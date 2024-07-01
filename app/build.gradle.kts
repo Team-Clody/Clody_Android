@@ -118,11 +118,6 @@ dependencies {
     implementation(libs.encrypted.datastore.preference.ksp.annotations)
     implementation(libs.encrypted.datastore.preference.security)
 
-    // Room (Database)
-    implementation(libs.room.runtime)
-    ksp(libs.room.compiler)
-    implementation(libs.room.ktx)
-
     // ViewPager Indicator
     implementation(libs.viewpager.indicator)
 

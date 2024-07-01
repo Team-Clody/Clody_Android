@@ -47,9 +47,6 @@ viewpager-indicator = "5.0"
 # Hilt
 hilt = "2.48"
 
-# Room
-room = "2.5.2"
-
 # Javax
 javax = "1"
 
@@ -123,9 +120,6 @@ encrypted-datastore-preference-ksp = { group = "tech.thdev", name = "useful-encr
 encrypted-datastore-preference-ksp-annotations = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-ksp-annotations", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences KSP 어노테이션
 encrypted-datastore-preference-security = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-security", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences 보안 라이브러리
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" } # 애니메이션 라이브러리
-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" } # Room 컴파일러
-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" } # Room KTX 라이브러리
-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" } # Room 런타임 라이브러리
 viewpager-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "viewpager-indicator" } # ViewPager 인디케이터 라이브러리
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # AndroidX Activity 라이브러리
 
