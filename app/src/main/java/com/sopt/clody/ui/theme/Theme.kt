@@ -33,12 +33,9 @@ fun provideClodyColorsAndTypography(
     typography: ClodyTypography,
     content: @Composable () -> Unit,
 ) {
-    val provideColors = remember { colors.copy() }
-    val provideTypography = remember { typography.copy() }
-
     CompositionLocalProvider(
-        LocalClodyColors provides provideColors,
-        LocalTypography provides provideTypography,
+        LocalClodyColors provides colors,
+        LocalTypography provides typography,
         content = content,
     )
 }
