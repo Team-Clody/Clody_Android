@@ -109,21 +109,5 @@ data class ClodyTypography(
 )
 
 val LocalTypography = staticCompositionLocalOf {
-    ClodyTypography(
-        head1 = pretendardTextStyle,
-        head2 = pretendardTextStyle,
-        head3 = pretendardTextStyle,
-        head4 = pretendardTextStyle,
-        head5 = pretendardTextStyle,
-        body1SemiBold = pretendardTextStyle,
-        body1Medium = pretendardTextStyle,
-        body2SemiBold = pretendardTextStyle,
-        body2Medium = pretendardTextStyle,
-        body3SemiBold = pretendardTextStyle,
-        body3Medium = pretendardTextStyle,
-        detail1SemiBold = pretendardTextStyle,
-        detail1Medium = pretendardTextStyle,
-        detail2SemiBold = pretendardTextStyle,
-        detail2Medium = pretendardTextStyle
-    )
+    defaultClodyTypography
 }
