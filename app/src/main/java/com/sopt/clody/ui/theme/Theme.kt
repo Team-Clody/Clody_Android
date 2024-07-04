@@ -38,10 +38,10 @@ fun provideClodyColorsAndTypography(
 
 @Composable
 fun CLODYTheme(content: @Composable () -> Unit) {
-    val color = defaultClodyColors
+    val colors = defaultClodyColors
     val typography = defaultClodyTypography
 
-    provideClodyColorsAndTypography(color, typography) {
+    provideClodyColorsAndTypography(colors, typography) {
         val view = LocalView.current
         if (!view.isInEditMode) {
             // SideEffect를 사용하여 상태 표시줄의 색상을 설정
