@@ -76,26 +76,4 @@ data class ClodyColors(
     val white: Color
 )
 
-val LocalClodyColors = staticCompositionLocalOf {
-    ClodyColors(
-        lightGreen = LightGreen,
-        mainGreen = MainGreen,
-        darkGreen = DarkGreen,
-        lightYellow = LightYellow,
-        mainYellow = MainYellow,
-        darkYellow = DarkYellow,
-        red = Red,
-        lightBlue = LightBlue,
-        blue = Blue,
-        gray01 = Gray01,
-        gray02 = Gray02,
-        gray03 = Gray03,
-        gray04 = Gray04,
-        gray05 = Gray05,
-        gray06 = Gray06,
-        gray07 = Gray07,
-        gray08 = Gray08,
-        gray09 = Gray09,
-        white = WHITE
-    )
-}
+val LocalClodyColors = staticCompositionLocalOf { defaultClodyColors }
