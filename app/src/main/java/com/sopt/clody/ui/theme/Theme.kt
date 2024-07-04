@@ -51,6 +51,6 @@ fun CLODYTheme(content: @Composable () -> Unit) {
                 WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true // 상태 표시줄 아이콘 색상을 항상 검정색으로 설정
             }
         }
-            MaterialTheme(content = content)
+        MaterialTheme(content = content)
     }
 }
