@@ -108,6 +108,4 @@ data class ClodyTypography(
     val detail2Medium: TextStyle
 )
 
-val LocalTypography = staticCompositionLocalOf {
-    defaultClodyTypography
-}
+val LocalClodyTypography = staticCompositionLocalOf { defaultClodyTypography }
