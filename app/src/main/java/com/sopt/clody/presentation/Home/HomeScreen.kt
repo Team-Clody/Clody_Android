@@ -23,7 +23,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
+import com.sopt.clody.presentation.Home.Calendar.DayItem
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.time.LocalDate
 
 @Composable
 fun HomeScreen() {
@@ -120,7 +122,13 @@ fun CloverCount() {
 
 @Composable
 fun ClodyCalendar() {
-
+    DayItem(
+        date = LocalDate.now(),
+        onDayClick = {},
+        isSelected = true,
+        diaryCount = 3,
+        hasUnreadReplies = true
+    )
 }
 
 @Preview(showBackground = true)
