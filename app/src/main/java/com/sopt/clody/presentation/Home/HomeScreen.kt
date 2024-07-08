@@ -27,53 +27,77 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun HomeScreen() {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(24.dp)
+    ) {
+        HomeHeader()
+        CalendarScreen()
+    }
+}
+
+@Composable
+fun HomeHeader() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_home_list),
+            contentDescription = "go to list",
+            modifier = Modifier
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        YearAndMonthTitle()
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            painter = painterResource(id = R.drawable.ic_home_setting),
+            contentDescription = "go to setting",
+            modifier = Modifier
+        )
+    }
+}
+
+@Composable
+fun YearAndMonthTitle() {
+    val text = "2024년 6월"
+    Row(
+        modifier = Modifier
+    ) {
+        Text(
+            text = text,
+            style = ClodyTheme.typography.head4,
+            color = ClodyTheme.colors.gray01
+        )
+        Image(
+            painter = painterResource(id = R.drawable.ic_home_under_arrow),
+            contentDescription = "choose month",
+            modifier = Modifier
+                .padding(horizontal = 6.dp, vertical = 6.dp)
+
+        )
+    }
+}
+
+@Composable
+fun CalendarScreen() {
     val scrollState = rememberScrollState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(24.dp)
             .verticalScroll(scrollState)
     ) {
-        HomeHeader()
         CloverCount()
         ClodyCalendar()
     }
 }
 
 @Composable
-fun HomeHeader() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_home_list),
-                contentDescription = "go to list",
-                modifier = Modifier
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-            //TODO 월 설정 스피너 들어갈 예정
-
-            Image(
-                painter = painterResource(id = R.drawable.ic_home_setting),
-                contentDescription = "go to setting",
-                modifier = Modifier
-            )
-        }
-    }
-}
-
-@Composable
-fun CloverCount(
-) {
+fun CloverCount() {
     val text = "클러버 23개"
 
     Box(
