@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.Home.Calendar
+package com.sopt.clody.presentation.Home.Calendar.Component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -28,20 +28,21 @@ fun DayItem(
     onDayClick: (LocalDate) -> Unit,
     isSelected: Boolean,
     diaryCount: Int,
+    modifier: Modifier = Modifier,
     hasUnreadReplies: Boolean,
-    modifier: Modifier = Modifier
 ) {
     val today = LocalDate.now()
     val isToday = date == today
     val isFuture = date.isAfter(today)
 
     val iconRes = when {
-        diaryCount in 1..1 -> R.drawable.ic_home_bottom_clover
+        hasUnreadReplies && diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
+        diaryCount == 1 -> R.drawable.ic_home_bottom_clover
         diaryCount in 2..3 -> R.drawable.ic_home_mid_clover
         diaryCount in 4..5 -> R.drawable.ic_home_top_clover
         isToday && diaryCount == 0 -> R.drawable.ic_home_today_unwritten_clover
-        isFuture || diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
-        hasUnreadReplies && diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        isFuture -> R.drawable.ic_home_ungiven_clover
         else -> R.drawable.ic_home_ungiven_clover
     }
 
@@ -99,7 +100,7 @@ fun DayItemPreview() {
         onDayClick = {},
         isSelected = false,
         diaryCount = 0,
-        hasUnreadReplies = false
+        hasUnreadReplies = true
     )
 }
 
