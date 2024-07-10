@@ -23,8 +23,6 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun ListViewScreen(name: String) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     Scaffold(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             Column {
                 DiaryListTopAppBar(name)
