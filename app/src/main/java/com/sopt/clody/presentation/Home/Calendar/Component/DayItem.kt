@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
+import com.sopt.clody.domain.model.DiaryData
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 
@@ -27,22 +28,20 @@ fun DayItem(
     date: LocalDate,
     onDayClick: (LocalDate) -> Unit,
     isSelected: Boolean,
-    diaryCount: Int,
+    diaryData: DiaryData,
     modifier: Modifier = Modifier,
-    hasUnreadReplies: Boolean,
 ) {
     val today = LocalDate.now()
     val isToday = date == today
-    val isFuture = date.isAfter(today)
 
     val iconRes = when {
-        hasUnreadReplies && diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
-        diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
-        diaryCount == 1 -> R.drawable.ic_home_bottom_clover
-        diaryCount in 2..3 -> R.drawable.ic_home_mid_clover
-        diaryCount in 4..5 -> R.drawable.ic_home_top_clover
-        isToday && diaryCount == 0 -> R.drawable.ic_home_today_unwritten_clover
-        isFuture -> R.drawable.ic_home_ungiven_clover
+        isToday && diaryData.diaryCount == 0 && diaryData.replyStatus == "UNREADY" -> R.drawable.ic_home_today_unwritten_clover
+        diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        diaryData.replyStatus == "UNREADY" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        diaryData.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
+        diaryData.diaryCount == 1 -> R.drawable.ic_home_bottom_clover
+        diaryData.diaryCount in 2..3 -> R.drawable.ic_home_mid_clover
+        diaryData.diaryCount in 4..5 -> R.drawable.ic_home_top_clover
         else -> R.drawable.ic_home_ungiven_clover
     }
 
@@ -62,7 +61,7 @@ fun DayItem(
                 painter = painterResource(id = iconRes),
                 contentDescription = "Diary clover icon"
             )
-            if (hasUnreadReplies && diaryCount > 0) {
+            if (diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_home_unread_reply),
                     contentDescription = "Unread replies icon",
@@ -84,11 +83,17 @@ fun DayItem(
         ) {
             Text(
                 text = date.dayOfMonth.toString(),
-                style = ClodyTheme.typography.detail1SemiBold.copy(color = if (isSelected) ClodyTheme.colors.white else ClodyTheme.colors.gray05),
+                style = ClodyTheme.typography.detail1SemiBold.copy
+                    (
+                    color = when {
+                        isSelected -> ClodyTheme.colors.white
+                        isToday -> ClodyTheme.colors.gray02
+                        else -> ClodyTheme.colors.gray05
+                    }
+                ),
                 textAlign = TextAlign.Center
             )
         }
-
     }
 }
 
@@ -99,8 +104,7 @@ fun DayItemPreview() {
         date = LocalDate.now(),
         onDayClick = {},
         isSelected = false,
-        diaryCount = 2,
-        hasUnreadReplies = true
+        DiaryData(diaryCount = 0, replyStatus = "UNREADY")
     )
 }
 
