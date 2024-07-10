@@ -104,7 +104,7 @@ fun DayItemPreview() {
         date = LocalDate.now(),
         onDayClick = {},
         isSelected = false,
-        DiaryData(diaryCount = 0, replyStatus = "UNREADY")
+        diaryData = DiaryData(diaryCount = 2, replyStatus = "READY_NOT_READ")
     )
 }
 
