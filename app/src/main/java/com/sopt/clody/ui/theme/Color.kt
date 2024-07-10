@@ -113,3 +113,5 @@ val LocalClodyColors = staticCompositionLocalOf {
         white = WHITE
     )
 }
+
+val LocalClodyColors = staticCompositionLocalOf { defaultClodyColors }

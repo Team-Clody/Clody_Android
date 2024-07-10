@@ -1,15 +1,11 @@
 package com.sopt.clody.ui.theme
 
 import android.app.Activity
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
@@ -24,7 +20,7 @@ object ClodyTheme {
     val typography: ClodyTypography
         @Composable
         @ReadOnlyComposable
-        get() = LocalTypography.current
+        get() = LocalClodyTypography.current
 }
 
 @Composable
@@ -35,17 +31,17 @@ fun provideClodyColorsAndTypography(
 ) {
     CompositionLocalProvider(
         LocalClodyColors provides colors,
-        LocalTypography provides typography,
+        LocalClodyTypography provides typography,
         content = content,
     )
 }
 
 @Composable
 fun CLODYTheme(content: @Composable () -> Unit) {
-    val color = defaultClodyColors
+    val colors = defaultClodyColors
     val typography = defaultClodyTypography
 
-    provideClodyColorsAndTypography(color, typography) {
+    provideClodyColorsAndTypography(colors, typography) {
         val view = LocalView.current
         if (!view.isInEditMode) {
             // SideEffect를 사용하여 상태 표시줄의 색상을 설정
@@ -55,6 +51,6 @@ fun CLODYTheme(content: @Composable () -> Unit) {
                 WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = true // 상태 표시줄 아이콘 색상을 항상 검정색으로 설정
             }
         }
-            MaterialTheme(content = content)
+        MaterialTheme(content = content)
     }
 }
