@@ -68,7 +68,7 @@ fun DayItem(
                     contentDescription = "Unread replies icon",
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(end = 6.dp, bottom = 6.dp)
+                        .padding(end = 6.dp, bottom = 8.dp)
                         .size(12.dp)
                 )
             }
@@ -80,7 +80,7 @@ fun DayItem(
                     if (isSelected) Color.Black else Color.Transparent,
                     shape = RoundedCornerShape(12.dp)
                 )
-                .padding(horizontal = 10.dp)
+                .padding(horizontal = 6.dp)
         ) {
             Text(
                 text = date.dayOfMonth.toString(),
@@ -99,7 +99,7 @@ fun DayItemPreview() {
         date = LocalDate.now(),
         onDayClick = {},
         isSelected = false,
-        diaryCount = 0,
+        diaryCount = 2,
         hasUnreadReplies = true
     )
 }
