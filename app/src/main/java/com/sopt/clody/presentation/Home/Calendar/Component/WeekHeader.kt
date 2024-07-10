@@ -16,7 +16,7 @@ import kotlinx.datetime.DayOfWeek
 
 @Composable
 fun WeekHeader(modifier: Modifier = Modifier) {
-    val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 38.dp) / 7
+    val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = modifier.padding(top = 16.dp, bottom = 7.dp)
