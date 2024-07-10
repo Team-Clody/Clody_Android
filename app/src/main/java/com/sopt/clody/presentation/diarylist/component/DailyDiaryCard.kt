@@ -38,12 +38,14 @@ fun DailyDiaryCard(index: Int, order: Int) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(20.dp)
+                .padding(top = 20.dp)
+                .padding(bottom = 8.dp)
         ) {
             Row(
                 modifier = Modifier
+                    .height(28.dp)
                     .fillMaxWidth()
-                    .height(28.dp),
+                    .padding(start = 20.dp, end = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             )
             {
@@ -83,10 +85,10 @@ fun DailyDiaryCard(index: Int, order: Int) {
                     painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
                     contentDescription = "케밥 메뉴",
                     modifier = Modifier
-                        .padding(start = 14.dp)
-                        .clickable(onClick = {})
+                        .clickable(onClick = { /* 삭제하기 바텀 모달 시트 노출 */})
                 )
             }
+            Spacer(modifier = Modifier.height(12.dp))
             DailyDiaryCardItem(index)
         }
     }
