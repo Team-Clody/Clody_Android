@@ -14,11 +14,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.domain.model.CalendarDate
+import com.sopt.clody.domain.model.DiaryData
 import com.sopt.clody.domain.model.daysInMonth
 import com.sopt.clody.domain.model.generateCalendarDates
 import java.time.LocalDate
 import java.time.YearMonth
 import kotlin.random.Random
+import com.sopt.clody.R
+import kotlin.random.Random.Default.nextInt
 
 @Composable
 fun MonthlyItem(
@@ -28,7 +31,7 @@ fun MonthlyItem(
     getDiaryDataForDate: (LocalDate) -> DiaryData?
 ) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
-
+    val replyStatuses = listOf("UNREADY", "READY_NOT_READ", "READY_READ")
     Box(
         modifier = Modifier
             .fillMaxWidth(),
@@ -49,15 +52,16 @@ fun MonthlyItem(
                                 .padding(vertical = 2.dp),
                             contentAlignment = Alignment.Center,
                         ) {
-                            DayItem(
-                                date = localDate,
-                                onDayClick = { clickedDate ->
-                                    onDayClick(clickedDate)
-                                },
-                                isSelected = localDate == selectedDate,
-                                diaryCount = diaryData?.diaryCount ?: 0,
-                                hasUnreadReplies = diaryData?.replyStatus == "READY_NOT_READ"
-                            )
+                            if (diaryData != null) {
+                                DayItem(
+                                    date = localDate,
+                                    onDayClick = { clickedDate ->
+                                        onDayClick(clickedDate)
+                                    },
+                                    isSelected = localDate == selectedDate,
+                                    diaryData = diaryData
+                                )
+                            }
                         }
                     }
                 }
@@ -65,11 +69,6 @@ fun MonthlyItem(
         }
     }
 }
-
-data class DiaryData(
-    val diaryCount: Int,
-    val replyStatus: String
-)
 
 @Preview(showBackground = true)
 @Composable
@@ -99,16 +98,26 @@ fun MonthlyItemPreview() {
 fun generateFakeDiaryData(year: Int, month: Int): List<DiaryData> {
     val daysInMonth = daysInMonth(month, year)
     val random = Random.Default
+    val today = LocalDate.now()
 
     val replyStatuses = listOf("UNREADY", "READY_NOT_READ", "READY_READ")
 
-    return (1..daysInMonth).map {
-        DiaryData(
-            diaryCount = random.nextInt(0, 5),
-            replyStatus = replyStatuses[random.nextInt(replyStatuses.size)]
-        )
+    return (1..daysInMonth).map { day ->
+        val date = LocalDate.of(year, month, day)
+        if (date == today) {
+            DiaryData(
+                diaryCount = 0,
+                replyStatus = "UNREADY"
+            )
+        } else {
+            DiaryData(
+                diaryCount = random.nextInt(0, 5),
+                replyStatus = replyStatuses[random.nextInt(replyStatuses.size)]
+            )
+        }
     }
 }
+
 
 
 
