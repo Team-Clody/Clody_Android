@@ -31,7 +31,7 @@ fun MonthlyItem(
     getDiaryDataForDate: (LocalDate) -> DiaryData?
 ) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
-    val replyStatuses = listOf("UNREADY", "READY_NOT_READ", "READY_READ")
+
     Box(
         modifier = Modifier
             .fillMaxWidth(),
