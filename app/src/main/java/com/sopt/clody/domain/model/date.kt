@@ -9,6 +9,11 @@ data class CalendarDate(
     val year: Int
 )
 
+data class DiaryData(
+    val diaryCount: Int,
+    val replyStatus: String,
+)
+
 fun daysInMonth(month: Int, year: Int): Int {
     return YearMonth.of(year, month).lengthOfMonth()
 }
