@@ -1,11 +1,10 @@
-package com.sopt.clody.presentation
+package com.sopt.clody.presentation.ui.navigatior
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.sopt.clody.presentation.auth.RegisterRoute
-import com.sopt.clody.presentation.auth.TermsOfServiceRoute
-import com.sopt.clody.presentation.main.MainNavigator
+import com.sopt.clody.presentation.ui.auth.screen.RegisterRoute
+import com.sopt.clody.presentation.ui.auth.screen.TermsOfServiceRoute
 
 
 fun NavGraphBuilder.registerNavGraph(

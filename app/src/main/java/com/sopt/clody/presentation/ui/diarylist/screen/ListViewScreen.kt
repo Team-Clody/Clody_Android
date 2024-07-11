@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.diarylist.screen
+package com.sopt.clody.presentation.ui.diarylist.screen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sopt.clody.presentation.diarylist.component.DiaryListTopAppBar
-import com.sopt.clody.presentation.diarylist.component.MonthlyDiaryList
+import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
+import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

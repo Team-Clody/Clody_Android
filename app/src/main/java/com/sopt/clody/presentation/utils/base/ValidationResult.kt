@@ -1,4 +1,4 @@
-package com.sopt.clody.utils.base
+package com.sopt.clody.presentation.utils.base
 
 sealed class ValidationResult {
     object EmptyError : ValidationResult()

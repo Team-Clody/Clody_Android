@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.main
+package com.sopt.clody.presentation.ui.navigatior
 
 import androidx.navigation.NavHostController
 
@@ -14,4 +14,3 @@ class MainNavigator(
         navController.popBackStack()
     }
 }
-

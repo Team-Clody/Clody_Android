@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.main
+package com.sopt.clody.presentation.ui.navigatior
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -7,8 +7,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import com.sopt.clody.presentation.registerNavGraph
-import com.sopt.clody.presentation.termsOfServiceNavGraph
 
 @Composable
 fun MainNavHost(
