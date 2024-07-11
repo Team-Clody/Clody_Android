@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -17,11 +19,10 @@ import com.sopt.clody.domain.model.CalendarDate
 import com.sopt.clody.domain.model.DiaryData
 import com.sopt.clody.domain.model.daysInMonth
 import com.sopt.clody.domain.model.generateCalendarDates
+import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 import kotlin.random.Random
-import com.sopt.clody.R
-import kotlin.random.Random.Default.nextInt
 
 @Composable
 fun MonthlyItem(
@@ -32,34 +33,63 @@ fun MonthlyItem(
 ) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
 
-    Box(
-        modifier = Modifier
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.fillMaxWidth()
+            .padding(horizontal = 20.dp),
     ) {
-        Column {
-            dateList.chunked(7).forEach { weekDates ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Start
-                ) {
-                    weekDates.forEach { date ->
-                        val localDate = LocalDate.of(date.year, date.month, date.date)
-                        val diaryData = getDiaryDataForDate(localDate)
-                        Box(
-                            modifier = Modifier
-                                .width(itemWidth)
-                                .padding(vertical = 2.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            if (diaryData != null) {
-                                DayItem(
-                                    date = localDate,
-                                    onDayClick = { clickedDate ->
-                                        onDayClick(clickedDate)
-                                    },
-                                    isSelected = localDate == selectedDate,
-                                    diaryData = diaryData
+        WeekHeader(itemWidth = itemWidth)
+        Spacer(modifier = Modifier.height(8.dp))
+        Box(
+            modifier = Modifier.fillMaxWidth(),
+            contentAlignment = Alignment.Center,
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                val firstDate = dateList.firstOrNull()?.let { LocalDate.of(it.year, it.month, it.date) }
+                val firstDayOfWeek = firstDate?.dayOfWeek ?: DayOfWeek.SUNDAY
+                val emptyDays = (firstDayOfWeek.value % 7)
+
+                val paddedDateList = List(emptyDays) { null } + dateList
+
+                paddedDateList.chunked(7).forEach { weekDates ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        weekDates.forEach { date ->
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(vertical = 2.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                if (date != null) {
+                                    val localDate = LocalDate.of(date.year, date.month, date.date)
+                                    val diaryData = getDiaryDataForDate(localDate)
+                                    if (diaryData != null) {
+                                        DayItem(
+                                            date = localDate,
+                                            dayOfWeek = localDate.dayOfWeek,
+                                            onDayClick = { clickedDate ->
+                                                onDayClick(clickedDate)
+                                            },
+                                            isSelected = localDate == selectedDate,
+                                            diaryData = diaryData,
+                                            modifier = Modifier.fillMaxWidth()
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                        if (weekDates.size < 7) {
+                            repeat(7 - weekDates.size) {
+                                Box(
+                                    modifier = Modifier
+                                        .width(itemWidth)
+                                        .padding(vertical = 2.dp)
                                 )
                             }
                         }
@@ -69,6 +99,8 @@ fun MonthlyItem(
         }
     }
 }
+
+
 
 @Preview(showBackground = true)
 @Composable

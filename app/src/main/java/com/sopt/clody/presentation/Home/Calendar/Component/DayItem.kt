@@ -21,11 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.domain.model.DiaryData
 import com.sopt.clody.ui.theme.ClodyTheme
+import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 
 @Composable
 fun DayItem(
     date: LocalDate,
+    dayOfWeek: DayOfWeek,
     onDayClick: (LocalDate) -> Unit,
     isSelected: Boolean,
     diaryData: DiaryData,
@@ -102,6 +104,7 @@ fun DayItem(
 fun DayItemPreview() {
     DayItem(
         date = LocalDate.now(),
+        dayOfWeek = DayOfWeek.SUNDAY,
         onDayClick = {},
         isSelected = false,
         diaryData = DiaryData(diaryCount = 2, replyStatus = "READY_NOT_READ")

@@ -20,13 +20,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
+import kotlinx.datetime.DayOfWeek
 
 @Composable
 fun DailyDiaryListItem(
+    date: java.time.LocalDate,
+    dayOfWeek: DayOfWeek,
     diaryTexts: List<String>
 ) {
     LazyColumn(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
@@ -34,16 +39,16 @@ fun DailyDiaryListItem(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(8.dp)
             ) {
                 Text(
-                    text = "6월 26일",
+                    text = "${date.month.value}.${date.dayOfMonth}",
                     style = ClodyTheme.typography.body3Medium,
                     color = ClodyTheme.colors.gray04,
                     modifier = Modifier.padding(vertical = 3.dp)
                 )
                 Text(
-                    text = "목요일",
+                    text = "${dayOfWeek.toKoreanShortLabel()}요일",
                     style = ClodyTheme.typography.body2Medium,
                     color = ClodyTheme.colors.gray02,
                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
@@ -66,6 +71,7 @@ fun DailyDiaryListItem(
     }
 }
 
+
 @Composable
 fun DiaryItem(
     index: Int,
@@ -74,7 +80,7 @@ fun DiaryItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp)) // 배경과 모서리 둥글게
+            .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp))
             .padding(18.dp)
     ) {
         Text(
@@ -93,7 +99,6 @@ fun DailyDiaryListItemPreview() {
         "두 번째 다이어리 내용",
         "세 번째 다이어리 내용"
     )
-    DailyDiaryListItem(diaryTexts = sampleTexts)
 }
 
 
