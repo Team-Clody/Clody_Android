@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.main
+package com.sopt.clody.presentation.ui.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -9,6 +9,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.sopt.clody.presentation.ui.navigatior.MainNavHost
+import com.sopt.clody.presentation.ui.navigatior.MainNavigator
 import com.sopt.clody.ui.theme.CLODYTheme
 import dagger.hilt.android.AndroidEntryPoint
 

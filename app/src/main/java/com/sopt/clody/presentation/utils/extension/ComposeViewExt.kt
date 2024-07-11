@@ -1,4 +1,4 @@
-package com.sopt.clody.utils.extension
+package com.sopt.clody.presentation.utils.extension
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable

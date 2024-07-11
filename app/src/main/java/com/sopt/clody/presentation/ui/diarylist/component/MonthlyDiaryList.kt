@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.diarylist.component
+package com.sopt.clody.presentation.ui.diarylist.component
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
