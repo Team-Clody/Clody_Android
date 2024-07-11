@@ -1,4 +1,4 @@
-package com.sopt.clody.utils.base
+package com.sopt.clody.presentation.utils.base
 
 sealed interface UiState<out T> {
     data object Empty : UiState<Nothing>
