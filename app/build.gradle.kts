@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.navigation.compose)
     implementation(libs.hilt.navigation.compose)
     implementation(libs.lifecycle.compose)
+    implementation(libs.constraintlayout.compose)
 
     // Kotlin
     implementation(libs.kotlinx.coroutines.android)
@@ -93,6 +94,7 @@ dependencies {
     implementation(libs.androidx.paging)
     implementation(libs.androidx.paging.common)
     implementation(libs.androidx.paging.compose)
+    implementation(libs.accompanist.insets)
 
     // Hilt (Dependency Injection)
     implementation(libs.hilt.android)

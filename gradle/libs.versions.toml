@@ -10,6 +10,8 @@ compose-bom = "2024.03.00"
 compose-material3 = "1.2.0-alpha07"
 activity-compose = "1.9.0"
 androidx-hilt-navigation-compose = "1.0.0"
+constraintlayout-compose = "1.0.1"
+
 
 # Kotlin
 kotlin = "1.9.0"
@@ -31,6 +33,7 @@ androidx-datastore = "1.1.0"
 androidx-paging = "3.2.1"
 androidx-paging-compose = "3.3.0-rc01"
 activity = "1.8.0"
+accompanist-insets = "0.28.0"
 
 # Third-Party Libraries
 retrofit = "2.9.0"
@@ -88,6 +91,8 @@ activity-compose = { group = "androidx.activity", name = "activity-compose", ver
 lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" } # Compose용 Lifecycle 라이브러리
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" } # Compose용 Navigation 라이브러리
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" } # Compose용 Hilt Navigation 라이브러리
+constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose" } # Compose용 ConstraintLayout 라이브러리
+
 
 # Kotlin
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" } # Kotlin Gradle 플러그인
@@ -108,6 +113,7 @@ androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", v
 androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "androidx-paging" } # AndroidX Paging 라이브러리
 androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" } # AndroidX Paging 공용 라이브러리
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging-compose" } # Compose용 AndroidX Paging 라이브러리
+accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist-insets" } #
 
 # Third-Party Libraries
 retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" } # Retrofit 네트워킹 라이브러리
