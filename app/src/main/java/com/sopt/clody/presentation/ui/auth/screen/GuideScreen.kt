@@ -60,6 +60,7 @@ fun GuideScreen(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
+            .background(color = ClodyTheme.colors.white)
             .padding(24.dp)
     ) {
         val (pager, indicator, nextButton) = createRefs()

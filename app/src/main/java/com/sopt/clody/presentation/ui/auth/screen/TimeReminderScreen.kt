@@ -46,7 +46,10 @@ fun TimeReminderScreen(
     var selectedTime by remember { mutableStateOf("오후 9시 30분") } // 상태 추가
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = ClodyTheme.colors.white)
+
     ) {
         ConstraintLayout(
             modifier = Modifier
