@@ -104,7 +104,7 @@ val defaultClodyTypography = ClodyTypography(
     ),
     detail1Regular = pretendardTextStyle.copy(
         fontSize = 12.sp,
-        fontWeight = FontWeight.Medium,
+        fontWeight = FontWeight.Normal,
         lineHeight = 18.sp
     ),
     detail2SemiBold = pretendardTextStyle.copy(
