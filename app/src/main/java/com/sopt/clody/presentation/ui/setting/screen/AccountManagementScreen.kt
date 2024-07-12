@@ -65,7 +65,7 @@ fun AccountManagementScreen(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "사용자 이름", // 추후 구현 : 사용자 이름 받아오기
+                    text = "사용자 이름", /* TODO : 사용자 이름 받아오기 */
                     style = ClodyTheme.typography.body1SemiBold
                 )
                 Text(
@@ -92,7 +92,7 @@ fun AccountManagementScreen(
                     contentDescription = null
                 )
                 Spacer(modifier = Modifier.width(10.dp))
-                Text(text = "사용자 아이디", style = ClodyTheme.typography.body1Medium) // 추후 구현 : 사용자 아이디 받아오기
+                Text(text = "사용자 아이디", style = ClodyTheme.typography.body1Medium) /* TODO : 사용자 아이디 받아오기 */
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(R.string.account_management_button_logout),
@@ -137,6 +137,7 @@ fun AccountManagementScreen(
             confirmOpt = stringResource(R.string.account_management_dialog_logout_confirm),
             dismissOpt = stringResource(R.string.account_management_dialog_logout_dismiss),
             confirmAction = { /* 로그아웃 로직 함수 */ }
+            confirmAction = { /* TODO : 로그아웃 로직 */ }
         )
     }
 
@@ -148,6 +149,7 @@ fun AccountManagementScreen(
             confirmOpt = stringResource(R.string.account_management_dialog_revoke_confirm),
             dismissOpt = stringResource(R.string.account_management_dialog_revoke_dismiss),
             confirmAction = { /* 회원탈퇴 로직 함수 */ }
+            confirmAction = { /* TODO : 회원탈퇴 로직  */ }
         )
     }
 }

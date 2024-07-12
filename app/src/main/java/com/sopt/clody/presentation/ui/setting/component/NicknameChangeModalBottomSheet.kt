@@ -106,7 +106,7 @@ fun NicknameChangeModalBottomSheetItem(
                 },
                 modifier = Modifier
                     .padding(horizontal = 24.dp),
-                hint = "사용자 이름" // 추후 구현 : 사용자 이름 받아와서 힌트로 노출
+                hint = "사용자 이름" /* TODO : 사용자 이름 받아와서 힌트로 노출 */
             )
 
             Row(
@@ -138,7 +138,7 @@ fun NicknameChangeModalBottomSheetItem(
             Spacer(modifier = Modifier.height(48.dp))
 
             ClodyButton(
-                onClick = { /* 닉네임 변경 로직 함수 */ },
+                onClick = { /* TODO : 닉네임 변경 로직 */ },
                 text = stringResource(R.string.nickname_change_confirm),
                 enabled = nicknameChangeState,
                 modifier = Modifier
