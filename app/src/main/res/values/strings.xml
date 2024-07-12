@@ -1,5 +1,18 @@
 <resources>
     <string name="app_name">CLODY</string>
+
+    <!--회원가입 UI-->
+    <string name="signup_title">행운을 전하는 감사일기</string>
+    <string name="signup_btn_kakao">카카오로 로그인</string>
+
+    <!-- 이용약관 -->
+    <string name="terms_title">"Clody 이용을 위해\n약관에 동의해 주세요"</string>
+    <string name="terms_agree_all">전체 동의하기</string>
+    <string name="terms_service_use">(필수) 서비스 이용약관</string>
+    <string name="terms_service_privacy">(필수) 개인정보 처리방침</string>
+    <string name="terms_next">다음</string>
+
+    <!-- 설정 -->
     <string name="account_management_topappbar_title">프로필 및 계정 관리</string>
     <string name="setting_topappbar_title">설정</string>
     <string name="setting_account_management">프로필 및 계정 관리</string>
