@@ -22,7 +22,7 @@ fun SettingTopAppBar(
 
     CenterAlignedTopAppBar(
         title = {
-            Text(text = "${title}", style = ClodyTheme.typography.head4)
+            Text(text = title, style = ClodyTheme.typography.head4)
         },
         navigationIcon = {
             IconButton(onClick = { onClickBack() }) {
