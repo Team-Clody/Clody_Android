@@ -37,7 +37,6 @@ fun NickNameChangeTextField(
 ) {
     val nicknameMaxLength = 10
 
-
     Box(modifier = modifier) {
         BasicTextField(
             value = value,

@@ -132,11 +132,10 @@ fun AccountManagementScreen(
     if (showLogoutDialog) {
         LogoutDialog(
             onDismiss = { showLogoutDialog = false },
-            titleMsg = stringResource(R.string.account_management_dialog_logout_title),
-            descriptionMsg = stringResource(R.string.account_management_dialog_logout_description),
-            confirmOpt = stringResource(R.string.account_management_dialog_logout_confirm),
-            dismissOpt = stringResource(R.string.account_management_dialog_logout_dismiss),
-            confirmAction = { /* 로그아웃 로직 함수 */ }
+            titleMassage = stringResource(R.string.account_management_dialog_logout_title),
+            descriptionMassage = stringResource(R.string.account_management_dialog_logout_description),
+            confirmOption = stringResource(R.string.account_management_dialog_logout_confirm),
+            dismissOption = stringResource(R.string.account_management_dialog_logout_dismiss),
             confirmAction = { /* TODO : 로그아웃 로직 */ }
         )
     }
@@ -144,11 +143,10 @@ fun AccountManagementScreen(
     if (showRevokeDialog) {
         ClodyDialog(
             onDismiss = { showRevokeDialog = false },
-            titleMsg = stringResource(R.string.account_management_dialog_revoke_title),
-            descriptionMsg = stringResource(R.string.account_management_dialog_revoke_description),
-            confirmOpt = stringResource(R.string.account_management_dialog_revoke_confirm),
-            dismissOpt = stringResource(R.string.account_management_dialog_revoke_dismiss),
-            confirmAction = { /* 회원탈퇴 로직 함수 */ }
+            titleMassage = stringResource(R.string.account_management_dialog_revoke_title),
+            descriptionMassage = stringResource(R.string.account_management_dialog_revoke_description),
+            confirmOption = stringResource(R.string.account_management_dialog_revoke_confirm),
+            dismissOption = stringResource(R.string.account_management_dialog_revoke_dismiss),
             confirmAction = { /* TODO : 회원탈퇴 로직  */ }
         )
     }
