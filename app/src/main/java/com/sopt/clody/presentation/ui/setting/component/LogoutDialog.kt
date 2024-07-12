@@ -27,10 +27,10 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun LogoutDialog(
     onDismiss: () -> Unit,
-    titleMsg: String,
-    descriptionMsg: String,
-    confirmOpt: String,
-    dismissOpt: String,
+    titleMassage: String,
+    descriptionMassage: String,
+    confirmOption: String,
+    dismissOption: String,
     confirmAction: () -> Unit
 ) {
     Dialog(
@@ -53,14 +53,14 @@ fun LogoutDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = titleMsg,
+                    text = titleMassage,
                     style = ClodyTheme.typography.body1SemiBold
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = descriptionMsg,
+                    text = descriptionMassage,
                     color = ClodyTheme.colors.gray04,
                     textAlign = TextAlign.Center,
                     style = ClodyTheme.typography.body3Regular
@@ -83,7 +83,7 @@ fun LogoutDialog(
                             ),
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07)
                     ) {
-                        Text(text = dismissOpt,
+                        Text(text = dismissOption,
                             color = ClodyTheme.colors.gray04,
                             style = ClodyTheme.typography.body3SemiBold)
                     }
@@ -101,7 +101,7 @@ fun LogoutDialog(
                             ),
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.darkYellow)
                     ) {
-                        Text(text = confirmOpt,
+                        Text(text = confirmOption,
                             color = ClodyTheme.colors.gray01,
                             style = ClodyTheme.typography.body3SemiBold)
                     }

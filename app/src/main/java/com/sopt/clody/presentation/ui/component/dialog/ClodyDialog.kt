@@ -27,10 +27,10 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun ClodyDialog(
     onDismiss: () -> Unit,
-    titleMsg: String,
-    descriptionMsg: String,
-    confirmOpt: String,
-    dismissOpt: String,
+    titleMassage: String,
+    descriptionMassage: String,
+    confirmOption: String,
+    dismissOption: String,
     confirmAction: () -> Unit
 ) {
     Dialog(
@@ -54,14 +54,14 @@ fun ClodyDialog(
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = titleMsg,
+                    text = titleMassage,
                     style = ClodyTheme.typography.body1SemiBold
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    text = descriptionMsg,
+                    text = descriptionMassage,
                     color = ClodyTheme.colors.gray04,
                     textAlign = TextAlign.Center,
                     style = ClodyTheme.typography.body3Regular
@@ -84,7 +84,7 @@ fun ClodyDialog(
                             ),
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07)
                     ) {
-                        Text(text = dismissOpt,
+                        Text(text = dismissOption,
                             color = ClodyTheme.colors.gray04,
                             style = ClodyTheme.typography.body3SemiBold)
                     }
@@ -102,7 +102,7 @@ fun ClodyDialog(
                             ),
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.red)
                     ) {
-                        Text(text = confirmOpt,
+                        Text(text = confirmOption,
                             color = ClodyTheme.colors.white,
                             style = ClodyTheme.typography.body3SemiBold)
                     }
