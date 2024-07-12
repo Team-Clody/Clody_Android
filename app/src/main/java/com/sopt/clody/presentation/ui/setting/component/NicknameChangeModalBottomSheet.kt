@@ -32,18 +32,18 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NicknameChangeModalBottomSheet(
-    onDisMiss: () -> Unit
+    onDismiss: () -> Unit
 ) {
     ClodyBottomSheet(
-        content = { NicknameChangeModalBottomSheetItem(onDisMiss) },
-        onDismissRequest = { onDisMiss() },
+        content = { NicknameChangeModalBottomSheetItem(onDismiss) },
+        onDismissRequest = { onDismiss() },
         heightFraction = 0.46f
     )
 }
 
 @Composable
 fun NicknameChangeModalBottomSheetItem(
-    onDisMiss: () -> Unit
+    onDismiss: () -> Unit
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
     var nicknameLength by remember { mutableIntStateOf(0) }
@@ -74,7 +74,7 @@ fun NicknameChangeModalBottomSheetItem(
                 )
 
                 IconButton(
-                    onClick = { onDisMiss() },
+                    onClick = onDismiss,
                     modifier = Modifier.align(Alignment.CenterEnd)
                 ) {
                     Image(

@@ -125,7 +125,7 @@ fun AccountManagementScreen(
 
     if (showChangeNicknameBottomSheet) {
         NicknameChangeModalBottomSheet(
-            onDisMiss = { showChangeNicknameBottomSheet = false }
+            onDismiss = { showChangeNicknameBottomSheet = false }
         )
     }
 
