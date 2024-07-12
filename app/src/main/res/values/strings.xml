@@ -1,3 +1,28 @@
 <resources>
     <string name="app_name">CLODY</string>
+    <string name="account_management_topappbar_title">프로필 및 계정 관리</string>
+    <string name="setting_topappbar_title">설정</string>
+    <string name="setting_account_management">프로필 및 계정 관리</string>
+    <string name="setting_notification_setting">알림 설정</string>
+    <string name="setting_announcement">공지사항</string>
+    <string name="setting_inquiries_suggestions">문의/제안하기</string>
+    <string name="setting_terms_of_service">서비스 이용 약관</string>
+    <string name="setting_privacy_policy">개인정보 처리방침</string>
+    <string name="setting_app_version">앱 버전</string>
+    <string name="account_management_user_name">님</string>
+    <string name="account_management_button_nickname_change">변경하기</string>
+    <string name="nickname_change_title">닉네임 변경</string>
+    <string name="nickname_change_notice">특수문자, 띄어쓰기 없이 작성해주세요</string>
+    <string name="account_management_button_logout">로그아웃</string>
+    <string name="account_management_dialog_logout_title">로그아웃 하시겠어요?</string>
+    <string name="account_management_dialog_logout_description">기다릴게요, 다음에 다시 만나요!</string>
+    <string name="account_management_dialog_logout_confirm">로그아웃</string>
+    <string name="account_management_dialog_logout_dismiss">아니요</string>
+    <string name="account_management_text_revoke">계정을 삭제하시겠어요?</string>
+    <string name="account_management_button_revoke">회원탈퇴</string>
+    <string name="account_management_dialog_revoke_title">서비스를 탈퇴하시겠어요?</string>
+    <string name="account_management_dialog_revoke_description">작성하신 일기와 받은 답장 및 클로버가\n 모두 삭제되며 복구할 수 없어요.</string>
+    <string name="account_management_dialog_revoke_confirm">탈퇴할래요</string>
+    <string name="account_management_dialog_revoke_dismiss">아니요</string>
+    <string name="nickname_change_confirm">변경하기</string>
 </resources>

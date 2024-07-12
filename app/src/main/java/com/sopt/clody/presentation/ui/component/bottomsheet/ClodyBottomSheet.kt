@@ -23,7 +23,8 @@ import kotlinx.coroutines.launch
 fun ClodyBottomSheet(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
+    heightFraction: Float = 0.18f
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -39,7 +40,7 @@ fun ClodyBottomSheet(
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(LocalConfiguration.current.screenHeightDp.dp * 0.18f) // 임의의 고정값으로 넣어두었습니다.
+                .height(LocalConfiguration.current.screenHeightDp.dp * heightFraction)
                 .pointerInput(Unit) {
                     detectVerticalDragGestures { _, _ -> }
                 }

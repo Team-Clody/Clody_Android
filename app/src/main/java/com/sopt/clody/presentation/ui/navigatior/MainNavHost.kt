@@ -7,11 +7,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
+import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
+import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
+import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
 
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    navigator: MainNavigator
+    mainNavigator: MainNavigator,
+    settingNavigator: SettingNavigator
 ) {
     Box(
         modifier = modifier
@@ -19,11 +24,14 @@ fun MainNavHost(
             .background(MaterialTheme.colorScheme.background)
     ) {
         NavHost(
-            navController = navigator.navController,
-            startDestination = navigator.startDestination,
+            navController = mainNavigator.navController,
+            startDestination = mainNavigator.startDestination,
         ) {
-            registerNavGraph(navigator)
-            termsOfServiceNavGraph(navigator)
+            registerNavGraph(mainNavigator)
+            termsOfServiceNavGraph(mainNavigator)
+            settingNavGraph(settingNavigator)
+            accountManagementNavGraph(settingNavigator)
+            notificationSettingNavGraph(settingNavigator)
         }
     }
 }
