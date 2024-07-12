@@ -37,7 +37,7 @@ fun ClodyButton(
         Text(
             text = text,
             color = contentColor,
-            style = ClodyTheme.typography.body1SemiBold
+            style = ClodyTheme.typography.body2SemiBold
         )
     }
 }
