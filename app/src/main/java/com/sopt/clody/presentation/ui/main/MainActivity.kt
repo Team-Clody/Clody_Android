@@ -9,8 +9,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
+import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.navigatior.MainNavHost
-import com.sopt.clody.presentation.ui.navigatior.MainNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.ui.theme.CLODYTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CLODYTheme {
                 val navController = rememberNavController()
-                val mainNavigator = remember(navController) { MainNavigator(navController) }
+                val mainNavigator = remember(navController) { AuthNavigator(navController) }
                 val settingNavigator = remember(navController) { SettingNavigator(navController) }
 
                 Scaffold(
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     content = { paddingValues ->
                         MainNavHost(
                             modifier = Modifier.padding(paddingValues),
-                            mainNavigator = mainNavigator,
+                            authNavigator = mainNavigator,
                             settingNavigator = settingNavigator
                         )
                     }
