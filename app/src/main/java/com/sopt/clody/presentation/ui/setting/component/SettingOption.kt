@@ -30,12 +30,12 @@ fun SettingOption(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = { onClickOption() }),
+                onClick = onClickOption),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Spacer(modifier = Modifier.width(24.dp))
         Text(
-            text = "${option}",
+            text = option,
             style = ClodyTheme.typography.body1Medium
         )
         Spacer(modifier = Modifier.weight(1f))

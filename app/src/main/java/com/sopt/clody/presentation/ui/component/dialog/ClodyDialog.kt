@@ -74,7 +74,7 @@ fun ClodyDialog(
                         .fillMaxWidth()
                 ) {
                     Button(
-                        onClick = { onDismiss() },
+                        onClick = onDismiss,
                         modifier = Modifier
                             .weight(1f)
                             .height(40.dp)
@@ -92,7 +92,7 @@ fun ClodyDialog(
                     Spacer(modifier = Modifier.width(8.dp))
 
                     Button(
-                        onClick = { confirmAction() },
+                        onClick = confirmAction,
                         modifier = Modifier
                             .weight(1f)
                             .height(40.dp)

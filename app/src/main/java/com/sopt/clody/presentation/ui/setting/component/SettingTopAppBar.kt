@@ -25,7 +25,7 @@ fun SettingTopAppBar(
             Text(text = title, style = ClodyTheme.typography.head4)
         },
         navigationIcon = {
-            IconButton(onClick = { onClickBack() }) {
+            IconButton(onClick = onClickBack) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_setting_back),
                     contentDescription = null
