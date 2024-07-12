@@ -7,10 +7,10 @@ class MainNavigator(
     val navController: NavHostController
 ) {
     val startDestination = "register_graph"
-    fun navigateTermsOfService() {
+    fun navigateToTermsOfService() {
         navController.navigate("terms_of_service")
     }
-    fun navigateBack() {
+    fun navigateToBack() {
         navController.popBackStack()
     }
 }
