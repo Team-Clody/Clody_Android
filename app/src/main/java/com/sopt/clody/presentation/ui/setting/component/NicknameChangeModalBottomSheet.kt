@@ -15,7 +15,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -46,7 +45,6 @@ fun NicknameChangeModalBottomSheetItem(
     onDismiss: () -> Unit
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
-    var nicknameLength by remember { mutableIntStateOf(0) }
     var nicknameChangeState by remember { mutableStateOf(false) }
     var isFocusedState by remember { mutableStateOf(false) }
     val nicknameMaxLength = 10
@@ -92,13 +90,11 @@ fun NicknameChangeModalBottomSheetItem(
                 value = nickname,
                 onValueChange = {
                     nickname = it
-                    nicknameLength = it.text.length
                     nicknameChangeState = it.text.isNotEmpty()
                 },
                 isFocused = isFocusedState,
                 onRemove = {
                     nickname = TextFieldValue("")
-                    nicknameLength = nickname.text.length
                     nicknameChangeState = false
                 },
                 onFocusChanged = {
@@ -124,7 +120,7 @@ fun NicknameChangeModalBottomSheetItem(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = "$nicknameLength",
+                    text = "${nickname.text.length}",
                     color = ClodyTheme.colors.gray04,
                     style = ClodyTheme.typography.detail1Medium
                 )
