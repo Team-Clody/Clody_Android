@@ -54,7 +54,7 @@ fun DiaryListTopAppBar(
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /* 캘린더뷰로 이동 */ }) {
+            IconButton(onClick = onClickCalendar) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_listview_calendar),
                     contentDescription = "go to calenderView"
