@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home
+package com.sopt.clody.presentation.ui.home.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
