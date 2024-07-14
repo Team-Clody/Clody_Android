@@ -185,7 +185,6 @@ fun DiaryDeleteBottomSheetItem(
                     onDismiss()
                     onShowDiaryDeleteDialogStateChange(true)
                 }
-                .background(ClodyTheme.colors.white)
                 .padding(start = 24.dp)
         ) {
             Image(

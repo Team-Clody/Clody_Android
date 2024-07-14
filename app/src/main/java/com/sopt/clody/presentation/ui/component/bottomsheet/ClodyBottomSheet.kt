@@ -34,7 +34,6 @@ fun ClodyBottomSheet(
         onDismissRequest = {
             onDismissRequest()
         },
-        containerColor = ClodyTheme.colors.white,
         sheetState = sheetState,
         dragHandle = null,
         windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
@@ -45,7 +44,6 @@ fun ClodyBottomSheet(
             Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(ClodyTheme.colors.white)
                 .pointerInput(Unit) {
                     detectVerticalDragGestures { _, _ -> }
                 }
