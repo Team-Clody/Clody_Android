@@ -92,7 +92,6 @@ fun DailyDiaryCard(index: Int, order: Int) {
             DailyDiaryCardItem(index)
         }
     }
-}
 
     if (showDiaryDeleteSheet) {
         DiaryDeleteSheet(
@@ -100,6 +99,20 @@ fun DailyDiaryCard(index: Int, order: Int) {
             onShowDiaryDeleteDialogStateChange = { newState -> showDiaryDeleteDialog = newState }
         )
     }
+
+    if (showDiaryDeleteDialog) {
+        ClodyDialog(
+            titleMassage = "정말 일기를 삭제할까요?",
+            descriptionMassage = "아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.",
+            confirmOption = "삭제할래요",
+            dismissOption = "아니요",
+            confirmAction = { /* TODO : 일기 삭제 로직 */ },
+            onDismiss = { showDiaryDeleteDialog = false },
+            confirmButtonColor = ClodyTheme.colors.red,
+            confirmButtonTextColor = ClodyTheme.colors.white
+        )
+    }
+}
 
 @Composable
 fun DiaryDeleteSheet(
