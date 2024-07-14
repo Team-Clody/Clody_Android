@@ -26,7 +26,10 @@ import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryListTopAppBar(name: String) {
+fun DiaryListTopAppBar(
+    onClickCalendar: () -> Unit,
+    onShowYearMonthPickerStateChange: (Boolean) -> Unit,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val currentDate = LocalDate.now()
     var selectedYear by remember { mutableStateOf(currentDate.year) }
