@@ -91,18 +91,31 @@ fun DailyDiaryCard(
                     style = ClodyTheme.typography.body2SemiBold
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
-                    shape = RoundedCornerShape(size = 9.dp),
-                    onClick = { /* 답장 확인 */ },
-                    contentPadding = PaddingValues(0.dp) // button에 설정된 기본 패딩을 제거
+                Box(
+                    contentAlignment = Alignment.TopEnd
                 ) {
-                    Text(
-                        text = "답장 확인",
+                    Button(
                         modifier = Modifier
-                            .padding(horizontal = 10.dp, vertical = 2.dp),
-                        style = ClodyTheme.typography.detail1SemiBold,
-                        color = ClodyTheme.colors.blue
+                            .height(33.dp)
+                            .padding(horizontal = 3.dp, vertical = 3.dp),
+                        colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
+                        shape = RoundedCornerShape(size = 9.dp),
+                        onClick = onClickReplyDiary,
+                        contentPadding = PaddingValues(0.dp),
+                    ) {
+                        Text(
+                            text = "답장 확인",
+                            modifier = Modifier
+                                .padding(horizontal = 10.dp, vertical = 2.dp),
+                            style = ClodyTheme.typography.detail1SemiBold,
+                            color = ClodyTheme.colors.blue
+                        )
+                    }
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_reply_diary_new),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd),
+                        contentDescription = null,
                     )
                 }
                 Image(
