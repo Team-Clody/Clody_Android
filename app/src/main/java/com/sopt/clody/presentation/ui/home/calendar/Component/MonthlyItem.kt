@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.Home.Calendar.Component
+package com.sopt.clody.presentation.ui.home.calendar.Component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -99,8 +99,6 @@ fun MonthlyItem(
         }
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable

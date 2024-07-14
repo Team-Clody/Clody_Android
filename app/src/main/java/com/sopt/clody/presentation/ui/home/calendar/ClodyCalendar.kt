@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.Home.Calendar
+package com.sopt.clody.presentation.ui.home.calendar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,22 +19,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.domain.model.generateCalendarDates
-import com.sopt.clody.presentation.Home.Calendar.Component.DailyDiaryListItem
-import com.sopt.clody.presentation.Home.Calendar.Component.MonthlyItem
-import com.sopt.clody.presentation.Home.Calendar.Component.generateFakeDiaryData
+import com.sopt.clody.presentation.ui.home.calendar.Component.DailyDiaryListItem
+import com.sopt.clody.presentation.ui.home.calendar.Component.MonthlyItem
+import com.sopt.clody.presentation.ui.home.calendar.Component.generateFakeDiaryData
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
 fun ClodyCalendar() {
     val currentMonth = YearMonth.now()
-    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
-    var selectedDayOfWeek by remember { mutableStateOf(DayOfWeek.MONDAY) } // Default value
+    val today = LocalDate.now()
+    val initialDayOfWeek = today.dayOfWeek
     val fakeDiaryData = generateFakeDiaryData(currentMonth.year, currentMonth.monthValue)
     val dateList = generateCalendarDates(currentMonth.year, currentMonth.monthValue)
-    var diaryTexts by remember { mutableStateOf(emptyList<String>()) }
+    var selectedDate by remember { mutableStateOf(today) }
+    var selectedDayOfWeek by remember { mutableStateOf(initialDayOfWeek) }
+    var diaryTexts by remember { mutableStateOf(fetchDiaryTextsForDate(today)) }
 
     Column(
         modifier = Modifier
@@ -58,7 +59,7 @@ fun ClodyCalendar() {
                 }
             },
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         HorizontalDivider()
         DailyDiaryListItem(
             date = selectedDate,
@@ -84,9 +85,10 @@ fun HorizontalDivider(
 
 fun fetchDiaryTextsForDate(date: LocalDate): List<String> {
     return listOf(
-        "감사일기 내용 1",
-        "감사일기 내용 2",
-        "감사일기 내용 3"
+        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
+        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
+        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
+        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
     )
 }
 
