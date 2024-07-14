@@ -18,7 +18,10 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeTopAppBar() {
+fun HomeTopAppBar(
+    onClickDiaryList: () -> Unit,
+    onClickSetting: () -> Unit
+) {
     TopAppBar(
         title = {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -31,7 +34,7 @@ fun HomeTopAppBar() {
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        IconButton(onClick = { /*TODO: Navigate to list*/ }) {
+                        IconButton(onClick = { onClickDiaryList }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_home_list),
                                 contentDescription = "go to list"
@@ -48,7 +51,7 @@ fun HomeTopAppBar() {
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.CenterEnd
                     ) {
-                        IconButton(onClick = { /*TODO: Navigate to settings*/ }) {
+                        IconButton(onClick = { onClickSetting }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_home_setting),
                                 contentDescription = "go to setting"

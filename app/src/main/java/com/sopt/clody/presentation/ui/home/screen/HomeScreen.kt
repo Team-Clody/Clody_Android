@@ -41,7 +41,10 @@ fun HomeScreen(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        HomeTopAppBar()
+        HomeTopAppBar(
+            onClickDiaryList = onClickDiaryList,
+            onClickSetting = onClickSetting
+        )
         ScrollableCalendarView()
     }
 }
