@@ -2,9 +2,10 @@ package com.sopt.clody.presentation.ui.component.bottomsheet
 
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -13,7 +14,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
@@ -24,7 +24,6 @@ fun ClodyBottomSheet(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
     onDismissRequest: () -> Unit,
-    heightFraction: Float = 0.18f
 ) {
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -35,12 +34,14 @@ fun ClodyBottomSheet(
         },
         sheetState = sheetState,
         dragHandle = null,
-        modifier = modifier.navigationBarsPadding()
+        windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
+        modifier = modifier
+            .navigationBarsPadding()
     ) {
         Box(
             Modifier
                 .fillMaxWidth()
-                .height(LocalConfiguration.current.screenHeightDp.dp * heightFraction)
+                .wrapContentHeight()
                 .pointerInput(Unit) {
                     detectVerticalDragGestures { _, _ -> }
                 }
