@@ -7,6 +7,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
+import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
+import com.sopt.clody.presentation.ui.auth.navigation.guidNavGraph
+import com.sopt.clody.presentation.ui.auth.navigation.nicknameNavGraph
+import com.sopt.clody.presentation.ui.auth.navigation.registerNavGraph
+import com.sopt.clody.presentation.ui.auth.navigation.termsOfServiceNavGraph
+import com.sopt.clody.presentation.ui.auth.navigation.timeReminderNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
@@ -15,7 +21,7 @@ import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
 @Composable
 fun MainNavHost(
     modifier: Modifier = Modifier,
-    mainNavigator: MainNavigator,
+    authNavigator: AuthNavigator,
     settingNavigator: SettingNavigator
 ) {
     Box(
@@ -24,11 +30,14 @@ fun MainNavHost(
             .background(MaterialTheme.colorScheme.background)
     ) {
         NavHost(
-            navController = mainNavigator.navController,
-            startDestination = mainNavigator.startDestination,
+            navController = authNavigator.navController,
+            startDestination = authNavigator.startDestination,
         ) {
-            registerNavGraph(mainNavigator)
-            termsOfServiceNavGraph(mainNavigator)
+            registerNavGraph(authNavigator)
+            termsOfServiceNavGraph(authNavigator)
+            nicknameNavGraph(authNavigator)
+            guidNavGraph(authNavigator)
+            timeReminderNavGraph(authNavigator)
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)

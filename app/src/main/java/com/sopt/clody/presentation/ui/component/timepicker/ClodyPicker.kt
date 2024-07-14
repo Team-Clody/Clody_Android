@@ -102,7 +102,7 @@ fun ClodyPicker(
                         text = "",
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = ClodyTheme.typography.head3.copy(color = Color.Gray),
+                        style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
                         modifier = Modifier.height(itemHeightDp)
                     )
                 } else {
@@ -110,7 +110,7 @@ fun ClodyPicker(
                         text = getItem(index),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
-                        style = ClodyTheme.typography.head3.copy(color = Color.Gray),
+                        style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
                         modifier = Modifier
                             .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
                             .then(textModifier)
