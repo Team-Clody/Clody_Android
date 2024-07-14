@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             CLODYTheme {
                 val navController = rememberNavController()
-                val mainNavigator = remember(navController) { AuthNavigator(navController) }
+                val authNavigator = remember(navController) { AuthNavigator(navController) }
                 val settingNavigator = remember(navController) { SettingNavigator(navController) }
 
                 Scaffold(
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     content = { paddingValues ->
                         MainNavHost(
                             modifier = Modifier.padding(paddingValues),
-                            authNavigator = mainNavigator,
+                            authNavigator = authNavigator,
                             settingNavigator = settingNavigator
                         )
                     }

@@ -36,7 +36,6 @@ fun NicknameChangeModalBottomSheet(
     ClodyBottomSheet(
         content = { NicknameChangeModalBottomSheetItem(onDismiss) },
         onDismissRequest = { onDismiss() },
-        heightFraction = 0.46f
     )
 }
 
