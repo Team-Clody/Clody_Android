@@ -61,6 +61,7 @@ fun DiaryListTopAppBar(
                 )
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
         scrollBehavior = scrollBehavior,
     )
 }
