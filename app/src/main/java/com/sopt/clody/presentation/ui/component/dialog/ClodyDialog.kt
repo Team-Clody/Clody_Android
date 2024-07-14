@@ -11,14 +11,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -31,83 +37,114 @@ fun ClodyDialog(
     descriptionMassage: String,
     confirmOption: String,
     dismissOption: String,
-    confirmAction: () -> Unit
+    confirmAction: () -> Unit,
+    confirmButtonColor: Color,
+    confirmButtonTextColor: Color
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnClickOutside = false)
+        properties = DialogProperties(
+            dismissOnClickOutside = false,
+            usePlatformDefaultWidth = false
+        )
     ) {
         Box(
             modifier = Modifier
-                .background(color = ClodyTheme.colors.white, shape = RoundedCornerShape(size = 12.dp))
-                .height(196.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.5f))
+                .wrapContentSize(Alignment.Center)
+                .padding(horizontal = 24.dp)
         ) {
-            Column(
+            Card(
+                shape = RoundedCornerShape(12.dp),
+                colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white),
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(20.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .wrapContentHeight()
             ) {
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = titleMassage,
-                    style = ClodyTheme.typography.body1SemiBold
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = descriptionMassage,
-                    color = ClodyTheme.colors.gray04,
-                    textAlign = TextAlign.Center,
-                    style = ClodyTheme.typography.body3Regular
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .padding(28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Button(
-                        onClick = onDismiss,
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(40.dp)
-                            .background(
-                                color = ClodyTheme.colors.gray07,
-                                shape = RoundedCornerShape(size = 8.dp)
-                            ),
-                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07)
-                    ) {
-                        Text(text = dismissOption,
-                            color = ClodyTheme.colors.gray04,
-                            style = ClodyTheme.typography.body3SemiBold)
-                    }
 
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
-                    Button(
-                        onClick = confirmAction,
+                    Text(
+                        text = titleMassage,
+                        style = ClodyTheme.typography.body1SemiBold
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = descriptionMassage,
+                        color = ClodyTheme.colors.gray04,
+                        textAlign = TextAlign.Center,
+                        style = ClodyTheme.typography.body3Regular
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
+
+                    Row(
                         modifier = Modifier
-                            .weight(1f)
-                            .height(40.dp)
-                            .background(
-                                color = ClodyTheme.colors.red,
-                                shape = RoundedCornerShape(size = 8.dp)
-                            ),
-                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.red)
+                            .fillMaxWidth()
                     ) {
-                        Text(text = confirmOption,
-                            color = ClodyTheme.colors.white,
-                            style = ClodyTheme.typography.body3SemiBold)
+                        Button(
+                            onClick = onDismiss,
+                            modifier = Modifier
+                                .weight(1f)
+                                .background(
+                                    color = ClodyTheme.colors.gray07,
+                                    shape = RoundedCornerShape(size = 8.dp)
+                                ),
+                            colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07)
+                        ) {
+                            Text(
+                                text = dismissOption,
+                                color = ClodyTheme.colors.gray04,
+                                style = ClodyTheme.typography.body3SemiBold
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Button(
+                            onClick = confirmAction,
+                            modifier = Modifier
+                                .weight(1f)
+                                .background(
+                                    color = confirmButtonColor,
+                                    shape = RoundedCornerShape(size = 8.dp)
+                                ),
+                            colors = ButtonDefaults.buttonColors(confirmButtonColor)
+                        ) {
+                            Text(
+                                text = confirmOption,
+                                color = confirmButtonTextColor,
+                                style = ClodyTheme.typography.body3SemiBold
+                            )
+                        }
                     }
                 }
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewClodyDialog() {
+    ClodyDialog(
+        onDismiss = {},
+        titleMassage = "일기를 저장할까요?",
+        descriptionMassage = "저장한 일기는 수정이 어려워요.",
+        confirmOption = "저장하기",
+        dismissOption = "아니오",
+        confirmAction = {},
+        confirmButtonColor = ClodyTheme.colors.mainYellow,
+        confirmButtonTextColor = ClodyTheme.colors.gray01
+    )
 }
