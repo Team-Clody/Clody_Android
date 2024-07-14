@@ -73,6 +73,6 @@ fun DiaryListScreen(
 @Composable
 fun Show() {
     DiaryListScreen(onClickBack = { /*TODO*/ }, onClickCalendar = { /*TODO*/ }) {
-        
+
     }
 }
