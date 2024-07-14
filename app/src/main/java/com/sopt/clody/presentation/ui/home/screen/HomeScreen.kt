@@ -15,9 +15,27 @@ import com.sopt.clody.presentation.ui.home.calendar.ClodyCalendar
 import com.sopt.clody.presentation.ui.home.component.CloverCount
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
+import com.sopt.clody.presentation.ui.home.navigator.HomeNavigator
 
 @Composable
-fun HomeScreen() {
+fun HomeRoute(
+    navigator: HomeNavigator
+) {
+    HomeScreen(
+        onClickBack = { navigator.navigateBack() },
+        onClickDiaryList = { navigator.navigateDiaryList() },
+        onClickSetting = { navigator.navigateSetting() },
+        onClickReplyDiary = { navigator.navigateReplyDiary() }
+    )
+}
+
+@Composable
+fun HomeScreen(
+    onClickBack: () -> Unit,
+    onClickDiaryList: () -> Unit,
+    onClickSetting: () -> Unit,
+    onClickReplyDiary: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -48,5 +66,5 @@ fun ScrollableCalendarView() {
 @Preview(showBackground = true)
 @Composable
 fun CalendarScreenPreview() {
-    HomeScreen()
+
 }
