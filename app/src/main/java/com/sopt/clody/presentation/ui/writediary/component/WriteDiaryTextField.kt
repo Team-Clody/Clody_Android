@@ -48,7 +48,7 @@ fun WriteDiaryTextField(
     showWarning: Boolean,
     modifier: Modifier = Modifier
 ) {
-    var isTextValid by remember { mutableStateOf(text.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))) }
+    var isTextValid by remember { mutableStateOf(text.replace("\\s".toRegex(), "").matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))) }
     var isFocused by remember { mutableStateOf(false) }
 
     Column(
@@ -98,7 +98,8 @@ fun WriteDiaryTextField(
                     onValueChange = {
                         if (it.length <= maxLength) {
                             onTextChange(it)
-                            isTextValid = it.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))
+                            val textWithoutSpaces = it.replace("\\s".toRegex(), "")
+                            isTextValid = textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))
                         }
                     },
                     textStyle = TextStyle(
@@ -170,7 +171,6 @@ fun WriteDiaryTextField(
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
