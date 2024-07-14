@@ -9,7 +9,7 @@ fun NotificationSettingRoute(
     navigator: SettingNavigator
 ) {
     NotificationSettingScreen(
-        onBackClick = { navigator.navigateToBack() }
+        onBackClick = { navigator.navigateBack() }
     )
 }
 
