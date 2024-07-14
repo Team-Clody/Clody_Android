@@ -147,7 +147,9 @@ fun AccountManagementScreen(
             descriptionMassage = stringResource(R.string.account_management_dialog_revoke_description),
             confirmOption = stringResource(R.string.account_management_dialog_revoke_confirm),
             dismissOption = stringResource(R.string.account_management_dialog_revoke_dismiss),
-            confirmAction = { /* TODO : 회원탈퇴 로직  */ }
+            confirmAction = { /* TODO : 회원탈퇴 로직  */ },
+            confirmButtonColor = ClodyTheme.colors.gray04,
+            confirmButtonTextColor = ClodyTheme.colors.white
         )
     }
 }
