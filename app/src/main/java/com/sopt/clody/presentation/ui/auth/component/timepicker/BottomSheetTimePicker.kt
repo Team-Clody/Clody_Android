@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
@@ -53,7 +54,7 @@ fun BottomSheetTimePicker(onDismissRequest: () -> Unit) {
                     .padding(top = 16.dp, bottom = 30.dp)
             ) {
                 Text(
-                    text = "발송 시간 변경",
+                    stringResource(id = R.string.time_picker_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center)

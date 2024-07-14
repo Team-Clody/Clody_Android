@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,10 +50,30 @@ fun GuideScreen(
     onNextButtonClick: () -> Unit
 ) {
     val pages = listOf(
-        BoardingPage("안녕하세요!", "저는 로디라고 해요", "여러분이 써준 감사일기를 받고,\n칭찬과 응원을 담아 답장을 쓴답니다", R.drawable.img_guide_first),
-        BoardingPage("답장마다 행운의", "네잎클로버를 함께 드려요", "하루에 받은 감사의 수가 많을수록\n" + "색이 진한 네잎클로버를 전달해요", R.drawable.img_guide_second),
-        BoardingPage("오늘의 일기만", "작성할 수 있어요", "전날이나 다음날의 일기는 작성할 수\n" + "없으니, 잊지 말고 기록해주세요", R.drawable.img_guide_third),
-        BoardingPage("이제 일기를 써볼까요?", "기다리고 있을게요!", "두번째 일기부터는 네잎클로버를 찾는 데\n" + "12시간이 걸리니 조금만 기다려 주세요", R.drawable.img_guide_fourth)
+        BoardingPage(
+            title = stringResource(R.string.guide_page1_title),
+            subtitle = stringResource(R.string.guide_page1_subtitle),
+            description = stringResource(R.string.guide_page1_description),
+            imageRes = R.drawable.img_guide_first
+        ),
+        BoardingPage(
+            title = stringResource(R.string.guide_page2_title),
+            subtitle = stringResource(R.string.guide_page2_subtitle),
+            description = stringResource(R.string.guide_page2_description),
+            imageRes = R.drawable.img_guide_second
+        ),
+        BoardingPage(
+            title = stringResource(R.string.guide_page3_title),
+            subtitle = stringResource(R.string.guide_page3_subtitle),
+            description = stringResource(R.string.guide_page3_description),
+            imageRes = R.drawable.img_guide_third
+        ),
+        BoardingPage(
+            title = stringResource(R.string.guide_page4_title),
+            subtitle = stringResource(R.string.guide_page4_subtitle),
+            description = stringResource(R.string.guide_page4_description),
+            imageRes = R.drawable.img_guide_fourth
+        )
     )
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
