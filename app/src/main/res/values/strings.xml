@@ -38,4 +38,24 @@
     <string name="account_management_dialog_revoke_confirm">탈퇴할래요</string>
     <string name="account_management_dialog_revoke_dismiss">아니요</string>
     <string name="nickname_change_confirm">변경하기</string>
+
+    <!-- 타임피커 -->
+    <string name="time_picker_title">발송 시간 변경</string>
+
+    <!-- 가이드 화면 -->
+    <string name="guide_page1_title">안녕하세요!</string>
+    <string name="guide_page1_subtitle">저는 로디라고 해요</string>
+    <string name="guide_page1_description">여러분이 써준 감사일기를 받고,\n칭찬과 응원을 담아 답장을 쓴답니다</string>
+
+    <string name="guide_page2_title">답장마다 행운의</string>
+    <string name="guide_page2_subtitle">네잎클로버를 함께 드려요</string>
+    <string name="guide_page2_description">하루에 받은 감사의 수가 많을수록\n색이 진한 네잎클로버를 전달해요</string>
+
+    <string name="guide_page3_title">오늘의 일기만</string>
+    <string name="guide_page3_subtitle">작성할 수 있어요</string>
+    <string name="guide_page3_description">전날이나 다음날의 일기는 작성할 수\n없으니, 잊지 말고 기록해주세요</string>
+
+    <string name="guide_page4_title">이제 일기를 써볼까요?</string>
+    <string name="guide_page4_subtitle">기다리고 있을게요!</string>
+    <string name="guide_page4_description">두번째 일기부터는 네잎클로버를 찾는 데\n12시간이 걸리니 조금만 기다려 주세요</string>
 </resources>
