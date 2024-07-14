@@ -63,6 +63,7 @@ espresso-core = "3.5.1"
 #agp
 android-gradle-plugin = "8.3.1"
 firebaseDatabaseKtx = "21.0.0"
+constraintlayout = "2.1.4"
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Kotlin Symbol Processing (KSP) 플러그인
@@ -150,4 +151,5 @@ androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version
 androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" } # AndroidX Test Runner 라이브러리
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test" } # AndroidX Test Core 라이브러리
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
-firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" } # Espresso 테스트 라이브러리
+firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" } # Espresso 테스트 라이브러리
