@@ -32,6 +32,7 @@ fun SettingTopAppBar(
                 )
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
         scrollBehavior = scrollBehavior,
     )
 }
