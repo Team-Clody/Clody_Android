@@ -10,6 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
+import com.sopt.clody.presentation.ui.diarylist.navigator.DiaryListNavigator
 import com.sopt.clody.presentation.ui.navigatior.MainNavHost
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.ui.theme.CLODYTheme
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
             CLODYTheme {
                 val navController = rememberNavController()
                 val authNavigator = remember(navController) { AuthNavigator(navController) }
+                val diaryListNavigator = remember(navController) { DiaryListNavigator(navController) }
                 val settingNavigator = remember(navController) { SettingNavigator(navController) }
 
                 Scaffold(
@@ -31,6 +33,7 @@ class MainActivity : ComponentActivity() {
                         MainNavHost(
                             modifier = Modifier.padding(paddingValues),
                             authNavigator = authNavigator,
+                            diaryListNavigator = diaryListNavigator,
                             settingNavigator = settingNavigator
                         )
                     }

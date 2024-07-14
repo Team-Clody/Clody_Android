@@ -31,9 +31,9 @@ fun SettingRoute(
     navigator: SettingNavigator
 ) {
     SettingScreen(
-        onClickBack = { navigator.navigateToBack() },
-        onClickAccountManagement = { navigator.navigateToAccountManagement() },
-        onClickNotificationSetting = { navigator.navigateToNotificationSetting() }
+        onClickBack = { navigator.navigateBack() },
+        onClickAccountManagement = { navigator.navigateAccountManagement() },
+        onClickNotificationSetting = { navigator.navigateNotificationSetting() }
     )
 }
 

@@ -13,27 +13,38 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DiaryListTopAppBar(name: String) {
+fun DiaryListTopAppBar(
+    onClickCalendar: () -> Unit,
+    onShowYearMonthPickerStateChange: (Boolean) -> Unit,
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val currentDate = LocalDate.now()
+    var selectedYear by remember { mutableStateOf(currentDate.year) }
+    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
 
     CenterAlignedTopAppBar(
-        // 표준 규격 : 64.dp 적용할 것
         title = {
             Row(
                 modifier = Modifier
-                    .clickable { /* 연,월 선택 */ },
+                    .clickable(onClick = { onShowYearMonthPickerStateChange(true) }),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = name,
+                    text = "${selectedYear}년 ${selectedMonth}월",
+                    color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.head4
                 )
                 Icon(
@@ -43,13 +54,14 @@ fun DiaryListTopAppBar(name: String) {
             }
         },
         navigationIcon = {
-            IconButton(onClick = { /* 캘린더뷰로 이동 */ }) {
+            IconButton(onClick = onClickCalendar) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_listview_calendar),
                     contentDescription = "go to calenderView"
                 )
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
         scrollBehavior = scrollBehavior,
     )
 }
