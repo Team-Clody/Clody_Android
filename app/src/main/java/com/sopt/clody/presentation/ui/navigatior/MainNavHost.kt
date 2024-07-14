@@ -13,6 +13,8 @@ import com.sopt.clody.presentation.ui.auth.navigation.nicknameNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.registerNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.termsOfServiceNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.timeReminderNavGraph
+import com.sopt.clody.presentation.ui.diarylist.navigator.DiaryListNavigator
+import com.sopt.clody.presentation.ui.diarylist.navigator.diaryListNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
@@ -22,6 +24,7 @@ import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
 fun MainNavHost(
     modifier: Modifier = Modifier,
     authNavigator: AuthNavigator,
+    diaryListNavigator: DiaryListNavigator,
     settingNavigator: SettingNavigator
 ) {
     Box(
@@ -38,6 +41,7 @@ fun MainNavHost(
             nicknameNavGraph(authNavigator)
             guidNavGraph(authNavigator)
             timeReminderNavGraph(authNavigator)
+            diaryListNavGraph(diaryListNavigator)
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)
