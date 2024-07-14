@@ -51,8 +51,9 @@ fun SignUpScreen(
             contentScale = ContentScale.Crop
         )
 
-        Text(
-            text = stringResource(id = R.string.signup_title),
+        Image(
+            painter = painterResource(id = R.drawable.ic__signup_title),
+            contentDescription = null,
             modifier = Modifier.constrainAs(txtSignUpTitle) {
                 top.linkTo(imgSignUpLogo.bottom, margin = 20.dp)
                 start.linkTo(parent.start)
