@@ -38,7 +38,6 @@ fun ClodyDialog(
     dismissOption: String,
     confirmAction: () -> Unit,
     confirmButtonColor: Color,
-    confirmButtonTextColor: Color
     confirmButtonTextColor: Color,
     onDismiss: () -> Unit,
 ) {
