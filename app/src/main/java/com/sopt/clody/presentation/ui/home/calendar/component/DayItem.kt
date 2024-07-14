@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home.calendar.Component
+package com.sopt.clody.presentation.ui.home.calendar.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

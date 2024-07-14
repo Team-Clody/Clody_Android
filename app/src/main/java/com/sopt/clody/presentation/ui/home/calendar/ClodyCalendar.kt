@@ -19,9 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.domain.model.generateCalendarDates
-import com.sopt.clody.presentation.ui.home.calendar.Component.DailyDiaryListItem
-import com.sopt.clody.presentation.ui.home.calendar.Component.MonthlyItem
-import com.sopt.clody.presentation.ui.home.calendar.Component.generateFakeDiaryData
+import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
+import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
+import com.sopt.clody.presentation.ui.home.calendar.component.generateFakeDiaryData
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 import java.time.YearMonth
