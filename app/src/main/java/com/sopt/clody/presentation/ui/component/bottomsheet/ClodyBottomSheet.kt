@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.component.bottomsheet
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,6 +34,7 @@ fun ClodyBottomSheet(
         onDismissRequest = {
             onDismissRequest()
         },
+        containerColor = ClodyTheme.colors.white,
         sheetState = sheetState,
         dragHandle = null,
         windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
@@ -42,6 +45,7 @@ fun ClodyBottomSheet(
             Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
+                .background(ClodyTheme.colors.white)
                 .pointerInput(Unit) {
                     detectVerticalDragGestures { _, _ -> }
                 }

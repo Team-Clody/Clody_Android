@@ -85,7 +85,7 @@ fun DailyDiaryCard(index: Int, order: Int) {
                     painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
                     contentDescription = "케밥 메뉴",
                     modifier = Modifier
-                        .clickable(onClick = { /* 삭제하기 바텀 모달 시트 노출 */})
+                        .clickable(onClick = { showDiaryDeleteSheet = true })
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
@@ -93,3 +93,67 @@ fun DailyDiaryCard(index: Int, order: Int) {
         }
     }
 }
+
+    if (showDiaryDeleteSheet) {
+        DiaryDeleteSheet(
+            onDismiss = { showDiaryDeleteSheet = false },
+            onShowDiaryDeleteDialogStateChange = { newState -> showDiaryDeleteDialog = newState }
+        )
+    }
+
+@Composable
+fun DiaryDeleteSheet(
+    onDismiss: () -> Unit,
+    onShowDiaryDeleteDialogStateChange: (Boolean) -> Unit
+) {
+    ClodyBottomSheet(
+        onDismissRequest = onDismiss,
+        content = {
+            DiaryDeleteBottomSheetItem(
+                onDismiss = onDismiss,
+                onShowDiaryDeleteDialogStateChange = onShowDiaryDeleteDialogStateChange
+            )
+        }
+    )
+}
+
+@Composable
+fun DiaryDeleteBottomSheetItem(
+    onDismiss: () -> Unit,
+    onShowDiaryDeleteDialogStateChange: (Boolean) -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(ClodyTheme.colors.white)
+            .padding(vertical = 20.dp),
+        verticalArrangement = Arrangement.Top
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(10.dp))
+                .clickable {
+                    onDismiss()
+                    onShowDiaryDeleteDialogStateChange(true)
+                }
+                .background(ClodyTheme.colors.white)
+                .padding(start = 24.dp)
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_bottomsheet_trash),
+                contentDescription = null
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "삭제하기",
+                style = ClodyTheme.typography.body4SemiBold,
+                color = ClodyTheme.colors.gray01
+            )
+        }
+        Spacer(modifier = Modifier.navigationBarsPadding())
+        Spacer(modifier = Modifier.height(60.dp))
+    }
+}
+
