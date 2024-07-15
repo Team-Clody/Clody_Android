@@ -58,4 +58,10 @@
     <string name="guide_page4_title">이제 일기를 써볼까요?</string>
     <string name="guide_page4_subtitle">기다리고 있을게요!</string>
     <string name="guide_page4_description">두번째 일기부터는 네잎클로버를 찾는 데\n12시간이 걸리니 조금만 기다려 주세요</string>
+
+    <!-- 로딩 화면 -->
+    <string name="loading_message">로디가 열심히 답장을 쓰고 있어요</string>
+    <string name="complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
+
+
 </resources>

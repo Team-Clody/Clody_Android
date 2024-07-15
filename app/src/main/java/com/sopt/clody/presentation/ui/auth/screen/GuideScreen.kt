@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 fun GuideRoute(
     navigator: AuthNavigator
 ) {
-    GuideScreen(onNextButtonClick = { navigator.navigateTimeReminder() }
+    GuideScreen(onNextButtonClick = { navigator.navigateDiaryList() }
     )
 }
 

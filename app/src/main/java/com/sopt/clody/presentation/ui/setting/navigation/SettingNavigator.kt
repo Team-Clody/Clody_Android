@@ -5,19 +5,15 @@ import androidx.navigation.NavHostController
 class SettingNavigator(
     val navController: NavHostController
 ) {
-    fun navigateToSetting() {
-        navController.navigate("setting")
-    }
-
-    fun navigateToAccountManagement() {
+    fun navigateAccountManagement() {
         navController.navigate("account_management")
     }
 
-    fun navigateToNotificationSetting() {
+    fun navigateNotificationSetting() {
         navController.navigate("notification_setting")
     }
 
-    fun navigateToBack() {
+    fun navigateBack() {
         navController.popBackStack()
     }
 }

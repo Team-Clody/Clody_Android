@@ -10,7 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun MonthlyDiaryList(paddingValues: PaddingValues) {
+fun MonthlyDiaryList(
+    paddingValues: PaddingValues,
+    onClickReplyDiary: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -20,7 +23,7 @@ fun MonthlyDiaryList(paddingValues: PaddingValues) {
         itemsIndexed(
             listOf(100, 200, 300, 400, 500, 600, 700, 800, 900, 1000)
         ) { index, item ->
-            DailyDiaryCard(index = index, order = item)
+            DailyDiaryCard(index = index, order = item, onClickReplyDiary = onClickReplyDiary)
         }
     }
 }

@@ -21,6 +21,10 @@ class AuthNavigator(
         navController.navigate("time_reminder")
     }
 
+    fun navigateDiaryList() {
+        navController.navigate("diary_list")
+    }
+
     fun navigateBack() {
         navController.popBackStack()
     }

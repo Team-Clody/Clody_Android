@@ -32,14 +32,14 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun ClodyDialog(
-    onDismiss: () -> Unit,
     titleMassage: String,
     descriptionMassage: String,
     confirmOption: String,
     dismissOption: String,
     confirmAction: () -> Unit,
     confirmButtonColor: Color,
-    confirmButtonTextColor: Color
+    confirmButtonTextColor: Color,
+    onDismiss: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -133,18 +133,3 @@ fun ClodyDialog(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewClodyDialog() {
-    ClodyDialog(
-        onDismiss = {},
-        titleMassage = "일기를 저장할까요?",
-        descriptionMassage = "저장한 일기는 수정이 어려워요.",
-        confirmOption = "저장하기",
-        dismissOption = "아니오",
-        confirmAction = {},
-        confirmButtonColor = ClodyTheme.colors.mainYellow,
-        confirmButtonTextColor = ClodyTheme.colors.gray01
-    )
-}
