@@ -3,6 +3,7 @@
 compileSdk = "34"
 minSdk = "28"
 targetSdk = "34"
+accompanist = "0.25.1"
 
 # Compose
 compose-compiler = "1.5.1"
@@ -93,7 +94,7 @@ lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-co
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" } # Compose용 Navigation 라이브러리
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" } # Compose용 Hilt Navigation 라이브러리
 constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose" } # Compose용 ConstraintLayout 라이브러리
-
+accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 
 # Kotlin
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" } # Kotlin Gradle 플러그인
