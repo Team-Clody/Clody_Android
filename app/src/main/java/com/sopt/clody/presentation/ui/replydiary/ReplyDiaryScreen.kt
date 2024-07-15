@@ -96,23 +96,19 @@ fun ReplyDiaryScreen() {
                                     .padding(top = 20.dp)
                             )
 
-                            Column(
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Text(
-                                    text = "문수님을 위한 행운의 답장",
-                                    style = ClodyTheme.typography.body2Medium,
-                                    color = ClodyTheme.colors.gray01,
-                                    modifier = Modifier.padding(top = 8.dp)
-                                )
-                                Text(
-                                    text = "너무 잘 그렸다고 칭찬해 주셨어요. 정말 기뻤답니다. 점심 시간에는 친구들과 함께 점심을 먹었어요. 오늘의 점심 메뉴는 김밥이었어요. 저는 김밥을 아주 좋아해서 신나게 먹었어요. 점심을 다 먹고 나서는 운동장에서 친구들과 술래잡기를 했어요. 오늘은 제가 술래가 되어서 친구들을 잡으려고 열심히 뛰어 다녔어요. 모두가 웃고 떠들며 즐거운 시간을 보냈어요. 점심 시간이 끝나고 나서는 체육 시간이었어요. 오늘은 축구를 했어요. 저는 골키퍼 역할을 맡았는데, 친구들이 공을 차올 때마다 열심히 막아냈어요. 한 번은 공이 너무 세게 날아와서 조금 겁이 났지만, 그래도 용기를 내서 막았답니다. 아아아아아아낭미아아아아아아아아아아아아아아아아아아아아아아아아아낭미아아아아아아\n" +
-                                            "너무 잘 그렸다고 칭찬해 주셨어. 칭찬해 주셨어\n",
-                                    modifier = Modifier.padding(24.dp),
-                                    style = ClodyTheme.typography.letterMedium,
-                                    color = ClodyTheme.colors.gray02,
-                                )
-                            }
+                            Text(
+                                text = "문수님을 위한 행운의 답장",
+                                style = ClodyTheme.typography.body2Medium,
+                                color = ClodyTheme.colors.gray01,
+                                modifier = Modifier.padding(top = 8.dp)
+                            )
+                            Text(
+                                text = "너무 잘 그렸다고 칭찬해 주셨어요. 정말 기뻤답니다. 점심 시간에는 친구들과 함께 점심을 먹었어요. 오늘의 점심 메뉴는 김밥이었어요. 저는 김밥을 아주 좋아해서 신나게 먹었어요. 점심을 다 먹고 나서는 운동장에서 친구들과 술래잡기를 했어요. 오늘은 제가 술래가 되어서 친구들을 잡으려고 열심히 뛰어 다녔어요. 모두가 웃고 떠들며 즐거운 시간을 보냈어요. 점심 시간이 끝나고 나서는 체육 시간이었어요. 오늘은 축구를 했어요. 저는 골키퍼 역할을 맡았는데, 친구들이 공을 차올 때마다 열심히 막아냈어요. 한 번은 공이 너무 세게 날아와서 조금 겁이 났지만, 그래도 용기를 내서 막았답니다. 아아아아아아낭미아아아아아아아아아아아아아아아아아아아아아아아아아낭미아아아아아아\n" +
+                                        "너무 잘 그렸다고 칭찬해 주셨어. 칭찬해 주셨어\n",
+                                modifier = Modifier.padding(24.dp),
+                                style = ClodyTheme.typography.letterMedium,
+                                color = ClodyTheme.colors.gray02,
+                            )
                         }
                     }
                 }
