@@ -17,8 +17,8 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
-import com.sopt.clody.presentation.ui.diarylist.component.YearMonthPicker
-import com.sopt.clody.presentation.ui.diarylist.navigator.DiaryListNavigator
+import com.sopt.clody.presentation.ui.component.YearMonthPicker
+import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable

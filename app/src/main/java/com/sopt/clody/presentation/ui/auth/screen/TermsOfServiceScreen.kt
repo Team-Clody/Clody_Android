@@ -146,7 +146,7 @@ fun TermsOfServiceScreen(
                 color = ClodyTheme.colors.gray01
             )
             NextButton(
-                onClick = { /*TODO*/ },
+                onClick = { /*TODO : 이용약관으로 이동 */ },
                 imageResource = R.drawable.ic_terms_next,
                 contentDescription = null
             )
@@ -181,7 +181,7 @@ fun TermsOfServiceScreen(
                 color = ClodyTheme.colors.gray01
             )
             NextButton(
-                onClick = { /*TODO*/ },
+                onClick = { /*TODO : 개인정보 처리방침으로 이동 */ },
                 imageResource = R.drawable.ic_terms_next,
                 contentDescription = null
             )

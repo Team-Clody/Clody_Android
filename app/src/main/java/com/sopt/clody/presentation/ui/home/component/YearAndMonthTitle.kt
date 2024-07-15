@@ -19,7 +19,9 @@ import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 
 @Composable
-fun YearAndMonthTitle() {
+fun YearAndMonthTitle(
+    onShowYearMonthPickerStateChange: (Boolean) -> Unit
+) {
     val currentDate = LocalDate.now()
     var showDatePicker by remember { mutableStateOf(false) }
     var selectedYear by remember { mutableStateOf(currentDate.year) }
@@ -29,7 +31,7 @@ fun YearAndMonthTitle() {
 
     Column {
         Row(
-            modifier = Modifier
+            modifier = Modifier.clickable( onClick = { onShowYearMonthPickerStateChange(true)})
         ) {
             Text(
                 text = text,

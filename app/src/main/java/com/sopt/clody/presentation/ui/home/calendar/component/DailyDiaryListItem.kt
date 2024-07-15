@@ -24,7 +24,8 @@ import kotlinx.datetime.DayOfWeek
 fun DailyDiaryListItem(
     date: java.time.LocalDate,
     dayOfWeek: DayOfWeek,
-    diaryTexts: List<String>
+    diaryTexts: List<String>,
+    onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -55,7 +56,7 @@ fun DailyDiaryListItem(
                 painter = painterResource(id = R.drawable.ic_home_kebab),
                 contentDescription = "go to delete",
                 modifier = Modifier
-                    .clickable(onClick = {})
+                    .clickable(onClick = {onShowDiaryDeleteStateChange(true)} )
             )
         }
         diaryTexts.forEachIndexed { index, text ->

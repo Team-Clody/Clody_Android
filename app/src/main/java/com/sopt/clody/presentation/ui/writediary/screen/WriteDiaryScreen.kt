@@ -34,15 +34,22 @@ import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.writediary.component.DeleteWriteDiaryBottomSheet
 import com.sopt.clody.presentation.ui.writediary.component.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.WriteDiaryTextField
+import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun WriteDiaryRoute() {
-    WriteDiaryScreen()
+fun WriteDiaryRoute(
+    navigator: WriteDiaryNavigator
+) {
+    WriteDiaryScreen(
+        onClickBack = { navigator.navigateBack() }
+    )
 }
 
 @Composable
-fun WriteDiaryScreen() {
+fun WriteDiaryScreen(
+    onClickBack: () -> Unit
+) {
     val entries = remember { mutableStateListOf("") }
     val showWarnings = remember { mutableStateListOf(false) }
     var showLimitMessage by remember { mutableStateOf(false) }
@@ -60,7 +67,7 @@ fun WriteDiaryScreen() {
         val (backButton, list, completeButton, addButton) = createRefs()
 
         IconButton(
-            onClick = { /*TODO*/ },
+            onClick = { onClickBack() },
             modifier = Modifier
                 .constrainAs(backButton) {
                     top.linkTo(parent.top)
@@ -204,5 +211,5 @@ fun WriteDiaryScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewWriteDiaryScreen() {
-    WriteDiaryScreen()
+
 }

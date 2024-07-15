@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
@@ -48,13 +50,11 @@ fun NicknameChangeModalBottomSheetItem(
     var isFocusedState by remember { mutableStateOf(false) }
     val nicknameMaxLength = 10
 
-    Surface(
-        modifier = Modifier
-            .background(ClodyTheme.colors.white)
-    ) {
+    Surface {
         Column(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .background(ClodyTheme.colors.white),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -140,6 +140,8 @@ fun NicknameChangeModalBottomSheetItem(
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp)
             )
+            Spacer(modifier = Modifier.navigationBarsPadding())
+            Spacer(modifier = Modifier.height(60.dp))
         }
     }
 }
