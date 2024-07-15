@@ -13,14 +13,16 @@ import com.sopt.clody.presentation.ui.auth.navigation.nicknameNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.registerNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.termsOfServiceNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.timeReminderNavGraph
-import com.sopt.clody.presentation.ui.diarylist.navigator.DiaryListNavigator
-import com.sopt.clody.presentation.ui.diarylist.navigator.diaryListNavGraph
-import com.sopt.clody.presentation.ui.home.navigator.HomeNavigator
-import com.sopt.clody.presentation.ui.home.navigator.homeNavGraph
+import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
+import com.sopt.clody.presentation.ui.diarylist.navigation.diaryListNavGraph
+import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
+import com.sopt.clody.presentation.ui.home.navigation.homeNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
+import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
+import com.sopt.clody.presentation.ui.writediary.navigation.writeDiaryNavGraph
 
 @Composable
 fun MainNavHost(
@@ -28,6 +30,7 @@ fun MainNavHost(
     authNavigator: AuthNavigator,
     homeNavigator: HomeNavigator,
     diaryListNavigator: DiaryListNavigator,
+    writeDiaryNavigator: WriteDiaryNavigator,
     settingNavigator: SettingNavigator
 ) {
     Box(
@@ -46,6 +49,7 @@ fun MainNavHost(
             timeReminderNavGraph(authNavigator)
             homeNavGraph(homeNavigator)
             diaryListNavGraph(diaryListNavigator)
+            writeDiaryNavGraph(writeDiaryNavigator)
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)
