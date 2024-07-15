@@ -10,7 +10,12 @@ import com.sopt.clody.domain.model.ButtonStateData
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 
 @Composable
-fun DiaryStateButton(diaryCount: Int, replyStatus: String) {
+fun DiaryStateButton(
+    diaryCount: Int,
+    replyStatus: String,
+    onClickWriteDiary: () -> Unit,
+    onClickReplyDiary: () -> Unit,
+    ) {
     val buttonState = remember(diaryCount, replyStatus) {
         when {
             diaryCount == 0 && replyStatus == "UNREADY" -> {
@@ -29,7 +34,7 @@ fun DiaryStateButton(diaryCount: Int, replyStatus: String) {
     }
 
     ClodyButton(
-        onClick = { /*TODO*/ },
+        onClick = { onClickWriteDiary() },
         text = buttonState.text,
         enabled = buttonState.enabled,
         modifier = Modifier
