@@ -21,8 +21,8 @@ class AuthNavigator(
         navController.navigate("time_reminder")
     }
 
-    fun navigateDiaryList() {
-        navController.navigate("diary_list")
+    fun navigateHome() {
+        navController.navigate("home")
     }
 
     fun navigateBack() {

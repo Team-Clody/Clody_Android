@@ -16,12 +16,12 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun CloverCount() {
-    val text = "클러버 23개"
+    val text = "클로버 23개"
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, end = 20.dp),
+            .padding(top = 10.dp, bottom = 5.dp, end = 20.dp),
         contentAlignment = Alignment.TopEnd
     ) {
         Text(

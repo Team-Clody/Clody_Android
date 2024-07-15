@@ -48,13 +48,13 @@ fun SettingScreen(
 
     Scaffold(
         modifier = Modifier
-            .background(ClodyTheme.colors.white)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { SettingTopAppBar(stringResource(R.string.setting_topappbar_title), onClickBack) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(ClodyTheme.colors.white)
                 .padding(innerPadding)
         ) {
             SettingOption(option = stringResource(R.string.setting_account_management), onClickAccountManagement)

@@ -27,7 +27,9 @@ import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
-fun ClodyCalendar() {
+fun ClodyCalendar(
+    onShowDiaryDeleteStateChange: (Boolean) -> Unit
+) {
     val currentMonth = YearMonth.now()
     val today = LocalDate.now()
     val initialDayOfWeek = today.dayOfWeek
@@ -64,7 +66,8 @@ fun ClodyCalendar() {
         DailyDiaryListItem(
             date = selectedDate,
             dayOfWeek = selectedDayOfWeek,
-            diaryTexts = diaryTexts
+            diaryTexts = diaryTexts,
+            onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
         )
     }
 }
@@ -95,6 +98,5 @@ fun fetchDiaryTextsForDate(date: LocalDate): List<String> {
 @Preview(showBackground = true)
 @Composable
 fun ClodyCalendarPreview() {
-    ClodyCalendar()
 }
 
