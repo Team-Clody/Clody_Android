@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home.navigator
+package com.sopt.clody.presentation.ui.home.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable

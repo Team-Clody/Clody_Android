@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home.navigator
+package com.sopt.clody.presentation.ui.home.navigation
 
 import androidx.navigation.NavController
 
@@ -11,6 +11,10 @@ class HomeNavigator(
 
     fun navigateSetting() {
         navController.navigate("setting")
+    }
+
+    fun navigateWriteDiary() {
+        navController.navigate("write_diary")
     }
 
     fun navigateReplyDiary() {
