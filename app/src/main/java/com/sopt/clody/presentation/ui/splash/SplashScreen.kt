@@ -14,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
@@ -41,7 +42,7 @@ fun SplashScreen(navController: NavHostController) {
         Image(
             painter = painterResource(id = R.drawable.img_splash_logo),
             contentDescription = "App Logo",
-            modifier = Modifier.size(128.dp)
+            modifier = Modifier.size(160.dp)
         )
     }
 }
@@ -49,5 +50,5 @@ fun SplashScreen(navController: NavHostController) {
 @Preview(showBackground = true)
 @Composable
 fun SplashScreenPreview() {
-
+    SplashScreen(navController = rememberNavController())
 }
