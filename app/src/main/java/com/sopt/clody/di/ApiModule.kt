@@ -22,6 +22,11 @@ object ApiModule {
 
     @Provides
     @Singleton
+    fun provideMonthlyCalendarService(@CLODY retrofit: Retrofit): ApiService =
+        retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
     fun provideAnotherService(@ANOTHER retrofit: Retrofit): AnotherApiService =
         retrofit.create(AnotherApiService::class.java)
 }
