@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.diarylist.navigator
+package com.sopt.clody.presentation.ui.diarylist.navigation
 
 import androidx.navigation.NavController
 
