@@ -35,7 +35,7 @@ fun HomeTopAppBar(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.CenterStart
                     ) {
-                        IconButton(onClick = { onClickDiaryList }) {
+                        IconButton(onClick = { onClickDiaryList() }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_home_list),
                                 contentDescription = "go to list"
@@ -46,13 +46,13 @@ fun HomeTopAppBar(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        YearAndMonthTitle()
+                        YearAndMonthTitle( onShowYearMonthPickerStateChange )
                     }
                     Box(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.CenterEnd
                     ) {
-                        IconButton(onClick = { onClickSetting }) {
+                        IconButton(onClick = { onClickSetting() }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_home_setting),
                                 contentDescription = "go to setting"
