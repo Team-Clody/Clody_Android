@@ -34,7 +34,8 @@ fun CloverDialog(
     titleMassage: String,
     descriptionMassage: String,
     confirmOption: String,
-    confirmAction: () -> Unit
+    confirmAction: () -> Unit,
+    confirmButtonColor: Color,
 ) {
     Dialog(
         onDismissRequest = onDismiss,
@@ -108,6 +109,7 @@ fun PreviewCloverDialog() {
         titleMassage = "클로버를 획득했어요!",
         descriptionMassage = "",
         confirmOption = "확인",
-        confirmAction = { }
+        confirmAction = { },
+        confirmButtonColor = ClodyTheme.colors.mainYellow
     )
 }
