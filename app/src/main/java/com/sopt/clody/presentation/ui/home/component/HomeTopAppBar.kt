@@ -20,7 +20,8 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun HomeTopAppBar(
     onClickDiaryList: () -> Unit,
-    onClickSetting: () -> Unit
+    onClickSetting: () -> Unit,
+    onShowYearMonthPickerStateChange: (Boolean) -> Unit,
 ) {
     TopAppBar(
         title = {
