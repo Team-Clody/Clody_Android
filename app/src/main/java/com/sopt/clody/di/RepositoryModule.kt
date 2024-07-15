@@ -1,7 +1,9 @@
 package com.sopt.clody.di
 
-import com.sopt.clody.data.repositoryimpl.ExampleRepositoryImpl
 import com.sopt.clody.data.repository.ExampleRepository
+import com.sopt.clody.data.repository.MonthlyCalendarRepository
+import com.sopt.clody.data.repositoryimpl.ExampleRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.MonthlyCalendarRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -18,4 +20,11 @@ abstract class RepositoryModule {
     abstract fun bindExampleRepository(
         exampleRepositoryImpl: ExampleRepositoryImpl
     ): ExampleRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindMonthlyCalendarRepository(
+        monthlyCalendarRepositoryImpl: MonthlyCalendarRepositoryImpl
+    ): MonthlyCalendarRepository
+
 }
