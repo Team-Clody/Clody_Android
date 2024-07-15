@@ -26,5 +26,4 @@ abstract class RepositoryModule {
     abstract fun bindMonthlyCalendarRepository(
         monthlyCalendarRepositoryImpl: MonthlyCalendarRepositoryImpl
     ): MonthlyCalendarRepository
-
 }
