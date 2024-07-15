@@ -32,6 +32,7 @@ class MainActivity : ComponentActivity() {
                     content = { paddingValues ->
                         MainNavHost(
                             modifier = Modifier.padding(paddingValues),
+                            navController = navController,
                             authNavigator = authNavigator,
                             diaryListNavigator = diaryListNavigator,
                             settingNavigator = settingNavigator
