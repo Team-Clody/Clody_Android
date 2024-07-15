@@ -2,6 +2,7 @@ package com.sopt.clody.di
 
 import com.sopt.clody.data.remote.api.AnotherApiService
 import com.sopt.clody.data.remote.api.ApiService
+import com.sopt.clody.data.remote.api.DiaryListService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +20,11 @@ object ApiModule {
     @Singleton
     fun provideClodyService(@CLODY retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDiaryListService(@CLODY retrofit: Retrofit) : DiaryListService =
+        retrofit.create(DiaryListService::class.java)
 
     @Provides
     @Singleton
