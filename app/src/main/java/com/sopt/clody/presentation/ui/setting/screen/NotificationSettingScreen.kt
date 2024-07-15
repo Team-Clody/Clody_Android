@@ -14,6 +14,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,13 +54,19 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
                 .padding(innerPadding)
                 .padding(top = 20.dp)
         ) {
-            DiaryWrittingAlarmSetting()
+            NotificationSettingSwitch(
+                title = "일기 작성 알림 받기",
+                checkedState = remember { mutableStateOf(true) }
+            )
             Spacer(modifier = Modifier.height(32.dp))
-            AlarmTime(
+            AlarmTimeSetting(
                 showBottomSheetStateChange = { newState -> showBottomSheet = newState}
             )
             Spacer(modifier = Modifier.height(32.dp))
-            ReplyAlarmSetting()
+            NotificationSettingSwitch(
+                title = "답장 도착 알림 받기",
+                checkedState = remember { mutableStateOf(true) }
+            )
         }
     }
     if (showBottomSheet) {
@@ -76,9 +83,7 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
 }
 
 @Composable
-fun DiaryWrittingAlarmSetting() {
-    val checkedState = remember { mutableStateOf(true) }
-
+fun NotificationSettingSwitch(title: String, checkedState: MutableState<Boolean>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -86,7 +91,7 @@ fun DiaryWrittingAlarmSetting() {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "일기 작성 알림 받기",
+            text = title,
             style = ClodyTheme.typography.body1Medium,
             color = ClodyTheme.colors.gray03
         )
@@ -106,7 +111,7 @@ fun DiaryWrittingAlarmSetting() {
 }
 
 @Composable
-fun AlarmTime(showBottomSheetStateChange: (Boolean) -> Unit) {
+fun AlarmTimeSetting(showBottomSheetStateChange: (Boolean) -> Unit) {
     var selectedTime by remember { mutableStateOf("오후 9시 30분") }
 
     Row(
@@ -131,36 +136,6 @@ fun AlarmTime(showBottomSheetStateChange: (Boolean) -> Unit) {
             painterResource(id = R.drawable.ic_setting_next),
             contentDescription = "pick the alarm time",
             modifier = Modifier.clickable { showBottomSheetStateChange(true) }
-        )
-    }
-}
-
-@Composable
-fun ReplyAlarmSetting() {
-    val checkedState = remember { mutableStateOf(true) }
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            text = "답장 도착 알림 받기",
-            style = ClodyTheme.typography.body1Medium,
-            color = ClodyTheme.colors.gray03
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Switch(
-            checked = checkedState.value,
-            onCheckedChange = { checkedState.value = it },
-            colors = SwitchDefaults.colors(
-                checkedThumbColor = ClodyTheme.colors.white,
-                checkedTrackColor = ClodyTheme.colors.darkYellow.copy(alpha = 0.5f),
-                uncheckedThumbColor = ClodyTheme.colors.white,
-                uncheckedTrackColor = ClodyTheme.colors.gray06,
-                uncheckedBorderColor = ClodyTheme.colors.gray06
-            )
         )
     }
 }
