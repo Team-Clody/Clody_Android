@@ -1,13 +1,14 @@
 package com.sopt.clody.data.remote.dto.response
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DailyDiariesResponseDto(
-    val diaries: List<Diary>
+    @SerialName("diaries") val diaries: List<Diary>
 ) {
     @Serializable
     data class Diary(
-        val content: String
+        @SerialName("content")val content: String
     )
 }
