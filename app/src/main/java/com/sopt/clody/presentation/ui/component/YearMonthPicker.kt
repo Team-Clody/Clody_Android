@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,30 +19,24 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
 import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
 import com.sopt.clody.ui.theme.ClodyTheme
-import java.time.LocalDate
 
 @Composable
 fun YearMonthPicker(
     onDismissRequest: () -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int,
+    onYearMonthSelected: (Int, Int) -> Unit
 ) {
-    val currentDate = LocalDate.now()
-    var selectedYear by remember { mutableStateOf(currentDate.year) }
-    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,8 +84,8 @@ fun YearMonthPicker(
             val yearPickerState = rememberPickerState()
             val monthPickerState = rememberPickerState()
 
-            val startYearIndex = (yearItems.indexOf("${currentDate.year}년") - 2).coerceAtLeast(0)
-            val startMonthIndex = (monthItems.indexOf("${currentDate.monthValue}월") - 2).coerceAtLeast(0)
+            val startYearIndex = (yearItems.indexOf("${selectedYear}년") - 2).coerceAtLeast(0)
+            val startMonthIndex = (monthItems.indexOf("${selectedMonth}월") - 2).coerceAtLeast(0)
 
             Box(
                 modifier = Modifier
@@ -107,6 +103,7 @@ fun YearMonthPicker(
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    Spacer(modifier = Modifier.weight(1f))
                     ClodyPicker(
                         state = yearPickerState,
                         items = yearItems,
@@ -117,6 +114,7 @@ fun YearMonthPicker(
                             .weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
+                    Spacer(modifier = Modifier.width(20.dp))
                     ClodyPicker(
                         state = monthPickerState,
                         items = monthItems,
@@ -127,10 +125,14 @@ fun YearMonthPicker(
                             .weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
             ClodyButton(
                 onClick = {
+                    val selectedYear = yearPickerState.selectedItem.split("년")[0].toInt()
+                    val selectedMonth = monthPickerState.selectedItem.split("월")[0].toInt()
+                    onYearMonthSelected(selectedYear, selectedMonth)
                     onDismissRequest()
                 },
                 text = "완료",
@@ -141,10 +143,4 @@ fun YearMonthPicker(
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun YearMonthPickerPreview() {
-
 }

@@ -14,9 +14,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.presentation.ui.component.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
-import com.sopt.clody.presentation.ui.diarylist.component.DiaryListYearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -76,7 +76,7 @@ fun DiaryListScreen(
 
     if (showYearMonthPickerState) {
         ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
-            DiaryListYearMonthPicker(
+            YearMonthPicker(
                 onDismissRequest = { showYearMonthPickerState = false },
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
