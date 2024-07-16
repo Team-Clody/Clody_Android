@@ -3,6 +3,7 @@ package com.sopt.clody.data.repositoryimpl
 import com.sopt.clody.data.remote.datasource.MonthlyCalendarDataSource
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
+import com.sopt.clody.presentation.utils.extension.handleApiResponse
 import javax.inject.Inject
 
 class MonthlyCalendarRepositoryImpl @Inject constructor(
@@ -10,12 +11,11 @@ class MonthlyCalendarRepositoryImpl @Inject constructor(
 ) : MonthlyCalendarRepository {
     override suspend fun getMonthlyCalendarData(year: Int, month: Int): Result<MonthlyCalendarResponseDto> {
         return runCatching {
-            val response = remoteDataSource.getCalendarData(year, month)
-            if (response.status == 200 && response.data != null) {
-                response.data
-            } else {
-                throw Exception(response.message)
-            }
+            remoteDataSource.getCalendarData(year, month).handleApiResponse()
+        }.getOrElse { exception ->
+            Result.failure(exception)
         }
     }
 }
+
+
