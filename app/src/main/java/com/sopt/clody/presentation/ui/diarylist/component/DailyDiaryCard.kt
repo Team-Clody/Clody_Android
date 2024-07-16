@@ -1,9 +1,7 @@
 package com.sopt.clody.presentation.ui.diarylist.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -12,9 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -30,23 +26,38 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.presentation.ui.component.bottomsheet.ClodyBottomSheet
+import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun DailyDiaryCard(
     index: Int,
-    order: Int,
+    dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
     onClickReplyDiary: () -> Unit
 ) {
     var showDiaryDeleteSheet by remember { mutableStateOf(false) }
     var showDiaryDeleteDialog by remember { mutableStateOf(false) }
+
+    val iconRes = when {
+        dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.replyStatus == "UNREADY" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.diaryCount == 1 -> R.drawable.ic_home_bottom_clover
+        dailyDiary.diaryCount in 2..3 -> R.drawable.ic_home_mid_clover
+        dailyDiary.diaryCount in 4..5 -> R.drawable.ic_home_top_clover
+        else -> R.drawable.ic_home_ungiven_clover
+    }
+
+    val day = dailyDiary.date.split("-")[2].toInt() // 날짜 계산
+    val dayOfWeek = getDayOfWeek(dailyDiary.date) // 요일 계산
 
     Card(
         modifier = Modifier
@@ -71,20 +82,20 @@ fun DailyDiaryCard(
             )
             {
                 Image(
-                    painter = painterResource(id = R.drawable.ic_listview_clover),
+                    painter = painterResource(id = iconRes),
                     contentDescription = "clover",
                     modifier = Modifier
                         .padding(end = 6.dp)
                 )
                 Text(
-                    text = "26일",
+                    text = "${day}일",
                     modifier = Modifier
                         .padding(end = 2.dp),
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body1SemiBold
                 )
                 Text(
-                    text = "/목요일",
+                    text = "/${dayOfWeek}",
                     color = ClodyTheme.colors.gray04,
                     style = ClodyTheme.typography.body2SemiBold
                 )
@@ -109,12 +120,14 @@ fun DailyDiaryCard(
                             color = ClodyTheme.colors.blue
                         )
                     }
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_reply_diary_new),
-                        modifier = Modifier
-                            .align(Alignment.TopEnd),
-                        contentDescription = null,
-                    )
+                    if (dailyDiary.replyStatus == "READY_NOT_READ") {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_reply_diary_new),
+                            modifier = Modifier
+                                .align(Alignment.TopEnd),
+                            contentDescription = null,
+                        )
+                    }
                 }
                 Image(
                     painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
@@ -124,7 +137,7 @@ fun DailyDiaryCard(
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            DailyDiaryCardItem(index)
+            DailyDiaryCardItem(dailyDiary.diary)
         }
     }
 
@@ -147,4 +160,13 @@ fun DailyDiaryCard(
             confirmButtonTextColor = ClodyTheme.colors.white
         )
     }
+}
+
+fun getDayOfWeek(dateString: String): String {
+    val parts = dateString.split("-")
+    val year = parts[0].toInt()
+    val month = parts[1].toInt()
+    val day = parts[2].toInt()
+
+    return LocalDate.of(year, month, day).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN)
 }
