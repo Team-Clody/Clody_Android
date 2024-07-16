@@ -26,6 +26,7 @@ import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
 import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.time.LocalDate
 
 @Composable
 fun HomeRoute(
@@ -49,6 +50,14 @@ fun HomeScreen(
     var showYearMonthPickerState by remember { mutableStateOf(false) }
     var showDiaryDeleteState by remember { mutableStateOf(false) }
     var showDiaryDeleteDialog by remember { mutableStateOf(false) }
+    val currentDate = LocalDate.now()
+    var selectedYear by remember { mutableStateOf(currentDate.year) }
+    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
+
+    val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
+        selectedYear = year
+        selectedMonth = month
+    }
 
     Column(
         modifier = Modifier
@@ -58,7 +67,9 @@ fun HomeScreen(
         HomeTopAppBar(
             onClickDiaryList = onClickDiaryList,
             onClickSetting = onClickSetting,
-            onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState }
+            onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState },
+            selectedYear = selectedYear,
+            selectedMonth = selectedMonth,
         )
         ScrollableCalendarView(
             onClickWriteDiary = onClickWriteDiary,
@@ -70,7 +81,10 @@ fun HomeScreen(
     if (showYearMonthPickerState) {
         ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
             YearMonthPicker(
-                onDismissRequest = { showYearMonthPickerState = false }
+                onDismissRequest = { showYearMonthPickerState = false },
+                selectedYear = selectedYear,
+                selectedMonth = selectedMonth,
+                onYearMonthSelected = onYearMonthSelected
             )
         }
     }

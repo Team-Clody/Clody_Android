@@ -20,12 +20,11 @@ import java.time.LocalDate
 
 @Composable
 fun YearAndMonthTitle(
-    onShowYearMonthPickerStateChange: (Boolean) -> Unit
+    onShowYearMonthPickerStateChange: (Boolean) -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int
 ) {
-    val currentDate = LocalDate.now()
     var showDatePicker by remember { mutableStateOf(false) }
-    var selectedYear by remember { mutableStateOf(currentDate.year) }
-    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
 
     val text = "${selectedYear}년 ${selectedMonth}월"
 

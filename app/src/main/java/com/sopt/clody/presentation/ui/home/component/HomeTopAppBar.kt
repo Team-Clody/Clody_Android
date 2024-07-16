@@ -27,6 +27,8 @@ fun HomeTopAppBar(
     onClickDiaryList: () -> Unit,
     onClickSetting: () -> Unit,
     onShowYearMonthPickerStateChange: (Boolean) -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int,
 ) {
     TopAppBar(
         title = {
@@ -51,7 +53,10 @@ fun HomeTopAppBar(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        YearAndMonthTitle(onShowYearMonthPickerStateChange)
+                        YearAndMonthTitle(
+                            onShowYearMonthPickerStateChange,
+                            selectedYear,
+                            selectedMonth)
                     }
                     Box(
                         modifier = Modifier.weight(1f),
@@ -77,13 +82,5 @@ fun HomeTopAppBar(
             actionIconContentColor = ClodyTheme.colors.gray01
         )
     )
-}
-
-@Preview
-@Composable
-fun show() {
-    HomeTopAppBar(onClickDiaryList = { /*TODO*/ }, onClickSetting = { /*TODO*/ }) {
-
-    }
 }
 
