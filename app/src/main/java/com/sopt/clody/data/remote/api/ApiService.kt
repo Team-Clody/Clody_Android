@@ -12,14 +12,9 @@ import retrofit2.http.Query
 interface ApiService {
     @GET("api/v1/data")
     suspend fun getExampleData(): ApiResponse<List<ExampleResponseDto>>
+
     @POST("api/v1/data")
     suspend fun postExampleData(
         @Body exampleRequestDto: ExampleRequestDto
     ): ApiResponse<Unit>
-
-    @GET("api/v1/calendar")
-    suspend fun getMonthlyCalendarData(
-        @Query("year") year: Int,
-        @Query("month") month: Int
-    ): ApiResponse<List<MonthlyCalendarResponseDto>>
 }
