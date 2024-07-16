@@ -14,15 +14,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.home.HomeViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(
+    homeViewModel: HomeViewModel,
     onClickDiaryList: () -> Unit,
     onClickSetting: () -> Unit,
     onShowYearMonthPickerStateChange: (Boolean) -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int,
 ) {
+
     TopAppBar(
         title = {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -46,7 +51,7 @@ fun HomeTopAppBar(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        YearAndMonthTitle( onShowYearMonthPickerStateChange )
+                        YearAndMonthTitle(homeViewModel,onShowYearMonthPickerStateChange,selectedYear,selectedMonth)
                     }
                     Box(
                         modifier = Modifier.weight(1f),
