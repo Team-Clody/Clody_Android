@@ -1,0 +1,16 @@
+package com.sopt.clody.data.remote.datasourceimpl
+
+import com.sopt.clody.data.remote.api.CalendarApiService
+import com.sopt.clody.data.remote.datasource.DailyDiariesDataSource
+import com.sopt.clody.data.remote.dto.base.ApiResponse
+import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
+import javax.inject.Inject
+
+class DailyDiariesDataSourceImpl @Inject constructor(
+    private val api: CalendarApiService
+) : DailyDiariesDataSource {
+    override suspend fun getDailyDiariesData(year: Int, month: Int, date: Int): ApiResponse<DailyDiariesResponseDto> {
+        return api.getDailyDiariesData(year, month, date)
+    }
+}
+
