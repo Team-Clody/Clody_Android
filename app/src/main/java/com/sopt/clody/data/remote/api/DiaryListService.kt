@@ -4,17 +4,16 @@ import com.sopt.clody.data.remote.dto.base.ApiResponse
 import com.sopt.clody.data.remote.dto.diarylist.MonthlyDiaryData
 import retrofit2.http.DELETE
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface DiaryListService {
-    @GET("api/v1/calender/list")
+    @GET("api/v1/calendar/list")
     suspend fun getMonthlyDiary(
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): ApiResponse<MonthlyDiaryData>
 
-    @DELETE("api/v1/calender")
+    @DELETE("api/v1/calendar")
     suspend fun deleteDailyDiary(
         @Query("year") year: Int,
         @Query("month") month: Int,
