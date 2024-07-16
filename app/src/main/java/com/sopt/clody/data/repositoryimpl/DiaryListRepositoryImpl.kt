@@ -9,15 +9,15 @@ import javax.inject.Inject
 class DiaryListRepositoryImpl @Inject constructor(
     private val diaryListDataSource: DiaryListDataSource
 ) : DiaryListRepository {
-    override suspend fun getMonthlyDiary(accessToken: String, year: Int, month: Int): Result<MonthlyDiaryData> {
+    override suspend fun getMonthlyDiary(year: Int, month: Int): Result<MonthlyDiaryData> {
         return runCatching {
-            diaryListDataSource.getMonthlyDiary(accessToken, year, month).handleApiResponse().getOrThrow()
+            diaryListDataSource.getMonthlyDiary(year, month).handleApiResponse().getOrThrow()
         }
     }
 
-    override suspend fun deleteDailyDiary(accessToken: String, year: Int, month: Int, date: Int): Result<Unit> {
+    override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): Result<Unit> {
         return runCatching {
-            diaryListDataSource.deleteDailyDiary(accessToken, year, month, date).handleApiResponse().getOrThrow()
+            diaryListDataSource.deleteDailyDiary(year, month, date).handleApiResponse().getOrThrow()
         }
     }
 

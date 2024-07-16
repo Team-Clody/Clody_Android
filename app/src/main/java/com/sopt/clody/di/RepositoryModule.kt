@@ -1,7 +1,9 @@
 package com.sopt.clody.di
 
+import com.sopt.clody.data.repository.DiaryListRepository
 import com.sopt.clody.data.repositoryimpl.ExampleRepositoryImpl
 import com.sopt.clody.data.repository.ExampleRepository
+import com.sopt.clody.data.repositoryimpl.DiaryListRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -13,6 +15,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
 
+    @Binds
+    @Singleton
+    abstract fun bindDiaryListRepository(
+        diaryListRepositoryImpl: DiaryListRepositoryImpl
+    ) : DiaryListRepository
     @Binds
     @Singleton
     abstract fun bindExampleRepository(
