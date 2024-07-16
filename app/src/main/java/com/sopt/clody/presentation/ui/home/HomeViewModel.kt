@@ -19,6 +19,8 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     private val _calendarData = MutableStateFlow<Result<MonthlyCalendarResponseDto>?>(null)
     val monthlyCalendarData: StateFlow<Result<MonthlyCalendarResponseDto>?> get() = _calendarData
+    private val _dailyDiariesData = MutableStateFlow<Result<DailyDiariesResponseDto>?>(null)
+    val dailyDiariesData: StateFlow<Result<DailyDiariesResponseDto>?> get() = _dailyDiariesData
 
     fun loadCalendarData(year: Int, month: Int) {
         viewModelScope.launch {
@@ -26,9 +28,6 @@ class HomeViewModel @Inject constructor(
             _calendarData.value = result
         }
     }
-
-    private val _dailyDiariesData = MutableStateFlow<Result<DailyDiariesResponseDto>?>(null)
-    val dailyDiariesData: StateFlow<Result<DailyDiariesResponseDto>?> get() = _dailyDiariesData
 
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         viewModelScope.launch {
