@@ -13,10 +13,4 @@ interface DiaryListService {
         @Query("month") month: Int,
     ): ApiResponse<ResponseMonthlyDiaryDto>
 
-    @DELETE("api/v1/calendar")
-    suspend fun deleteDailyDiary(
-        @Query("year") year: Int,
-        @Query("month") month: Int,
-        @Query("date") date: Int,
-    ): ApiResponse<Unit>
 }

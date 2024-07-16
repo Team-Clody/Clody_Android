@@ -8,10 +8,4 @@ interface DiaryListDataSource {
         year: Int,
         month: Int
     ): ApiResponse<ResponseMonthlyDiaryDto>
-
-    suspend fun deleteDailyDiary(
-        year: Int,
-        month: Int,
-        date: Int
-    ): ApiResponse<Unit>
 }

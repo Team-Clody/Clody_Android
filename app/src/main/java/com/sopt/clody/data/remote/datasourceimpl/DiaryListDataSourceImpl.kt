@@ -12,8 +12,4 @@ class DiaryListDataSourceImpl @Inject constructor(
     override suspend fun getMonthlyDiary(year: Int, month: Int): ApiResponse<ResponseMonthlyDiaryDto> {
         return diaryListService.getMonthlyDiary(year, month)
     }
-
-    override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): ApiResponse<Unit> {
-        return diaryListService.deleteDailyDiary(year, month, date)
-    }
 }

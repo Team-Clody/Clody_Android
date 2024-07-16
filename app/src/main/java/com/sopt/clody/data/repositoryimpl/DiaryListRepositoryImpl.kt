@@ -14,11 +14,4 @@ class DiaryListRepositoryImpl @Inject constructor(
             diaryListDataSource.getMonthlyDiary(year, month).handleApiResponse().getOrThrow()
         }
     }
-
-    override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): Result<Unit> {
-        return runCatching {
-            diaryListDataSource.deleteDailyDiary(year, month, date).handleApiResponse().getOrThrow()
-        }
-    }
-
 }

@@ -7,10 +7,4 @@ interface DiaryListRepository {
         year: Int,
         month: Int
     ): Result<ResponseMonthlyDiaryDto>
-
-    suspend fun deleteDailyDiary(
-        year: Int,
-        month: Int,
-        date: Int
-    ) : Result<Unit>
 }
