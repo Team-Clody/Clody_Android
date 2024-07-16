@@ -1,7 +1,7 @@
 package com.sopt.clody.data.remote.api
 
 import com.sopt.clody.data.remote.dto.base.ApiResponse
-import com.sopt.clody.data.remote.dto.diarylist.MonthlyDiaryData
+import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,7 +11,7 @@ interface DiaryListService {
     suspend fun getMonthlyDiary(
         @Query("year") year: Int,
         @Query("month") month: Int,
-    ): ApiResponse<MonthlyDiaryData>
+    ): ApiResponse<ResponseMonthlyDiaryDto>
 
     @DELETE("api/v1/calendar")
     suspend fun deleteDailyDiary(
