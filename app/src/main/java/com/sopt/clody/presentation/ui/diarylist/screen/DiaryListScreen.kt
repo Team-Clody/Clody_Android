@@ -39,8 +39,8 @@ fun DiaryListScreen(
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
     val currentDate = LocalDate.now()
-    var selectedYear by remember { mutableStateOf(currentDate.year) }
-    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
+    var selectedYear by remember { mutableIntStateOf(currentDate.year) }
+    var selectedMonth by remember { mutableIntStateOf(currentDate.monthValue) }
 
     val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
         selectedYear = year
