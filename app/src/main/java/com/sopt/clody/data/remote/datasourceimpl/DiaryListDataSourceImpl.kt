@@ -9,11 +9,11 @@ import javax.inject.Inject
 class DiaryListDataSourceImpl @Inject constructor(
     private val diaryListService: DiaryListService
 ): DiaryListDataSource {
-    override suspend fun getMonthlyDiary(accessToken: String, year: Int, month: Int): ApiResponse<MonthlyDiaryData> {
-        return diaryListService.getMonthlyDiary(accessToken, year, month)
+    override suspend fun getMonthlyDiary(year: Int, month: Int): ApiResponse<MonthlyDiaryData> {
+        return diaryListService.getMonthlyDiary(year, month)
     }
 
-    override suspend fun deleteDailyDiary(accessToken: String, year: Int, month: Int, date: Int): ApiResponse<Unit> {
-        return diaryListService.deleteDailyDiary(accessToken, year, month, date)
+    override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): ApiResponse<Unit> {
+        return diaryListService.deleteDailyDiary(year, month, date)
     }
 }
