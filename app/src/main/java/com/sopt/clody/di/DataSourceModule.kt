@@ -2,8 +2,10 @@ package com.sopt.clody.di
 
 import com.sopt.clody.data.local.datasource.LocalDataSource
 import com.sopt.clody.data.local.datasourceimpl.LocalDataSourceImpl
+import com.sopt.clody.data.remote.datasource.DailyDiariesDataSource
 import com.sopt.clody.data.remote.datasource.MonthlyCalendarDataSource
 import com.sopt.clody.data.remote.datasource.RemoteDataSource
+import com.sopt.clody.data.remote.datasourceimpl.DailyDiariesDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.MonthlyCalendarDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.RemoteDataSourceImpl
 import dagger.Binds
@@ -28,6 +30,12 @@ abstract class DataSourceModule {
     abstract fun bindMonthlyCalendarRemoteDataSource(
         monthlyCalendarDataSourceImpl: MonthlyCalendarDataSourceImpl
     ): MonthlyCalendarDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindDailyDiariesRemoteDataSource(
+        dailyDiariesDataSourceImpl: DailyDiariesDataSourceImpl
+    ): DailyDiariesDataSource
 
     @Binds
     @Singleton
