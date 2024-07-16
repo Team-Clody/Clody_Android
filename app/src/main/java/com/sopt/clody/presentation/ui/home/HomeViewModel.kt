@@ -1,9 +1,7 @@
 package com.sopt.clody.presentation.ui.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.base.ApiResponse
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.repository.DailyDiariesRepository
@@ -12,7 +10,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,9 +30,9 @@ class HomeViewModel @Inject constructor(
     private val _dailyDiariesData = MutableStateFlow<Result<DailyDiariesResponseDto>?>(null)
     val dailyDiariesData: StateFlow<Result<DailyDiariesResponseDto>?> get() = _dailyDiariesData
 
-    fun loadDailyDiariesData(year: Int, month: Int,date:Int) {
+    fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         viewModelScope.launch {
-            val result = diariesRepository.getDailyDiariesData(year, month,date)
+            val result = diariesRepository.getDailyDiariesData(year, month, date)
             _dailyDiariesData.value = result
         }
     }

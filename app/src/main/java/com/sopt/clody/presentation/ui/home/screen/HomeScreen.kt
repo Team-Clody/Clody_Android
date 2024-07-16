@@ -87,7 +87,7 @@ fun HomeScreen(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
         )
-        calendarData?.let { result ->
+            calendarData?.let { result ->
             result.fold(
                 onSuccess = { data ->
                     ScrollableCalendarView(
