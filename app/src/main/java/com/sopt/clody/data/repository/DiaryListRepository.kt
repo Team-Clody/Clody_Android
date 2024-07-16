@@ -1,12 +1,13 @@
 package com.sopt.clody.data.repository
 
-import com.sopt.clody.data.remote.dto.diarylist.MonthlyDiaryData
+import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
 
 interface DiaryListRepository {
     suspend fun getMonthlyDiary(
         year: Int,
         month: Int
-    ): Result<MonthlyDiaryData>
+    ): Result<ResponseMonthlyDiaryDto>
+
     suspend fun deleteDailyDiary(
         year: Int,
         month: Int,
