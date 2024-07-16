@@ -100,54 +100,6 @@ fun MonthlyItem(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun MonthlyItemPreview() {
-//    val currentMonth = YearMonth.now()
-//    val selectedDate = LocalDate.now()
-//    val fakeDiaryData = generateFakeDiaryData(currentMonth.year, currentMonth.monthValue)
-//    val dateList = generateCalendarDates(currentMonth.year, currentMonth.monthValue)
-//
-//    MonthlyItem(
-//        dateList = dateList,
-//        selectedDate = selectedDate,
-//        onDayClick = { selectedDate ->
-//
-//        }
-//    ) { date ->
-//        val dayIndex = date.dayOfMonth - 1
-//        val diaryData = if (dayIndex < fakeDiaryData.size) {
-//            fakeDiaryData[dayIndex]
-//        } else {
-//            null
-//        }
-//        diaryData
-//    }
-}
-
-fun generateFakeDiaryData(year: Int, month: Int): List<DiaryData> {
-    val daysInMonth = daysInMonth(month, year)
-    val random = Random.Default
-    val today = LocalDate.now()
-
-    val replyStatuses = listOf("UNREADY", "READY_NOT_READ", "READY_READ")
-
-    return (1..daysInMonth).map { day ->
-        val date = LocalDate.of(year, month, day)
-        if (date == today) {
-            DiaryData(
-                diaryCount = 0,
-                replyStatus = "UNREADY"
-            )
-        } else {
-            DiaryData(
-                diaryCount = random.nextInt(0, 5),
-                replyStatus = replyStatuses[random.nextInt(replyStatuses.size)]
-            )
-        }
-    }
-}
-
 
 
 
