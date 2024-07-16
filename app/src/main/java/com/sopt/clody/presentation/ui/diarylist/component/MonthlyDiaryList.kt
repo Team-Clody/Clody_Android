@@ -12,7 +12,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun MonthlyDiaryList(
     paddingValues: PaddingValues,
-    onClickReplyDiary: () -> Unit
+    onClickReplyDiary: () -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int,
 ) {
     LazyColumn(
         modifier = Modifier
