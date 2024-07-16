@@ -3,7 +3,7 @@ package com.sopt.clody.presentation.utils.extension
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 
 fun <T> ApiResponse<T>.handleApiResponse(): Result<T> {
-    return when (this.code) {
+    return when (this.status) {
         in 200..299 -> {
             if (this.data != null) {
                 Result.success(this.data)
