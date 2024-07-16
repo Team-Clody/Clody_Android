@@ -10,14 +10,12 @@ import retrofit2.http.Query
 interface DiaryListService {
     @GET("api/v1/calender/list")
     suspend fun getMonthlyDiary(
-        @Header("accessToken") accessToken: String,
         @Query("year") year: Int,
         @Query("month") month: Int,
     ): ApiResponse<MonthlyDiaryData>
 
     @DELETE("api/v1/calender")
     suspend fun deleteDailyDiary(
-        @Header("accessToken") accessToken: String,
         @Query("year") year: Int,
         @Query("month") month: Int,
         @Query("date") date: Int,
