@@ -68,7 +68,7 @@ fun DiaryListScreen(
                     selectedMonth = selectedMonth,
                     onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState }
                 )
-                Box( // 구분선
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(1.dp)
