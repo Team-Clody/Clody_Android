@@ -56,8 +56,8 @@ fun DailyDiaryCard(
         else -> R.drawable.ic_home_ungiven_clover
     }
 
-    val day = dailyDiary.date.split("-")[2].toInt() // 날짜 계산
-    val dayOfWeek = getDayOfWeek(dailyDiary.date) // 요일 계산
+    val day = dailyDiary.date.split("-")[2].toInt()
+    val dayOfWeek = getDayOfWeek(dailyDiary.date)
 
     Card(
         modifier = Modifier
