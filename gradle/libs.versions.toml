@@ -43,7 +43,7 @@ okhttp = "4.11.0"
 timber = "5.0.1"
 encrypted-datastore = "1.7.21-1.0.8-1.1.0-alpha01"
 coil = "2.4.0"
-lottie = "6.0.0"
+lottie-compose = "6.4.1"
 ## Kakao
 kakaoVersion = "2.20.1"
 
@@ -132,7 +132,7 @@ androidx-datastore-preferences = { group = "androidx.datastore", name = "datasto
 encrypted-datastore-preference-ksp = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-ksp", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences KSP
 encrypted-datastore-preference-ksp-annotations = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-ksp-annotations", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences KSP 어노테이션
 encrypted-datastore-preference-security = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-security", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences 보안 라이브러리
-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" } # 애니메이션 라이브러리
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-compose" } # Lottie Compose 라이브러리
 viewpager-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "viewpager-indicator" } # ViewPager 인디케이터 라이브러리
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # AndroidX Activity 라이브러리
 process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version.ref = "phoenix" } # Process Phoenix 라이브러리
