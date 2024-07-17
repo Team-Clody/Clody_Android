@@ -15,6 +15,8 @@ fun MonthlyDiaryList(
     paddingValues: PaddingValues,
     onClickReplyDiary: () -> Unit,
     diaries: List<ResponseMonthlyDiaryDto.DailyDiary>
+    selectedYear: Int,
+    selectedMonth: Int,
 ) {
     LazyColumn(
         modifier = Modifier

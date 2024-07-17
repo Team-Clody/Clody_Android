@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.home.HomeViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 
@@ -24,8 +26,6 @@ fun YearAndMonthTitle(
     selectedYear: Int,
     selectedMonth: Int
 ) {
-    var showDatePicker by remember { mutableStateOf(false) }
-
     val text = "${selectedYear}년 ${selectedMonth}월"
 
     Column {
@@ -42,7 +42,6 @@ fun YearAndMonthTitle(
                 contentDescription = "choose month",
                 modifier = Modifier
                     .padding(horizontal = 6.dp, vertical = 6.dp)
-                    .clickable(onClick = { showDatePicker = true })
             )
         }
     }

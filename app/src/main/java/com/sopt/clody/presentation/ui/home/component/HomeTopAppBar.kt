@@ -19,6 +19,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.home.HomeViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -30,6 +31,7 @@ fun HomeTopAppBar(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
+
     TopAppBar(
         title = {
             Box(modifier = Modifier.fillMaxWidth()) {
@@ -83,4 +85,3 @@ fun HomeTopAppBar(
         )
     )
 }
-

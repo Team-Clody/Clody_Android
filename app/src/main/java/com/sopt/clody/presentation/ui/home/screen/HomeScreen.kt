@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.home.screen
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,18 +9,22 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.presentation.ui.component.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
+import com.sopt.clody.presentation.ui.home.HomeViewModel
 import com.sopt.clody.presentation.ui.home.calendar.ClodyCalendar
 import com.sopt.clody.presentation.ui.home.component.CloverCount
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
@@ -42,6 +47,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
+    homeViewModel: HomeViewModel = hiltViewModel(),
     onClickDiaryList: () -> Unit,
     onClickSetting: () -> Unit,
     onClickWriteDiary: () -> Unit,
@@ -59,6 +65,12 @@ fun HomeScreen(
         selectedMonth = month
     }
 
+    LaunchedEffect(selectedYear, selectedMonth) {
+        homeViewModel.loadCalendarData(selectedYear, selectedMonth)
+    }
+
+    val calendarData by homeViewModel.monthlyCalendarData.collectAsStateWithLifecycle()
+
     Column(
         modifier = Modifier
             .fillMaxSize(),
@@ -71,11 +83,24 @@ fun HomeScreen(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
         )
-        ScrollableCalendarView(
-            onClickWriteDiary = onClickWriteDiary,
-            onClickReplyDiary = onClickReplyDiary,
-            onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState }
-        )
+        calendarData?.let { result ->
+            result.fold(
+                onSuccess = { data ->
+                    ScrollableCalendarView(
+                        selectedYear = selectedYear,
+                        selectedMonth = selectedMonth,
+                        cloverCount = data.totalMonthlyCount,
+                        diaries = data.diaries,
+                        homeViewModel = homeViewModel,
+                        onClickWriteDiary = onClickWriteDiary,
+                        onClickReplyDiary = onClickReplyDiary,
+                        onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState }
+                    )
+                }, onFailure = { throwable ->
+                    Log.e("HomeScreen", "Failed to load calendar data: ${throwable.message}")
+                }
+            )
+        }
     }
 
     if (showYearMonthPickerState) {
@@ -112,6 +137,11 @@ fun HomeScreen(
 
 @Composable
 fun ScrollableCalendarView(
+    selectedYear: Int,
+    selectedMonth: Int,
+    cloverCount: Int,
+    homeViewModel: HomeViewModel,
+    diaries: List<MonthlyCalendarResponseDto.Diary>,
     onClickWriteDiary: () -> Unit,
     onClickReplyDiary: () -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
@@ -123,9 +153,13 @@ fun ScrollableCalendarView(
             .verticalScroll(scrollState)
             .background(ClodyTheme.colors.white)
     ) {
-        CloverCount()
+        CloverCount(cloverCount = cloverCount)
         Spacer(modifier = Modifier.height(20.dp))
         ClodyCalendar(
+            selectedYear = selectedYear,
+            selectedMonth = selectedMonth,
+            diaries = diaries,
+            homeViewModel = homeViewModel,
             onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
         )
         Spacer(modifier = Modifier.height(14.dp))
@@ -137,10 +171,4 @@ fun ScrollableCalendarView(
         )
         Spacer(modifier = Modifier.height(14.dp))
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CalendarScreenPreview() {
-
 }
