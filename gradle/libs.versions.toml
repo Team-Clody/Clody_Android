@@ -135,7 +135,7 @@ encrypted-datastore-preference-security = { group = "tech.thdev", name = "useful
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" } # 애니메이션 라이브러리
 viewpager-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "viewpager-indicator" } # ViewPager 인디케이터 라이브러리
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # AndroidX Activity 라이브러리
-process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version = "phoenix" } # Process Phoenix 라이브러리
+process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version.ref = "phoenix" } # Process Phoenix 라이브러리
 
 #firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" } # Firebase 메시징 라이브러리 (주석 처리됨)
 #firebase-remoteConfig = { group = "com.google.firebase", name = "firebase-config-ktx" } # Firebase 원격 구성 라이브러리 (주석 처리됨)
