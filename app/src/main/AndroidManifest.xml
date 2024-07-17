@@ -16,6 +16,7 @@
         android:theme="@style/Theme.CLODY"
         tools:targetApi="31"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".presentation.ui.main.MainActivity"
             android:windowSoftInputMode="adjustResize"
@@ -28,6 +29,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}.AuthCodeHandlerActivity"
+            android:excludeFromRecents="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:host="oauth"
+                    android:scheme="${kakaoRedirectUri}" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
