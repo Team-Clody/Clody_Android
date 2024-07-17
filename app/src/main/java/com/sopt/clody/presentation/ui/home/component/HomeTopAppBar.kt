@@ -51,7 +51,7 @@ fun HomeTopAppBar(
                         modifier = Modifier.weight(1f),
                         contentAlignment = Alignment.Center
                     ) {
-                        YearAndMonthTitle(homeViewModel,onShowYearMonthPickerStateChange,selectedYear,selectedMonth)
+                        YearAndMonthTitle(homeViewModel, onShowYearMonthPickerStateChange, selectedYear, selectedMonth)
                     }
                     Box(
                         modifier = Modifier.weight(1f),
@@ -75,4 +75,3 @@ fun HomeTopAppBar(
         )
     )
 }
-
