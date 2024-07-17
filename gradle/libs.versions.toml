@@ -4,6 +4,7 @@ compileSdk = "34"
 minSdk = "28"
 targetSdk = "34"
 accompanist = "0.25.1"
+jvmTarget = "1.8"
 
 # Compose
 compose-compiler = "1.5.1"
@@ -12,7 +13,6 @@ compose-material3 = "1.2.0-alpha07"
 activity-compose = "1.9.0"
 androidx-hilt-navigation-compose = "1.0.0"
 constraintlayout-compose = "1.0.1"
-
 
 # Kotlin
 kotlin = "1.9.0"
@@ -26,7 +26,7 @@ ksp = "1.9.10-1.0.13"
 # AndroidX
 core-ktx = "1.12.0"
 androidx-core = "1.12.0"
-androidx-lifecycle = "2.7.0"
+androidx-lifecycle = "2.8.3"
 androidx-navigation = "2.7.6"
 androidx-activity-ktx = "1.8.2"
 androidx-splash-screen = "1.0.1"
@@ -44,7 +44,9 @@ timber = "5.0.1"
 encrypted-datastore = "1.7.21-1.0.8-1.1.0-alpha01"
 coil = "2.4.0"
 lottie = "6.0.0"
-kakao-login = "2.19.0"
+## Kakao
+kakaoVersion = "2.20.1"
+
 google-service = "4.4.0"
 viewpager-indicator = "5.0"
 
@@ -66,6 +68,9 @@ android-gradle-plugin = "8.3.1"
 firebaseDatabaseKtx = "21.0.0"
 constraintlayout = "2.1.4"
 
+# Process Phoenix
+phoenix = "3.0.0"
+
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Kotlin Symbol Processing (KSP) 플러그인
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" } # Kotlin Android 플러그인
@@ -76,7 +81,6 @@ android-application = { id = "com.android.application", version.ref = "android-g
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" } # Android 라이브러리 플러그인
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" } # Hilt DI 플러그인
 #google-services = { id = "com.google.gms.google-services", version.ref = "google-service" } # Google 서비스 플러그인 (주석 처리됨)
-
 
 [libraries]
 # Compose
@@ -109,6 +113,7 @@ kotlinx-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collect
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" } # AndroidX Core KTX 라이브러리
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" } # AndroidX Core KTX 라이브러리 (중복)
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" } # AndroidX Lifecycle Runtime KTX 라이브러리
+androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" } # Compose용 Lifecycle 라이브러리
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" } # AndroidX Lifecycle ViewModel KTX 라이브러리
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidx-activity-ktx" } # AndroidX Activity KTX 라이브러리
 androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splash-screen" } # AndroidX SplashScreen 라이브러리
@@ -130,10 +135,11 @@ encrypted-datastore-preference-security = { group = "tech.thdev", name = "useful
 lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "lottie" } # 애니메이션 라이브러리
 viewpager-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "viewpager-indicator" } # ViewPager 인디케이터 라이브러리
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # AndroidX Activity 라이브러리
+process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version.ref = "phoenix" } # Process Phoenix 라이브러리
 
 #firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" } # Firebase 메시징 라이브러리 (주석 처리됨)
 #firebase-remoteConfig = { group = "com.google.firebase", name = "firebase-config-ktx" } # Firebase 원격 구성 라이브러리 (주석 처리됨)
-#kakao-login = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao-login" } # Kakao 로그인 라이브러리 (주석 처리됨)
+kakao-user = {group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoVersion"}
 
 # Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" } # Hilt Android 라이브러리
@@ -153,4 +159,3 @@ androidx-test-runner = { group = "androidx.test", name = "runner", version.ref =
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test" } # AndroidX Test Core 라이브러리
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
-androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" } # Espresso 테스트 라이브러리

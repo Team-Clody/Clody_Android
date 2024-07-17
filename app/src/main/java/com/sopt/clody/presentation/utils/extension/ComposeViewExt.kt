@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.utils.extension
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,9 +17,7 @@ fun showToast(message: String) {
     Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
 
-@Composable
-fun showLongToast(message: String) {
-    val context = LocalContext.current
+fun showLongToast(context: Context, message: String) {
     Toast.makeText(context, message, Toast.LENGTH_LONG).show()
 }
 

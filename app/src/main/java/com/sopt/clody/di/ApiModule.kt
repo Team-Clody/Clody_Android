@@ -1,7 +1,10 @@
 package com.sopt.clody.di
 
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.clody.data.remote.api.AnotherApiService
 import com.sopt.clody.data.remote.api.ApiService
+import com.sopt.clody.data.remote.api.AuthService
+import com.sopt.clody.data.remote.api.ReIssueService
 import com.sopt.clody.data.remote.api.DiaryListService
 import com.sopt.clody.data.remote.api.CalendarApiService
 import dagger.Module
@@ -9,8 +12,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.create
 import javax.inject.Singleton
 
 // Retrofit 객체를 제공하는 모듈
@@ -37,4 +41,26 @@ object ApiModule {
     @Singleton
     fun provideAnotherService(@ANOTHER retrofit: Retrofit): AnotherApiService =
         retrofit.create(AnotherApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideAuthService(@CLODY retrofit: Retrofit): AuthService =
+        retrofit.create(AuthService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReissueRetrofit(@CLODY okHttpClient: OkHttpClient, @CLODY baseUrl: String): Retrofit {
+        val json = Json { ignoreUnknownKeys = true }
+        return Retrofit.Builder()
+            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+            .baseUrl(baseUrl)
+            .client(okHttpClient)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideReissueTokenService(@CLODY reissueRetrofit: Retrofit): ReIssueService =
+        reissueRetrofit.create(ReIssueService::class.java)
 }
+

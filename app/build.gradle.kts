@@ -28,20 +28,20 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        val localProperties = Properties()
-        val localPropertiesFile = rootProject.file("local.properties")
-        if (localPropertiesFile.exists()) {
-            localProperties.load(localPropertiesFile.inputStream())
-        }
         val clodyBaseUrl: String = localProperties.getProperty("clody.base.url") ?: ""
         val anotherBaseUrl: String = localProperties.getProperty("another.base.url") ?: ""
+        val kakaoApiKey: String = localProperties.getProperty("kakao.api.key") ?: ""
 
         buildConfigField("String", "CLODY_BASE_URL", "\"$clodyBaseUrl\"")
         buildConfigField("String", "ANOTHER_BASE_URL", "\"$anotherBaseUrl\"")
+        buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
+
+        manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
 
     buildTypes {
         release {
@@ -50,11 +50,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = libs.versions.jvmTarget.get()
     }
     buildFeatures {
         compose = true
@@ -64,6 +64,7 @@ android {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 }
+
 
 dependencies {
     // Compose
@@ -98,7 +99,6 @@ dependencies {
 
     // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
-    implementation(libs.androidx.constraintlayout)
     ksp(libs.hilt.compiler)
     implementation(libs.javax.inject)
 
@@ -135,4 +135,7 @@ dependencies {
 
     // Accompanist System UI Controller
     implementation(libs.accompanist.systemuicontroller)
+    // Kakao
+    implementation(libs.kakao.user)
+    implementation(libs.process.phoenix)
 }

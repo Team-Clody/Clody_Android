@@ -1,5 +1,12 @@
 package com.sopt.clody.di
 
+import com.sopt.clody.data.repository.AuthRepository
+import com.sopt.clody.data.repository.ReissueTokenRepository
+import com.sopt.clody.data.repository.TokenRepository
+import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.ReissueTokenRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
+import com.sopt.clody.data.repository.DailyDiariesRepository
 import com.sopt.clody.data.repository.DiaryListRepository
 import com.sopt.clody.data.repository.ExampleRepository
 import com.sopt.clody.data.repository.DailyDiariesRepository
@@ -21,6 +28,22 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindAuthRepository(
+        authRepositoryImpl: AuthRepositoryImpl
+    ): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindTokenRepository(
+        tokenRepositoryImpl: TokenRepositoryImpl
+    ): TokenRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReissueTokenRepository(
+        reissueTokenRepositoryImpl: ReissueTokenRepositoryImpl
+    ): ReissueTokenRepository
+
     abstract fun bindDiaryListRepository(
         diaryListRepositoryImpl: DiaryListRepositoryImpl
     ): DiaryListRepository
@@ -42,4 +65,5 @@ abstract class RepositoryModule {
     abstract fun bindDailyDiariesRepository(
         dailyDiariesRepositoryImpl: DailyDiariesRepositoryImpl
     ): DailyDiariesRepository
+
 }
