@@ -163,15 +163,4 @@ fun NicknameChangeModalBottomSheetItem(
             Spacer(modifier = Modifier.height(60.dp))
         }
     }
-
-    when (userNicknameState) {
-        is UserNicknameState.Idle -> { }
-        is UserNicknameState.Loading -> { }
-        is UserNicknameState.Success -> {
-
-        }
-        is UserNicknameState.Failure -> {
-            showToast(message = "${(userNicknameState as UserNicknameState.Failure).errorMessage}")
-        }
-    }
 }
