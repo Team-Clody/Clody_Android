@@ -64,7 +64,7 @@ fun NicknameRoute(
     LaunchedEffect(signUpState) {
         when (val result = signUpState.uiState) {
             is UiState.Success -> {
-                navigator.navigateHome()
+                navigator.navigateTimeReminder()
             }
             is UiState.Failure -> {
                 coroutineScope.launch {
