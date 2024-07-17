@@ -15,8 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun CloverCount() {
-    val text = "클로버 23개"
+fun CloverCount(cloverCount:Int) {
+    val text = "클로버 ${cloverCount}개"
 
     Box(
         modifier = Modifier

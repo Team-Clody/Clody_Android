@@ -16,10 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.domain.model.DiaryData
+import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
@@ -30,14 +29,14 @@ fun DayItem(
     dayOfWeek: DayOfWeek,
     onDayClick: (LocalDate) -> Unit,
     isSelected: Boolean,
-    diaryData: DiaryData,
+    diaryData: MonthlyCalendarResponseDto.Diary,
     modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()
     val isToday = date == today
 
     val iconRes = when {
-        isToday && diaryData.diaryCount == 0 && diaryData.replyStatus == "UNREADY" -> R.drawable.ic_home_today_unwritten_clover
+        isToday && diaryData.diaryCount == 0 -> R.drawable.ic_home_today_unwritten_clover
         diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         diaryData.replyStatus == "UNREADY" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         diaryData.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
@@ -69,7 +68,7 @@ fun DayItem(
                     contentDescription = "Unread replies icon",
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
-                        .padding(end = 6.dp, bottom = 8.dp)
+                        .padding(end = 0.dp, bottom = 8.dp)
                         .size(12.dp)
                 )
             }
@@ -97,18 +96,6 @@ fun DayItem(
             )
         }
     }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun DayItemPreview() {
-    DayItem(
-        date = LocalDate.now(),
-        dayOfWeek = DayOfWeek.SUNDAY,
-        onDayClick = {},
-        isSelected = false,
-        diaryData = DiaryData(diaryCount = 2, replyStatus = "READY_NOT_READ")
-    )
 }
 
 

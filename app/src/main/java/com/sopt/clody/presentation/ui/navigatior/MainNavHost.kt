@@ -19,7 +19,6 @@ import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.presentation.ui.diarylist.navigation.diaryListNavGraph
 import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
 import com.sopt.clody.presentation.ui.home.navigation.homeNavGraph
-import com.sopt.clody.presentation.ui.auth.screen.SignUpScreen
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph

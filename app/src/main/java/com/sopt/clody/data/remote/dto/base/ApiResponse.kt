@@ -12,3 +12,4 @@ data class ApiResponse<T>(
     @SerialName("data")
     val data: T
 )
+

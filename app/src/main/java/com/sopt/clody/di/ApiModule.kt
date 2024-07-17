@@ -5,6 +5,7 @@ import com.sopt.clody.data.remote.api.AnotherApiService
 import com.sopt.clody.data.remote.api.ApiService
 import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.api.ReIssueService
+import com.sopt.clody.data.remote.api.CalendarApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -24,6 +25,11 @@ object ApiModule {
     @Singleton
     fun provideClodyService(@CLODY retrofit: Retrofit): ApiService =
         retrofit.create(ApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMonthlyCalendarService(@CLODY retrofit: Retrofit): CalendarApiService=
+        retrofit.create(CalendarApiService::class.java)
 
     @Provides
     @Singleton

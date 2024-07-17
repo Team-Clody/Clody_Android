@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,26 +19,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.generateCalendarDates
+import com.sopt.clody.presentation.ui.home.HomeViewModel
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
-import com.sopt.clody.presentation.ui.home.calendar.component.generateFakeDiaryData
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 import java.time.YearMonth
 
 @Composable
 fun ClodyCalendar(
+    selectedYear: Int,
+    selectedMonth: Int,
+    diaries: List<MonthlyCalendarResponseDto.Diary>,
+    homeViewModel: HomeViewModel,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
-    val currentMonth = YearMonth.now()
+    val currentMonth = YearMonth.of(selectedYear, selectedMonth)
     val today = LocalDate.now()
     val initialDayOfWeek = today.dayOfWeek
-    val fakeDiaryData = generateFakeDiaryData(currentMonth.year, currentMonth.monthValue)
-    val dateList = generateCalendarDates(currentMonth.year, currentMonth.monthValue)
+    val dateList by remember(currentMonth.year, currentMonth.monthValue) {
+        mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
+    }
     var selectedDate by remember { mutableStateOf(today) }
     var selectedDayOfWeek by remember { mutableStateOf(initialDayOfWeek) }
-    var diaryTexts by remember { mutableStateOf(fetchDiaryTextsForDate(today)) }
+
+    LaunchedEffect(selectedDate) {
+        homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+    }
+
+    val dailyDiariesData by homeViewModel.dailyDiariesData.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -50,25 +63,27 @@ fun ClodyCalendar(
             onDayClick = { date ->
                 selectedDate = date
                 selectedDayOfWeek = date.dayOfWeek
-                diaryTexts = fetchDiaryTextsForDate(date)
             },
             getDiaryDataForDate = { date ->
-                val dayIndex = date.dayOfMonth - 1
-                if (dayIndex < fakeDiaryData.size) {
-                    fakeDiaryData[dayIndex]
-                } else {
-                    null
-                }
+                diaries.getOrNull(date.dayOfMonth - 1)
             },
         )
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalDivider()
-        DailyDiaryListItem(
-            date = selectedDate,
-            dayOfWeek = selectedDayOfWeek,
-            diaryTexts = diaryTexts,
-            onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
-        )
+        dailyDiariesData?.let { result ->
+            result.fold(
+                onSuccess = { data ->
+                    DailyDiaryListItem(
+                        date = selectedDate,
+                        dayOfWeek = selectedDayOfWeek,
+                        dailyDiaries = data.diaries,
+                        onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
+                    )
+                }, onFailure = {
+                    // 추후 넣을 예정
+                }
+            )
+        }
     }
 }
 
@@ -83,15 +98,6 @@ fun HorizontalDivider(
             .fillMaxWidth()
             .height(thickness)
             .background(color)
-    )
-}
-
-fun fetchDiaryTextsForDate(date: LocalDate): List<String> {
-    return listOf(
-        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
-        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
-        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
-        "오늘의 일기 오늘은 의진이가 가정방문을 햇다 의진이한테 많은 걸 물어볼 수 있었다. 그래서 좋았다",
     )
 }
 

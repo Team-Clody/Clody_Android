@@ -15,13 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.CalendarDate
 import com.sopt.clody.domain.model.DiaryData
 import com.sopt.clody.domain.model.daysInMonth
-import com.sopt.clody.domain.model.generateCalendarDates
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
-import java.time.YearMonth
 import kotlin.random.Random
 
 @Composable
@@ -29,13 +28,14 @@ fun MonthlyItem(
     dateList: List<CalendarDate>,
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit,
-    getDiaryDataForDate: (LocalDate) -> DiaryData?
+    getDiaryDataForDate: (LocalDate) -> MonthlyCalendarResponseDto.Diary?
 ) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
             .padding(horizontal = 20.dp),
     ) {
         WeekHeader(itemWidth = itemWidth)
@@ -96,54 +96,6 @@ fun MonthlyItem(
                     }
                 }
             }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun MonthlyItemPreview() {
-    val currentMonth = YearMonth.now()
-    val selectedDate = LocalDate.now()
-    val fakeDiaryData = generateFakeDiaryData(currentMonth.year, currentMonth.monthValue)
-    val dateList = generateCalendarDates(currentMonth.year, currentMonth.monthValue)
-
-    MonthlyItem(
-        dateList = dateList,
-        selectedDate = selectedDate,
-        onDayClick = { selectedDate ->
-
-        }
-    ) { date ->
-        val dayIndex = date.dayOfMonth - 1
-        val diaryData = if (dayIndex < fakeDiaryData.size) {
-            fakeDiaryData[dayIndex]
-        } else {
-            null
-        }
-        diaryData
-    }
-}
-
-fun generateFakeDiaryData(year: Int, month: Int): List<DiaryData> {
-    val daysInMonth = daysInMonth(month, year)
-    val random = Random.Default
-    val today = LocalDate.now()
-
-    val replyStatuses = listOf("UNREADY", "READY_NOT_READ", "READY_READ")
-
-    return (1..daysInMonth).map { day ->
-        val date = LocalDate.of(year, month, day)
-        if (date == today) {
-            DiaryData(
-                diaryCount = 0,
-                replyStatus = "UNREADY"
-            )
-        } else {
-            DiaryData(
-                diaryCount = random.nextInt(0, 5),
-                replyStatus = replyStatuses[random.nextInt(replyStatuses.size)]
-            )
         }
     }
 }
