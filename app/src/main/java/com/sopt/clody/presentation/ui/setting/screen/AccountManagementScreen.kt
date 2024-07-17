@@ -84,11 +84,7 @@ fun AccountManagementScreen(
             }
 
             is UserInfoState.Success -> {
-                val userName = (userInfoState as UserInfoState.Success).data.name
-                val userEmail = (userInfoState as UserInfoState.Success).data.email
-                val userPlatform = (userInfoState as UserInfoState.Success).data.platform
-
-                Log.e("userName", "userName : ${userName}")
+                val userInfo = (userInfoState as UserInfoState.Success).data
 
                 Column(
                     modifier = Modifier
@@ -109,7 +105,7 @@ fun AccountManagementScreen(
                         )
                         Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = userName,
+                            text = userInfo.name,
                             style = ClodyTheme.typography.body1SemiBold
                         )
                         Text(
@@ -129,24 +125,26 @@ fun AccountManagementScreen(
                         modifier = Modifier
                             .padding(top = 17.dp, bottom = 24.dp, start = 22.dp, end = 24.dp)
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.img_account_management_kakao),
-                            modifier = Modifier
-                                .size(24.dp),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            text = userEmail,
-                            style = ClodyTheme.typography.body1Medium
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = stringResource(R.string.account_management_button_logout),
-                            modifier = Modifier.clickable(onClick = { showLogoutDialog = true }),
-                            color = ClodyTheme.colors.gray05,
-                            style = ClodyTheme.typography.body4Medium
-                        )
+                        if (userInfo.platform == "kakao") {
+                            Image(
+                                painter = painterResource(id = R.drawable.img_account_management_kakao),
+                                modifier = Modifier
+                                    .size(24.dp),
+                                contentDescription = null
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Text(
+                                text = userInfo.email,
+                                style = ClodyTheme.typography.body1Medium
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                text = stringResource(R.string.account_management_button_logout),
+                                modifier = Modifier.clickable(onClick = { showLogoutDialog = true }),
+                                color = ClodyTheme.colors.gray05,
+                                style = ClodyTheme.typography.body4Medium
+                            )
+                        }
                     }
 
                     SettingSeparateLine()
