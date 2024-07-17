@@ -9,11 +9,13 @@ import com.sopt.clody.data.remote.datasource.DiaryListDataSource
 import com.sopt.clody.data.remote.datasource.MonthlyCalendarDataSource
 import com.sopt.clody.data.remote.datasource.ReissueTokenDataSource
 import com.sopt.clody.data.remote.datasourceimpl.AccountManagementDataSourceImpl
+import com.sopt.clody.data.remote.datasource.WriteDiaryDataSource
 import com.sopt.clody.data.remote.datasourceimpl.AuthDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DailyDiariesDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DiaryListDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.MonthlyCalendarDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.ReissueTokenDataSourceImpl
+import com.sopt.clody.data.remote.datasourceimpl.WriteDiaryDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -69,4 +71,9 @@ abstract class DataSourceModule {
         accountManagementDataSourceImpl: AccountManagementDataSourceImpl
     ): AccountManagementDataSource
 
+    @Binds
+    @Singleton
+    abstract fun bindWriteDiaryDataSource(
+        writeDiaryDataSourceImpl: WriteDiaryDataSourceImpl
+    ): WriteDiaryDataSource
 }

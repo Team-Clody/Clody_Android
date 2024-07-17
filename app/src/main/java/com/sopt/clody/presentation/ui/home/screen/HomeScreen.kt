@@ -42,7 +42,7 @@ fun HomeRoute(
         homeViewModel = homeViewModel,
         onClickDiaryList = { navigator.navigateDiaryList() },
         onClickSetting = { navigator.navigateSetting() },
-        onClickWriteDiary = { navigator.navigateWriteDiary() },
+        onClickWriteDiary = { year, month, day -> navigator.navigateWriteDiary(year, month, day) },
         onClickReplyDiary = { navigator.navigateReplyDiary() }
     )
 }
@@ -52,7 +52,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel,
     onClickDiaryList: () -> Unit,
     onClickSetting: () -> Unit,
-    onClickWriteDiary: () -> Unit,
+    onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
@@ -144,11 +144,12 @@ fun ScrollableCalendarView(
     cloverCount: Int,
     homeViewModel: HomeViewModel,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
-    onClickWriteDiary: () -> Unit,
+    onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -160,6 +161,8 @@ fun ScrollableCalendarView(
         ClodyCalendar(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
+            selectedDate = selectedDate,
+            onDateSelected = { date -> selectedDate = date },
             diaries = diaries,
             homeViewModel = homeViewModel,
             onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
@@ -168,7 +171,7 @@ fun ScrollableCalendarView(
         DiaryStateButton(
             diaryCount = 5,
             replyStatus = "READY_NOT_READ",
-            onClickWriteDiary = onClickWriteDiary,
+            onClickWriteDiary = { onClickWriteDiary(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth) },
             onClickReplyDiary = onClickReplyDiary
         )
         Spacer(modifier = Modifier.height(14.dp))
