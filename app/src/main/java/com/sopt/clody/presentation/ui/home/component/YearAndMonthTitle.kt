@@ -22,19 +22,11 @@ import java.time.LocalDate
 
 @Composable
 fun YearAndMonthTitle(
-    homeViewModel: HomeViewModel,
     onShowYearMonthPickerStateChange: (Boolean) -> Unit,
-    selectedYear:Int,
-    selectedMonth:Int,
+    selectedYear: Int,
+    selectedMonth: Int
 ) {
-    val currentDate = LocalDate.now()
-    var showDatePicker by remember { mutableStateOf(false) }
-
     val text = "${selectedYear}년 ${selectedMonth}월"
-
-    LaunchedEffect(selectedYear, selectedMonth) {
-        homeViewModel.loadCalendarData(selectedYear, selectedMonth)
-    }
 
     Column {
         Row(
@@ -50,7 +42,6 @@ fun YearAndMonthTitle(
                 contentDescription = "choose month",
                 modifier = Modifier
                     .padding(horizontal = 6.dp, vertical = 6.dp)
-                    .clickable(onClick = { showDatePicker = true })
             )
         }
     }

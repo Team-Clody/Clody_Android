@@ -35,9 +35,9 @@ import java.time.LocalDate
 
 @Composable
 fun HomeRoute(
-    navigator: HomeNavigator
+    navigator: HomeNavigator,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    val homeViewModel: HomeViewModel = hiltViewModel()
     HomeScreen(
         homeViewModel = homeViewModel,
         onClickDiaryList = { navigator.navigateDiaryList() },
@@ -58,9 +58,9 @@ fun HomeScreen(
     var showYearMonthPickerState by remember { mutableStateOf(false) }
     var showDiaryDeleteState by remember { mutableStateOf(false) }
     var showDiaryDeleteDialog by remember { mutableStateOf(false) }
-
-    var selectedYear by remember { mutableStateOf(LocalDate.now().year) }
-    var selectedMonth by remember { mutableStateOf(LocalDate.now().monthValue) }
+    val currentDate = LocalDate.now()
+    var selectedYear by remember { mutableStateOf(currentDate.year) }
+    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
 
     val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
         selectedYear = year
@@ -79,7 +79,6 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         HomeTopAppBar(
-            homeViewModel = homeViewModel,
             onClickDiaryList = onClickDiaryList,
             onClickSetting = onClickSetting,
             onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState },

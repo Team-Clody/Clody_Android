@@ -7,10 +7,13 @@ import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.ReissueTokenRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
 import com.sopt.clody.data.repository.DailyDiariesRepository
+import com.sopt.clody.data.repository.DiaryListRepository
 import com.sopt.clody.data.repository.ExampleRepository
+import com.sopt.clody.data.repository.DailyDiariesRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
-import com.sopt.clody.data.repositoryimpl.DailyDiariesRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.DiaryListRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.ExampleRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.DailyDiariesRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.MonthlyCalendarRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -41,6 +44,12 @@ abstract class RepositoryModule {
         reissueTokenRepositoryImpl: ReissueTokenRepositoryImpl
     ): ReissueTokenRepository
 
+    abstract fun bindDiaryListRepository(
+        diaryListRepositoryImpl: DiaryListRepositoryImpl
+    ): DiaryListRepository
+
+    @Binds
+    @Singleton
     abstract fun bindExampleRepository(
         exampleRepositoryImpl: ExampleRepositoryImpl
     ): ExampleRepository
