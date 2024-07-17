@@ -3,6 +3,7 @@ package com.sopt.clody.presentation.ui.diarylist.component
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
@@ -28,17 +30,17 @@ import java.time.LocalDate
 @Composable
 fun DiaryListTopAppBar(
     onClickCalendar: () -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int,
     onShowYearMonthPickerStateChange: (Boolean) -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val currentDate = LocalDate.now()
-    var selectedYear by remember { mutableStateOf(currentDate.year) }
-    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
 
     CenterAlignedTopAppBar(
         title = {
             Row(
                 modifier = Modifier
+                    .padding(start = 16.dp)
                     .clickable(onClick = { onShowYearMonthPickerStateChange(true) }),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -47,14 +49,17 @@ fun DiaryListTopAppBar(
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.head4
                 )
-                Icon(
-                    imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "choose year and month"
+                Image(
+                    painter = painterResource(id = R.drawable.ic_home_under_arrow),
+                    contentDescription = null
                 )
             }
         },
         navigationIcon = {
-            IconButton(onClick = onClickCalendar) {
+            IconButton(
+                onClick = onClickCalendar,
+                modifier = Modifier.padding(start = 8.dp)
+            ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_listview_calendar),
                     contentDescription = "go to calenderView"

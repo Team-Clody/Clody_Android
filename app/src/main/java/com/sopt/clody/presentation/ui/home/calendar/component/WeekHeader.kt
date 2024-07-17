@@ -21,7 +21,7 @@ import kotlinx.datetime.DayOfWeek
 fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
     Row(
-        horizontalArrangement = Arrangement.SpaceBetween, // 고르게 분포되도록 설정
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.fillMaxWidth()
     ) {
         val weekLabelArray = listOf(
@@ -43,7 +43,8 @@ fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
             ) {
                 Text(
                     text = week,
-                    style = ClodyTheme.typography.body3SemiBold,
+                    color = ClodyTheme.colors.gray05,
+                    style = ClodyTheme.typography.detail1Medium,
                     textAlign = TextAlign.Center,
                 )
             }
