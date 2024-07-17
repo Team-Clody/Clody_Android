@@ -1,6 +1,5 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -59,6 +58,7 @@ fun AccountManagementScreen(
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showRevokeDialog by remember { mutableStateOf(false) }
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
+    var userName by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         accountManagementViewModel.fetchUserInfo()
@@ -85,6 +85,7 @@ fun AccountManagementScreen(
 
             is UserInfoState.Success -> {
                 val userInfo = (userInfoState as UserInfoState.Success).data
+                userName = userInfo.name
 
                 Column(
                     modifier = Modifier
@@ -176,6 +177,7 @@ fun AccountManagementScreen(
 
     if (showChangeNicknameBottomSheet) {
         NicknameChangeModalBottomSheet(
+            userName = userName,
             onDismiss = { showChangeNicknameBottomSheet = false }
         )
     }

@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -33,16 +32,23 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NicknameChangeModalBottomSheet(
+    userName: String,
     onDismiss: () -> Unit
 ) {
     ClodyBottomSheet(
-        content = { NicknameChangeModalBottomSheetItem(onDismiss) },
+        content = {
+            NicknameChangeModalBottomSheetItem(
+                userName = userName,
+                onDismiss = onDismiss
+            )
+        },
         onDismissRequest = { onDismiss() },
     )
 }
 
 @Composable
 fun NicknameChangeModalBottomSheetItem(
+    userName: String,
     onDismiss: () -> Unit
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
@@ -101,7 +107,7 @@ fun NicknameChangeModalBottomSheetItem(
                 },
                 modifier = Modifier
                     .padding(horizontal = 24.dp),
-                hint = "사용자 이름" /* TODO : 사용자 이름 받아와서 힌트로 노출 */
+                hint = userName
             )
 
             Row(
@@ -144,4 +150,7 @@ fun NicknameChangeModalBottomSheetItem(
             Spacer(modifier = Modifier.height(60.dp))
         }
     }
+
 }
+
+
