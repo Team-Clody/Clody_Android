@@ -42,7 +42,7 @@ fun SignUpRoute(
                 authNavigator.navigateHome()
             }
             is UiState.Failure -> {
-                if (result.msg.contains("500") || result.msg.contains("User not found")) {
+                if (result.msg.contains("404") || result.msg.contains("User not found")) {
                     authNavigator.navigateTermsOfService()
                 } else {
                     coroutineScope.launch {

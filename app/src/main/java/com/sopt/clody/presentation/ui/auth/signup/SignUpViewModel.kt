@@ -75,7 +75,7 @@ class SignUpViewModel @Inject constructor(
             } else if (user != null) {
                 _signInState.value = SignInState(UiState.Success("Kakao login successful"))
                 val requestSignInDto = LoginRequestDto(platform = "kakao")
-                validateUser(accessToken.orEmpty(), requestSignInDto)
+                validateUser("Bearer ${accessToken.orEmpty()}", requestSignInDto)
             }
         }
     }
@@ -88,8 +88,8 @@ class SignUpViewModel @Inject constructor(
                 storeTokens(response.accessToken, response.refreshToken)
             }.onFailure {
                 val message = it.localizedMessage ?: "Unknown error"
-                val uiState = if (message.contains("500") || message.contains("User not found")) {
-                    UiState.Failure("500 Error or User not found")
+                val uiState = if (message.contains("404") || message.contains("User not found")) {
+                    UiState.Failure("404 Error or User not found")
                 } else {
                     UiState.Failure(message)
                 }
@@ -112,7 +112,7 @@ class SignUpViewModel @Inject constructor(
 
     // 회원가입 수행
     private fun performSignUp() {
-        val authorization = accessToken.orEmpty()
+        val authorization = "Bearer ${accessToken.orEmpty()}"
         _signUpState.value = SignUpState(UiState.Loading)
         viewModelScope.launch {
             authRepository.signUp(
