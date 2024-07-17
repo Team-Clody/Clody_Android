@@ -12,4 +12,8 @@ class AccountManagementDataSourceImpl @Inject constructor(
     override suspend fun getUserInfo(): ApiResponse<ResponseUserInfoDto> {
         return accountManagementSevice.getUserInfo()
     }
+
+    override suspend fun revoke(): ApiResponse<Unit> {
+        return accountManagementSevice.revoke()
+    }
 }
