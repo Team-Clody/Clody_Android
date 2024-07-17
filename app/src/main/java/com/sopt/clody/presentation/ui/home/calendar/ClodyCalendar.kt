@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -20,6 +19,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.home.HomeViewModel
@@ -40,7 +40,9 @@ fun ClodyCalendar(
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
     val today = LocalDate.now()
     val initialDayOfWeek = today.dayOfWeek
-    val dateList = generateCalendarDates(currentMonth.year, currentMonth.monthValue)
+    val dateList by remember(currentMonth.year, currentMonth.monthValue) {
+        mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
+    }
     var selectedDate by remember { mutableStateOf(today) }
     var selectedDayOfWeek by remember { mutableStateOf(initialDayOfWeek) }
 
@@ -48,7 +50,7 @@ fun ClodyCalendar(
         homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
     }
 
-    val dailyDiariesData by homeViewModel.dailyDiariesData.collectAsState()
+    val dailyDiariesData by homeViewModel.dailyDiariesData.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier

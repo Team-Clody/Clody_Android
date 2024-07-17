@@ -10,16 +10,15 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.presentation.ui.component.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
@@ -44,7 +43,7 @@ fun HomeRoute(
         onClickDiaryList = { navigator.navigateDiaryList() },
         onClickSetting = { navigator.navigateSetting() },
         onClickWriteDiary = { navigator.navigateWriteDiary() },
-        onClickReplyDiary = { navigator.navigateReplyDiary() },
+        onClickReplyDiary = { navigator.navigateReplyDiary() }
     )
 }
 
@@ -72,7 +71,7 @@ fun HomeScreen(
         homeViewModel.loadCalendarData(selectedYear, selectedMonth)
     }
 
-    val calendarData by homeViewModel.monthlyCalendarData.collectAsState()
+    val calendarData by homeViewModel.monthlyCalendarData.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -87,7 +86,7 @@ fun HomeScreen(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
         )
-            calendarData?.let { result ->
+        calendarData?.let { result ->
             result.fold(
                 onSuccess = { data ->
                     ScrollableCalendarView(
@@ -100,7 +99,7 @@ fun HomeScreen(
                         onClickReplyDiary = onClickReplyDiary,
                         onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState }
                     )
-                },onFailure = { throwable ->
+                }, onFailure = { throwable ->
                     Log.e("HomeScreen", "Failed to load calendar data: ${throwable.message}")
                 }
             )
@@ -143,7 +142,7 @@ fun HomeScreen(
 fun ScrollableCalendarView(
     selectedYear: Int,
     selectedMonth: Int,
-    cloverCount:Int,
+    cloverCount: Int,
     homeViewModel: HomeViewModel,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     onClickWriteDiary: () -> Unit,
@@ -157,7 +156,7 @@ fun ScrollableCalendarView(
             .verticalScroll(scrollState)
             .background(ClodyTheme.colors.white)
     ) {
-        CloverCount(cloverCount=cloverCount)
+        CloverCount(cloverCount = cloverCount)
         Spacer(modifier = Modifier.height(20.dp))
         ClodyCalendar(
             selectedYear = selectedYear,
@@ -175,10 +174,4 @@ fun ScrollableCalendarView(
         )
         Spacer(modifier = Modifier.height(14.dp))
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CalendarScreenPreview() {
-
 }
