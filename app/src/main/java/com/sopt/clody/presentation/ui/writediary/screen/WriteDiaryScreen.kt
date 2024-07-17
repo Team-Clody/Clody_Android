@@ -14,9 +14,12 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -24,10 +27,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
@@ -35,20 +38,35 @@ import com.sopt.clody.presentation.ui.writediary.component.DeleteWriteDiaryBotto
 import com.sopt.clody.presentation.ui.writediary.component.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
+import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun WriteDiaryRoute(
-    navigator: WriteDiaryNavigator
+    navigator: WriteDiaryNavigator,
+    year: Int,
+    month: Int,
+    day: Int,
+    viewModel: WriteDiaryViewModel = hiltViewModel()
 ) {
     WriteDiaryScreen(
-        onClickBack = { navigator.navigateBack() }
+        viewModel = viewModel,
+        onClickBack = { navigator.navigateBack() },
+        onCompleteClick = { navigator.navigateReplyLoading() },
+        year = year,
+        month = month,
+        day = day
     )
 }
 
 @Composable
 fun WriteDiaryScreen(
-    onClickBack: () -> Unit
+    viewModel: WriteDiaryViewModel,
+    onClickBack: () -> Unit,
+    onCompleteClick: () -> Unit,
+    year: Int,
+    month: Int,
+    day: Int
 ) {
     val entries = remember { mutableStateListOf("") }
     val showWarnings = remember { mutableStateListOf(false) }
@@ -57,7 +75,14 @@ fun WriteDiaryScreen(
     var entryToDelete by remember { mutableStateOf(-1) }
     val allFieldsEmpty = entries.all { it.isEmpty() }
     var showDialog by remember { mutableStateOf(false) }
+    val writeDiaryState by viewModel.writeDiaryState.collectAsState()
+    val dayOfWeek = getDayOfWeek(year, month, day)
 
+    LaunchedEffect(writeDiaryState) {
+        if (writeDiaryState is WriteDiaryState.Success) {
+            onCompleteClick()
+        }
+    }
 
     ConstraintLayout(
         modifier = Modifier
@@ -94,9 +119,9 @@ fun WriteDiaryScreen(
         ) {
             item {
                 DiaryTitleText(
-                    date = "6월 26일",
-                    separator = " ",
-                    day = "목요일"
+                    date = "${month}월 ${day}일 $dayOfWeek",
+                    separator = "",
+                    day = ""
                 )
             }
 
@@ -197,19 +222,30 @@ fun WriteDiaryScreen(
                 confirmOption = "저장하기",
                 dismissOption = "아니오",
                 confirmAction = {
-                    // 저장 액션
-                    showDialog = false
+                    viewModel.writeDiary(year, month, day, entries.toList())
                 },
                 confirmButtonColor = ClodyTheme.colors.mainYellow,
                 confirmButtonTextColor = ClodyTheme.colors.gray01
             )
         }
     }
-}
+    when (writeDiaryState) {
+        is WriteDiaryState.Loading -> {
+            CircularProgressIndicator(
+                modifier = Modifier.fillMaxSize(),
+                color = ClodyTheme.colors.mainYellow
+            )
+        }
+        is WriteDiaryState.Success -> {
+            val createdAt = (writeDiaryState as WriteDiaryState.Success).createdAt
+            //TODO ToastMessage
 
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewWriteDiaryScreen() {
-
+        }
+        is WriteDiaryState.Failure -> {
+            val error = (writeDiaryState as WriteDiaryState.Failure).error
+            //TODO ToastMessage
+            showDialog = false
+        }
+        else -> {}
+    }
 }

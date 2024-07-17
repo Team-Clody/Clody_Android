@@ -6,8 +6,8 @@ import androidx.navigation.NavHostController
 class WriteDiaryNavigator(
     val navController: NavHostController
 ) {
-    fun navigateWriteDiary() {
-        navController.navigate("write_diary")
+    fun navigateReplyLoading() {
+        navController.navigate("reply_loading")
     }
 
     fun navigateBack() {

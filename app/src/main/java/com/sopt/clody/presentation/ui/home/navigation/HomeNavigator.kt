@@ -13,9 +13,10 @@ class HomeNavigator(
         navController.navigate("setting")
     }
 
-    fun navigateWriteDiary() {
-        navController.navigate("write_diary")
+    fun navigateWriteDiary(year: Int, month: Int, day: Int) {
+        navController.navigate("write_diary/$year/$month/$day")
     }
+
 
     fun navigateReplyDiary() {
         navController.navigate("reply_diary")

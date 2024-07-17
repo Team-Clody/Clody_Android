@@ -19,13 +19,15 @@ import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.presentation.ui.diarylist.navigation.diaryListNavGraph
 import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
 import com.sopt.clody.presentation.ui.home.navigation.homeNavGraph
+import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
+import com.sopt.clody.presentation.ui.replyloading.navigation.replyLoadingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
+import com.sopt.clody.presentation.ui.splash.SplashScreen
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
 import com.sopt.clody.presentation.ui.writediary.navigation.writeDiaryNavGraph
-import com.sopt.clody.presentation.ui.splash.SplashScreen
 
 @Composable
 fun MainNavHost(
@@ -35,7 +37,8 @@ fun MainNavHost(
     homeNavigator: HomeNavigator,
     diaryListNavigator: DiaryListNavigator,
     writeDiaryNavigator: WriteDiaryNavigator,
-    settingNavigator: SettingNavigator
+    settingNavigator: SettingNavigator,
+    replyLoadingNavigator: ReplyLoadingNavigator,
 ) {
     Box(
         modifier = modifier
@@ -54,10 +57,11 @@ fun MainNavHost(
             timeReminderNavGraph(authNavigator)
             homeNavGraph(homeNavigator)
             diaryListNavGraph(diaryListNavigator)
-            writeDiaryNavGraph(writeDiaryNavigator)
+            writeDiaryNavGraph(writeDiaryNavigator, replyLoadingNavigator)
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)
+            replyLoadingNavGraph(replyLoadingNavigator)
         }
     }
 }
