@@ -48,11 +48,12 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
     var selectedTime by remember { mutableStateOf("오후 9시 30분") }
 
     Scaffold(
-        topBar = { SettingTopAppBar(stringResource(R.string.setting_notification_setting), onBackClick) }
+        topBar = { SettingTopAppBar(stringResource(R.string.setting_notification_setting), onBackClick) },
+        containerColor = ClodyTheme.colors.white,
+        contentColor = ClodyTheme.colors.white
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .background(ClodyTheme.colors.white)
                 .padding(innerPadding)
                 .padding(top = 20.dp)
         ) {
