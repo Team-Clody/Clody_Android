@@ -1,9 +1,9 @@
 package com.sopt.clody.data.remote.datasource
 
-import com.sopt.clody.data.remote.dto.LoginRequestDto
-import com.sopt.clody.data.remote.dto.LoginResponseDto
-import com.sopt.clody.data.remote.dto.SignUpRequestDto
-import com.sopt.clody.data.remote.dto.SignUpResponseDto
+import com.sopt.clody.data.remote.dto.request.LoginRequestDto
+import com.sopt.clody.data.remote.dto.response.LoginResponseDto
+import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
+import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 
 interface AuthDataSource {

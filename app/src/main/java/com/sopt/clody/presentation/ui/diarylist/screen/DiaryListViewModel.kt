@@ -2,7 +2,6 @@ package com.sopt.clody.presentation.ui.diarylist.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
 import com.sopt.clody.data.repository.DiaryListRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
