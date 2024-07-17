@@ -9,15 +9,14 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DiaryTitleText(date: String, separator: String, day: String, modifier: Modifier = Modifier) {
-
-
     Text(
-        text = "6월 26일 목요일",
+        text = "$date$separator$day",
         modifier = modifier.fillMaxWidth(),
         style = ClodyTheme.typography.head2,
         color = ClodyTheme.colors.gray01
     )
 }
+
 
 @Preview(showBackground = true)
 @Composable
