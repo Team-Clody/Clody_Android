@@ -109,7 +109,7 @@ dependencies {
 
     // Image Loading
     implementation(libs.coil.compose)
-    implementation(libs.lottie)
+
 
     // Logging
     implementation(libs.timber)
@@ -138,4 +138,5 @@ dependencies {
     // Kakao
     implementation(libs.kakao.user)
     implementation(libs.process.phoenix)
+    implementation (libs.lottie.compose)
 }

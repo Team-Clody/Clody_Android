@@ -33,6 +33,8 @@ import java.time.YearMonth
 fun ClodyCalendar(
     selectedYear: Int,
     selectedMonth: Int,
+    selectedDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     homeViewModel: HomeViewModel,
     onDateSelected: (LocalDate) -> Unit,
@@ -40,13 +42,10 @@ fun ClodyCalendar(
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
-    val today = LocalDate.now()
-    val initialDayOfWeek = today.dayOfWeek
     val dateList by remember(currentMonth.year, currentMonth.monthValue) {
         mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
     }
-    var selectedDate by remember { mutableStateOf(today) }
-    var selectedDayOfWeek by remember { mutableStateOf(initialDayOfWeek) }
+    val initialDayOfWeek = selectedDate.dayOfWeek
 
     LaunchedEffect(selectedDate) {
         homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
@@ -82,7 +81,7 @@ fun ClodyCalendar(
                 onSuccess = { data ->
                     DailyDiaryListItem(
                         date = selectedDate,
-                        dayOfWeek = selectedDayOfWeek,
+                        dayOfWeek = initialDayOfWeek,
                         dailyDiaries = data.diaries,
                         onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
                     )
@@ -112,4 +111,3 @@ fun HorizontalDivider(
 @Composable
 fun ClodyCalendarPreview() {
 }
-

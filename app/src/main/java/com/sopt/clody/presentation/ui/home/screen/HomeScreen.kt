@@ -42,7 +42,7 @@ fun HomeRoute(
         homeViewModel = homeViewModel,
         onClickDiaryList = { navigator.navigateDiaryList() },
         onClickSetting = { navigator.navigateSetting() },
-        onClickWriteDiary = { navigator.navigateWriteDiary() },
+        onClickWriteDiary = { year, month, day -> navigator.navigateWriteDiary(year, month, day) },
         onClickReplyDiary = { navigator.navigateReplyDiary() }
     )
 }
@@ -52,7 +52,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel,
     onClickDiaryList: () -> Unit,
     onClickSetting: () -> Unit,
-    onClickWriteDiary: () -> Unit,
+    onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
@@ -151,7 +151,7 @@ fun ScrollableCalendarView(
     cloverCount: Int,
     homeViewModel: HomeViewModel,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
-    onClickWriteDiary: () -> Unit,
+    onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit,
     initialDate: LocalDate
@@ -167,7 +167,6 @@ fun ScrollableCalendarView(
         selectedReplyStatus = diary?.replyStatus ?: "UNREADY"
         homeViewModel.loadDailyDiariesData(initialDate.year, initialDate.monthValue, initialDate.dayOfMonth)
     }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -179,6 +178,8 @@ fun ScrollableCalendarView(
         ClodyCalendar(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
+            selectedDate = selectedDate,
+            onDateSelected = { date -> selectedDate = date },
             diaries = diaries,
             homeViewModel = homeViewModel,
             onDateSelected = { date ->
