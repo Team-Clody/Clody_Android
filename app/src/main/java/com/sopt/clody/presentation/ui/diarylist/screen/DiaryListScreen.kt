@@ -1,5 +1,3 @@
-package com.sopt.clody.presentation.ui.diarylist.screen
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,24 +18,26 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.presentation.ui.component.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
+import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListState
+import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.presentation.utils.extension.showToast
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 
 @Composable
 fun DiaryListRoute(
-    navigator: DiaryListNavigator
+    navigator: DiaryListNavigator,
+    diaryListViewModel: DiaryListViewModel = hiltViewModel()
 ) {
     DiaryListScreen(
+        diaryListViewModel = diaryListViewModel,
         onClickCalendar = { navigator.navigateCalendar() },
         onClickReplyDiary = { navigator.navigateReplyDiary() },
     )
@@ -46,7 +45,7 @@ fun DiaryListRoute(
 
 @Composable
 fun DiaryListScreen(
-    diaryListViewModel: DiaryListViewModel = hiltViewModel(),
+    diaryListViewModel: DiaryListViewModel,
     onClickCalendar: () -> Unit,
     onClickReplyDiary: () -> Unit,
 ) {
@@ -92,7 +91,9 @@ fun DiaryListScreen(
                     contentAlignment = Alignment.Center
                 ){
                     CircularProgressIndicator(
-                        modifier = Modifier.padding(innerPadding).wrapContentSize(Alignment.Center),
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .wrapContentSize(Alignment.Center),
                         color = ClodyTheme.colors.mainYellow
                     )
                 }
