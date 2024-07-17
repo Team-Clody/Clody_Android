@@ -2,11 +2,13 @@ package com.sopt.clody.di
 
 import com.sopt.clody.data.local.datasource.LocalDataSource
 import com.sopt.clody.data.local.datasourceimpl.LocalDataSourceImpl
+import com.sopt.clody.data.remote.datasource.AccountManagementDataSource
 import com.sopt.clody.data.remote.datasource.AuthDataSource
 import com.sopt.clody.data.remote.datasource.DailyDiariesDataSource
 import com.sopt.clody.data.remote.datasource.DiaryListDataSource
 import com.sopt.clody.data.remote.datasource.MonthlyCalendarDataSource
 import com.sopt.clody.data.remote.datasource.ReissueTokenDataSource
+import com.sopt.clody.data.remote.datasourceimpl.AccountManagementDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.AuthDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DailyDiariesDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DiaryListDataSourceImpl
@@ -52,12 +54,19 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindLocalDataSource(
-         localDataSourceImpl: LocalDataSourceImpl
+        localDataSourceImpl: LocalDataSourceImpl
     ): LocalDataSource
 
     @Binds
     @Singleton
     abstract fun bindDiaryListDataSource(
         diaryListDataSourceImpl: DiaryListDataSourceImpl
-    ) : DiaryListDataSource
+    ): DiaryListDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindAccountManagementDataSource(
+        accountManagementDataSourceImpl: AccountManagementDataSourceImpl
+    ): AccountManagementDataSource
+
 }
