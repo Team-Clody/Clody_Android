@@ -35,9 +35,11 @@ import java.time.LocalDate
 
 @Composable
 fun HomeRoute(
-    navigator: HomeNavigator
+    navigator: HomeNavigator,
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     HomeScreen(
+        homeViewModel = homeViewModel,
         onClickDiaryList = { navigator.navigateDiaryList() },
         onClickSetting = { navigator.navigateSetting() },
         onClickWriteDiary = { navigator.navigateWriteDiary() },
@@ -47,7 +49,7 @@ fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    homeViewModel: HomeViewModel,
     onClickDiaryList: () -> Unit,
     onClickSetting: () -> Unit,
     onClickWriteDiary: () -> Unit,

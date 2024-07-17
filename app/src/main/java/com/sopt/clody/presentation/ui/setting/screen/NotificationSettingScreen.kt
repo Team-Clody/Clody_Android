@@ -1,6 +1,7 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -51,6 +52,7 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
     ) { innerPadding ->
         Column(
             modifier = Modifier
+                .background(ClodyTheme.colors.white)
                 .padding(innerPadding)
                 .padding(top = 20.dp)
         ) {
