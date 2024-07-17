@@ -1,10 +1,14 @@
 package com.sopt.clody.data.remote.dto.base
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ApiResponse<T>(
-    val code: Int,
+    @SerialName("status")
+    val status: Int,
+    @SerialName("message")
     val message: String,
-    val data: T? = null
+    @SerialName("data")
+    val data: T
 )
