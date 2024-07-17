@@ -8,6 +8,7 @@ import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.api.CalendarApiService
 import com.sopt.clody.data.remote.api.DiaryListService
 import com.sopt.clody.data.remote.api.ReIssueService
+import com.sopt.clody.data.remote.api.WriteDiaryService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,6 +33,7 @@ object ApiModule {
     @Singleton
     fun provideMonthlyCalendarService(@CLODY retrofit: Retrofit): CalendarApiService =
         retrofit.create(CalendarApiService::class.java)
+
 
     @Provides
     @Singleton
@@ -68,5 +70,10 @@ object ApiModule {
     @Singleton
     fun provideReissueTokenService(@CLODY reissueRetrofit: Retrofit): ReIssueService =
         reissueRetrofit.create(ReIssueService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideWriteDiaryService(@CLODY retrofit: Retrofit): WriteDiaryService =
+        retrofit.create(WriteDiaryService::class.java)
 }
 
