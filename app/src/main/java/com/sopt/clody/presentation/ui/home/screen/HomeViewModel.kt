@@ -77,12 +77,12 @@ class HomeViewModel @Inject constructor(
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
             _deleteDiaryResult.value = result.fold(
                 onSuccess = {
-                    DeleteDiaryState.Success("삭제가 완료되었습니다.")
+                    DeleteDiaryState.Success
                 },
                 onFailure = {
                     DeleteDiaryState.Failure(it.message ?: "Unknown error")
                 }
-            )
+            ) as DeleteDiaryState
             loadCalendarData(year, month)
             loadDailyDiariesData(year, month, day)
         }
