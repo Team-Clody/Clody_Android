@@ -37,6 +37,8 @@ fun ClodyCalendar(
     onDateSelected: (LocalDate) -> Unit,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     homeViewModel: HomeViewModel,
+    onDateSelected: (LocalDate) -> Unit,
+    onDiaryDataUpdated: (Int, String) -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
@@ -60,7 +62,13 @@ fun ClodyCalendar(
             dateList = dateList,
             selectedDate = selectedDate,
             onDayClick = { date ->
+                selectedDate = date
+                selectedDayOfWeek = date.dayOfWeek
+                val diary = diaries.getOrNull(date.dayOfMonth - 1)
+                val diaryCount = diary?.diaryCount ?: 0
+                val replyStatus = diary?.replyStatus ?: "UNREADY"
                 onDateSelected(date)
+                onDiaryDataUpdated(diaryCount, replyStatus)
             },
             getDiaryDataForDate = { date ->
                 diaries.getOrNull(date.dayOfMonth - 1)
