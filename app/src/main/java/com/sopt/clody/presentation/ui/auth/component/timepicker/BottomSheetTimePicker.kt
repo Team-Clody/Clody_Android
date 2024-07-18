@@ -31,7 +31,10 @@ import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun BottomSheetTimePicker(onDismissRequest: () -> Unit) {
+fun BottomSheetTimePicker(
+    onDismissRequest: () -> Unit,
+    onRemindTimeSelected: (String, String, String) -> Unit
+) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -130,7 +133,13 @@ fun BottomSheetTimePicker(onDismissRequest: () -> Unit) {
                 }
             }
             ClodyButton(
-                onClick = { onDismissRequest() },
+                onClick = {
+                    onRemindTimeSelected(
+                        amPmPickerState.selectedItem,
+                        hourPickerState.selectedItem,
+                        minutePickerState.selectedItem
+                    )
+                    onDismissRequest() },
                 text = "완료",
                 enabled = true,
                 modifier = Modifier
@@ -144,7 +153,5 @@ fun BottomSheetTimePicker(onDismissRequest: () -> Unit) {
 @Preview(showBackground = true)
 @Composable
 fun BottomSheetPickerPreview() {
-    BottomSheetTimePicker(
-        onDismissRequest = { /*TODO*/ }
-    )
+
 }
