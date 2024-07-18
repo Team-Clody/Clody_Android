@@ -133,7 +133,7 @@ fun WriteDiaryScreen(
                     onTextChange = { newText ->
                         entries[index] = newText
                         val textWithoutSpaces = newText.replace("\\s".toRegex(), "")
-                        showWarnings[index] = !textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))
+                        showWarnings[index] = !textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"))
                     },
                     onRemove = {
                         entryToDelete = index
@@ -150,7 +150,7 @@ fun WriteDiaryScreen(
             onClick = {
                 for (i in entries.indices) {
                     val textWithoutSpaces = entries[i].replace("\\s".toRegex(), "")
-                    showWarnings[i] = !textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))
+                    showWarnings[i] = !textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"))
                 }
                 if (showWarnings.all { !it }) {
                     showDialog = true
