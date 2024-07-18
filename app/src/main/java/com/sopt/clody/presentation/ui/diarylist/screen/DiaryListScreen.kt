@@ -39,15 +39,16 @@ fun DiaryListRoute(
     DiaryListScreen(
         diaryListViewModel = diaryListViewModel,
         onClickCalendar = { navigator.navigateCalendar() },
-        onClickReplyDiary = { navigator.navigateReplyDiary() },
+        onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
     )
 }
+
 
 @Composable
 fun DiaryListScreen(
     diaryListViewModel: DiaryListViewModel,
     onClickCalendar: () -> Unit,
-    onClickReplyDiary: () -> Unit,
+    onClickReplyDiary: (Int, Int, Int) -> Unit,
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
     val currentDate = LocalDate.now()
