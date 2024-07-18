@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.sopt.clody.data.remote.dto.LoginRequestDto
-import com.sopt.clody.data.remote.dto.SignUpRequestDto
+import com.sopt.clody.data.remote.dto.request.LoginRequestDto
+import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.repository.AuthRepository
 import com.sopt.clody.data.repository.TokenRepository
 import com.sopt.clody.presentation.utils.base.UiState

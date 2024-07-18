@@ -1,7 +1,7 @@
 package com.sopt.clody.data.repositoryimpl
 
 import com.sopt.clody.data.remote.datasource.ReissueTokenDataSource
-import com.sopt.clody.data.remote.dto.ReissueTokenResponseDto
+import com.sopt.clody.data.remote.dto.response.ReissueTokenResponseDto
 import com.sopt.clody.data.repository.ReissueTokenRepository
 import javax.inject.Inject
 

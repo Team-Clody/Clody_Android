@@ -1,8 +1,7 @@
 package com.sopt.clody.data.remote.api
 
 import com.sopt.clody.data.remote.dto.base.ApiResponse
-import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
-import retrofit2.http.DELETE
+import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 import retrofit2.http.GET
 import retrofit2.http.Query
 

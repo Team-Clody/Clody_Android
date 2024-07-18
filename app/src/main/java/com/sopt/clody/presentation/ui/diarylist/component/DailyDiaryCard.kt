@@ -29,7 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.ui.theme.ClodyTheme

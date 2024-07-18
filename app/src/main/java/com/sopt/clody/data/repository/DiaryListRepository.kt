@@ -1,6 +1,6 @@
 package com.sopt.clody.data.repository
 
-import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 
 interface DiaryListRepository {
     suspend fun getMonthlyDiary(
