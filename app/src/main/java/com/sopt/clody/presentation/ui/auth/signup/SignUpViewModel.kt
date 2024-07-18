@@ -33,6 +33,22 @@ class SignUpViewModel @Inject constructor(
 
     private var accessToken: String? = null
 
+    init {
+        attemptAutoLogin()
+    }
+
+    // 자동 로그인
+    private fun attemptAutoLogin() {
+        val accessToken = tokenRepository.getAccessToken()
+        val refreshToken = tokenRepository.getRefreshToken()
+
+        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
+            _signInState.value = SignInState(UiState.Success("Auto login successful"))
+        } else {
+            _signInState.value = SignInState(UiState.Empty)
+        }
+    }
+
     // 카카오 로그인
     fun signInWithKakao(context: Context) {
         _signInState.value = SignInState(UiState.Loading)
