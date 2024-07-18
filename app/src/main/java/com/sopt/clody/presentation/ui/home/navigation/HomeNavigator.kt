@@ -17,9 +17,8 @@ class HomeNavigator(
         navController.navigate("write_diary/$year/$month/$day")
     }
 
-
-    fun navigateReplyDiary() {
-        navController.navigate("reply_diary")
+    fun navigateReplyLoading(year: Int, month: Int, day: Int) {
+        navController.navigate("reply_loading/$year/$month/$day") // 수정
     }
 
     fun navigateBack() {

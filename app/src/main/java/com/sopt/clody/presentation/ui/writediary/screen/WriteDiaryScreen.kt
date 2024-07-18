@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.writediary.screen
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,12 +53,13 @@ fun WriteDiaryRoute(
     WriteDiaryScreen(
         viewModel = viewModel,
         onClickBack = { navigator.navigateBack() },
-        onCompleteClick = { navigator.navigateReplyLoading() },
+        onCompleteClick = { navigator.navigateReplyLoading(year, month, day) },
         year = year,
         month = month,
         day = day
     )
 }
+
 
 @Composable
 fun WriteDiaryScreen(
@@ -76,7 +78,6 @@ fun WriteDiaryScreen(
     val allFieldsEmpty = entries.all { it.isEmpty() }
     var showDialog by remember { mutableStateOf(false) }
     val writeDiaryState by viewModel.writeDiaryState.collectAsState()
-    val dayOfWeek = getDayOfWeek(year, month, day)
 
     LaunchedEffect(writeDiaryState) {
         if (writeDiaryState is WriteDiaryState.Success) {
@@ -119,9 +120,9 @@ fun WriteDiaryScreen(
         ) {
             item {
                 DiaryTitleText(
-                    date = "${month}월 ${day}일 $dayOfWeek",
-                    separator = "",
-                    day = ""
+                    date = "${month}월 ${day}일",
+                    separator = " ",
+                    day = getDayOfWeek(year, month, day)
                 )
             }
 
@@ -229,6 +230,8 @@ fun WriteDiaryScreen(
             )
         }
     }
+
+    // 상태에 따른 UI 업데이트
     when (writeDiaryState) {
         is WriteDiaryState.Loading -> {
             CircularProgressIndicator(
@@ -238,13 +241,12 @@ fun WriteDiaryScreen(
         }
         is WriteDiaryState.Success -> {
             val createdAt = (writeDiaryState as WriteDiaryState.Success).createdAt
-            //TODO ToastMessage
-
+            Log.d("WriteDiaryScreen", "Diary created at $createdAt")
         }
         is WriteDiaryState.Failure -> {
             val error = (writeDiaryState as WriteDiaryState.Failure).error
-            //TODO ToastMessage
-            showDialog = false
+            Log.e("WriteDiaryScreen", "Failed: $error")
+            showDialog = false // 상태가 실패일 때 다이얼로그 닫기
         }
         else -> {}
     }

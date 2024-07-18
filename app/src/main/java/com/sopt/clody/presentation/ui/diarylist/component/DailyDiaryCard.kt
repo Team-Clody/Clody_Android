@@ -41,7 +41,7 @@ import java.util.Locale
 fun DailyDiaryCard(
     index: Int,
     dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
-    onClickReplyDiary: () -> Unit
+    onClickReplyDiary: (Int, Int, Int) -> Unit
 ) {
     var showDiaryDeleteSheet by remember { mutableStateOf(false) }
     var showDiaryDeleteDialog by remember { mutableStateOf(false) }
@@ -56,7 +56,10 @@ fun DailyDiaryCard(
         else -> R.drawable.ic_home_ungiven_clover
     }
 
-    val day = dailyDiary.date.split("-")[2].toInt()
+    val dateParts = dailyDiary.date.split("-")
+    val year = dateParts[0].toInt()
+    val month = dateParts[1].toInt()
+    val day = dateParts[2].toInt()
     val dayOfWeek = getDayOfWeek(dailyDiary.date)
 
     Card(
@@ -109,7 +112,7 @@ fun DailyDiaryCard(
                             .padding(horizontal = 3.dp, vertical = 3.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
                         shape = RoundedCornerShape(size = 9.dp),
-                        onClick = onClickReplyDiary,
+                        onClick = { onClickReplyDiary(year, month, day) },
                         contentPadding = PaddingValues(0.dp),
                     ) {
                         Text(

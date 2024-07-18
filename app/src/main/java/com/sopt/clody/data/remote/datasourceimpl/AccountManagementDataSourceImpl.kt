@@ -14,11 +14,12 @@ class AccountManagementDataSourceImpl @Inject constructor(
     override suspend fun getUserInfo(): ApiResponse<ResponseUserInfoDto> {
         return accountManagementSevice.getUserInfo()
     }
-    
+
     override suspend fun ModifyNickname(requestModifyNicknameDto: RequestModifyNicknameDto): ApiResponse<ResponseModifyNicknameDto> {
         return accountManagementSevice.modifyNickname(requestModifyNicknameDto)
     }
-    
+
     override suspend fun revokeAccount(): ApiResponse<Unit> {
         return accountManagementSevice.revokeAccount()
+    }
 }

@@ -7,7 +7,9 @@ import com.sopt.clody.data.remote.api.ApiService
 import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.api.CalendarApiService
 import com.sopt.clody.data.remote.api.DiaryListService
+import com.sopt.clody.data.remote.api.DiaryTimeService
 import com.sopt.clody.data.remote.api.ReIssueService
+import com.sopt.clody.data.remote.api.ReplyDiaryService
 import com.sopt.clody.data.remote.api.WriteDiaryService
 import dagger.Module
 import dagger.Provides
@@ -75,5 +77,15 @@ object ApiModule {
     @Singleton
     fun provideWriteDiaryService(@CLODY retrofit: Retrofit): WriteDiaryService =
         retrofit.create(WriteDiaryService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideReplyDiaryService(@CLODY retrofit: Retrofit): ReplyDiaryService =
+        retrofit.create(ReplyDiaryService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDiaryTimeService(@CLODY retrofit: Retrofit): DiaryTimeService =
+        retrofit.create(DiaryTimeService::class.java)
 }
 

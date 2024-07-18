@@ -19,6 +19,7 @@ import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.presentation.ui.diarylist.navigation.diaryListNavGraph
 import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
 import com.sopt.clody.presentation.ui.home.navigation.homeNavGraph
+import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.ui.replyloading.navigation.replyLoadingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
@@ -39,6 +40,7 @@ fun MainNavHost(
     writeDiaryNavigator: WriteDiaryNavigator,
     settingNavigator: SettingNavigator,
     replyLoadingNavigator: ReplyLoadingNavigator,
+    replyDiaryNavigator: ReplyDiaryNavigator
 ) {
     Box(
         modifier = modifier
@@ -55,13 +57,13 @@ fun MainNavHost(
             nicknameNavGraph(authNavigator)
             guidNavGraph(authNavigator)
             timeReminderNavGraph(authNavigator)
-            homeNavGraph(homeNavigator)
-            diaryListNavGraph(diaryListNavigator)
+            homeNavGraph(homeNavigator, replyLoadingNavigator)
+            diaryListNavGraph(diaryListNavigator, replyLoadingNavigator)
             writeDiaryNavGraph(writeDiaryNavigator, replyLoadingNavigator)
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)
-            replyLoadingNavGraph(replyLoadingNavigator)
+            replyLoadingNavGraph(replyLoadingNavigator, replyDiaryNavigator)
         }
     }
 }

@@ -13,15 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.CalendarDate
-import com.sopt.clody.domain.model.DiaryData
-import com.sopt.clody.domain.model.daysInMonth
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
-import kotlin.random.Random
 
 @Composable
 fun MonthlyItem(
@@ -99,7 +95,3 @@ fun MonthlyItem(
         }
     }
 }
-
-
-
-
