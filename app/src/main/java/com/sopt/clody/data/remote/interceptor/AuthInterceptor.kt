@@ -33,7 +33,7 @@ class AuthInterceptor @Inject constructor(
             var response = chain.proceed(authRequest)
             if (response.code == TOKEN_EXPIRED) {
                 response.close()
-                response = handleTokenExpiration(chain, authRequest)
+                return handleTokenExpiration(chain, originalRequest)
             }
             response
         } else {
@@ -60,10 +60,10 @@ class AuthInterceptor @Inject constructor(
 
     private fun handleTokenExpiration(
         chain: Interceptor.Chain,
-        authRequest: Request
+        originalRequest: Request
     ): Response {
         return if (tryReissueToken()) {
-            val newRequest = authRequest.newBuilder().addAuthorizationHeader().build()
+            val newRequest = originalRequest.newBuilder().addAuthorizationHeader().build()
             chain.proceed(newRequest)
         } else {
             clearUserInfoAndRestart()
