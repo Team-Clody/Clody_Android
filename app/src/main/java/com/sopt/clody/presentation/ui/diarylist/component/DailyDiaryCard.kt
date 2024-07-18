@@ -41,7 +41,8 @@ import java.util.Locale
 fun DailyDiaryCard(
     index: Int,
     dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
-    onClickReplyDiary: (Int, Int, Int) -> Unit
+    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    onDeleteDiary: (Int, Int, Int) -> Unit
 ) {
     var showDiaryDeleteSheet by remember { mutableStateOf(false) }
     var showDiaryDeleteDialog by remember { mutableStateOf(false) }
@@ -157,7 +158,10 @@ fun DailyDiaryCard(
             descriptionMassage = "아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.",
             confirmOption = "삭제할래요",
             dismissOption = "아니요",
-            confirmAction = { /* TODO : 일기 삭제 로직 */ },
+            confirmAction = {
+                onDeleteDiary(year, month, day)
+                showDiaryDeleteDialog = false
+            },
             onDismiss = { showDiaryDeleteDialog = false },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white
