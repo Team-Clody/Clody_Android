@@ -40,17 +40,15 @@ fun ClodyPicker(
     infiniteScroll: Boolean = true
 ) {
     val visibleItemsMiddle = visibleItemsCount / 2
-    val emptyItems = List(visibleItemsMiddle) { "" }
-    val paddedItems = emptyItems + items + emptyItems
-    val listScrollCount = if (infiniteScroll) Integer.MAX_VALUE else paddedItems.size
+    val listScrollCount = if (infiniteScroll) Integer.MAX_VALUE else items.size + visibleItemsMiddle * 2
     val listScrollMiddle = listScrollCount / 2
     val listStartIndex = if (infiniteScroll) {
-        listScrollMiddle - listScrollMiddle % paddedItems.size - visibleItemsMiddle + startIndex
+        listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + startIndex
     } else {
-        startIndex + visibleItemsMiddle
+        startIndex
     }
 
-    fun getItem(index: Int) = paddedItems.getOrNull(index).orEmpty()
+    fun getItem(index: Int) = items.getOrNull(index % items.size) ?: ""
 
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = listStartIndex)
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
@@ -99,26 +97,26 @@ fun ClodyPicker(
                 }
         ) {
             items(listScrollCount) { index ->
-                Text(
-                    text = getItem(index),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
-                    modifier = Modifier
-                        .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
-                        .then(textModifier)
-                )
+                if (!infiniteScroll && (index < visibleItemsMiddle || index >= items.size + visibleItemsMiddle)) {
+                    Text(
+                        text = "",
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
+                        modifier = Modifier.height(itemHeightDp)
+                    )
+                } else {
+                    Text(
+                        text = getItem(index),
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
+                        modifier = Modifier
+                            .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
+                            .then(textModifier)
+                    )
+                }
             }
         }
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewPicker() {
-    ClodyPicker(
-        items = (1..99).map { it.toString() },
-        visibleItemsCount = 5,
-    )
 }
