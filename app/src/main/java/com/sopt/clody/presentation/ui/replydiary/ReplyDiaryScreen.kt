@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.replydiary
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,13 +10,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,47 +31,93 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
+
+
+@Composable
+fun ReplyDiaryRoute(
+    navigator: ReplyDiaryNavigator,
+    year: Int,
+    month: Int,
+    date: Int,
+    viewModel: ReplyDiaryViewModel = hiltViewModel(),
+) {
+    LaunchedEffect(Unit) {
+        viewModel.getReplyDiary(year, month, date)
+    }
+
+    var backPressedTime by remember { mutableStateOf(0L) }
+    val backPressThreshold = 2000 // 2 seconds
+
+    BackHandler {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - backPressedTime <= backPressThreshold) {
+            navigator.navigateHome()
+        } else {
+            backPressedTime = currentTime
+        }
+    }
+
+
+    ReplyDiaryScreen(
+        viewModel = viewModel,
+        onClickBack = { navigator.navigateHome() }
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReplyDiaryScreen() {
+fun ReplyDiaryScreen(
+    viewModel: ReplyDiaryViewModel,
+    onClickBack: () -> Unit,
+) {
+    val replyDiaryState by viewModel.replyDiaryState.collectAsState()
+
     var showDialog by remember { mutableStateOf(true) }
 
     if (showDialog) {
-        CloverDialog(
-            onDismiss = { showDialog = false },
-            titleMassage = "길동님을 위한 행운 도착",
-            descriptionMassage = "1개의 네잎클로버 획득",
-            confirmOption = "확인",
-            confirmAction = {
-                showDialog = false
-            },
-            confirmButtonColor = ClodyTheme.colors.mainYellow
-        )
+        if (replyDiaryState is ReplyDiaryState.Success) {
+            val nickname = (replyDiaryState as ReplyDiaryState.Success).nickname
+            CloverDialog(
+                onDismiss = { showDialog = false },
+                titleMassage = "${nickname}님을 위한 행운 도착",
+                descriptionMassage = "1개의 네잎클로버 획득",
+                confirmOption = "확인",
+                confirmAction = {
+                    showDialog = false
+                },
+                confirmButtonColor = ClodyTheme.colors.mainYellow
+            )
+        }
     } else {
         Scaffold(
             topBar = {
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = "5월 10일 금요일",
-                            style = ClodyTheme.typography.head4,
-                            color = ClodyTheme.colors.gray01,
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Image(
-                                painterResource(id = R.drawable.ic_nickname_back),
-                                contentDescription = "back"
+                if (replyDiaryState is ReplyDiaryState.Success) {
+                    val month = (replyDiaryState as ReplyDiaryState.Success).month
+                    val date = (replyDiaryState as ReplyDiaryState.Success).date
+                    CenterAlignedTopAppBar(
+                        title = {
+                            Text(
+                                text = "${month}월 ${date}일",
+                                style = ClodyTheme.typography.head4,
+                                color = ClodyTheme.colors.gray01,
                             )
-                        }
-                    }
-                )
+                        },
+                        navigationIcon = {
+                            IconButton(onClick = onClickBack) {
+                                Image(
+                                    painterResource(id = R.drawable.ic_nickname_back),
+                                    contentDescription = "back"
+                                )
+                            }
+                        },
+                        colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
+                    )
+                }
             },
             content = { innerPadding ->
                 Column(
@@ -73,6 +126,7 @@ fun ReplyDiaryScreen() {
                         .background(ClodyTheme.colors.white)
                         .padding(innerPadding)
                         .padding(horizontal = 24.dp)
+                        .verticalScroll(rememberScrollState()) // Add vertical scroll
                 ) {
                     Spacer(modifier = Modifier.height(13.dp))
 
@@ -85,41 +139,47 @@ fun ReplyDiaryScreen() {
                             .background(ClodyTheme.colors.gray08)
                             .weight(1f)
                     ) {
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.img_reply_logo),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .align(Alignment.CenterHorizontally)
-                                    .padding(top = 20.dp)
-                            )
+                        when (replyDiaryState) {
+                            is ReplyDiaryState.Loading -> {
+                                CircularProgressIndicator()
+                            }
+                            is ReplyDiaryState.Success -> {
+                                val content = (replyDiaryState as ReplyDiaryState.Success).content
+                                val nickname = (replyDiaryState as ReplyDiaryState.Success).nickname
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.img_reply_logo),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .align(Alignment.CenterHorizontally)
+                                            .padding(top = 20.dp)
+                                    )
 
-                            Text(
-                                text = "문수님을 위한 행운의 답장",
-                                style = ClodyTheme.typography.body2Medium,
-                                color = ClodyTheme.colors.gray01,
-                                modifier = Modifier.padding(top = 8.dp)
-                            )
-                            Text(
-                                text = "너무 잘 그렸다고 칭찬해 주셨어요. 정말 기뻤답니다. 점심 시간에는 친구들과 함께 점심을 먹었어요. 오늘의 점심 메뉴는 김밥이었어요. 저는 김밥을 아주 좋아해서 신나게 먹었어요. 점심을 다 먹고 나서는 운동장에서 친구들과 술래잡기를 했어요. 오늘은 제가 술래가 되어서 친구들을 잡으려고 열심히 뛰어 다녔어요. 모두가 웃고 떠들며 즐거운 시간을 보냈어요. 점심 시간이 끝나고 나서는 체육 시간이었어요. 오늘은 축구를 했어요. 저는 골키퍼 역할을 맡았는데, 친구들이 공을 차올 때마다 열심히 막아냈어요. 한 번은 공이 너무 세게 날아와서 조금 겁이 났지만, 그래도 용기를 내서 막았답니다. 아아아아아아낭미아아아아아아아아아아아아아아아아아아아아아아아아아낭미아아아아아아\n" +
-                                        "너무 잘 그렸다고 칭찬해 주셨어. 칭찬해 주셨어\n",
-                                modifier = Modifier.padding(24.dp),
-                                style = ClodyTheme.typography.letterMedium,
-                                color = ClodyTheme.colors.gray02,
-                            )
+                                    Text(
+                                        text = "${nickname}님을 위한 행운의 답장",
+                                        style = ClodyTheme.typography.body2Medium,
+                                        color = ClodyTheme.colors.gray01,
+                                        modifier = Modifier.padding(top = 8.dp)
+                                    )
+                                    Text(
+                                        text = content,
+                                        modifier = Modifier.padding(24.dp),
+                                        style = ClodyTheme.typography.letterMedium,
+                                        color = ClodyTheme.colors.gray02,
+                                    )
+                                }
+                            }
+                            is ReplyDiaryState.Failure -> {
+                                val error = (replyDiaryState as ReplyDiaryState.Failure).error
+                                Text("Error: $error")
+                            }
+                            else -> {}
                         }
                     }
                 }
             }
         )
     }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewReplyScreen() {
-    ReplyDiaryScreen()
 }

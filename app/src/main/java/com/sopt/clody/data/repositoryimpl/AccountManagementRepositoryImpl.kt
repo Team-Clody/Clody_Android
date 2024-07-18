@@ -24,8 +24,10 @@ class AccountManagementRepositoryImpl @Inject constructor(
             accountManagementDataSource.ModifyNickname(requestModifyNicknameDto).handleApiResponse().getOrThrow()
         }
     }
-    
+
     override suspend fun revokeAccount(): Result<Unit> {
         return runCatching {
             accountManagementDataSource.revokeAccount().handleApiResponse().getOrThrow()
+        }
+    }
 }

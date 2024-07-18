@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +23,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -32,24 +34,56 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
+import java.time.LocalTime
 
 @Composable
 fun ReplyLoadingRoute(
     navigator: ReplyLoadingNavigator,
+    year: Int,
+    month: Int,
+    day: Int,
+    viewModel: ReplyLoadingViewModel = hiltViewModel()
 ) {
-    ReplyLoadingScreen()
-}
-@Composable
-fun ReplyLoadingScreen() {
-    var remainingTime by remember { mutableStateOf(1 * 10) }
-    var isComplete by remember { mutableStateOf(false) }
+    val replyLoadingState by viewModel.replyLoadingState.collectAsState()
 
     LaunchedEffect(Unit) {
-        while (remainingTime > 0) {
-            delay(1000L)
-            remainingTime--
+        viewModel.getDiaryTime(year, month, day)
+    }
+
+    ReplyLoadingScreen(
+        onCompleteClick = { navigator.navigateReplyDiary(year, month, day) },
+        replyLoadingState = replyLoadingState
+    )
+}
+
+@Composable
+fun ReplyLoadingScreen(
+    onCompleteClick: () -> Unit,
+    replyLoadingState: ReplyLoadingState
+) {
+    var remainingTime by remember { mutableStateOf(0) }
+    var isComplete by remember { mutableStateOf(false) }
+
+    LaunchedEffect(replyLoadingState) {
+        if (replyLoadingState is ReplyLoadingState.Success) {
+            val diaryTime = with(replyLoadingState as ReplyLoadingState.Success) {
+                HH * 3600 + MM * 60 + SS
+            }
+            val currentTime = LocalTime.now().toSecondOfDay()
+            val timeDiff = diaryTime + 2 * 60 - currentTime // 현재 시간과 일기 작성 시간 + 2분
+            remainingTime = if (timeDiff > 0) timeDiff else 0 // 기본값은 0초 카운트다운
+            isComplete = remainingTime <= 0
         }
-        isComplete = true
+    }
+
+    LaunchedEffect(remainingTime) {
+        if (remainingTime > 0) {
+            while (remainingTime > 0) {
+                delay(1000L)
+                remainingTime--
+            }
+            isComplete = true
+        }
     }
 
     val hours = remainingTime / 3600
@@ -132,7 +166,7 @@ fun ReplyLoadingScreen() {
         )
 
         ClodyButton(
-            onClick = { /*TODO*/ },
+            onClick = { onCompleteClick() },
             text = "확인",
             enabled = isComplete,
             modifier = Modifier.constrainAs(completeButton) {
@@ -148,5 +182,9 @@ fun ReplyLoadingScreen() {
 @Preview(showBackground = true)
 @Composable
 fun PreviewReplyLoadingScreen() {
-    ReplyLoadingScreen()
+    ReplyLoadingScreen(
+        onCompleteClick = {},
+        replyLoadingState = ReplyLoadingState.Idle
+    )
 }
+

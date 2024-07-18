@@ -14,7 +14,7 @@ fun NavGraphBuilder.writeDiaryNavGraph(
     replyLoadingNavigator: ReplyLoadingNavigator
 ) {
     composable(
-        route = "write_diary/{year}/{month}/{day}",
+        "write_diary/{year}/{month}/{day}",
         arguments = listOf(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
@@ -26,7 +26,18 @@ fun NavGraphBuilder.writeDiaryNavGraph(
         val day = backStackEntry.arguments?.getInt("day") ?: 0
         WriteDiaryRoute(writeDiaryNavigator, year, month, day)
     }
-    composable("reply_loading") {
-        ReplyLoadingRoute(replyLoadingNavigator)
+    composable(
+        "reply_loading/{year}/{month}/{day}",
+        arguments = listOf(
+            navArgument("year") { type = NavType.IntType },
+            navArgument("month") { type = NavType.IntType },
+            navArgument("day") { type = NavType.IntType }
+        )
+    ) { backStackEntry ->
+        val year = backStackEntry.arguments?.getInt("year") ?: 0
+        val month = backStackEntry.arguments?.getInt("month") ?: 0
+        val day = backStackEntry.arguments?.getInt("day") ?: 0
+        ReplyLoadingRoute(replyLoadingNavigator, year, month, day)
     }
 }
+
