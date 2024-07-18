@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,7 +44,15 @@ fun TimeReminderScreen(
     onStartClick: () -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedTime by remember { mutableStateOf("오후 9시 30분") } // 상태 추가
+    var selectedAmPm by remember { mutableStateOf("오후") }
+    var selectedHour by remember { mutableStateOf("9") }
+    var selectedMinute by remember { mutableStateOf("30") }
+
+    val onRemindTimeSelected: (String, String, String) -> Unit = { amPm, hour, minute ->
+        selectedAmPm = amPm
+        selectedHour = hour
+        selectedMinute = minute
+    }
 
     Box(
         modifier = Modifier
@@ -70,7 +79,7 @@ fun TimeReminderScreen(
             )
 
             PickerBox(
-                time = selectedTime, // 수정: 선택된 시간을 전달
+                time = "${selectedAmPm} ${selectedHour}시 ${selectedMinute}분", // 수정: 선택된 시간을 전달
                 modifier = Modifier
                     .constrainAs(pickerBox) {
                         top.linkTo(title.bottom, margin = 46.dp)
@@ -127,7 +136,10 @@ fun TimeReminderScreen(
 
         if (showBottomSheet) {
             ClodyPopupBottomSheet(onDismissRequest = { showBottomSheet = false }) {
-                BottomSheetTimePicker(onDismissRequest = { showBottomSheet = false })
+                BottomSheetTimePicker(
+                    onDismissRequest = { showBottomSheet = false },
+                    onRemindTimeSelected = onRemindTimeSelected
+                )
             }
         }
     }

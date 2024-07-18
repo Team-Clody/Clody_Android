@@ -1,14 +1,17 @@
 package com.sopt.clody.presentation.ui.replyloading.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,6 +46,7 @@ fun ReplyLoadingRoute(
     year: Int,
     month: Int,
     day: Int,
+    from: String,
     viewModel: ReplyLoadingViewModel = hiltViewModel()
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
@@ -50,15 +55,30 @@ fun ReplyLoadingRoute(
         viewModel.getDiaryTime(year, month, day)
     }
 
+    var backPressedTime by remember { mutableStateOf(0L) }
+    val backPressThreshold = 2000
+
+    BackHandler {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - backPressedTime <= backPressThreshold) {
+            navigator.navigateHome()
+        } else {
+            backPressedTime = currentTime
+        }
+    }
+
     ReplyLoadingScreen(
         onCompleteClick = { navigator.navigateReplyDiary(year, month, day) },
+        onBackClick = { navigator.navigateBack(from) },
         replyLoadingState = replyLoadingState
     )
 }
 
+
 @Composable
 fun ReplyLoadingScreen(
     onCompleteClick: () -> Unit,
+    onBackClick: () -> Unit,
     replyLoadingState: ReplyLoadingState
 ) {
     var remainingTime by remember { mutableStateOf(0) }
@@ -70,8 +90,8 @@ fun ReplyLoadingScreen(
                 HH * 3600 + MM * 60 + SS
             }
             val currentTime = LocalTime.now().toSecondOfDay()
-            val timeDiff = diaryTime + 2 * 60 - currentTime // 현재 시간과 일기 작성 시간 + 2분
-            remainingTime = if (timeDiff > 0) timeDiff else 0 // 기본값은 0초 카운트다운
+            val timeDiff = diaryTime + 2 * 60 - currentTime
+            remainingTime = if (timeDiff > 0) timeDiff else 0
             isComplete = remainingTime <= 0
         }
     }
@@ -97,13 +117,27 @@ fun ReplyLoadingScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(ClodyTheme.colors.white)
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 12.dp)
     ) {
-        val (animation, timer, message, completeButton) = createRefs()
+        val (backButton, animation, timer, message, completeButton) = createRefs()
         val guideline = createGuidelineFromTop(0.25f)
 
         val fadeInOutAnimationSpec = tween<Float>(durationMillis = 3000) // 3000ms = 3s
 
+        IconButton(
+            onClick = onBackClick,
+            modifier = Modifier
+                .padding(top = 6.dp)
+                .constrainAs(backButton) {
+                    top.linkTo(parent.top)
+                    start.linkTo(parent.start)
+                }
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_nickname_back),
+                contentDescription = null,
+            )
+        }
         Box(
             modifier = Modifier
                 .constrainAs(animation) {
@@ -169,22 +203,26 @@ fun ReplyLoadingScreen(
             onClick = { onCompleteClick() },
             text = "확인",
             enabled = isComplete,
-            modifier = Modifier.constrainAs(completeButton) {
-                bottom.linkTo(parent.bottom, margin = 26.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                width = Dimension.fillToConstraints
-            }
+            modifier = Modifier
+                .constrainAs(completeButton) {
+                    bottom.linkTo(parent.bottom, margin = 26.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    width = Dimension.fillToConstraints
+                }
+                .padding(horizontal = 12.dp)
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewReplyLoadingScreen() {
     ReplyLoadingScreen(
-        onCompleteClick = {},
-        replyLoadingState = ReplyLoadingState.Idle
+        onCompleteClick = { /*TODO*/ },
+        onBackClick = { /*TODO*/ },
+        replyLoadingState = ReplyLoadingState.Success(1, 2, 3)
     )
 }
 
