@@ -7,30 +7,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
+import java.time.LocalDate
 
 @Composable
 fun DiaryStateButton(
     diaryCount: Int,
     replyStatus: String,
     isToday: Boolean,
-    onClickWriteDiary: () -> Unit,
-    onClickReplyDiary: () -> Unit
+    year: Int,
+    month: Int,
+    day: Int,
+    onClickWriteDiary: (Int, Int, Int) -> Unit,
+    onClickReplyDiary: () -> Unit,
 ) {
+    val today = LocalDate.now()
+    val isSelectedDateToday = year == today.year && month == today.monthValue && day == today.dayOfMonth
+
 
     when {
-        !isToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
+        isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
             ClodyButton(
-                onClick = onClickWriteDiary,
-                text = "일기쓰기",
-                enabled = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
-        isToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
-            ClodyButton(
-                onClick = onClickWriteDiary,
+                onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
                 enabled = true,
                 modifier = Modifier
@@ -38,7 +35,16 @@ fun DiaryStateButton(
                     .padding(horizontal = 16.dp)
             )
         }
-
+        !isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
+            ClodyButton(
+                onClick = { onClickWriteDiary(year, month, day) },
+                text = "일기쓰기",
+                enabled = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
         diaryCount != 0 && (replyStatus == "UNREADY" || replyStatus == "READY_NOT_READ" || replyStatus == "READY_READ") -> {
             ClodyReplyButton(
                 onClick = onClickReplyDiary,

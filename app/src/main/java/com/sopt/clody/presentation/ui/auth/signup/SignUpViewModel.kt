@@ -49,7 +49,6 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-
     // 카카오 로그인
     fun signInWithKakao(context: Context) {
         _signInState.value = SignInState(UiState.Loading)

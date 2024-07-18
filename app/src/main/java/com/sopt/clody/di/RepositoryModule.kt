@@ -3,6 +3,7 @@ package com.sopt.clody.di
 import com.sopt.clody.data.repository.AccountManagementRepository
 import com.sopt.clody.data.repository.AuthRepository
 import com.sopt.clody.data.repository.DailyDiariesRepository
+import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.DiaryListRepository
 import com.sopt.clody.data.repository.DiaryTimeRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
@@ -13,6 +14,7 @@ import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
 import com.sopt.clody.data.repository.WriteDiaryRepository
 import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DailyDiariesRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.DailyDiaryListRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryListRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryTimeRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.MonthlyCalendarRepositoryImpl
@@ -60,6 +62,12 @@ abstract class RepositoryModule {
     abstract fun bindMonthlyCalendarRepository(
         monthlyCalendarRepositoryImpl: MonthlyCalendarRepositoryImpl
     ): MonthlyCalendarRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDailyDiaryListRepository(
+        dailyDiaryListRepositoryImpl: DailyDiaryListRepositoryImpl
+    ): DailyDiaryListRepository
 
     @Binds
     @Singleton
