@@ -73,6 +73,9 @@ fun HomeScreen(
 
     LaunchedEffect(selectedYear, selectedMonth) {
         homeViewModel.loadCalendarData(selectedYear, selectedMonth)
+        if (selectedYear == currentDate.year && selectedMonth == currentDate.monthValue) {
+            homeViewModel.updateSelectedDate(currentDate)
+        }
     }
 
     LaunchedEffect(deleteDiaryResult) {
