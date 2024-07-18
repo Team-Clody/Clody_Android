@@ -11,11 +11,13 @@ class DailyDiaryListRepositoryImpl @Inject constructor(
     private val service: DailyDiaryListService
 ) : DailyDiaryListRepository {
     override suspend fun deleteDailyDiary(year: Int, month: Int, day: Int): Result<DailyDiariesResponseDto> {
-        return try {
+        return runCatching {
             val response = service.deleteDailyDiary(year, month, day)
             response.handleApiResponse()
-        } catch (e: Exception) {
-            Result.failure(e)
-        }
+        }.fold(
+            onSuccess = { it },
+            onFailure = { Result.failure(it) }
+        )
     }
 }
+
