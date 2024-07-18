@@ -1,6 +1,6 @@
 package com.sopt.clody.data.remote.api
 
-import com.sopt.clody.data.remote.dto.ReissueTokenResponseDto
+import com.sopt.clody.data.remote.dto.response.ReissueTokenResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Header

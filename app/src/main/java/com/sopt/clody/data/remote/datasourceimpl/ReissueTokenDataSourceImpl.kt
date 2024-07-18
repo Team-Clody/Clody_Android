@@ -2,7 +2,7 @@ package com.sopt.clody.data.remote.datasourceimpl
 
 import com.sopt.clody.data.remote.api.ReIssueService
 import com.sopt.clody.data.remote.datasource.ReissueTokenDataSource
-import com.sopt.clody.data.remote.dto.ReissueTokenResponseDto
+import com.sopt.clody.data.remote.dto.response.ReissueTokenResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 import javax.inject.Inject
 

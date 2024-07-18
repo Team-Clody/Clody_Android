@@ -65,6 +65,7 @@ fun HomeScreen(
     val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
         selectedYear = year
         selectedMonth = month
+        homeViewModel.updateIsToday(year, month)
     }
 
     LaunchedEffect(selectedYear, selectedMonth) {
@@ -72,6 +73,11 @@ fun HomeScreen(
     }
 
     val calendarData by homeViewModel.monthlyCalendarData.collectAsStateWithLifecycle()
+    val diaryCount by homeViewModel.diaryCount.collectAsStateWithLifecycle()
+    val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
+    val isToday by homeViewModel.isToday.collectAsStateWithLifecycle()
+
+    Log.d("HomeScreen", "diaryCount: $diaryCount, replyStatus: $replyStatus, isToday: $isToday")
 
     Column(
         modifier = Modifier
@@ -96,7 +102,8 @@ fun HomeScreen(
                         homeViewModel = homeViewModel,
                         onClickWriteDiary = onClickWriteDiary,
                         onClickReplyDiary = onClickReplyDiary,
-                        onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState }
+                        onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState },
+                        initialDate = currentDate
                     )
                 }, onFailure = { throwable ->
                     Log.e("HomeScreen", "Failed to load calendar data: ${throwable.message}")
@@ -146,10 +153,20 @@ fun ScrollableCalendarView(
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
-    onShowDiaryDeleteStateChange: (Boolean) -> Unit
+    onShowDiaryDeleteStateChange: (Boolean) -> Unit,
+    initialDate: LocalDate
 ) {
     val scrollState = rememberScrollState()
-    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    var selectedDate by remember { mutableStateOf(initialDate) }
+    var selectedDiaryCount by remember { mutableStateOf(0) }
+    var selectedReplyStatus by remember { mutableStateOf("UNREADY") }
+
+    LaunchedEffect(initialDate) {
+        val diary = diaries.getOrNull(initialDate.dayOfMonth - 1)
+        selectedDiaryCount = diary?.diaryCount ?: 0
+        selectedReplyStatus = diary?.replyStatus ?: "UNREADY"
+        homeViewModel.loadDailyDiariesData(initialDate.year, initialDate.monthValue, initialDate.dayOfMonth)
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -165,13 +182,22 @@ fun ScrollableCalendarView(
             onDateSelected = { date -> selectedDate = date },
             diaries = diaries,
             homeViewModel = homeViewModel,
+            onDateSelected = { date ->
+                selectedDate = date
+                homeViewModel.loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
+            },
+            onDiaryDataUpdated = { diaryCount, replyStatus ->
+                selectedDiaryCount = diaryCount
+                selectedReplyStatus = replyStatus
+            },
             onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
         )
         Spacer(modifier = Modifier.height(14.dp))
         DiaryStateButton(
-            diaryCount = 5,
-            replyStatus = "READY_NOT_READ",
-            onClickWriteDiary = { onClickWriteDiary(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth) },
+            diaryCount = selectedDiaryCount,
+            replyStatus = selectedReplyStatus,
+            isToday = selectedDate == LocalDate.now(),
+            onClickWriteDiary = onClickWriteDiary,
             onClickReplyDiary = onClickReplyDiary
         )
         Spacer(modifier = Modifier.height(14.dp))

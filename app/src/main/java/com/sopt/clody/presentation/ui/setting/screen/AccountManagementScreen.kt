@@ -59,9 +59,16 @@ fun AccountManagementScreen(
     var showRevokeDialog by remember { mutableStateOf(false) }
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
     var userName by remember { mutableStateOf("") }
+    val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
 
     LaunchedEffect(Unit) {
         accountManagementViewModel.fetchUserInfo()
+    }
+
+    LaunchedEffect(userNicknameState) {
+        if (userNicknameState is UserNicknameState.Success) {
+            accountManagementViewModel.fetchUserInfo()
+        }
     }
 
     Scaffold(
@@ -177,6 +184,7 @@ fun AccountManagementScreen(
 
     if (showChangeNicknameBottomSheet) {
         NicknameChangeModalBottomSheet(
+            accountManagementViewModel = accountManagementViewModel,
             userName = userName,
             onDismiss = { showChangeNicknameBottomSheet = false }
         )

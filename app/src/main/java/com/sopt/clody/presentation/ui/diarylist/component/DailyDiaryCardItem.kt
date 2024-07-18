@@ -10,7 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sopt.clody.data.remote.dto.diarylist.ResponseMonthlyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable

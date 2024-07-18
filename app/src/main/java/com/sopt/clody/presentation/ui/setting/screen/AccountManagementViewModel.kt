@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.jakewharton.processphoenix.ProcessPhoenix
 import com.sopt.clody.data.datastore.TokenDataStore
+import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
+import com.sopt.clody.data.remote.dto.ResponseModifyNicknameDto
 import com.sopt.clody.data.repository.AccountManagementRepository
 import com.sopt.clody.presentation.ui.main.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +28,9 @@ class AccountManagementViewModel @Inject constructor(
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
 
+    private val _userNicknameState = MutableStateFlow<UserNicknameState>(UserNicknameState.Idle)
+    val userNicknameState: StateFlow<UserNicknameState> = _userNicknameState
+  
     private val _revokeAccountState = MutableStateFlow<RevokeAccountState>(RevokeAccountState.Idle)
     val revokeAccountState: StateFlow<RevokeAccountState> = _revokeAccountState
 
@@ -40,6 +45,17 @@ class AccountManagementViewModel @Inject constructor(
         }
     }
 
+    fun changeNickname(requestModifyNicknameDto: RequestModifyNicknameDto) {
+        _userNicknameState.value = UserNicknameState.Loading
+        viewModelScope.launch {
+            val result = accountManagementRepository.modifyNickname(requestModifyNicknameDto)
+            _userNicknameState.value = result.fold(
+                onSuccess = { UserNicknameState.Success(it) },
+                onFailure = { UserNicknameState.Failure(it.message ?: "Unknown error")}
+            )
+        }
+    }
+    
     fun revokeAccount() {
         viewModelScope.launch {
             val result = accountManagementRepository.revokeAccount()
