@@ -40,6 +40,9 @@ class HomeViewModel @Inject constructor(
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
 
+    private val _selectedDate = MutableStateFlow(LocalDate.now())
+    val selectedDate: StateFlow<LocalDate> get() = _selectedDate
+
     init {
         updateIsToday(LocalDate.now().year, LocalDate.now().monthValue)
     }
@@ -49,8 +52,7 @@ class HomeViewModel @Inject constructor(
             val result = calendarRepository.getMonthlyCalendarData(year, month)
             _calendarData.value = result
             result.onSuccess { data ->
-                _diaryCount.value = data.diaries.size
-                _replyStatus.value = data.diaries.firstOrNull()?.replyStatus ?: "UNREADY"
+                updateDiaryState(data.diaries)
                 Log.d("HomeViewModel", "Loaded calendar data: ${data.diaries.size} diaries, replyStatus: ${_replyStatus.value}")
             }.onFailure {
                 Log.e("HomeViewModel", "Failed to load calendar data: ${it.message}")
@@ -77,14 +79,25 @@ class HomeViewModel @Inject constructor(
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
             _deleteDiaryResult.value = result.fold(
                 onSuccess = {
+                    loadCalendarData(year, month)
+                    loadDailyDiariesData(year, month, day)
                     DeleteDiaryState.Success
                 },
                 onFailure = {
                     DeleteDiaryState.Failure(it.message ?: "Unknown error")
                 }
-            ) as DeleteDiaryState
-            loadCalendarData(year, month)
-            loadDailyDiariesData(year, month, day)
+            )
         }
+    }
+
+    fun updateSelectedDate(date: LocalDate) {
+        _selectedDate.value = date
+        loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
+    }
+
+    fun updateDiaryState(diaries: List<MonthlyCalendarResponseDto.Diary>) {
+        val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
+        _diaryCount.value = selectedDiary?.diaryCount ?: 0
+        _replyStatus.value = selectedDiary?.replyStatus ?: "UNREADY"
     }
 }
