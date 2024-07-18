@@ -13,14 +13,17 @@ fun DiaryStateButton(
     diaryCount: Int,
     replyStatus: String,
     isToday: Boolean,
-    onClickWriteDiary: () -> Unit,
-    onClickReplyDiary: () -> Unit
+    year: Int,
+    month: Int,
+    day: Int,
+    onClickWriteDiary: (Int, Int, Int) -> Unit,
+    onClickReplyDiary: () -> Unit,
 ) {
 
     when {
         !isToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
             ClodyButton(
-                onClick = onClickWriteDiary,
+                onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
                 enabled = false,
                 modifier = Modifier
@@ -30,7 +33,7 @@ fun DiaryStateButton(
         }
         isToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
             ClodyButton(
-                onClick = onClickWriteDiary,
+                onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
                 enabled = true,
                 modifier = Modifier

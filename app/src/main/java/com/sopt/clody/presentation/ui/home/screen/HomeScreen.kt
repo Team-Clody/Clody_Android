@@ -28,7 +28,6 @@ import com.sopt.clody.presentation.ui.component.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
-import com.sopt.clody.presentation.ui.home.HomeViewModel
 import com.sopt.clody.presentation.ui.home.calendar.ClodyCalendar
 import com.sopt.clody.presentation.ui.home.component.CloverCount
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
@@ -66,7 +65,7 @@ fun HomeScreen(
     var selectedYear by remember { mutableStateOf(currentDate.year) }
     var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
 
-    val selectedDate = remember { mutableStateOf(currentDate) } // 추가
+    val selectedDate = remember { mutableStateOf(currentDate) }
 
     val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
         selectedYear = year
@@ -82,11 +81,19 @@ fun HomeScreen(
     val diaryCount by homeViewModel.diaryCount.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
     val isToday by homeViewModel.isToday.collectAsStateWithLifecycle()
+    val deleteDiaryResult by homeViewModel.deleteDiaryResult.collectAsStateWithLifecycle() // 추가
+
+    LaunchedEffect(deleteDiaryResult) {
+        if (deleteDiaryResult is DeleteDiaryState.Success) {
+            homeViewModel.loadCalendarData(selectedYear, selectedMonth)
+            homeViewModel.loadDailyDiariesData(selectedDate.value.year, selectedDate.value.monthValue, selectedDate.value.dayOfMonth)
+        }
+    }
 
     Log.d("HomeScreen", "diaryCount: $diaryCount, replyStatus: $replyStatus, isToday: $isToday")
 
     var backPressedTime by remember { mutableStateOf(0L) }
-    val backPressThreshold = 2000 // 2 seconds
+    val backPressThreshold = 2000
 
     val context = LocalContext.current
     BackHandler {
@@ -129,6 +136,7 @@ fun HomeScreen(
                 }
             )
         }
+
     }
 
     if (showYearMonthPickerState) {
@@ -155,7 +163,10 @@ fun HomeScreen(
             descriptionMassage = "아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.",
             confirmOption = "삭제할래요",
             dismissOption = "아니요",
-            confirmAction = { /* TODO : 일기 삭제 로직 */ },
+            confirmAction = {
+                homeViewModel.deleteDailyDiary(selectedYear, selectedMonth, selectedDate.value.dayOfMonth)
+                showDiaryDeleteDialog = false
+            },
             onDismiss = { showDiaryDeleteDialog = false },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white
@@ -214,12 +225,11 @@ fun ScrollableCalendarView(
             diaryCount = selectedDiaryCount,
             replyStatus = selectedReplyStatus,
             isToday = selectedDate.value == LocalDate.now(),
-            onClickWriteDiary = {
-                onClickWriteDiary(selectedDate.value.year, selectedDate.value.monthValue, selectedDate.value.dayOfMonth)
-            },
-            onClickReplyDiary = {
-                onClickReplyDiary(selectedDate.value.year, selectedDate.value.monthValue, selectedDate.value.dayOfMonth)
-            }
+            year = selectedDate.value.year,
+            month = selectedDate.value.monthValue,
+            day = selectedDate.value.dayOfMonth,
+            onClickWriteDiary = onClickWriteDiary,
+            onClickReplyDiary = { onClickReplyDiary(selectedDate.value.year, selectedDate.value.monthValue, selectedDate.value.dayOfMonth) }
         )
         Spacer(modifier = Modifier.height(14.dp))
     }

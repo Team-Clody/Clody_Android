@@ -14,6 +14,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.generateCalendarDates
-import com.sopt.clody.presentation.ui.home.HomeViewModel
+import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -33,7 +34,7 @@ import java.time.YearMonth
 fun ClodyCalendar(
     selectedYear: Int,
     selectedMonth: Int,
-    selectedDate: MutableState<LocalDate>, // 변경
+    selectedDate: MutableState<LocalDate>,
     onDateSelected: (LocalDate) -> Unit,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     homeViewModel: HomeViewModel,
@@ -44,6 +45,7 @@ fun ClodyCalendar(
     val dateList by remember(currentMonth.year, currentMonth.monthValue) {
         mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
     }
+    var selectedDateState by remember { mutableStateOf(selectedDate) }
     val initialDayOfWeek = selectedDate.value.dayOfWeek
 
     LaunchedEffect(selectedDate.value) {

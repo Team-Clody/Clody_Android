@@ -6,6 +6,7 @@ import com.sopt.clody.data.remote.api.AnotherApiService
 import com.sopt.clody.data.remote.api.ApiService
 import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.api.CalendarApiService
+import com.sopt.clody.data.remote.api.DailyDiaryListService
 import com.sopt.clody.data.remote.api.DiaryListService
 import com.sopt.clody.data.remote.api.DiaryTimeService
 import com.sopt.clody.data.remote.api.ReIssueService
@@ -41,6 +42,11 @@ object ApiModule {
     @Singleton
     fun provideDiaryListService(@CLODY retrofit: Retrofit): DiaryListService =
         retrofit.create(DiaryListService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideDailyDiaryListService(@CLODY retrofit: Retrofit): DailyDiaryListService =
+        retrofit.create(DailyDiaryListService::class.java)
 
     @Provides
     @Singleton
