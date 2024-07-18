@@ -10,10 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,11 +33,10 @@ import java.time.YearMonth
 fun ClodyCalendar(
     selectedYear: Int,
     selectedMonth: Int,
-    selectedDate: LocalDate,
+    selectedDate: MutableState<LocalDate>, // 변경
     onDateSelected: (LocalDate) -> Unit,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     homeViewModel: HomeViewModel,
-    onDateSelected: (LocalDate) -> Unit,
     onDiaryDataUpdated: (Int, String) -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
@@ -45,10 +44,10 @@ fun ClodyCalendar(
     val dateList by remember(currentMonth.year, currentMonth.monthValue) {
         mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
     }
-    val initialDayOfWeek = selectedDate.dayOfWeek
+    val initialDayOfWeek = selectedDate.value.dayOfWeek
 
-    LaunchedEffect(selectedDate) {
-        homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+    LaunchedEffect(selectedDate.value) {
+        homeViewModel.loadDailyDiariesData(selectedDate.value.year, selectedDate.value.monthValue, selectedDate.value.dayOfMonth)
     }
 
     val dailyDiariesData by homeViewModel.dailyDiariesData.collectAsStateWithLifecycle()
@@ -60,10 +59,9 @@ fun ClodyCalendar(
     ) {
         MonthlyItem(
             dateList = dateList,
-            selectedDate = selectedDate,
+            selectedDate = selectedDate.value,
             onDayClick = { date ->
-                selectedDate = date
-                selectedDayOfWeek = date.dayOfWeek
+                selectedDate.value = date
                 val diary = diaries.getOrNull(date.dayOfMonth - 1)
                 val diaryCount = diary?.diaryCount ?: 0
                 val replyStatus = diary?.replyStatus ?: "UNREADY"
@@ -80,7 +78,7 @@ fun ClodyCalendar(
             result.fold(
                 onSuccess = { data ->
                     DailyDiaryListItem(
-                        date = selectedDate,
+                        date = selectedDate.value,
                         dayOfWeek = initialDayOfWeek,
                         dailyDiaries = data.diaries,
                         onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
