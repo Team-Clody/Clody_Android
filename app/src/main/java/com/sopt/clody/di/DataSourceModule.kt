@@ -5,6 +5,7 @@ import com.sopt.clody.data.local.datasourceimpl.LocalDataSourceImpl
 import com.sopt.clody.data.remote.datasource.AccountManagementDataSource
 import com.sopt.clody.data.remote.datasource.AuthDataSource
 import com.sopt.clody.data.remote.datasource.DailyDiariesDataSource
+import com.sopt.clody.data.remote.datasource.DailyDiaryListDataSource
 import com.sopt.clody.data.remote.datasource.DiaryListDataSource
 import com.sopt.clody.data.remote.datasource.DiaryTimeDataSource
 import com.sopt.clody.data.remote.datasource.MonthlyCalendarDataSource
@@ -14,6 +15,7 @@ import com.sopt.clody.data.remote.datasourceimpl.AccountManagementDataSourceImpl
 import com.sopt.clody.data.remote.datasource.WriteDiaryDataSource
 import com.sopt.clody.data.remote.datasourceimpl.AuthDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DailyDiariesDataSourceImpl
+import com.sopt.clody.data.remote.datasourceimpl.DailyDiaryListDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DiaryListDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DiaryTimeDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.MonthlyCalendarDataSourceImpl
@@ -50,6 +52,12 @@ abstract class DataSourceModule {
     abstract fun bindMonthlyCalendarRemoteDataSource(
         monthlyCalendarDataSourceImpl: MonthlyCalendarDataSourceImpl
     ): MonthlyCalendarDataSource
+
+    @Binds
+    @Singleton
+    abstract fun bindDailyDiaryListRemoteDataSource(
+        dailyDiaryListDataSourceImpl: DailyDiaryListDataSourceImpl
+    ): DailyDiaryListDataSource
 
     @Binds
     @Singleton
