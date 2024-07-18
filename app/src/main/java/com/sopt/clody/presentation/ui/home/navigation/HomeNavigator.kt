@@ -18,10 +18,11 @@ class HomeNavigator(
     }
 
     fun navigateReplyLoading(year: Int, month: Int, day: Int) {
-        navController.navigate("reply_loading/$year/$month/$day") // 수정
+        navController.navigate("reply_loading/$year/$month/$day?from=home")
     }
 
     fun navigateBack() {
         navController.popBackStack()
     }
 }
+
