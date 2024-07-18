@@ -10,5 +10,5 @@ interface AccountManagementService {
     suspend fun getUserInfo(): ApiResponse<ResponseUserInfoDto>
 
     @DELETE("api/v1/user/revoke")
-    suspend fun revoke() : ApiResponse<Unit>
+    suspend fun revokeAccount() : ApiResponse<Unit>
 }

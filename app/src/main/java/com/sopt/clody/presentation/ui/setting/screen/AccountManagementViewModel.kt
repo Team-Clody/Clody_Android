@@ -26,8 +26,8 @@ class AccountManagementViewModel @Inject constructor(
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
 
-    private val _revokeState = MutableStateFlow<RevokeState>(RevokeState.Idle)
-    val revokeState: StateFlow<RevokeState> = _revokeState
+    private val _revokeAccountState = MutableStateFlow<RevokeAccountState>(RevokeAccountState.Idle)
+    val revokeAccountState: StateFlow<RevokeAccountState> = _revokeAccountState
 
     fun fetchUserInfo() {
         _userInfoState.value = UserInfoState.Loading
@@ -40,18 +40,18 @@ class AccountManagementViewModel @Inject constructor(
         }
     }
 
-    fun revoke() {
+    fun revokeAccount() {
         viewModelScope.launch {
-            val result = accountManagementRepository.revoke()
-            _revokeState.value = result.fold(
+            val result = accountManagementRepository.revokeAccount()
+            _revokeAccountState.value = result.fold(
                 onSuccess = {
                     tokenDataStore.clearInfo()
                     Handler(Looper.getMainLooper()).post {
                         ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
                     }
-                    RevokeState.Success(it)
+                    RevokeAccountState.Success(it)
                 },
-                onFailure = { RevokeState.Failure(it.message ?: "Unknown error") }
+                onFailure = { RevokeAccountState.Failure(it.message ?: "Unknown error") }
             )
         }
     }

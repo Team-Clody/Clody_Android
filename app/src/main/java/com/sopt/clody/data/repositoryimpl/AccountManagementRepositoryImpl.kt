@@ -15,9 +15,9 @@ class AccountManagementRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun revoke(): Result<Unit> {
+    override suspend fun revokeAccount(): Result<Unit> {
         return runCatching {
-            accountManagementDataSource.revoke().handleApiResponse().getOrThrow()
+            accountManagementDataSource.revokeAccount().handleApiResponse().getOrThrow()
         }
     }
 }

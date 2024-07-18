@@ -13,7 +13,7 @@ class AccountManagementDataSourceImpl @Inject constructor(
         return accountManagementSevice.getUserInfo()
     }
 
-    override suspend fun revoke(): ApiResponse<Unit> {
-        return accountManagementSevice.revoke()
+    override suspend fun revokeAccount(): ApiResponse<Unit> {
+        return accountManagementSevice.revokeAccount()
     }
 }
