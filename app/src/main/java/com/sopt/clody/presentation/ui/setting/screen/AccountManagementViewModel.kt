@@ -30,7 +30,7 @@ class AccountManagementViewModel @Inject constructor(
 
     private val _userNicknameState = MutableStateFlow<UserNicknameState>(UserNicknameState.Idle)
     val userNicknameState: StateFlow<UserNicknameState> = _userNicknameState
-  
+
     private val _revokeAccountState = MutableStateFlow<RevokeAccountState>(RevokeAccountState.Idle)
     val revokeAccountState: StateFlow<RevokeAccountState> = _revokeAccountState
 
@@ -55,7 +55,16 @@ class AccountManagementViewModel @Inject constructor(
             )
         }
     }
-    
+
+    fun logOutAccount() {
+        viewModelScope.launch {
+            tokenDataStore.clearInfo()
+            Handler(Looper.getMainLooper()).post {
+                ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
+            }
+        }
+    }
+
     fun revokeAccount() {
         viewModelScope.launch {
             val result = accountManagementRepository.revokeAccount()

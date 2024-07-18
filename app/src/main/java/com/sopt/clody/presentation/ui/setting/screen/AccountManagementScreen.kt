@@ -197,7 +197,7 @@ fun AccountManagementScreen(
             descriptionMassage = stringResource(R.string.account_management_dialog_logout_description),
             confirmOption = stringResource(R.string.account_management_dialog_logout_confirm),
             dismissOption = stringResource(R.string.account_management_dialog_logout_dismiss),
-            confirmAction = { /* TODO : 로그아웃 로직 */ }
+            confirmAction = { accountManagementViewModel.logOutAccount() }
         )
     }
 
