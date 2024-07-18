@@ -11,4 +11,6 @@ interface AccountManagementDataSource {
     suspend fun ModifyNickname(
         requestModifyNicknameDto: RequestModifyNicknameDto
     ) : ApiResponse<ResponseModifyNicknameDto>
+  
+    suspend fun revokeAccount(): ApiResponse<Unit>
 }
