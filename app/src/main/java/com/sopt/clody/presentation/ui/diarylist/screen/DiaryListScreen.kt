@@ -25,6 +25,7 @@ import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
+import com.sopt.clody.presentation.ui.diarylist.screen.DeleteDiaryListState
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListState
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.presentation.utils.extension.showToast
@@ -43,7 +44,6 @@ fun DiaryListRoute(
     )
 }
 
-
 @Composable
 fun DiaryListScreen(
     diaryListViewModel: DiaryListViewModel,
@@ -55,6 +55,7 @@ fun DiaryListScreen(
     var selectedYear by remember { mutableIntStateOf(currentDate.year) }
     var selectedMonth by remember { mutableIntStateOf(currentDate.monthValue) }
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
+    val deleteDiaryResult by diaryListViewModel.deleteDiaryResult.collectAsState()
 
     val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
         selectedYear = year
@@ -63,6 +64,22 @@ fun DiaryListScreen(
 
     LaunchedEffect(selectedYear, selectedMonth) {
         diaryListViewModel.fetchMonthlyDiary(selectedYear, selectedMonth)
+    }
+
+    when (deleteDiaryResult) {
+        is DeleteDiaryListState.Loading -> {
+        }
+
+        is DeleteDiaryListState.Success -> {
+            LaunchedEffect(Unit) {
+                diaryListViewModel.fetchMonthlyDiary(selectedYear, selectedMonth)
+            }
+        }
+
+        is DeleteDiaryListState.Failure -> {
+        }
+
+        else -> {}
     }
 
     Scaffold(
@@ -85,12 +102,12 @@ fun DiaryListScreen(
         containerColor = ClodyTheme.colors.gray08,
     ) { innerPadding ->
         when (diaryListState) {
-            is DiaryListState.Idle -> { }
+            is DiaryListState.Idle -> {}
             is DiaryListState.Loading -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
-                ){
+                ) {
                     CircularProgressIndicator(
                         modifier = Modifier
                             .padding(innerPadding)
@@ -99,13 +116,16 @@ fun DiaryListScreen(
                     )
                 }
             }
+
             is DiaryListState.Success -> {
                 MonthlyDiaryList(
                     paddingValues = innerPadding,
                     onClickReplyDiary = onClickReplyDiary,
-                    diaries = (diaryListState as DiaryListState.Success).data.diaries
+                    diaries = (diaryListState as DiaryListState.Success).data.diaries,
+                    diaryListViewModel = diaryListViewModel
                 )
             }
+
             is DiaryListState.Failure -> {
                 showToast(message = "${(diaryListState as DiaryListState.Failure).errorMessage}")
             }
