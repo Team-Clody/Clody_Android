@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="Theme.CLODY" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 
-    <style name="Theme.CLODY" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.Splash" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/mainYellow</item>
+
+        <item name="windowSplashScreenAnimatedIcon">@color/mainYellow</item>
+
+        <item name="postSplashScreenTheme">@style/Theme.CLODY</item>
+    </style>
 </resources>
