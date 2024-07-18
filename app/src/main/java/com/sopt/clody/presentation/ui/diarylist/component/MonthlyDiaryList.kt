@@ -13,7 +13,7 @@ import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 @Composable
 fun MonthlyDiaryList(
     paddingValues: PaddingValues,
-    onClickReplyDiary: () -> Unit,
+    onClickReplyDiary: (Int, Int, Int) -> Unit,
     diaries: List<ResponseMonthlyDiaryDto.DailyDiary>
 ) {
     LazyColumn(
