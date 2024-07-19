@@ -74,7 +74,6 @@ fun ReplyLoadingRoute(
     )
 }
 
-
 @Composable
 fun ReplyLoadingScreen(
     onCompleteClick: () -> Unit,
@@ -90,8 +89,9 @@ fun ReplyLoadingScreen(
                 HH * 3600 + MM * 60 + SS
             }
             val currentTime = LocalTime.now().toSecondOfDay()
-            val timeDiff = diaryTime + 1 * 30 - currentTime // 30초로 조정함
+            val timeDiff = diaryTime - currentTime
             remainingTime = if (timeDiff > 0) timeDiff else 0
+            remainingTime = minOf(remainingTime, 30)  // 30초를 넘지 않도록 제한
             isComplete = remainingTime <= 0
         }
     }
@@ -215,7 +215,6 @@ fun ReplyLoadingScreen(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewReplyLoadingScreen() {
@@ -225,4 +224,3 @@ fun PreviewReplyLoadingScreen() {
         replyLoadingState = ReplyLoadingState.Success(1, 2, 3)
     )
 }
-
