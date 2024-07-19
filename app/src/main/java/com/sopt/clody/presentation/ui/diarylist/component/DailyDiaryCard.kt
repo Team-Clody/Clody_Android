@@ -51,9 +51,9 @@ fun DailyDiaryCard(
         dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.replyStatus == "UNREADY" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
-        dailyDiary.diaryCount == 1 -> R.drawable.ic_home_bottom_clover
-        dailyDiary.diaryCount in 2..3 -> R.drawable.ic_home_mid_clover
-        dailyDiary.diaryCount in 4..5 -> R.drawable.ic_home_top_clover
+        dailyDiary.diaryCount in 1..2-> R.drawable.ic_home_bottom_clover
+        dailyDiary.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
+        dailyDiary.diaryCount == 5 -> R.drawable.ic_home_top_clover
         else -> R.drawable.ic_home_ungiven_clover
     }
 
