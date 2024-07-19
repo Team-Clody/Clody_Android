@@ -181,7 +181,7 @@ fun ReplyLoadingScreen(
             style = ClodyTheme.typography.head2,
             color = ClodyTheme.colors.gray01,
             modifier = Modifier.constrainAs(timer) {
-                top.linkTo(animation.bottom, margin = 12.dp)
+                top.linkTo(animation.bottom, margin = 24.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
             }
@@ -193,7 +193,7 @@ fun ReplyLoadingScreen(
             color = ClodyTheme.colors.gray04,
             modifier = Modifier
                 .constrainAs(message) {
-                    top.linkTo(timer.bottom, margin = 4.dp)
+                    top.linkTo(timer.bottom, margin = 8.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
