@@ -195,7 +195,7 @@ fun ReplyDiaryScreen(
                                         Modifier.size(80.dp)
                                     )
                                     Text(
-                                        text = "현재 시스템에러로 딥징을 작성하지 못했어요 \n잠시 후 다시 확인해주세요",
+                                        text = "현재 시스템에러로 답장을 작성하지 못했어요 \n잠시 후 다시 확인해주세요",
                                         style = ClodyTheme.typography.head4,
                                         color = ClodyTheme.colors.gray01,
                                         textAlign = TextAlign.Center,
