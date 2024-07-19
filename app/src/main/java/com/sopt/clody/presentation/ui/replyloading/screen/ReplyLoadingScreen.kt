@@ -90,7 +90,7 @@ fun ReplyLoadingScreen(
                 HH * 3600 + MM * 60 + SS
             }
             val currentTime = LocalTime.now().toSecondOfDay()
-            val timeDiff = diaryTime + 2 * 60 - currentTime
+            val timeDiff = diaryTime + 1 * 30 - currentTime // 30초로 조정함
             remainingTime = if (timeDiff > 0) timeDiff else 0
             isComplete = remainingTime <= 0
         }
