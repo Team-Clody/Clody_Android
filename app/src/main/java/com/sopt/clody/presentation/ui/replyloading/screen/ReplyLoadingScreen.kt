@@ -201,7 +201,7 @@ fun ReplyLoadingScreen(
 
         ClodyButton(
             onClick = { onCompleteClick() },
-            text = "확인",
+            text = if (isComplete) "열어보기" else "확인",
             enabled = isComplete,
             modifier = Modifier
                 .constrainAs(completeButton) {
