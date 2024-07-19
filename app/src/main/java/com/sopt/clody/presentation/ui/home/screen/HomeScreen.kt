@@ -73,6 +73,9 @@ fun HomeScreen(
 
     LaunchedEffect(selectedYear, selectedMonth) {
         homeViewModel.loadCalendarData(selectedYear, selectedMonth)
+        if (selectedYear == currentDate.year && selectedMonth == currentDate.monthValue) {
+            homeViewModel.updateSelectedDate(currentDate)
+        }
     }
 
     LaunchedEffect(deleteDiaryResult) {
@@ -157,7 +160,13 @@ fun HomeScreen(
                 onYearMonthSelected = { year, month ->
                     selectedYear = year
                     selectedMonth = month
-                    homeViewModel.updateSelectedDate(LocalDate.of(year, month, 1))
+                    val newDate = if (year == currentDate.year && month == currentDate.monthValue) {
+                        currentDate
+                    } else {
+                        LocalDate.of(year, month, 1)
+                    }
+                    homeViewModel.updateSelectedDate(newDate)
+                    homeViewModel.loadCalendarData(year, month)
                 }
             )
         }
@@ -220,7 +229,7 @@ fun ScrollableCalendarView(
         ClodyCalendar(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
-            selectedDate = remember { mutableStateOf(selectedDate) },
+            selectedDate = selectedDate,
             onDateSelected = { date ->
                 homeViewModel.updateSelectedDate(date)
             },

@@ -45,6 +45,8 @@ class HomeViewModel @Inject constructor(
 
     init {
         updateIsToday(LocalDate.now().year, LocalDate.now().monthValue)
+        loadCalendarData(LocalDate.now().year, LocalDate.now().monthValue)
+        updateSelectedDate(LocalDate.now())
     }
 
     fun loadCalendarData(year: Int, month: Int) {
@@ -70,6 +72,11 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             val result = diariesRepository.getDailyDiariesData(year, month, date)
             _dailyDiariesData.value = result
+            result.onSuccess { data ->
+                Log.d("HomeViewModel", "Loaded daily diaries data for $year-$month-$date: ${data.diaries.size} diaries")
+            }.onFailure {
+                Log.e("HomeViewModel", "Failed to load daily diaries data for $year-$month-$date: ${it.message}")
+            }
         }
     }
 
