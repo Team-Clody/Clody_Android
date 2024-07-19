@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.map
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ClodyPicker(
+fun YearMonthPickerItem(
     modifier: Modifier = Modifier,
     items: List<String>,
     state: PickerState = rememberPickerState(),
@@ -40,15 +40,17 @@ fun ClodyPicker(
     infiniteScroll: Boolean = true
 ) {
     val visibleItemsMiddle = visibleItemsCount / 2
-    val listScrollCount = if (infiniteScroll) Integer.MAX_VALUE else items.size + visibleItemsMiddle * 2
+    val emptyItems = List(visibleItemsMiddle) { "" }
+    val paddedItems = emptyItems + items + emptyItems
+    val listScrollCount = if (infiniteScroll) Integer.MAX_VALUE else paddedItems.size
     val listScrollMiddle = listScrollCount / 2
     val listStartIndex = if (infiniteScroll) {
-        listScrollMiddle - listScrollMiddle % items.size - visibleItemsMiddle + startIndex
+        listScrollMiddle - listScrollMiddle % paddedItems.size - visibleItemsMiddle + startIndex
     } else {
-        startIndex
+        startIndex + visibleItemsMiddle
     }
 
-    fun getItem(index: Int) = items.getOrNull(index % items.size) ?: ""
+    fun getItem(index: Int) = paddedItems.getOrNull(index).orEmpty()
 
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = listStartIndex)
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
@@ -97,26 +99,26 @@ fun ClodyPicker(
                 }
         ) {
             items(listScrollCount) { index ->
-                if (!infiniteScroll && (index < visibleItemsMiddle || index >= items.size + visibleItemsMiddle)) {
-                    Text(
-                        text = "",
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
-                        modifier = Modifier.height(itemHeightDp)
-                    )
-                } else {
-                    Text(
-                        text = getItem(index),
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
-                        modifier = Modifier
-                            .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
-                            .then(textModifier)
-                    )
-                }
+                Text(
+                    text = getItem(index),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
+                    modifier = Modifier
+                        .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
+                        .then(textModifier)
+                )
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPicker() {
+    YearMonthPickerItem(
+        items = (1..99).map { it.toString() },
+        visibleItemsCount = 5,
+    )
 }

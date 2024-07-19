@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.component
+package com.sopt.clody.presentation.ui.component.timepicker
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,8 +26,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
-import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
-import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -104,7 +102,7 @@ fun YearMonthPicker(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
-                    ClodyPicker(
+                    YearMonthPickerItem(
                         state = yearPickerState,
                         items = yearItems,
                         startIndex = startYearIndex,
@@ -115,7 +113,7 @@ fun YearMonthPicker(
                         textModifier = Modifier.padding(8.dp),
                     )
                     Spacer(modifier = Modifier.width(20.dp))
-                    ClodyPicker(
+                    YearMonthPickerItem(
                         state = monthPickerState,
                         items = monthItems,
                         startIndex = startMonthIndex,
