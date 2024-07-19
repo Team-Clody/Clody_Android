@@ -12,9 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -134,7 +133,6 @@ fun ReplyDiaryScreen(
                         .background(ClodyTheme.colors.white)
                         .padding(innerPadding)
                         .padding(horizontal = 24.dp)
-                        .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(modifier = Modifier.height(13.dp))
 
@@ -154,29 +152,46 @@ fun ReplyDiaryScreen(
                             is ReplyDiaryState.Success -> {
                                 val content = (replyDiaryState as ReplyDiaryState.Success).content
                                 val nickname = (replyDiaryState as ReplyDiaryState.Success).nickname
-                                Column(
-                                    horizontalAlignment = Alignment.CenterHorizontally
+                                LazyColumn(
+                                    modifier = Modifier.fillMaxSize()
                                 ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.img_reply_logo),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .align(Alignment.CenterHorizontally)
-                                            .padding(top = 20.dp)
-                                    )
+                                    item {
+                                        Box(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.img_reply_logo),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .padding(top = 20.dp)
+                                            )
+                                        }
 
-                                    Text(
-                                        text = "${nickname}님을 위한 행운의 답장",
-                                        style = ClodyTheme.typography.body2Medium,
-                                        color = ClodyTheme.colors.gray01,
-                                        modifier = Modifier.padding(top = 8.dp)
-                                    )
-                                    Text(
-                                        text = content,
-                                        modifier = Modifier.padding(24.dp),
-                                        style = ClodyTheme.typography.letterMedium,
-                                        color = ClodyTheme.colors.gray02,
-                                    )
+                                        Box(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = "${nickname}님을 위한 행운의 답장",
+                                                style = ClodyTheme.typography.body2Medium,
+                                                color = ClodyTheme.colors.gray01,
+                                                modifier = Modifier.padding(top = 8.dp)
+                                            )
+                                        }
+
+                                        Box(
+                                            modifier = Modifier.fillMaxWidth(),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Text(
+                                                text = content,
+                                                modifier = Modifier.padding(24.dp),
+                                                style = ClodyTheme.typography.letterMedium,
+                                                color = ClodyTheme.colors.gray02,
+                                            )
+                                        }
+                                    }
                                 }
                             }
                             is ReplyDiaryState.Failure -> {
