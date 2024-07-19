@@ -28,4 +28,9 @@ class AuthNavigator(
     fun navigateBack() {
         navController.popBackStack()
     }
+    fun navigateToSignupScreen() {
+        navController.navigate("register") {
+            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+        }
+    }
 }
