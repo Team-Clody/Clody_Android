@@ -3,6 +3,7 @@ package com.sopt.clody.presentation.ui.replydiary
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -31,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -62,7 +65,6 @@ fun ReplyDiaryRoute(
         }
     }
 
-
     ReplyDiaryScreen(
         viewModel = viewModel,
         onClickBack = { navigator.navigateHome() }
@@ -77,7 +79,13 @@ fun ReplyDiaryScreen(
 ) {
     val replyDiaryState by viewModel.replyDiaryState.collectAsState()
 
-    var showDialog by remember { mutableStateOf(true) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(replyDiaryState) {
+        if (replyDiaryState is ReplyDiaryState.Success) {
+            showDialog = true
+        }
+    }
 
     if (showDialog) {
         if (replyDiaryState is ReplyDiaryState.Success) {
@@ -96,9 +104,9 @@ fun ReplyDiaryScreen(
     } else {
         Scaffold(
             topBar = {
-                if (replyDiaryState is ReplyDiaryState.Success) {
-                    val month = (replyDiaryState as ReplyDiaryState.Success).month
-                    val date = (replyDiaryState as ReplyDiaryState.Success).date
+                if (replyDiaryState is ReplyDiaryState.Success || replyDiaryState is ReplyDiaryState.NotFound) {
+                    val month = (replyDiaryState as? ReplyDiaryState.Success)?.month
+                    val date = (replyDiaryState as? ReplyDiaryState.Success)?.date
                     CenterAlignedTopAppBar(
                         title = {
                             Text(
@@ -126,7 +134,7 @@ fun ReplyDiaryScreen(
                         .background(ClodyTheme.colors.white)
                         .padding(innerPadding)
                         .padding(horizontal = 24.dp)
-                        .verticalScroll(rememberScrollState()) // Add vertical scroll
+                        .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(modifier = Modifier.height(13.dp))
 
@@ -174,6 +182,28 @@ fun ReplyDiaryScreen(
                             is ReplyDiaryState.Failure -> {
                                 val error = (replyDiaryState as ReplyDiaryState.Failure).error
                                 Text("Error: $error")
+                            }
+                            is ReplyDiaryState.NotFound -> {
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_not_found),
+                                        contentDescription = null,
+                                        Modifier.size(80.dp)
+                                    )
+                                    Text(
+                                        text = "현재 시스템에러로 딥징을 작성하지 못했어요 \n잠시 후 다시 확인해주세요",
+                                        style = ClodyTheme.typography.head4,
+                                        color = ClodyTheme.colors.gray01,
+                                        textAlign = TextAlign.Center,
+                                        modifier = Modifier
+                                            .padding(top = 16.dp)
+                                            .align(Alignment.CenterHorizontally)
+                                    )
+                                }
                             }
                             else -> {}
                         }
