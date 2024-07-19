@@ -117,7 +117,7 @@ fun HomeScreen(
                         ScrollableCalendarView(
                             selectedYear = selectedYear,
                             selectedMonth = selectedMonth,
-                            cloverCount = data.totalMonthlyCount,
+                            cloverCount = data.totalCloverCount,
                             diaries = data.diaries,
                             homeViewModel = homeViewModel,
                             onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState },
