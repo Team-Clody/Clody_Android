@@ -30,7 +30,14 @@ class ReplyDiaryViewModel @Inject constructor(
                         date = data.date
                     )
                 },
-                onFailure = { ReplyDiaryState.Failure(it.message ?: "Unknown error") }
+                onFailure = {
+                    val message = it.message ?: "Unknown error"
+                    if (message.contains("400") || message.contains("User not found")) {
+                        ReplyDiaryState.NotFound
+                    } else {
+                        ReplyDiaryState.Failure(message)
+                    }
+                }
             )
         }
     }
