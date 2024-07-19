@@ -40,9 +40,9 @@ fun DayItem(
         diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         diaryData.replyStatus == "UNREADY" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         diaryData.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
-        diaryData.diaryCount == 1 -> R.drawable.ic_home_bottom_clover
-        diaryData.diaryCount in 2..3 -> R.drawable.ic_home_mid_clover
-        diaryData.diaryCount in 4..5 -> R.drawable.ic_home_top_clover
+        diaryData.diaryCount in 1..2-> R.drawable.ic_home_bottom_clover
+        diaryData.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
+        diaryData.diaryCount == 5 -> R.drawable.ic_home_top_clover
         else -> R.drawable.ic_home_ungiven_clover
     }
 
