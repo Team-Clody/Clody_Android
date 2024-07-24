@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">CLODY</string>
 
-    <!--회원가입 UI-->
+    <!--회원가입 -->
     <string name="signup_title">행운을 전하는 감사일기</string>
     <string name="signup_btn_kakao">카카오로 로그인</string>
 
@@ -11,33 +11,6 @@
     <string name="terms_service_use">(필수) 서비스 이용약관</string>
     <string name="terms_service_privacy">(필수) 개인정보 처리방침</string>
     <string name="terms_next">다음</string>
-
-    <!-- 설정 -->
-    <string name="account_management_topappbar_title">프로필 및 계정 관리</string>
-    <string name="setting_topappbar_title">설정</string>
-    <string name="setting_account_management">프로필 및 계정 관리</string>
-    <string name="setting_notification_setting">알림 설정</string>
-    <string name="setting_announcement">공지사항</string>
-    <string name="setting_inquiries_suggestions">문의/제안하기</string>
-    <string name="setting_terms_of_service">서비스 이용 약관</string>
-    <string name="setting_privacy_policy">개인정보 처리방침</string>
-    <string name="setting_app_version">앱 버전</string>
-    <string name="account_management_user_name">님</string>
-    <string name="account_management_button_nickname_change">변경하기</string>
-    <string name="nickname_change_title">닉네임 변경</string>
-    <string name="nickname_change_notice">특수문자, 띄어쓰기 없이 작성해주세요</string>
-    <string name="account_management_button_logout">로그아웃</string>
-    <string name="account_management_dialog_logout_title">로그아웃 하시겠어요?</string>
-    <string name="account_management_dialog_logout_description">기다릴게요, 다음에 다시 만나요!</string>
-    <string name="account_management_dialog_logout_confirm">로그아웃</string>
-    <string name="account_management_dialog_logout_dismiss">아니요</string>
-    <string name="account_management_text_revoke">계정을 삭제하시겠어요?</string>
-    <string name="account_management_button_revoke">회원탈퇴</string>
-    <string name="account_management_dialog_revoke_title">서비스를 탈퇴하시겠어요?</string>
-    <string name="account_management_dialog_revoke_description">작성하신 일기와 받은 답장 및 클로버가\n 모두 삭제되며 복구할 수 없어요.</string>
-    <string name="account_management_dialog_revoke_confirm">탈퇴할래요</string>
-    <string name="account_management_dialog_revoke_dismiss">아니요</string>
-    <string name="nickname_change_confirm">변경하기</string>
 
     <!-- 타임피커 -->
     <string name="time_picker_title">발송 시간 변경</string>
@@ -59,9 +32,16 @@
     <string name="guide_page4_subtitle">기다리고 있을게요!</string>
     <string name="guide_page4_description">두번째 일기부터는 네잎클로버를 찾는 데\n12시간이 걸리니 조금만 기다려 주세요</string>
 
-    <!-- 로딩 화면 -->
+    <!-- 답장 로딩 화면 -->
     <string name="loading_message">로디가 열심히 답장을 쓰고 있어요</string>
     <string name="complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
+    <string name="diarylist_check_reply">답장 확인</string>
+
+    <!-- 일기 삭제 다이얼로그-->
+    <string name="delete_diary_dialog_title">정말 일기를 삭제할까요?</string>
+    <string name="delete_diary_dialog_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
+    <string name="delete_diary_dialog_confirm_option">삭제할래요</string>
+    <string name="delete_diary_dialog_dismiss_option">아니요</string>
 
     <!-- 설정 -->
     <string name="setting_title">설정</string>
