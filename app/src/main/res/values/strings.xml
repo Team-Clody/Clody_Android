@@ -63,5 +63,41 @@
     <string name="loading_message">로디가 열심히 답장을 쓰고 있어요</string>
     <string name="complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
 
+    <!-- 설정 -->
+    <string name="setting_title">설정</string>
+    <string name="setting_option_account_management">프로필 및 계정 관리</string>
+    <string name="setting_option_notification_setting">알림 설정</string>
+    <string name="setting_option_announcement">공지사항</string>
+    <string name="setting_option_inquiries_suggestions">문의/제안하기</string>
+    <string name="setting_option_terms_of_service">서비스 이용 약관</string>
+    <string name="setting_option_privacy_policy">개인정보 처리방침</string>
+    <string name="setting_option_app_version">앱 버전</string>
+    <string name="setting_app_version">최신버전</string>
+
+    <!-- 프로필 및 계정 관리 -->
+    <string name="account_management_title">프로필 및 계정 관리</string>
+    <string name="account_management_nickname">님</string>
+    <string name="account_management_nickname_change_button">변경하기</string>
+    <string name="account_management_nickname_change_title">닉네임 변경</string>
+    <string name="account_management_nickname_change_notice">특수문자, 띄어쓰기 없이 작성해주세요</string>
+    <string name="account_management_nickname_change_confirm">변경하기</string>
+    <string name="account_management_logout_button">로그아웃</string>
+    <string name="account_management_logout_dialog_title">로그아웃 하시겠어요?</string>
+    <string name="account_management_logout_dialog_description">기다릴게요, 다음에 다시 만나요!</string>
+    <string name="account_management_logout_dialog_confirm">로그아웃</string>
+    <string name="account_management_logout_dialog_dismiss">아니요</string>
+    <string name="account_management_revoke">계정을 삭제하시겠어요?</string>
+    <string name="account_management_revoke_button">회원탈퇴</string>
+    <string name="account_management_revoke_dialog_title">서비스를 탈퇴하시겠어요?</string>
+    <string name="account_management_revoke_dialog_description">작성하신 일기와 받은 답장 및 클로버가\n 모두 삭제되며 복구할 수 없어요.</string>
+    <string name="account_management_revoke_dialog_confirm">탈퇴할래요</string>
+    <string name="account_management_revoke_dialog_dismiss">아니요</string>
+
+    <!-- 알림 설정 -->
+    <string name="notification_setting_title">프로필 및 계정 관리</string>
+    <string name="notification_setting_write_diary">일기 작성 알림 받기</string>
+    <string name="notification_setting_notification_time">알림 시간</string>
+    <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
+    <string name="notification_setting_timepicker_confirm">완료</string>
 
 </resources>

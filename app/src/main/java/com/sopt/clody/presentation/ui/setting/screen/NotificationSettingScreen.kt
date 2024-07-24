@@ -1,7 +1,6 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,7 +47,7 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
     var selectedTime by remember { mutableStateOf("오후 9시 30분") }
 
     Scaffold(
-        topBar = { SettingTopAppBar(stringResource(R.string.setting_notification_setting), onBackClick) },
+        topBar = { SettingTopAppBar(stringResource(R.string.notification_setting_title), onBackClick) },
         containerColor = ClodyTheme.colors.white,
         contentColor = ClodyTheme.colors.white
     ) { innerPadding ->
@@ -58,16 +57,16 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
                 .padding(top = 20.dp)
         ) {
             NotificationSettingSwitch(
-                title = "일기 작성 알림 받기",
+                title = stringResource(R.string.notification_setting_write_diary),
                 checkedState = remember { mutableStateOf(true) }
             )
             Spacer(modifier = Modifier.height(32.dp))
             AlarmTimeSetting(
-                showBottomSheetStateChange = { newState -> showBottomSheet = newState}
+                showBottomSheetStateChange = { newState -> showBottomSheet = newState }
             )
             Spacer(modifier = Modifier.height(32.dp))
             NotificationSettingSwitch(
-                title = "답장 도착 알림 받기",
+                title = stringResource(R.string.notification_setting_reply_diary),
                 checkedState = remember { mutableStateOf(true) }
             )
         }
@@ -125,7 +124,7 @@ fun AlarmTimeSetting(showBottomSheetStateChange: (Boolean) -> Unit) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = "알림 시간",
+            text = stringResource(R.string.notification_setting_notification_time),
             style = ClodyTheme.typography.body1Medium,
             color = ClodyTheme.colors.gray03
         )

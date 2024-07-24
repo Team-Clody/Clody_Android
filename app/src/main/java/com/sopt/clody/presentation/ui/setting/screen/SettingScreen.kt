@@ -49,7 +49,7 @@ fun SettingScreen(
     Scaffold(
         modifier = Modifier
             .nestedScroll(scrollBehavior.nestedScrollConnection),
-        topBar = { SettingTopAppBar(stringResource(R.string.setting_topappbar_title), onClickBack) }
+        topBar = { SettingTopAppBar(stringResource(R.string.setting_title), onClickBack) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -57,18 +57,18 @@ fun SettingScreen(
                 .background(ClodyTheme.colors.white)
                 .padding(innerPadding)
         ) {
-            SettingOption(option = stringResource(R.string.setting_account_management), onClickAccountManagement)
+            SettingOption(option = stringResource(R.string.setting_option_account_management), onClickAccountManagement)
 
             SettingSeparateLine()
 
-            SettingOption(option = stringResource(R.string.setting_notification_setting), onClickNotificationSetting)
-            SettingOption(option = stringResource(R.string.setting_announcement), { /* TODO : 공지사항 이동 */ })
-            SettingOption(option = stringResource(R.string.setting_inquiries_suggestions), { /* TODO : 문의/제안하기 이동 */ })
+            SettingOption(option = stringResource(R.string.setting_option_notification_setting), onClickNotificationSetting)
+            SettingOption(option = stringResource(R.string.setting_option_announcement), { /* TODO : 공지사항 이동 */ })
+            SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), { /* TODO : 문의/제안하기 이동 */ })
 
             SettingSeparateLine()
 
-            SettingOption(option = stringResource(R.string.setting_terms_of_service), { /* TODO : 서비스 이용 약관 이동 */ })
-            SettingOption(option = stringResource(R.string.setting_privacy_policy), { /* TODO : 개인정보 처리방침 이동 */ })
+            SettingOption(option = stringResource(R.string.setting_option_terms_of_service), { /* TODO : 서비스 이용 약관 이동 */ })
+            SettingOption(option = stringResource(R.string.setting_option_privacy_policy), { /* TODO : 개인정보 처리방침 이동 */ })
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,12 +77,12 @@ fun SettingScreen(
             ) {
                 Spacer(modifier = Modifier.width(24.dp))
                 Text(
-                    text = stringResource(R.string.setting_app_version),
+                    text = stringResource(R.string.setting_option_app_version),
                     style = ClodyTheme.typography.body1Medium
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = "최신버전", /* TODO : 서버로부터 앱 버전 받아오기 */
+                    text = stringResource(R.string.setting_app_version), /* TODO : 서버로부터 앱 버전 받아오기 */
                     modifier = Modifier.padding(end = 20.dp),
                     color = ClodyTheme.colors.gray05,
                     style = ClodyTheme.typography.body4Medium

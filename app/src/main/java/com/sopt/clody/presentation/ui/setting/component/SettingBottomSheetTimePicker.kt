@@ -137,7 +137,7 @@ fun SettingBottomSheetTimePicker(onDismissRequest: () -> Unit, onTimeSelected: (
             }
             ClodyButton(
                 onClick = { onTimeSelected("$selectedAmPm ${selectedHour}시 ${selectedMinute}분") },
-                text = "완료",
+                text = stringResource(R.string.notification_setting_timepicker_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
