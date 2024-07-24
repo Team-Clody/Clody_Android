@@ -93,14 +93,14 @@ fun DailyDiaryCard(
                         .padding(end = 6.dp)
                 )
                 Text(
-                    text = "${day}일",
+                    text = stringResource(R.string.diarylist_daily_diary_day, day),
                     modifier = Modifier
                         .padding(end = 2.dp),
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body1SemiBold
                 )
                 Text(
-                    text = "/${dayOfWeek}",
+                    text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
                     color = ClodyTheme.colors.gray04,
                     style = ClodyTheme.typography.body2SemiBold
                 )

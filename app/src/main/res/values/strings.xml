@@ -43,6 +43,11 @@
     <string name="delete_diary_dialog_confirm_option">삭제할래요</string>
     <string name="delete_diary_dialog_dismiss_option">아니요</string>
 
+    <!-- 일기 모아보기 -->
+    <string name="diarylist_selected_year_month">%1$s년 %2$s월</string>
+    <string name="diarylist_daily_diary_day">%1$s일</string>
+    <string name="diarylist_daily_diary_day_of_week">/%1$s</string>
+
     <!-- 설정 -->
     <string name="setting_title">설정</string>
     <string name="setting_option_account_management">프로필 및 계정 관리</string>
