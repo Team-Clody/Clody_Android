@@ -72,7 +72,7 @@ fun AccountManagementScreen(
     }
 
     Scaffold(
-        topBar = { SettingTopAppBar(stringResource(R.string.account_management_topappbar_title), onBackClick) }
+        topBar = { SettingTopAppBar(stringResource(R.string.account_management_title), onBackClick) }
     ) { innerPadding ->
         when (userInfoState) {
             is UserInfoState.Idle -> {}
@@ -117,12 +117,12 @@ fun AccountManagementScreen(
                             style = ClodyTheme.typography.body1SemiBold
                         )
                         Text(
-                            text = stringResource(R.string.account_management_user_name),
+                            text = stringResource(R.string.account_management_nickname),
                             style = ClodyTheme.typography.body1Medium
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
-                            text = stringResource(R.string.account_management_button_nickname_change),
+                            text = stringResource(R.string.account_management_nickname_change_button),
                             modifier = Modifier.clickable(onClick = { showChangeNicknameBottomSheet = true }),
                             color = ClodyTheme.colors.gray05,
                             style = ClodyTheme.typography.body4Medium
@@ -147,7 +147,7 @@ fun AccountManagementScreen(
                             )
                             Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                text = stringResource(R.string.account_management_button_logout),
+                                text = stringResource(R.string.account_management_logout_button),
                                 modifier = Modifier.clickable(onClick = { showLogoutDialog = true }),
                                 color = ClodyTheme.colors.gray05,
                                 style = ClodyTheme.typography.body4Medium
@@ -161,13 +161,13 @@ fun AccountManagementScreen(
                         modifier = Modifier.padding(24.dp)
                     ) {
                         Text(
-                            text = stringResource(R.string.account_management_text_revoke),
+                            text = stringResource(R.string.account_management_revoke),
                             color = ClodyTheme.colors.gray05,
                             style = ClodyTheme.typography.body4Medium
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
-                            text = stringResource(R.string.account_management_button_revoke),
+                            text = stringResource(R.string.account_management_revoke_button),
                             modifier = Modifier.clickable(onClick = { showRevokeDialog = true }),
                             color = ClodyTheme.colors.gray05,
                             style = ClodyTheme.typography.body4Medium
@@ -193,20 +193,20 @@ fun AccountManagementScreen(
     if (showLogoutDialog) {
         LogoutDialog(
             onDismiss = { showLogoutDialog = false },
-            titleMassage = stringResource(R.string.account_management_dialog_logout_title),
-            descriptionMassage = stringResource(R.string.account_management_dialog_logout_description),
-            confirmOption = stringResource(R.string.account_management_dialog_logout_confirm),
-            dismissOption = stringResource(R.string.account_management_dialog_logout_dismiss),
+            titleMassage = stringResource(R.string.account_management_logout_dialog_title),
+            descriptionMassage = stringResource(R.string.account_management_logout_dialog_description),
+            confirmOption = stringResource(R.string.account_management_logout_dialog_confirm),
+            dismissOption = stringResource(R.string.account_management_logout_dialog_dismiss),
             confirmAction = { accountManagementViewModel.logOutAccount() }
         )
     }
 
     if (showRevokeDialog) {
         ClodyDialog(
-            titleMassage = stringResource(R.string.account_management_dialog_revoke_title),
-            descriptionMassage = stringResource(R.string.account_management_dialog_revoke_description),
-            confirmOption = stringResource(R.string.account_management_dialog_revoke_confirm),
-            dismissOption = stringResource(R.string.account_management_dialog_revoke_dismiss),
+            titleMassage = stringResource(R.string.account_management_revoke_dialog_title),
+            descriptionMassage = stringResource(R.string.account_management_revoke_dialog_description),
+            confirmOption = stringResource(R.string.account_management_revoke_dialog_confirm),
+            dismissOption = stringResource(R.string.account_management_revoke_dialog_dismiss),
             confirmAction = { accountManagementViewModel.revokeAccount() },
             onDismiss = { showRevokeDialog = false },
             confirmButtonColor = ClodyTheme.colors.red,

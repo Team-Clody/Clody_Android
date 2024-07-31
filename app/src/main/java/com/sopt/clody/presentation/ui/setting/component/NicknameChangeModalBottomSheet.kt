@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,8 +31,6 @@ import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
 import com.sopt.clody.presentation.ui.component.bottomsheet.ClodyBottomSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.setting.screen.AccountManagementViewModel
-import com.sopt.clody.presentation.ui.setting.screen.UserNicknameState
-import com.sopt.clody.presentation.utils.extension.showToast
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -81,7 +78,7 @@ fun NicknameChangeModalBottomSheetItem(
                     .padding(top = 8.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.nickname_change_title),
+                    text = stringResource(R.string.account_management_nickname_change_title),
                     modifier = Modifier.align(Alignment.Center),
                     style = ClodyTheme.typography.head4
                 )
@@ -127,7 +124,7 @@ fun NicknameChangeModalBottomSheetItem(
                     .padding(horizontal = 24.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.nickname_change_notice),
+                    text = stringResource(R.string.account_management_nickname_change_notice),
                     color = ClodyTheme.colors.gray04,
                     style = ClodyTheme.typography.detail1Regular
                 )
@@ -153,7 +150,7 @@ fun NicknameChangeModalBottomSheetItem(
                     accountManagementViewModel.changeNickname(RequestModifyNicknameDto(name = nickname.text))
                     onDismiss()
                 },
-                text = stringResource(R.string.nickname_change_confirm),
+                text = stringResource(R.string.account_management_nickname_change_confirm),
                 enabled = nicknameChangeState,
                 modifier = Modifier
                     .fillMaxWidth()

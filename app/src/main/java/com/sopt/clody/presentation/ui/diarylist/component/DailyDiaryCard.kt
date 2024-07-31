@@ -27,6 +27,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
@@ -51,7 +52,7 @@ fun DailyDiaryCard(
         dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.replyStatus == "UNREADY" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
-        dailyDiary.diaryCount in 1..2-> R.drawable.ic_home_bottom_clover
+        dailyDiary.diaryCount in 1..2 -> R.drawable.ic_home_bottom_clover
         dailyDiary.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
         dailyDiary.diaryCount == 5 -> R.drawable.ic_home_top_clover
         else -> R.drawable.ic_home_ungiven_clover
@@ -92,14 +93,14 @@ fun DailyDiaryCard(
                         .padding(end = 6.dp)
                 )
                 Text(
-                    text = "${day}일",
+                    text = stringResource(R.string.diarylist_daily_diary_day, day),
                     modifier = Modifier
                         .padding(end = 2.dp),
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body1SemiBold
                 )
                 Text(
-                    text = "/${dayOfWeek}",
+                    text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
                     color = ClodyTheme.colors.gray04,
                     style = ClodyTheme.typography.body2SemiBold
                 )
@@ -113,11 +114,11 @@ fun DailyDiaryCard(
                             .padding(horizontal = 3.dp, vertical = 3.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
                         shape = RoundedCornerShape(size = 9.dp),
-                        onClick = { onClickReplyDiary(year,month,day) },
+                        onClick = { onClickReplyDiary(year, month, day) },
                         contentPadding = PaddingValues(0.dp),
                     ) {
                         Text(
-                            text = "답장 확인",
+                            text = stringResource(R.string.diarylist_check_reply),
                             modifier = Modifier
                                 .padding(horizontal = 10.dp, vertical = 2.dp),
                             style = ClodyTheme.typography.detail1SemiBold,
@@ -135,7 +136,7 @@ fun DailyDiaryCard(
                 }
                 Image(
                     painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
-                    contentDescription = "케밥 메뉴",
+                    contentDescription = "kebab menu",
                     modifier = Modifier
                         .clickable(onClick = { showDiaryDeleteSheet = true })
                 )
@@ -154,10 +155,10 @@ fun DailyDiaryCard(
 
     if (showDiaryDeleteDialog) {
         ClodyDialog(
-            titleMassage = "정말 일기를 삭제할까요?",
-            descriptionMassage = "아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.",
-            confirmOption = "삭제할래요",
-            dismissOption = "아니요",
+            titleMassage = stringResource(R.string.delete_diary_dialog_title),
+            descriptionMassage = stringResource(R.string.delete_diary_dialog_description),
+            confirmOption = stringResource(R.string.delete_diary_dialog_confirm_option),
+            dismissOption = stringResource(R.string.delete_diary_dialog_dismiss_option),
             confirmAction = {
                 onDeleteDiary(year, month, day)
                 showDiaryDeleteDialog = false

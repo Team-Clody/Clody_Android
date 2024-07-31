@@ -32,7 +32,7 @@ fun DailyDiaryCardItem(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "$content",
+                    text = content,
                     color = ClodyTheme.colors.gray03,
                     style = ClodyTheme.typography.body3Medium
                 )
