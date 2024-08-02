@@ -49,6 +49,7 @@ fun HomeRoute(
         onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
     )
 }
+
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
