@@ -72,9 +72,3 @@ fun MainNavHost(
         }
     }
 }
-
-fun NavGraphBuilder.homeNavGraph(homeNavigator: HomeNavigator, replyLoadingNavigator: ReplyLoadingNavigator) {
-    navigation(startDestination = "home", route = "home") {
-        composable("home") { HomeRoute(navigator = homeNavigator) }
-    }
-}

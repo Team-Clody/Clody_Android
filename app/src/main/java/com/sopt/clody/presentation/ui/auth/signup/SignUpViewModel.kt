@@ -89,7 +89,6 @@ class SignUpViewModel @Inject constructor(
             if (error != null) {
                 _signInState.value = SignInState(UiState.Failure(error.localizedMessage))
             } else if (user != null) {
-                _signInState.value = SignInState(UiState.Success("Kakao login successful"))
                 val requestSignInDto = LoginRequestDto(platform = "kakao")
                 validateUser("Bearer ${accessToken.orEmpty()}", requestSignInDto)
             }
