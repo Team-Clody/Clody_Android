@@ -26,7 +26,7 @@ fun NavGraphBuilder.homeNavGraph(
         val year = backStackEntry.arguments?.getInt("year") ?: 0
         val month = backStackEntry.arguments?.getInt("month") ?: 0
         val day = backStackEntry.arguments?.getInt("day") ?: 0
-        val from = backStackEntry.arguments?.getString("from") ?: "home" // from 파라미터 가져오기
+        val from = backStackEntry.arguments?.getString("from") ?: "home"
         ReplyLoadingRoute(replyLoadingNavigator, year, month, day, from)
     }
 }
