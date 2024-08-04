@@ -7,13 +7,26 @@ import androidx.navigation.navArgument
 import com.sopt.clody.presentation.ui.home.screen.HomeRoute
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.ui.replyloading.screen.ReplyLoadingRoute
+import java.time.LocalDate
 
 fun NavGraphBuilder.homeNavGraph(
     navigator: HomeNavigator,
     replyLoadingNavigator: ReplyLoadingNavigator
 ) {
-    composable("home") {
-        HomeRoute(navigator)
+    composable(
+        route = "home/{selectedYear}/{selectedMonth}",
+        arguments = listOf(
+            navArgument("selectedYear") { type = NavType.IntType },
+            navArgument("selectedMonth") { type = NavType.IntType }
+        )
+    ) { backStackEntry ->
+        val selectedYear = backStackEntry.arguments?.getInt("selectedYear") ?: LocalDate.now().year
+        val selectedMonth = backStackEntry.arguments?.getInt("selectedMonth") ?: LocalDate.now().monthValue
+        HomeRoute(
+            navigator = navigator,
+            selectedYear = selectedYear,
+            selectedMonth = selectedMonth
+        )
     }
     composable("reply_loading/{year}/{month}/{day}?from={from}",
         arguments = listOf(
