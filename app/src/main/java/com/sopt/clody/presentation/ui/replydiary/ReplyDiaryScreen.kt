@@ -58,7 +58,7 @@ fun ReplyDiaryRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome()
+            navigator.navigateHome(year, month)
         } else {
             backPressedTime = currentTime
         }
@@ -66,7 +66,7 @@ fun ReplyDiaryRoute(
 
     ReplyDiaryScreen(
         viewModel = viewModel,
-        onClickBack = { navigator.navigateHome() }
+        onClickBack = { navigator.navigateHome(year, month) }
     )
 }
 
@@ -149,6 +149,7 @@ fun ReplyDiaryScreen(
                             is ReplyDiaryState.Loading -> {
                                 CircularProgressIndicator()
                             }
+
                             is ReplyDiaryState.Success -> {
                                 val content = (replyDiaryState as ReplyDiaryState.Success).content
                                 val nickname = (replyDiaryState as ReplyDiaryState.Success).nickname
@@ -194,10 +195,12 @@ fun ReplyDiaryScreen(
                                     }
                                 }
                             }
+
                             is ReplyDiaryState.Failure -> {
                                 val error = (replyDiaryState as ReplyDiaryState.Failure).error
                                 Text("Error: $error")
                             }
+
                             is ReplyDiaryState.NotFound -> {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -220,6 +223,7 @@ fun ReplyDiaryScreen(
                                     )
                                 }
                             }
+
                             else -> {}
                         }
                     }
