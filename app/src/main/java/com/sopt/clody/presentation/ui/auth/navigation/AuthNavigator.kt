@@ -21,12 +21,12 @@ class AuthNavigator(
         navController.navigate("time_reminder")
     }
 
-    fun navigateHome() {
-        navController.navigate("home")
+    fun navigateHome(selectedYear: Int, selectedMonth: Int) {
+        navController.navigate("home/$selectedYear/$selectedMonth")
     }
 
     fun navigateBack() {
-        navController.popBackStack()
+        navController.navigateUp()
     }
     fun navigateToSignupScreen() {
         navController.navigate("register") {
