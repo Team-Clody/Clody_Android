@@ -35,11 +35,15 @@ import java.time.LocalDate
 @Composable
 fun DiaryListRoute(
     navigator: DiaryListNavigator,
-    diaryListViewModel: DiaryListViewModel = hiltViewModel()
+    diaryListViewModel: DiaryListViewModel = hiltViewModel(),
+    selectedYearFromHome: Int,
+    selectedMonthFromHome: Int
 ) {
     DiaryListScreen(
         diaryListViewModel = diaryListViewModel,
         onClickCalendar = { navigator.navigateCalendar() },
+        selectedYearFromHome = selectedYearFromHome,
+        selectedMonthFromHome = selectedMonthFromHome,
         onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
     )
 }
@@ -48,22 +52,26 @@ fun DiaryListRoute(
 fun DiaryListScreen(
     diaryListViewModel: DiaryListViewModel,
     onClickCalendar: () -> Unit,
+    selectedYearFromHome: Int,
+    selectedMonthFromHome: Int,
     onClickReplyDiary: (Int, Int, Int) -> Unit,
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
     val currentDate = LocalDate.now()
     var selectedYear by remember { mutableIntStateOf(currentDate.year) }
     var selectedMonth by remember { mutableIntStateOf(currentDate.monthValue) }
+    var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
+    var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
     val deleteDiaryResult by diaryListViewModel.deleteDiaryResult.collectAsState()
 
     val onYearMonthSelected: (Int, Int) -> Unit = { year, month ->
-        selectedYear = year
-        selectedMonth = month
+        selectedYearInDiaryList = year
+        selectedMonthInDiaryList = month
     }
 
-    LaunchedEffect(selectedYear, selectedMonth) {
-        diaryListViewModel.fetchMonthlyDiary(selectedYear, selectedMonth)
+    LaunchedEffect(selectedYearInDiaryList, selectedMonthInDiaryList) {
+        diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
     }
 
     when (deleteDiaryResult) {
@@ -72,7 +80,7 @@ fun DiaryListScreen(
 
         is DeleteDiaryListState.Success -> {
             LaunchedEffect(Unit) {
-                diaryListViewModel.fetchMonthlyDiary(selectedYear, selectedMonth)
+                diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
             }
         }
 
@@ -86,9 +94,9 @@ fun DiaryListScreen(
         topBar = {
             Column {
                 DiaryListTopAppBar(
-                    onClickCalendar = onClickCalendar,
-                    selectedYear = selectedYear,
-                    selectedMonth = selectedMonth,
+                    onClickCalendar = { onClickCalendar(selectedYearInDiaryList, selectedMonthInDiaryList) },
+                    selectedYear = selectedYearInDiaryList,
+                    selectedMonth = selectedMonthInDiaryList,
                     onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState }
                 )
                 Box(
@@ -134,8 +142,8 @@ fun DiaryListScreen(
             ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
                 YearMonthPicker(
                     onDismissRequest = { showYearMonthPickerState = false },
-                    selectedYear = selectedYear,
-                    selectedMonth = selectedMonth,
+                    selectedYear = selectedYearInDiaryList,
+                    selectedMonth = selectedMonthInDiaryList,
                     onYearMonthSelected = onYearMonthSelected
                 )
             }
