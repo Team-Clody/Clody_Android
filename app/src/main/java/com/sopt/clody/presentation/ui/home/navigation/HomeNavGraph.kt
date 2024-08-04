@@ -28,7 +28,9 @@ fun NavGraphBuilder.homeNavGraph(
             selectedMonth = selectedMonth
         )
     }
-    composable("reply_loading/{year}/{month}/{day}?from={from}",
+
+    composable(
+        route = "reply_loading/{year}/{month}/{day}?from={from}",
         arguments = listOf(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
@@ -40,6 +42,12 @@ fun NavGraphBuilder.homeNavGraph(
         val month = backStackEntry.arguments?.getInt("month") ?: 0
         val day = backStackEntry.arguments?.getInt("day") ?: 0
         val from = backStackEntry.arguments?.getString("from") ?: "home"
-        ReplyLoadingRoute(replyLoadingNavigator, year, month, day, from)
+        ReplyLoadingRoute(
+            navigator = replyLoadingNavigator,
+            year = year,
+            month = month,
+            day = day,
+            from = from
+        )
     }
 }
