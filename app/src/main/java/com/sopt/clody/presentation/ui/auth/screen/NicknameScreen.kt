@@ -23,6 +23,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
@@ -121,7 +122,7 @@ fun NicknameScreen(
         }
 
         Text(
-            text = "만나서 반가워요!\n어떻게 불러 드릴까요?",
+            text = stringResource(id = R.string.nickname_title),
             style = ClodyTheme.typography.head1,
             color = ClodyTheme.colors.gray01,
             modifier = Modifier
@@ -138,7 +139,7 @@ fun NicknameScreen(
                 nicknameTextField = it
                 onNicknameChange(it.text)
             },
-            hint = "닉네임을 입력해주세요",
+            hint = stringResource(id = R.string.nickname_input_hint),
             isFocused = isFocused,
             isValid = isValidNickname,
             onFocusChanged = { isFocused = it },
@@ -158,7 +159,11 @@ fun NicknameScreen(
         Text(
             text = nicknameMessage,
             style = ClodyTheme.typography.detail1Regular,
-            color = if (nicknameTextField.text.isEmpty()) ClodyTheme.colors.gray04 else if (isValidNickname) ClodyTheme.colors.gray04 else ClodyTheme.colors.red,
+            color = when {
+                nicknameTextField.text.isEmpty() -> ClodyTheme.colors.gray04
+                isValidNickname -> ClodyTheme.colors.gray04
+                else -> ClodyTheme.colors.red
+            },
             modifier = Modifier
                 .padding(start = 12.dp)
                 .constrainAs(nicknameRegex) {

@@ -92,7 +92,11 @@ fun NickNameTextField(
                         modifier = Modifier
                             .height(2.dp)
                             .fillMaxWidth()
-                            .background(if (!isValid) ClodyTheme.colors.red else if (isFocused) ClodyTheme.colors.mainYellow else ClodyTheme.colors.gray08)
+                            .background(when {
+                                isValid.not() -> ClodyTheme.colors.red
+                                isFocused -> ClodyTheme.colors.mainYellow
+                                else -> ClodyTheme.colors.gray08
+                            })
                     )
                 }
             }
