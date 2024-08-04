@@ -30,6 +30,7 @@ fun NickNameTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     isFocused: Boolean,
+    isValid: Boolean,
     onRemove: () -> Unit,
     onFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -91,14 +92,13 @@ fun NickNameTextField(
                         modifier = Modifier
                             .height(2.dp)
                             .fillMaxWidth()
-                            .background(if (isFocused) ClodyTheme.colors.mainYellow else ClodyTheme.colors.gray08)
+                            .background(if (!isValid) ClodyTheme.colors.red else if (isFocused) ClodyTheme.colors.mainYellow else ClodyTheme.colors.gray08)
                     )
                 }
             }
         )
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewNickNameTextField() {
@@ -106,10 +106,10 @@ fun PreviewNickNameTextField() {
         value = TextFieldValue(""),
         onValueChange = {},
         isFocused = false,
+        isValid = true,
         onRemove = {},
         onFocusChanged = {},
         modifier = Modifier.fillMaxWidth(),
-        hint = "닉네임을 입력해주세요"
-
+        hint = "닉네임을 입력해주세요",
     )
 }
