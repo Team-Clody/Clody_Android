@@ -43,7 +43,7 @@ fun HomeRoute(
 ) {
     HomeScreen(
         homeViewModel = homeViewModel,
-        onClickDiaryList = { navigator.navigateDiaryList() },
+        onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
         onClickSetting = { navigator.navigateSetting() },
         onClickWriteDiary = { year, month, day -> navigator.navigateWriteDiary(year, month, day) },
         onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
@@ -53,7 +53,7 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    onClickDiaryList: () -> Unit,
+    onClickDiaryList: (Int, Int) -> Unit,
     onClickSetting: () -> Unit,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: (Int, Int, Int) -> Unit,
@@ -104,7 +104,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopAppBar(
-                onClickDiaryList = onClickDiaryList,
+                onClickDiaryList = { onClickDiaryList(selectedYearInCalendar,selectedMonthInCalendar) },
                 onClickSetting = onClickSetting,
                 onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState },
                 selectedYear = selectedYear,
