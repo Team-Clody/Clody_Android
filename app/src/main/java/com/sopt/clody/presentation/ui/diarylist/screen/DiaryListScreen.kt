@@ -20,8 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
+import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
@@ -30,7 +30,6 @@ import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListState
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.presentation.utils.extension.showToast
 import com.sopt.clody.ui.theme.ClodyTheme
-import java.time.LocalDate
 
 @Composable
 fun DiaryListRoute(
@@ -41,9 +40,9 @@ fun DiaryListRoute(
 ) {
     DiaryListScreen(
         diaryListViewModel = diaryListViewModel,
-        onClickCalendar = { navigator.navigateCalendar() },
         selectedYearFromHome = selectedYearFromHome,
         selectedMonthFromHome = selectedMonthFromHome,
+        onClickCalendar = { selectedYearFromDiaryList, selectedMonthFromDiaryList -> navigator.navigateHome(selectedYearFromDiaryList, selectedMonthFromDiaryList) },
         onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
     )
 }
@@ -51,15 +50,12 @@ fun DiaryListRoute(
 @Composable
 fun DiaryListScreen(
     diaryListViewModel: DiaryListViewModel,
-    onClickCalendar: () -> Unit,
     selectedYearFromHome: Int,
     selectedMonthFromHome: Int,
+    onClickCalendar: (Int, Int) -> Unit,
     onClickReplyDiary: (Int, Int, Int) -> Unit,
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
-    val currentDate = LocalDate.now()
-    var selectedYear by remember { mutableIntStateOf(currentDate.year) }
-    var selectedMonth by remember { mutableIntStateOf(currentDate.monthValue) }
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
