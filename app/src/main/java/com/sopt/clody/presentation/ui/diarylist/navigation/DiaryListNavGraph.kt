@@ -10,7 +10,7 @@ import com.sopt.clody.presentation.ui.replyloading.screen.ReplyLoadingRoute
 import java.time.LocalDate
 
 fun NavGraphBuilder.diaryListNavGraph(
-    navigator: DiaryListNavigator,
+    diaryListNavigator: DiaryListNavigator,
     replyLoadingNavigator: ReplyLoadingNavigator
 ) {
     composable(
@@ -28,7 +28,9 @@ fun NavGraphBuilder.diaryListNavGraph(
             selectedMonthFromHome = selectedMonthFromHome
         )
     }
-    composable("reply_loading/{year}/{month}/{day}?from={from}",
+
+    composable(
+        route = "reply_loading/{year}/{month}/{day}?from={from}",
         arguments = listOf(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
@@ -40,6 +42,12 @@ fun NavGraphBuilder.diaryListNavGraph(
         val month = backStackEntry.arguments?.getInt("month") ?: 0
         val day = backStackEntry.arguments?.getInt("day") ?: 0
         val from = backStackEntry.arguments?.getString("from") ?: "diary_list" // from 파라미터 가져오기
-        ReplyLoadingRoute(replyLoadingNavigator, year, month, day, from)
+        ReplyLoadingRoute(
+            navigator = replyLoadingNavigator,
+            year = year,
+            month = month,
+            day = day,
+            from = from
+        )
     }
 }
