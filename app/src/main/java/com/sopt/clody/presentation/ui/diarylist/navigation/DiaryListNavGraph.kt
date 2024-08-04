@@ -7,13 +7,26 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.ui.replyloading.screen.ReplyLoadingRoute
+import java.time.LocalDate
 
 fun NavGraphBuilder.diaryListNavGraph(
     navigator: DiaryListNavigator,
     replyLoadingNavigator: ReplyLoadingNavigator
 ) {
-    composable("diary_list") {
-        DiaryListRoute(navigator)
+    composable(
+        route = "diary_list/{selectedYearFromHome}/{selectedMonthFromHome}",
+        arguments = listOf(
+            navArgument("selectedYearFromHome") { type = NavType.IntType },
+            navArgument("selectedMonthFromHome") { type = NavType.IntType }
+        )
+    ) { backStackEntry ->
+        val selectedYearFromHome = backStackEntry.arguments?.getInt("selectedYearFromHome") ?: LocalDate.now().year
+        val selectedMonthFromHome = backStackEntry.arguments?.getInt("selectedMonthFromHome") ?: LocalDate.now().monthValue
+        DiaryListRoute(
+            navigator = diaryListNavigator,
+            selectedYearFromHome = selectedYearFromHome,
+            selectedMonthFromHome = selectedMonthFromHome
+        )
     }
     composable("reply_loading/{year}/{month}/{day}?from={from}",
         arguments = listOf(
