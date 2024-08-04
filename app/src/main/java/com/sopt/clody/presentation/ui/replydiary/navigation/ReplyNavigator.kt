@@ -14,6 +14,6 @@ class ReplyDiaryNavigator(
     }
 
     fun navigateBack() {
-        navController.popBackStack()
+        navController.navigateUp()
     }
 }

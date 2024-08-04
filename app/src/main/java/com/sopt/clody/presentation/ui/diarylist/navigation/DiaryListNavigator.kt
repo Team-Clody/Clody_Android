@@ -14,6 +14,6 @@ class DiaryListNavigator(
     }
 
     fun navigateBack() {
-        navController.popBackStack()
+        navController.navigateUp()
     }
 }
