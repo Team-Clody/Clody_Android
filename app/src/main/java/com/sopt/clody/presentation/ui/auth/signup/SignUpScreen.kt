@@ -26,6 +26,7 @@ import com.sopt.clody.presentation.utils.base.UiState
 import com.sopt.clody.presentation.utils.extension.showLongToast
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun SignUpRoute(
@@ -39,7 +40,7 @@ fun SignUpRoute(
     LaunchedEffect(signInState) {
         when (val result = signInState.uiState) {
             is UiState.Success -> {
-                authNavigator.navigateHome()
+                authNavigator.navigateHome(LocalDate.now().year, LocalDate.now().monthValue)
             }
             is UiState.Failure -> {
                 if (result.msg.contains("404") || result.msg.contains("User not found")) {

@@ -35,12 +35,13 @@ import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 @Composable
 fun GuideRoute(
     navigator: AuthNavigator
 ) {
-    GuideScreen(onNextButtonClick = { navigator.navigateHome() }
+    GuideScreen(onNextButtonClick = { navigator.navigateHome(LocalDate.now().year, LocalDate.now().monthValue) }
     )
 }
 
