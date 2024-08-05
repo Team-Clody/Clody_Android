@@ -1,6 +1,5 @@
-package com.sopt.clody.presentation.ui.writediary.component
+package com.sopt.clody.presentation.ui.writediary.component.text
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -11,12 +10,10 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun DiaryTitleText(date: String, separator: String, day: String, modifier: Modifier = Modifier) {
     Text(
         text = "$date$separator$day",
-        modifier = modifier.fillMaxWidth(),
         style = ClodyTheme.typography.head2,
         color = ClodyTheme.colors.gray01
     )
 }
-
 
 @Preview(showBackground = true)
 @Composable
