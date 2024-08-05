@@ -149,6 +149,7 @@ fun ReplyDiaryScreen(
                             is ReplyDiaryState.Loading -> {
                                 CircularProgressIndicator()
                             }
+
                             is ReplyDiaryState.Success -> {
                                 val content = (replyDiaryState as ReplyDiaryState.Success).content
                                 val nickname = (replyDiaryState as ReplyDiaryState.Success).nickname
@@ -194,10 +195,12 @@ fun ReplyDiaryScreen(
                                     }
                                 }
                             }
+
                             is ReplyDiaryState.Failure -> {
                                 val error = (replyDiaryState as ReplyDiaryState.Failure).error
                                 Text("Error: $error")
                             }
+
                             is ReplyDiaryState.NotFound -> {
                                 Column(
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -220,6 +223,7 @@ fun ReplyDiaryScreen(
                                     )
                                 }
                             }
+
                             else -> {}
                         }
                     }

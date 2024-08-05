@@ -6,24 +6,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.auth.navigation.guidNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.nicknameNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.registerNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.termsOfServiceNavGraph
 import com.sopt.clody.presentation.ui.auth.navigation.timeReminderNavGraph
-import com.sopt.clody.presentation.ui.auth.screen.NicknameScreen
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.presentation.ui.diarylist.navigation.diaryListNavGraph
 import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
 import com.sopt.clody.presentation.ui.home.navigation.homeNavGraph
-import com.sopt.clody.presentation.ui.home.screen.HomeRoute
-import com.sopt.clody.presentation.ui.home.screen.HomeScreen
 import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.ui.replyloading.navigation.replyLoadingNavGraph
@@ -62,9 +57,9 @@ fun MainNavHost(
             nicknameNavGraph(authNavigator)
             guidNavGraph(authNavigator)
             timeReminderNavGraph(authNavigator)
-            homeNavGraph(homeNavigator, replyLoadingNavigator)
-            diaryListNavGraph(diaryListNavigator, replyLoadingNavigator)
-            writeDiaryNavGraph(writeDiaryNavigator, replyLoadingNavigator)
+            homeNavGraph(homeNavigator)
+            diaryListNavGraph(diaryListNavigator)
+            writeDiaryNavGraph(writeDiaryNavigator)
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)

@@ -1,6 +1,7 @@
 package com.sopt.clody.presentation.ui.auth.navigation
 
 import androidx.navigation.NavHostController
+import java.time.LocalDate
 
 
 class AuthNavigator(
@@ -21,12 +22,12 @@ class AuthNavigator(
         navController.navigate("time_reminder")
     }
 
-    fun navigateHome() {
-        navController.navigate("home")
+    fun navigateHome(selectedYear: Int = LocalDate.now().year, selectedMonth: Int = LocalDate.now().monthValue) {
+        navController.navigate("home/$selectedYear/$selectedMonth")
     }
 
     fun navigateBack() {
-        navController.popBackStack()
+        navController.navigateUp()
     }
     fun navigateToSignupScreen() {
         navController.navigate("register") {

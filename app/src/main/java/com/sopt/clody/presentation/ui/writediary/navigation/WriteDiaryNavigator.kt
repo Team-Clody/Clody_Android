@@ -11,6 +11,6 @@ class WriteDiaryNavigator(
     }
 
     fun navigateBack() {
-        navController.popBackStack()
+        navController.navigateUp()
     }
 }

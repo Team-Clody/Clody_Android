@@ -41,6 +41,7 @@ fun SignUpRoute(
             is UiState.Success -> {
                 authNavigator.navigateHome()
             }
+
             is UiState.Failure -> {
                 if (result.msg.contains("404") || result.msg.contains("User not found")) {
                     authNavigator.navigateTermsOfService()
@@ -50,6 +51,7 @@ fun SignUpRoute(
                     }
                 }
             }
+
             else -> {}
         }
     }
@@ -59,6 +61,7 @@ fun SignUpRoute(
         onSignInClick = { viewModel.signInWithKakao(context) },
     )
 }
+
 @Composable
 fun SignUpScreen(
     signInState: SignInState,
@@ -131,6 +134,7 @@ fun SignUpScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {

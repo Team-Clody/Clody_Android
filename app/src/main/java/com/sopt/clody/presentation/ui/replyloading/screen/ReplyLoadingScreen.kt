@@ -69,7 +69,7 @@ fun ReplyLoadingRoute(
 
     ReplyLoadingScreen(
         onCompleteClick = { navigator.navigateReplyDiary(year, month, day) },
-        onBackClick = { navigator.navigateBack(from) },
+        onBackClick = { navigator.navigateBack(year, month, from) },
         replyLoadingState = replyLoadingState
     )
 }

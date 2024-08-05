@@ -15,6 +15,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -39,31 +40,37 @@ import java.time.LocalDate
 @Composable
 fun HomeRoute(
     navigator: HomeNavigator,
-    homeViewModel: HomeViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel(),
+    selectedYear: Int,
+    selectedMonth: Int,
 ) {
     HomeScreen(
         homeViewModel = homeViewModel,
-        onClickDiaryList = { navigator.navigateDiaryList() },
+        onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
         onClickSetting = { navigator.navigateSetting() },
         onClickWriteDiary = { year, month, day -> navigator.navigateWriteDiary(year, month, day) },
-        onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
+        onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) },
+        selectedYear = selectedYear,
+        selectedMonth = selectedMonth
     )
 }
 
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    onClickDiaryList: () -> Unit,
+    onClickDiaryList: (Int, Int) -> Unit,
     onClickSetting: () -> Unit,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: (Int, Int, Int) -> Unit,
+    selectedYear: Int,
+    selectedMonth: Int
 ) {
     var showYearMonthPickerState by remember { mutableStateOf(false) }
     var showDiaryDeleteState by remember { mutableStateOf(false) }
     var showDiaryDeleteDialog by remember { mutableStateOf(false) }
     val currentDate = LocalDate.now()
-    var selectedYear by remember { mutableStateOf(currentDate.year) }
-    var selectedMonth by remember { mutableStateOf(currentDate.monthValue) }
+    var selectedYearInCalendar by remember { mutableIntStateOf(selectedYear) }
+    var selectedMonthInCalendar by remember { mutableIntStateOf(selectedMonth) }
 
     val selectedDate by homeViewModel.selectedDate.collectAsStateWithLifecycle()
     val diaryCount by homeViewModel.diaryCount.collectAsStateWithLifecycle()
@@ -72,16 +79,16 @@ fun HomeScreen(
     val deleteDiaryResult by homeViewModel.deleteDiaryResult.collectAsStateWithLifecycle()
     val calendarData by homeViewModel.monthlyCalendarData.collectAsStateWithLifecycle()
 
-    LaunchedEffect(selectedYear, selectedMonth) {
-        homeViewModel.loadCalendarData(selectedYear, selectedMonth)
-        if (selectedYear == currentDate.year && selectedMonth == currentDate.monthValue) {
+    LaunchedEffect(selectedYearInCalendar, selectedMonthInCalendar) {
+        homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
+        if (selectedYearInCalendar == currentDate.year && selectedMonthInCalendar == currentDate.monthValue) {
             homeViewModel.updateSelectedDate(currentDate)
         }
     }
 
     LaunchedEffect(deleteDiaryResult) {
         if (deleteDiaryResult is DeleteDiaryState.Success) {
-            homeViewModel.loadCalendarData(selectedYear, selectedMonth)
+            homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
             homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
         }
     }
@@ -104,11 +111,11 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopAppBar(
-                onClickDiaryList = onClickDiaryList,
+                onClickDiaryList = { onClickDiaryList(selectedYearInCalendar,selectedMonthInCalendar) },
                 onClickSetting = onClickSetting,
                 onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState },
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth,
+                selectedYear = selectedYearInCalendar,
+                selectedMonth = selectedMonthInCalendar,
             )
         },
         content = { innerPadding ->
@@ -116,8 +123,8 @@ fun HomeScreen(
                 result.fold(
                     onSuccess = { data ->
                         ScrollableCalendarView(
-                            selectedYear = selectedYear,
-                            selectedMonth = selectedMonth,
+                            selectedYear = selectedYearInCalendar,
+                            selectedMonth = selectedMonthInCalendar,
                             cloverCount = data.totalCloverCount,
                             diaries = data.diaries,
                             homeViewModel = homeViewModel,
@@ -156,11 +163,11 @@ fun HomeScreen(
         ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
             YearMonthPicker(
                 onDismissRequest = { showYearMonthPickerState = false },
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth,
+                selectedYear = selectedYearInCalendar,
+                selectedMonth = selectedMonthInCalendar,
                 onYearMonthSelected = { year, month ->
-                    selectedYear = year
-                    selectedMonth = month
+                    selectedYearInCalendar = year
+                    selectedMonthInCalendar = month
                     val newDate = if (year == currentDate.year && month == currentDate.monthValue) {
                         currentDate
                     } else {
@@ -187,7 +194,7 @@ fun HomeScreen(
             confirmOption = "삭제할래요",
             dismissOption = "아니요",
             confirmAction = {
-                homeViewModel.deleteDailyDiary(selectedYear, selectedMonth, selectedDate.dayOfMonth)
+                homeViewModel.deleteDailyDiary(selectedYearInCalendar, selectedMonthInCalendar, selectedDate.dayOfMonth)
                 showDiaryDeleteDialog = false
             },
             onDismiss = { showDiaryDeleteDialog = false },

@@ -5,8 +5,8 @@ import androidx.navigation.NavController
 class DiaryListNavigator(
     val navController: NavController
 ) {
-    fun navigateCalendar() {
-        navController.navigate("home")
+    fun navigateHome(selectedYear: Int, selectedMonth: Int) {
+        navController.navigate("home/$selectedYear/$selectedMonth")
     }
 
     fun navigateReplyLoading(year: Int, month: Int, day: Int) {
@@ -14,6 +14,6 @@ class DiaryListNavigator(
     }
 
     fun navigateBack() {
-        navController.popBackStack()
+        navController.navigateUp()
     }
 }
