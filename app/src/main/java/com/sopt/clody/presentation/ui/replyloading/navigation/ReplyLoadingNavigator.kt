@@ -1,11 +1,12 @@
 package com.sopt.clody.presentation.ui.replyloading.navigation
 
 import androidx.navigation.NavHostController
+import java.time.LocalDate
 
 class ReplyLoadingNavigator(
     private val navController: NavHostController
 ) {
-    fun navigateHome(selectedYear: Int, selectedMonth: Int) {
+    fun navigateHome(selectedYear: Int = LocalDate.now().year, selectedMonth: Int = LocalDate.now().monthValue) {
         navController.navigate("home/$selectedYear/$selectedMonth") {
             popUpTo(navController.graph.startDestinationId) {
                 inclusive = true
