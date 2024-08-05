@@ -58,7 +58,7 @@ fun ReplyDiaryRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome(year, month)
+            navigator.navigateHome()
         } else {
             backPressedTime = currentTime
         }
@@ -66,7 +66,7 @@ fun ReplyDiaryRoute(
 
     ReplyDiaryScreen(
         viewModel = viewModel,
-        onClickBack = { navigator.navigateHome(year, month) }
+        onClickBack = { navigator.navigateHome() }
     )
 }
 
