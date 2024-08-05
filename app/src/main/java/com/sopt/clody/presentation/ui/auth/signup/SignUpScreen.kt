@@ -26,7 +26,6 @@ import com.sopt.clody.presentation.utils.base.UiState
 import com.sopt.clody.presentation.utils.extension.showLongToast
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 @Composable
 fun SignUpRoute(
@@ -40,8 +39,9 @@ fun SignUpRoute(
     LaunchedEffect(signInState) {
         when (val result = signInState.uiState) {
             is UiState.Success -> {
-                authNavigator.navigateHome(LocalDate.now().year, LocalDate.now().monthValue)
+                authNavigator.navigateHome()
             }
+
             is UiState.Failure -> {
                 if (result.msg.contains("404") || result.msg.contains("User not found")) {
                     authNavigator.navigateTermsOfService()
@@ -51,6 +51,7 @@ fun SignUpRoute(
                     }
                 }
             }
+
             else -> {}
         }
     }
@@ -60,6 +61,7 @@ fun SignUpRoute(
         onSignInClick = { viewModel.signInWithKakao(context) },
     )
 }
+
 @Composable
 fun SignUpScreen(
     signInState: SignInState,
@@ -132,6 +134,7 @@ fun SignUpScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
