@@ -61,7 +61,7 @@ fun ReplyLoadingRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome(year, month)
+            navigator.navigateHome()
         } else {
             backPressedTime = currentTime
         }
