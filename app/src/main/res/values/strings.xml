@@ -5,6 +5,10 @@
     <string name="signup_title">행운을 전하는 감사일기</string>
     <string name="signup_btn_kakao">카카오로 로그인</string>
 
+    <!--닉네임 설정(온보딩)-->
+    <string name="nickname_title">만나서 반가워요!\n어떻게 불러 드릴까요?</string>
+    <string name="nickname_input_hint">닉네임을 입력해주세요</string>
+
     <!-- 이용약관 -->
     <string name="terms_title">"Clody 이용을 위해\n약관에 동의해 주세요"</string>
     <string name="terms_agree_all">전체 동의하기</string>
