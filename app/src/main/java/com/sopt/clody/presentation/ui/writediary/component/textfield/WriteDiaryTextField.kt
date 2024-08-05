@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.writediary.component
+package com.sopt.clody.presentation.ui.writediary.component.textfield
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
