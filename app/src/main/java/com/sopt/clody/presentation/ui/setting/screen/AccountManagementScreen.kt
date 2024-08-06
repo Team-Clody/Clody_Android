@@ -31,7 +31,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.setting.component.LogoutDialog
-import com.sopt.clody.presentation.ui.setting.component.NicknameChangeModalBottomSheet
+import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
@@ -54,7 +54,7 @@ fun AccountManagementScreen(
     accountManagementViewModel: AccountManagementViewModel,
     onBackClick: () -> Unit
 ) {
-    var showChangeNicknameBottomSheet by remember { mutableStateOf(false) }
+    var showNicknameChangeBottomSheet by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showRevokeDialog by remember { mutableStateOf(false) }
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
@@ -123,7 +123,7 @@ fun AccountManagementScreen(
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
                             text = stringResource(R.string.account_management_nickname_change_button),
-                            modifier = Modifier.clickable(onClick = { showChangeNicknameBottomSheet = true }),
+                            modifier = Modifier.clickable(onClick = { showNicknameChangeBottomSheet = true }),
                             color = ClodyTheme.colors.gray05,
                             style = ClodyTheme.typography.body4Medium
                         )
@@ -182,11 +182,11 @@ fun AccountManagementScreen(
         }
     }
 
-    if (showChangeNicknameBottomSheet) {
-        NicknameChangeModalBottomSheet(
+    if (showNicknameChangeBottomSheet) {
+        NicknameChangeBottomSheet(
             accountManagementViewModel = accountManagementViewModel,
             userName = userName,
-            onDismiss = { showChangeNicknameBottomSheet = false }
+            onDismiss = { showNicknameChangeBottomSheet = false }
         )
     }
 
