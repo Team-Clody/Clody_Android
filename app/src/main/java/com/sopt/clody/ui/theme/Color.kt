@@ -16,9 +16,9 @@ val MainGreen = Color(0xFF47D27D)
 val DarkGreen = Color(0xFF1C9D5F)
 
 // Yellow Scale
-val LightYellow = Color(0xFFFFF5D0)
-val MainYellow = Color(0xFFFFD84D)
-val DarkYellow = Color(0xFFFFC700)
+val LightYellow = Color(0xFFFFF5B1)
+val MainYellow = Color(0xFFFFE63C)
+val DarkYellow = Color(0xFFFFDE00)
 
 // Blue Scale
 val LightBlue = Color(0xFFE8F3FF)
