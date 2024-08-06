@@ -63,7 +63,6 @@ fun SettingScreen(
 
             SettingOption(option = stringResource(R.string.setting_option_terms_of_service), { /* TODO : 서비스 이용 약관 이동 */ })
             SettingOption(option = stringResource(R.string.setting_option_privacy_policy), { /* TODO : 개인정보 처리방침 이동 */ })
-            Spacer(modifier = Modifier.height(20.dp))
             SettingAppVersion()
         }
     }

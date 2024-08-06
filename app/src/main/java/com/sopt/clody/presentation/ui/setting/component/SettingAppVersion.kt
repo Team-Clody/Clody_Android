@@ -18,6 +18,7 @@ fun SettingAppVersion() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = 20.dp)
             .padding(horizontal = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
