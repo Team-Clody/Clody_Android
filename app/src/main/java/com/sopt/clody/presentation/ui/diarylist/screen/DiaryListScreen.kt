@@ -104,45 +104,47 @@ fun DiaryListScreen(
             }
         },
         containerColor = ClodyTheme.colors.gray08,
-    ) { innerPadding ->
-        when (diaryListState) {
-            is DiaryListState.Idle -> {}
-            is DiaryListState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .wrapContentSize(Alignment.Center),
-                        color = ClodyTheme.colors.mainYellow
+        content = { innerPadding ->
+            when (diaryListState) {
+                is DiaryListState.Idle -> {}
+                is DiaryListState.Loading -> {
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .padding(innerPadding)
+                                .wrapContentSize(Alignment.Center),
+                            color = ClodyTheme.colors.mainYellow
+                        )
+                    }
+                }
+
+                is DiaryListState.Success -> {
+                    MonthlyDiaryList(
+                        paddingValues = innerPadding,
+                        onClickReplyDiary = onClickReplyDiary,
+                        diaries = (diaryListState as DiaryListState.Success).data.diaries,
+                        diaryListViewModel = diaryListViewModel
                     )
                 }
-            }
 
-            is DiaryListState.Success -> {
-                MonthlyDiaryList(
-                    paddingValues = innerPadding,
-                    onClickReplyDiary = onClickReplyDiary,
-                    diaries = (diaryListState as DiaryListState.Success).data.diaries,
-                    diaryListViewModel = diaryListViewModel
-                )
-            }
-
-            is DiaryListState.Failure -> {
-                showToast(message = "${(diaryListState as DiaryListState.Failure).errorMessage}")
+                is DiaryListState.Failure -> {
+                    showToast(message = "${(diaryListState as DiaryListState.Failure).errorMessage}")
+                }
             }
         }
-        if (showYearMonthPickerState) {
-            ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
-                YearMonthPicker(
-                    onDismissRequest = { showYearMonthPickerState = false },
-                    selectedYear = selectedYearInDiaryList,
-                    selectedMonth = selectedMonthInDiaryList,
-                    onYearMonthSelected = onYearMonthSelected
-                )
-            }
+    )
+
+    if (showYearMonthPickerState) {
+        ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
+            YearMonthPicker(
+                onDismissRequest = { showYearMonthPickerState = false },
+                selectedYear = selectedYearInDiaryList,
+                selectedMonth = selectedMonthInDiaryList,
+                onYearMonthSelected = onYearMonthSelected
+            )
         }
     }
 }

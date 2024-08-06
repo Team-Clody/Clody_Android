@@ -26,12 +26,12 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun LogoutDialog(
-    onDismiss: () -> Unit,
     titleMassage: String,
     descriptionMassage: String,
     confirmOption: String,
     dismissOption: String,
-    confirmAction: () -> Unit
+    confirmAction: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     Dialog(
         onDismissRequest = onDismiss,

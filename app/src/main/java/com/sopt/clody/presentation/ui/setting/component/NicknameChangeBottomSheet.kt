@@ -34,25 +34,25 @@ import com.sopt.clody.presentation.ui.setting.screen.AccountManagementViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun NicknameChangeModalBottomSheet(
+fun NicknameChangeBottomSheet(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
     onDismiss: () -> Unit
 ) {
     ClodyBottomSheet(
         content = {
-            NicknameChangeModalBottomSheetItem(
+            NicknameChangeBottomSheetItem(
                 accountManagementViewModel = accountManagementViewModel,
                 userName = userName,
                 onDismiss = onDismiss
             )
         },
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = onDismiss,
     )
 }
 
 @Composable
-fun NicknameChangeModalBottomSheetItem(
+fun NicknameChangeBottomSheetItem(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
     onDismiss: () -> Unit

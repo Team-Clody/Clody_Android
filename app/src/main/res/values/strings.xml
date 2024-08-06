@@ -83,10 +83,11 @@
     <string name="account_management_revoke_dialog_dismiss">아니요</string>
 
     <!-- 알림 설정 -->
-    <string name="notification_setting_title">프로필 및 계정 관리</string>
+    <string name="notification_setting_title">알림 설정</string>
     <string name="notification_setting_write_diary">일기 작성 알림 받기</string>
     <string name="notification_setting_notification_time">알림 시간</string>
     <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
     <string name="notification_setting_timepicker_confirm">완료</string>
+    <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
 
 </resources>
