@@ -5,6 +5,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
@@ -26,6 +28,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -35,9 +38,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
-import com.sopt.clody.presentation.ui.writediary.component.DeleteWriteDiaryBottomSheet
-import com.sopt.clody.presentation.ui.writediary.component.DiaryTitleText
-import com.sopt.clody.presentation.ui.writediary.component.WriteDiaryTextField
+import com.sopt.clody.presentation.ui.writediary.component.bottomsheet.DeleteWriteDiaryBottomSheet
+import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
+import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
+import com.sopt.clody.presentation.ui.writediary.component.textfield.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -59,7 +63,6 @@ fun WriteDiaryRoute(
         day = day
     )
 }
-
 
 @Composable
 fun WriteDiaryScreen(
@@ -90,7 +93,7 @@ fun WriteDiaryScreen(
             .fillMaxSize()
             .background(ClodyTheme.colors.white)
     ) {
-        val (backButton, list, completeButton, addButton) = createRefs()
+        val (backButton, titleRow, list, completeButton, addButton) = createRefs()
 
         IconButton(
             onClick = { onClickBack() },
@@ -108,24 +111,38 @@ fun WriteDiaryScreen(
             )
         }
 
+        Row(
+            modifier = Modifier
+                .constrainAs(titleRow) {
+                    top.linkTo(backButton.bottom, margin = 16.dp)
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                }
+                .padding(horizontal = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DiaryTitleText(
+                date = "${month}월 ${day}일",
+                separator = " ",
+                day = getDayOfWeek(year, month, day)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            TooltipIcon(
+                tooltipsText = "신조어, 비속어, 이모지 작성은 불가능해요",
+            )
+        }
+
         LazyColumn(
             modifier = Modifier
                 .constrainAs(list) {
-                    top.linkTo(backButton.bottom, margin = 16.dp)
+                    top.linkTo(titleRow.bottom, margin = 16.dp)
                     bottom.linkTo(completeButton.top, margin = 16.dp)
                     height = Dimension.fillToConstraints
                 }
                 .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            item {
-                DiaryTitleText(
-                    date = "${month}월 ${day}일",
-                    separator = " ",
-                    day = getDayOfWeek(year, month, day)
-                )
-            }
-
             itemsIndexed(entries) { index, text ->
                 WriteDiaryTextField(
                     entryNumber = index + 1,

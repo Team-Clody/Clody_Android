@@ -17,10 +17,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -33,10 +30,19 @@ import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun SettingBottomSheetTimePicker(onDismissRequest: () -> Unit, onTimeSelected: (String) -> Unit) {
-    var selectedAmPm by remember { mutableStateOf("오후") }
-    var selectedHour by remember { mutableStateOf("9") }
-    var selectedMinute by remember { mutableStateOf("30") }
+fun NotificationSettingTimePicker(
+    onTimeSelected: (String) -> Unit,
+    onDismissRequest: () -> Unit
+) {
+    val amPmItems = remember { listOf("오전", "오후") }
+    val hourItems = remember { (1..12).map { it.toString() } }
+    val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
+
+    val amPmPickerState = rememberPickerState()
+    val hourPickerState = rememberPickerState()
+    val minutePickerState = rememberPickerState()
+
+    val selectedTime = stringResource(R.string.notification_setting_selected_time, amPmPickerState.selectedItem, hourPickerState.selectedItem, minutePickerState.selectedItem)
 
     Surface(
         modifier = Modifier
@@ -78,14 +84,6 @@ fun SettingBottomSheetTimePicker(onDismissRequest: () -> Unit, onTimeSelected: (
                     )
                 }
             }
-
-            val amPmItems = remember { listOf("오전", "오후") }
-            val hourItems = remember { (1..12).map { it.toString() } }
-            val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
-
-            val amPmPickerState = rememberPickerState()
-            val hourPickerState = rememberPickerState()
-            val minutePickerState = rememberPickerState()
 
             Box(
                 modifier = Modifier
@@ -136,7 +134,7 @@ fun SettingBottomSheetTimePicker(onDismissRequest: () -> Unit, onTimeSelected: (
                 }
             }
             ClodyButton(
-                onClick = { onTimeSelected("$selectedAmPm ${selectedHour}시 ${selectedMinute}분") },
+                onClick = { onTimeSelected(selectedTime) },
                 text = stringResource(R.string.notification_setting_timepicker_confirm),
                 enabled = true,
                 modifier = Modifier
