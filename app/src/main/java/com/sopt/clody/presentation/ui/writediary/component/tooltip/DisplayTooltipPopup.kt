@@ -30,34 +30,31 @@ fun DisplayTooltipPopup(
     onDismissRequest: (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
-    var alignment = Alignment.BottomCenter
-    var offset = position.offset
-
     val horizontalPaddingInPx = with(LocalDensity.current) {
         horizontalPadding.toPx()
     }
 
     var arrowPositionX by remember { mutableStateOf(position.centerPositionX) }
 
-    with(LocalDensity.current) {
+    val (alignment, offset) = with(LocalDensity.current) {
         val arrowPaddingPx = arrowHeight.toPx().roundToInt() * 3
-
         when (position.alignment) {
             TooltipAlignment.TopCenter -> {
-                alignment = Alignment.BottomCenter
-                offset = offset.copy(
-                    y = position.offset.y - arrowPaddingPx + 60
+                Alignment.BottomCenter to position.offset.copy(
+                    y = position.offset.y - arrowPaddingPx + 80
                 )
             }
-
             TooltipAlignment.BottomCenter -> {
-                alignment = Alignment.TopCenter
-                offset = offset.copy(
-                    y = position.offset.y + arrowPaddingPx - 60
+                Alignment.TopCenter to position.offset.copy(
+                    y = position.offset.y + arrowPaddingPx - 80
                 )
+            }
+            else -> {
+                Alignment.BottomCenter to position.offset
             }
         }
     }
+
     val popupPositionProvider = remember(alignment, offset) {
         TooltipPositionProvider(
             alignment = alignment,

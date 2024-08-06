@@ -74,7 +74,6 @@ private fun Tooltip(
                         contentDescription = "Close",
                         tint = ClodyTheme.colors.blue,
                         modifier = Modifier
-                            .size(24.dp)
                             .clickable(
                                 indication = null,
                                 interactionSource = remember { MutableInteractionSource() }

@@ -28,27 +28,27 @@ fun BubbleLayout(
             .drawBehind {
                 if (arrowPositionX <= 0f) return@drawBehind
 
-                val isBottomCenter = alignment == TooltipAlignment.BottomCenter
-
                 val path = Path()
-
-                if (isBottomCenter) {
-                    val position = Offset(arrowPositionX, drawContext.size.height)
+                val position: Offset
+                if (alignment == TooltipAlignment.BottomCenter) {
+                    position = Offset(arrowPositionX, size.height)
                     path.apply {
                         moveTo(x = position.x, y = position.y)
                         lineTo(x = position.x - arrowHeightPx, y = position.y)
                         lineTo(x = position.x, y = position.y + arrowHeightPx)
                         lineTo(x = position.x + arrowHeightPx, y = position.y)
                         lineTo(x = position.x, y = position.y)
+                        close()
                     }
                 } else {
-                    val position = Offset(arrowPositionX, 0f)
+                    position = Offset(arrowPositionX, 0f)
                     path.apply {
                         moveTo(x = position.x, y = position.y)
                         lineTo(x = position.x + arrowHeightPx, y = position.y)
                         lineTo(x = position.x, y = position.y - arrowHeightPx)
                         lineTo(x = position.x - arrowHeightPx, y = position.y)
                         lineTo(x = position.x, y = position.y)
+                        close()
                     }
                 }
 
