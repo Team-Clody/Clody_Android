@@ -72,7 +72,8 @@ fun AccountManagementScreen(
     }
 
     Scaffold(
-        topBar = { SettingTopAppBar(stringResource(R.string.account_management_title), onBackClick) }
+        topBar = { SettingTopAppBar(stringResource(R.string.account_management_title), onBackClick) },
+        containerColor = ClodyTheme.colors.white,
     ) { innerPadding ->
         when (userInfoState) {
             is UserInfoState.Idle -> {}
@@ -96,8 +97,6 @@ fun AccountManagementScreen(
 
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(ClodyTheme.colors.white)
                         .padding(innerPadding)
                         .padding(top = 20.dp)
                 )

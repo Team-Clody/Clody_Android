@@ -46,7 +46,6 @@ fun SettingScreen(
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { SettingTopAppBar(stringResource(R.string.setting_title), onClickBack) },
         containerColor = ClodyTheme.colors.white,
-        contentColor = ClodyTheme.colors.white
     ) { innerPadding ->
         Column(
             modifier = Modifier
