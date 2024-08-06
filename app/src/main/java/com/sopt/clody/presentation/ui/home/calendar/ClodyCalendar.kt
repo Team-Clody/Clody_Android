@@ -8,11 +8,14 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +26,7 @@ import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
+import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
 import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
@@ -39,7 +43,6 @@ fun ClodyCalendar(
     onDiaryDataUpdated: (Int, String) -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
-
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
     val dateList by remember(currentMonth.year, currentMonth.monthValue) {
         mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
@@ -50,7 +53,7 @@ fun ClodyCalendar(
         homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
     }
 
-    val dailyDiariesData by homeViewModel.dailyDiariesData.collectAsStateWithLifecycle()
+    val dailyDiariesUiState by homeViewModel.dailyDiariesUiState.collectAsStateWithLifecycle()
 
     Column(
         modifier = Modifier
@@ -73,19 +76,26 @@ fun ClodyCalendar(
         )
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalDivider()
-        dailyDiariesData?.let { result ->
-            result.fold(
-                onSuccess = { data ->
-                    DailyDiaryListItem(
-                        date = selectedDate,
-                        dayOfWeek = initialDayOfWeek,
-                        dailyDiaries = data.diaries,
-                        onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
-                    )
-                }, onFailure = {
-                    // 추후 넣을 예정
-                }
-            )
+        when (val state = dailyDiariesUiState) {
+            is DailyDiariesState.Loading -> {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            }
+            is DailyDiariesState.Error -> {
+                Text(
+                    text = "Failed to load daily diaries data: ${state.message}",
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+            }
+            is DailyDiariesState.Success -> {
+                DailyDiaryListItem(
+                    date = selectedDate,
+                    dayOfWeek = initialDayOfWeek,
+                    dailyDiaries = state.data.diaries,
+                    onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
+                )
+            }
+            else -> {
+            }
         }
     }
 }
