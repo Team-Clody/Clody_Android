@@ -23,6 +23,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
@@ -49,6 +50,8 @@ fun NicknameRoute(
     viewModel: SignUpViewModel = hiltViewModel()
 ) {
     val nickname by viewModel.nickname.collectAsState()
+    val isValidNickname by viewModel.isValidNickname.collectAsState()
+    val nicknameMessage by viewModel.nicknameMessage.collectAsState()
     val signUpState by viewModel.signUpState.collectAsState()
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
@@ -58,7 +61,9 @@ fun NicknameRoute(
         onNicknameChange = viewModel::setNickname,
         onCompleteClick = { viewModel.proceedWithSignUp(context) },
         onBackClick = { navigator.navigateBack() },
-        isLoading = signUpState.uiState is UiState.Loading
+        isLoading = signUpState.uiState is UiState.Loading,
+        isValidNickname = isValidNickname,
+        nicknameMessage = nicknameMessage
     )
 
     LaunchedEffect(signUpState) {
@@ -76,15 +81,15 @@ fun NicknameRoute(
     }
 }
 
-
-
 @Composable
 fun NicknameScreen(
     nickname: String,
     onNicknameChange: (String) -> Unit,
     onCompleteClick: () -> Unit,
     onBackClick: () -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
+    isValidNickname: Boolean,
+    nicknameMessage: String
 ) {
     var nicknameTextField by remember { mutableStateOf(TextFieldValue(nickname)) }
     val focusRequester = remember { FocusRequester() }
@@ -117,7 +122,7 @@ fun NicknameScreen(
         }
 
         Text(
-            text = "만나서 반가워요!\n어떻게 불러 드릴까요?",
+            text = stringResource(id = R.string.nickname_title),
             style = ClodyTheme.typography.head1,
             color = ClodyTheme.colors.gray01,
             modifier = Modifier
@@ -134,8 +139,9 @@ fun NicknameScreen(
                 nicknameTextField = it
                 onNicknameChange(it.text)
             },
-            hint = "닉네임을 입력해주세요",
+            hint = stringResource(id = R.string.nickname_input_hint),
             isFocused = isFocused,
+            isValid = isValidNickname,
             onFocusChanged = { isFocused = it },
             onRemove = { nicknameTextField = TextFieldValue("") },
             modifier = Modifier
@@ -151,9 +157,13 @@ fun NicknameScreen(
         )
 
         Text(
-            text = "특수문자, 띄어쓰기 없이 작성해주세요",
+            text = nicknameMessage,
             style = ClodyTheme.typography.detail1Regular,
-            color = ClodyTheme.colors.gray04,
+            color = when {
+                nicknameTextField.text.isEmpty() -> ClodyTheme.colors.gray04
+                isValidNickname -> ClodyTheme.colors.gray04
+                else -> ClodyTheme.colors.red
+            },
             modifier = Modifier
                 .padding(start = 12.dp)
                 .constrainAs(nicknameRegex) {
@@ -195,7 +205,7 @@ fun NicknameScreen(
                 onCompleteClick()
             },
             text = "다음",
-            enabled = nicknameTextField.text.isNotEmpty(),
+            enabled = nicknameTextField.text.isNotEmpty() && isValidNickname,
             modifier = Modifier
                 .padding(bottom = 28.dp)
                 .padding(horizontal = 12.dp)
@@ -230,6 +240,8 @@ fun NicknameScreenPreview() {
         onNicknameChange = {},
         onCompleteClick = {},
         onBackClick = {},
-        isLoading = false
+        isLoading = false,
+        isValidNickname = true,
+        nicknameMessage = "특수문자, 띄어쓰기 없이 작성해주세요"
     )
 }

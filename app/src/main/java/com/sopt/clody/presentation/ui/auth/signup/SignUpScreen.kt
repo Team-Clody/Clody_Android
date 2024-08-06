@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -24,9 +23,7 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.button.KaKaoButton
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.utils.base.UiState
-import com.sopt.clody.presentation.utils.extension.showLongToast
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpRoute(
@@ -35,22 +32,17 @@ fun SignUpRoute(
     val viewModel: SignUpViewModel = hiltViewModel()
     val signInState by viewModel.signInState.collectAsState()
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
     LaunchedEffect(signInState) {
-        when (val result = signInState.uiState) {
+        when (signInState.uiState) {
             is UiState.Success -> {
                 authNavigator.navigateHome()
             }
+
             is UiState.Failure -> {
-                if (result.msg.contains("404") || result.msg.contains("User not found")) {
-                    authNavigator.navigateTermsOfService()
-                } else {
-                    coroutineScope.launch {
-                        showLongToast(context, result.msg)
-                    }
-                }
+                authNavigator.navigateTermsOfService()
             }
+
             else -> {}
         }
     }
@@ -60,6 +52,7 @@ fun SignUpRoute(
         onSignInClick = { viewModel.signInWithKakao(context) },
     )
 }
+
 @Composable
 fun SignUpScreen(
     signInState: SignInState,

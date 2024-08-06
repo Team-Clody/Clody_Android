@@ -40,8 +40,7 @@ import kotlinx.coroutines.launch
 fun GuideRoute(
     navigator: AuthNavigator
 ) {
-    GuideScreen(onNextButtonClick = { navigator.navigateHome() }
-    )
+    GuideScreen(onNextButtonClick = { navigator.navigateHome() })
 }
 
 @OptIn(ExperimentalFoundationApi::class)

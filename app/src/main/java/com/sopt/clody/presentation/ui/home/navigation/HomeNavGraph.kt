@@ -5,28 +5,25 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.sopt.clody.presentation.ui.home.screen.HomeRoute
-import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
-import com.sopt.clody.presentation.ui.replyloading.screen.ReplyLoadingRoute
+import java.time.LocalDate
 
 fun NavGraphBuilder.homeNavGraph(
     navigator: HomeNavigator,
-    replyLoadingNavigator: ReplyLoadingNavigator
 ) {
-    composable("home") {
-        HomeRoute(navigator)
-    }
-    composable("reply_loading/{year}/{month}/{day}?from={from}",
+    composable(
+        route = "home/{selectedYear}/{selectedMonth}",
         arguments = listOf(
-            navArgument("year") { type = NavType.IntType },
-            navArgument("month") { type = NavType.IntType },
-            navArgument("day") { type = NavType.IntType },
-            navArgument("from") { defaultValue = "home" } // 기본값 설정
+            navArgument("selectedYear") { type = NavType.IntType },
+            navArgument("selectedMonth") { type = NavType.IntType }
         )
     ) { backStackEntry ->
-        val year = backStackEntry.arguments?.getInt("year") ?: 0
-        val month = backStackEntry.arguments?.getInt("month") ?: 0
-        val day = backStackEntry.arguments?.getInt("day") ?: 0
-        val from = backStackEntry.arguments?.getString("from") ?: "home"
-        ReplyLoadingRoute(replyLoadingNavigator, year, month, day, from)
+        val currentDate = LocalDate.now()
+        val selectedYear = backStackEntry.arguments?.getInt("selectedYear") ?: currentDate.year
+        val selectedMonth = backStackEntry.arguments?.getInt("selectedMonth") ?: currentDate.monthValue
+        HomeRoute(
+            navigator = navigator,
+            selectedYear = selectedYear,
+            selectedMonth = selectedMonth
+        )
     }
 }
