@@ -43,7 +43,7 @@ fun NotificationSettingRoute(
 
 @Composable
 fun NotificationSettingScreen(onBackClick: () -> Unit) {
-    var showBottomSheet by remember { mutableStateOf(false) }
+    var showNotificationTimePicker by remember { mutableStateOf(false) }
     var selectedTime by remember { mutableStateOf("오후 9시 30분") }
 
     Scaffold(
@@ -54,15 +54,15 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(top = 20.dp)
         ) {
+            Spacer(modifier = Modifier.height(20.dp))
             NotificationSettingSwitch(
                 title = stringResource(R.string.notification_setting_write_diary),
                 checkedState = remember { mutableStateOf(true) }
             )
             Spacer(modifier = Modifier.height(32.dp))
             AlarmTimeSetting(
-                showBottomSheetStateChange = { newState -> showBottomSheet = newState }
+                showBottomSheetStateChange = { newState -> showNotificationTimePicker = newState }
             )
             Spacer(modifier = Modifier.height(32.dp))
             NotificationSettingSwitch(
@@ -71,13 +71,13 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
             )
         }
     }
-    if (showBottomSheet) {
-        ClodyPopupBottomSheet(onDismissRequest = { showBottomSheet = false }) {
+    if (showNotificationTimePicker) {
+        ClodyPopupBottomSheet(onDismissRequest = { showNotificationTimePicker = false }) {
             SettingBottomSheetTimePicker(
-                onDismissRequest = { showBottomSheet = false },
+                onDismissRequest = { showNotificationTimePicker = false },
                 onTimeSelected = { newTime ->
                     selectedTime = newTime
-                    showBottomSheet = false
+                    showNotificationTimePicker = false
                 }
             )
         }
