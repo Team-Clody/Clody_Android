@@ -22,8 +22,8 @@ fun TooltipPopup(
 
     if (isShowTooltip) {
         DisplayTooltipPopup(
-            onDismissRequest = onDismissRequest,
             position = position,
+            onDismissRequest = onDismissRequest,
             content = tooltipContent
         )
     }
