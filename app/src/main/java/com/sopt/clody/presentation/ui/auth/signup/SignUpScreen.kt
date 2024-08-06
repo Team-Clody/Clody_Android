@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.button.KaKaoButton
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
@@ -64,6 +65,16 @@ fun SignUpScreen(
     signInState: SignInState,
     onSignInClick: () -> Unit
 ) {
+    val systemUiController = rememberSystemUiController()
+    val backgroundColor = ClodyTheme.colors.white
+
+    LaunchedEffect(Unit) {
+        systemUiController.setStatusBarColor(
+            color = backgroundColor,
+            darkIcons = true
+        )
+    }
+
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -131,6 +142,7 @@ fun SignUpScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun RegisterScreenPreview() {
