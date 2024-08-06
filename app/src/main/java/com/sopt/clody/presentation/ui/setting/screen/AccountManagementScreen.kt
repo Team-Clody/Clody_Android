@@ -11,11 +11,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
@@ -29,7 +26,6 @@ import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomShee
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
-import com.sopt.clody.presentation.utils.extension.showToast
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -37,23 +33,11 @@ fun AccountManagementRoute(
     navigator: SettingNavigator,
     accountManagementViewModel: AccountManagementViewModel = hiltViewModel()
 ) {
-    AccountManagementScreen(
-        accountManagementViewModel = accountManagementViewModel,
-        onBackClick = { navigator.navigateBack() }
-    )
-}
-
-@Composable
-fun AccountManagementScreen(
-    accountManagementViewModel: AccountManagementViewModel,
-    onBackClick: () -> Unit
-) {
+    val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
+    val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
     var showNicknameChangeBottomSheet by remember { mutableStateOf(false) }
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showRevokeDialog by remember { mutableStateOf(false) }
-    val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
-    var userName by remember { mutableStateOf("") }
-    val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
 
     LaunchedEffect(Unit) {
         accountManagementViewModel.fetchUserInfo()
@@ -65,22 +49,47 @@ fun AccountManagementScreen(
         }
     }
 
+    AccountManagementScreen(
+        accountManagementViewModel = accountManagementViewModel,
+        userInfoState = userInfoState,
+        showNicknameChangeBottomSheet = showNicknameChangeBottomSheet,
+        updateNicknameChangeBottomSheet = { state -> showNicknameChangeBottomSheet = state },
+        showLogoutDialog = showLogoutDialog,
+        updateLogoutDialog = { state -> showLogoutDialog = state },
+        showRevokeDialog = showRevokeDialog,
+        updateRevokeDialog = { state -> showRevokeDialog = state },
+        onBackClick = { navigator.navigateBack() }
+    )
+}
+
+@Composable
+fun AccountManagementScreen(
+    accountManagementViewModel: AccountManagementViewModel,
+    userInfoState: UserInfoState,
+    showNicknameChangeBottomSheet: Boolean,
+    updateNicknameChangeBottomSheet: (Boolean) -> Unit,
+    showLogoutDialog: Boolean,
+    updateLogoutDialog: (Boolean) -> Unit,
+    showRevokeDialog: Boolean,
+    updateRevokeDialog: (Boolean) -> Unit,
+    onBackClick: () -> Unit
+) {
     Scaffold(
         topBar = { SettingTopAppBar(stringResource(R.string.account_management_title), onBackClick) },
         containerColor = ClodyTheme.colors.white,
     ) { innerPadding ->
         when (userInfoState) {
             is UserInfoState.Idle -> {}
+
             is UserInfoState.Loading -> {
                 LoadingScreen()
             }
 
             is UserInfoState.Success -> {
-                val userInfo = (userInfoState as UserInfoState.Success).data
-                userName = userInfo.name
-
+                val userInfo = userInfoState.data
                 Column(
                     modifier = Modifier
+                        .fillMaxSize()
                         .padding(innerPadding)
                 ) {
                     AccountManagementNickname(
@@ -112,19 +121,19 @@ fun AccountManagementScreen(
     if (showNicknameChangeBottomSheet) {
         NicknameChangeBottomSheet(
             accountManagementViewModel = accountManagementViewModel,
-            userName = userName,
-            onDismiss = { showNicknameChangeBottomSheet = false }
+            userName = (userInfoState as UserInfoState.Success).data.name,
+            onDismiss = { updateNicknameChangeBottomSheet(false) }
         )
     }
 
     if (showLogoutDialog) {
         LogoutDialog(
-            onDismiss = { showLogoutDialog = false },
             titleMassage = stringResource(R.string.account_management_logout_dialog_title),
             descriptionMassage = stringResource(R.string.account_management_logout_dialog_description),
             confirmOption = stringResource(R.string.account_management_logout_dialog_confirm),
             dismissOption = stringResource(R.string.account_management_logout_dialog_dismiss),
-            confirmAction = { accountManagementViewModel.logOutAccount() }
+            confirmAction = { accountManagementViewModel.logOutAccount() },
+            onDismiss = { updateLogoutDialog(false) }
         )
     }
 
@@ -135,9 +144,9 @@ fun AccountManagementScreen(
             confirmOption = stringResource(R.string.account_management_revoke_dialog_confirm),
             dismissOption = stringResource(R.string.account_management_revoke_dialog_dismiss),
             confirmAction = { accountManagementViewModel.revokeAccount() },
-            onDismiss = { showRevokeDialog = false },
             confirmButtonColor = ClodyTheme.colors.red,
-            confirmButtonTextColor = ClodyTheme.colors.white
+            confirmButtonTextColor = ClodyTheme.colors.white,
+            onDismiss = { updateRevokeDialog(false) },
         )
     }
 }
