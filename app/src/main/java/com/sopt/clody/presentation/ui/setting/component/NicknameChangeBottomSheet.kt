@@ -47,7 +47,7 @@ fun NicknameChangeBottomSheet(
                 onDismiss = onDismiss
             )
         },
-        onDismissRequest = { onDismiss() },
+        onDismissRequest = onDismiss,
     )
 }
 
