@@ -13,7 +13,7 @@ import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun AccountManagementRevoke(
+fun AccountManagementRevokeOption(
     updateRevokeDialog: (Boolean) -> Unit
 ) {
     Row(

@@ -16,7 +16,7 @@ import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun AccountManagementNickname(
+fun AccountManagementNicknameOption(
     userName: String,
     updateNicknameChangeBottomSheet: (Boolean) -> Unit
 ) {

@@ -17,7 +17,7 @@ import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun AccountManagementLogout(
+fun AccountManagementLogoutOption(
     userEmail: String,
     updateLogoutDialog: (Boolean) -> Unit
 ) {

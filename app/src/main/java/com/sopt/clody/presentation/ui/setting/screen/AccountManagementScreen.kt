@@ -18,9 +18,9 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
-import com.sopt.clody.presentation.ui.setting.component.AccountManagementLogout
-import com.sopt.clody.presentation.ui.setting.component.AccountManagementNickname
-import com.sopt.clody.presentation.ui.setting.component.AccountManagementRevoke
+import com.sopt.clody.presentation.ui.setting.component.AccountManagementLogoutOption
+import com.sopt.clody.presentation.ui.setting.component.AccountManagementNicknameOption
+import com.sopt.clody.presentation.ui.setting.component.AccountManagementRevokeOption
 import com.sopt.clody.presentation.ui.setting.component.LogoutDialog
 import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
@@ -92,13 +92,13 @@ fun AccountManagementScreen(
                         .fillMaxSize()
                         .padding(innerPadding)
                 ) {
-                    AccountManagementNickname(
+                    AccountManagementNicknameOption(
                         userName = userInfo.name,
                         updateNicknameChangeBottomSheet = updateNicknameChangeBottomSheet
                     )
 
                     if (userInfo.platform == "kakao") {
-                        AccountManagementLogout(
+                        AccountManagementLogoutOption(
                             userEmail = userInfo.email,
                             updateLogoutDialog = updateLogoutDialog
                         )
@@ -106,7 +106,7 @@ fun AccountManagementScreen(
 
                     SettingSeparateLine()
 
-                    AccountManagementRevoke(
+                    AccountManagementRevokeOption(
                         updateRevokeDialog = updateRevokeDialog
                     )
                 }
