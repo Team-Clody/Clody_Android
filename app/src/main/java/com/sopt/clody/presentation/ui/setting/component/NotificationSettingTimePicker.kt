@@ -33,7 +33,7 @@ import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun SettingBottomSheetTimePicker(onDismissRequest: () -> Unit, onTimeSelected: (String) -> Unit) {
+fun NotificationSettingTimePicker(onDismissRequest: () -> Unit, onTimeSelected: (String) -> Unit) {
     var selectedAmPm by remember { mutableStateOf("오후") }
     var selectedHour by remember { mutableStateOf("9") }
     var selectedMinute by remember { mutableStateOf("30") }
