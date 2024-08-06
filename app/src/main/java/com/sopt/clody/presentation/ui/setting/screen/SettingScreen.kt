@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,21 +70,22 @@ fun SettingScreen(
 
             SettingOption(option = stringResource(R.string.setting_option_terms_of_service), { /* TODO : 서비스 이용 약관 이동 */ })
             SettingOption(option = stringResource(R.string.setting_option_privacy_policy), { /* TODO : 개인정보 처리방침 이동 */ })
+
+            Spacer(modifier = Modifier.height(20.dp))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp),
+                    .padding(horizontal = 20.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Spacer(modifier = Modifier.width(24.dp))
                 Text(
                     text = stringResource(R.string.setting_option_app_version),
+                    modifier = Modifier.padding(start = 4.dp),
                     style = ClodyTheme.typography.body1Medium
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = stringResource(R.string.setting_app_version), /* TODO : 서버로부터 앱 버전 받아오기 */
-                    modifier = Modifier.padding(end = 20.dp),
                     color = ClodyTheme.colors.gray05,
                     style = ClodyTheme.typography.body4Medium
                 )
