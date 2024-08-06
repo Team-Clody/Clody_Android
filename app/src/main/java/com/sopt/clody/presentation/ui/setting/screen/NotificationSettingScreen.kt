@@ -12,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
@@ -27,18 +26,33 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NotificationSettingRoute(
     navigator: SettingNavigator
 ) {
+    var selectedTime by remember { mutableStateOf("오후 9시 30분") }
+    var showNotificationTimePicker by remember { mutableStateOf(false) }
+
     NotificationSettingScreen(
-        onBackClick = { navigator.navigateBack() }
+        selectedTime = selectedTime,
+        updateSelectedTime = { newSelectedTime -> selectedTime = newSelectedTime },
+        showNotificationTimePicker = showNotificationTimePicker,
+        updateNotificationTimePicker = { state -> showNotificationTimePicker = state },
+        onClickBack = { navigator.navigateBack() }
     )
 }
 
 @Composable
-fun NotificationSettingScreen(onBackClick: () -> Unit) {
-    var showNotificationTimePicker by remember { mutableStateOf(false) }
-    var selectedTime by remember { mutableStateOf("오후 9시 30분") }
-
+fun NotificationSettingScreen(
+    selectedTime: String,
+    updateSelectedTime: (String) -> Unit,
+    showNotificationTimePicker: Boolean,
+    updateNotificationTimePicker: (Boolean) -> Unit,
+    onClickBack: () -> Unit
+) {
     Scaffold(
-        topBar = { SettingTopAppBar(stringResource(R.string.notification_setting_title), onBackClick) },
+        topBar = {
+            SettingTopAppBar(
+                title = stringResource(R.string.notification_setting_title),
+                onClickBack = onClickBack
+            )
+        },
         containerColor = ClodyTheme.colors.white,
     ) { innerPadding ->
         Column(
@@ -52,7 +66,8 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(32.dp))
             NotificationSettingTime(
-                showBottomSheetStateChange = { newState -> showNotificationTimePicker = newState }
+                selectedTime = selectedTime,
+                updateNotificationTimePicker = updateNotificationTimePicker
             )
             Spacer(modifier = Modifier.height(32.dp))
             NotificationSettingSwitch(
@@ -62,20 +77,14 @@ fun NotificationSettingScreen(onBackClick: () -> Unit) {
         }
     }
     if (showNotificationTimePicker) {
-        ClodyPopupBottomSheet(onDismissRequest = { showNotificationTimePicker = false }) {
+        ClodyPopupBottomSheet(onDismissRequest = { updateNotificationTimePicker(false) }) {
             NotificationSettingTimePicker(
-                onDismissRequest = { showNotificationTimePicker = false },
-                onTimeSelected = { newTime ->
-                    selectedTime = newTime
-                    showNotificationTimePicker = false
-                }
+                onTimeSelected = { newSelectedTime ->
+                    updateSelectedTime(newSelectedTime)
+                    updateNotificationTimePicker(false)
+                },
+                onDismissRequest = { updateNotificationTimePicker(false) }
             )
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun NotificationSettingScreenPreview() {
-    NotificationSettingScreen(onBackClick = {})
 }

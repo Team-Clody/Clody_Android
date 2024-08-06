@@ -15,7 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun NotificationSettingSwitch(title: String, checkedState: MutableState<Boolean>) {
+fun NotificationSettingSwitch(
+    title: String,
+    checkedState: MutableState<Boolean>
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
