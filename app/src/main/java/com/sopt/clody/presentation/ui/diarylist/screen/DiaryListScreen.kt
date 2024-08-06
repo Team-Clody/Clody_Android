@@ -29,7 +29,7 @@ fun DiaryListRoute(
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
-    val deleteDiaryResult by diaryListViewModel.deleteDiaryResult.collectAsState()
+    val deleteDiaryState by diaryListViewModel.deleteDiaryState.collectAsState()
     var showYearMonthPicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedYearInDiaryList, selectedMonthInDiaryList) {
@@ -45,7 +45,7 @@ fun DiaryListRoute(
             selectedMonthInDiaryList = newMonth
         },
         diaryListState = diaryListState,
-        deleteDiaryResult = deleteDiaryResult,
+        deleteDiaryState = deleteDiaryState,
         showYearMonthPicker = showYearMonthPicker,
         updateYearMonthPicker = { state -> showYearMonthPicker = state },
         onClickCalendar = { selectedYearFromDiaryList, selectedMonthFromDiaryList -> navigator.navigateHome(selectedYearFromDiaryList, selectedMonthFromDiaryList) },
@@ -60,7 +60,7 @@ fun DiaryListScreen(
     selectedMonthInDiaryList: Int,
     updateYearAndMonth: (Int, Int) -> Unit,
     diaryListState: DiaryListState,
-    deleteDiaryResult: DeleteDiaryListState,
+    deleteDiaryState: DeleteDiaryState,
     showYearMonthPicker: Boolean,
     updateYearMonthPicker: (Boolean) -> Unit,
     onClickCalendar: (Int, Int) -> Unit,
@@ -100,22 +100,22 @@ fun DiaryListScreen(
                 }
             }
 
-            when (deleteDiaryResult) {
-                is DeleteDiaryListState.Idle -> {
+            when (deleteDiaryState) {
+                is DeleteDiaryState.Idle -> {
 
                 }
 
-                is DeleteDiaryListState.Loading -> {
+                is DeleteDiaryState.Loading -> {
                     LoadingScreen()
                 }
 
-                is DeleteDiaryListState.Success -> {
+                is DeleteDiaryState.Success -> {
                     LaunchedEffect(Unit) {
                         diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
                     }
                 }
 
-                is DeleteDiaryListState.Failure -> {
+                is DeleteDiaryState.Failure -> {
                     FailureScreen()
                 }
             }

@@ -19,8 +19,8 @@ class DiaryListViewModel @Inject constructor(
     private val _diaryListState = MutableStateFlow<DiaryListState>(DiaryListState.Idle)
     val diaryListState: StateFlow<DiaryListState> = _diaryListState
 
-    private val _deleteDiaryResult = MutableStateFlow<DeleteDiaryListState>(DeleteDiaryListState.Idle)
-    val deleteDiaryResult: StateFlow<DeleteDiaryListState> get() = _deleteDiaryResult
+    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
+    val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryState
 
     fun fetchMonthlyDiary(year: Int, month: Int) {
         _diaryListState.value = DiaryListState.Loading
@@ -35,14 +35,14 @@ class DiaryListViewModel @Inject constructor(
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
-            _deleteDiaryResult.value = DeleteDiaryListState.Loading
+            _deleteDiaryState.value = DeleteDiaryState.Loading
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
-            _deleteDiaryResult.value = result.fold(
+            _deleteDiaryState.value = result.fold(
                 onSuccess = {
-                    DeleteDiaryListState.Success
+                    DeleteDiaryState.Success
                 },
                 onFailure = {
-                    DeleteDiaryListState.Failure(it.message ?: "Unknown error")
+                    DeleteDiaryState.Failure(it.message ?: "Unknown error")
                 }
             )
         }
