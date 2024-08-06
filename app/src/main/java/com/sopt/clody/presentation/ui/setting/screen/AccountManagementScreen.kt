@@ -1,20 +1,9 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -29,7 +18,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.component.FailureScreen
+import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.setting.component.AccountManagementLogout
+import com.sopt.clody.presentation.ui.setting.component.AccountManagementNickname
+import com.sopt.clody.presentation.ui.setting.component.AccountManagementRevoke
 import com.sopt.clody.presentation.ui.setting.component.LogoutDialog
 import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
@@ -78,17 +72,7 @@ fun AccountManagementScreen(
         when (userInfoState) {
             is UserInfoState.Idle -> {}
             is UserInfoState.Loading -> {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(
-                        modifier = Modifier
-                            .padding(innerPadding)
-                            .wrapContentSize(Alignment.Center),
-                        color = ClodyTheme.colors.mainYellow
-                    )
-                }
+                LoadingScreen()
             }
 
             is UserInfoState.Success -> {
@@ -98,85 +82,29 @@ fun AccountManagementScreen(
                 Column(
                     modifier = Modifier
                         .padding(innerPadding)
-                        .padding(top = 20.dp)
-                )
-                {
-                    Row(
-                        modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .padding(bottom = 17.dp)
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_account_management_clover),
-                            contentDescription = null
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            text = userInfo.name,
-                            style = ClodyTheme.typography.body1SemiBold
-                        )
-                        Text(
-                            text = stringResource(R.string.account_management_nickname),
-                            style = ClodyTheme.typography.body1Medium
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = stringResource(R.string.account_management_nickname_change_button),
-                            modifier = Modifier.clickable(onClick = { showNicknameChangeBottomSheet = true }),
-                            color = ClodyTheme.colors.gray05,
-                            style = ClodyTheme.typography.body4Medium
-                        )
-                    }
+                ) {
+                    AccountManagementNickname(
+                        userName = userInfo.name,
+                        updateNicknameChangeBottomSheet = updateNicknameChangeBottomSheet
+                    )
 
-                    Row(
-                        modifier = Modifier
-                            .padding(top = 17.dp, bottom = 24.dp, start = 22.dp, end = 24.dp)
-                    ) {
-                        if (userInfo.platform == "kakao") {
-                            Image(
-                                painter = painterResource(id = R.drawable.img_account_management_kakao),
-                                modifier = Modifier
-                                    .size(24.dp),
-                                contentDescription = null
-                            )
-                            Spacer(modifier = Modifier.width(10.dp))
-                            Text(
-                                text = userInfo.email,
-                                style = ClodyTheme.typography.body1Medium
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            Text(
-                                text = stringResource(R.string.account_management_logout_button),
-                                modifier = Modifier.clickable(onClick = { showLogoutDialog = true }),
-                                color = ClodyTheme.colors.gray05,
-                                style = ClodyTheme.typography.body4Medium
-                            )
-                        }
+                    if (userInfo.platform == "kakao") {
+                        AccountManagementLogout(
+                            userEmail = userInfo.email,
+                            updateLogoutDialog = updateLogoutDialog
+                        )
                     }
 
                     SettingSeparateLine()
 
-                    Row(
-                        modifier = Modifier.padding(24.dp)
-                    ) {
-                        Text(
-                            text = stringResource(R.string.account_management_revoke),
-                            color = ClodyTheme.colors.gray05,
-                            style = ClodyTheme.typography.body4Medium
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            text = stringResource(R.string.account_management_revoke_button),
-                            modifier = Modifier.clickable(onClick = { showRevokeDialog = true }),
-                            color = ClodyTheme.colors.gray05,
-                            style = ClodyTheme.typography.body4Medium
-                        )
-                    }
+                    AccountManagementRevoke(
+                        updateRevokeDialog = updateRevokeDialog
+                    )
                 }
             }
 
             is UserInfoState.Failure -> {
-                showToast(message = "${(userInfoState as UserInfoState.Failure).errorMessage}")
+                FailureScreen()
             }
         }
     }
