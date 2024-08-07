@@ -20,10 +20,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -31,23 +27,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
-import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
-import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
+import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.ui.theme.ClodyTheme
-import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 @Composable
 fun DailyDiaryCard(
     index: Int,
+    diaryListViewModel: DiaryListViewModel,
     dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
-    onDeleteDiary: (Int, Int, Int) -> Unit
+    showDiaryDeleteBottomSheet: () -> Unit,
+    onClickReplyDiary: () -> Unit,
 ) {
-    var showDiaryDeleteSheet by remember { mutableStateOf(false) }
-    var showDiaryDeleteDialog by remember { mutableStateOf(false) }
-
     val iconRes = when {
         dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.replyStatus == "UNREADY" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
@@ -106,68 +97,17 @@ fun DailyDiaryCard(
                     style = ClodyTheme.typography.body2SemiBold
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                Box(
-                    contentAlignment = Alignment.TopEnd
-                ) {
-                    Button(
-                        modifier = Modifier
-                            .height(33.dp)
-                            .padding(horizontal = 3.dp, vertical = 3.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
-                        shape = RoundedCornerShape(size = 9.dp),
-                        onClick = { onClickReplyDiary(year, month, day) },
-                        contentPadding = PaddingValues(0.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.diarylist_check_reply),
-                            modifier = Modifier
-                                .padding(horizontal = 10.dp, vertical = 2.dp),
-                            style = ClodyTheme.typography.detail1SemiBold,
-                            color = ClodyTheme.colors.blue
-                        )
-                    }
-                    if (dailyDiary.replyStatus == "READY_NOT_READ") {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_reply_diary_new),
-                            modifier = Modifier
-                                .align(Alignment.TopEnd),
-                            contentDescription = null,
-                        )
-                    }
-                }
-                Image(
-                    painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
-                    contentDescription = "kebab menu",
-                    modifier = Modifier
-                        .clickable(onClick = { showDiaryDeleteSheet = true })
+                ReplyDiaryButton(
+                    dailyDiary = dailyDiary,
+                    onClickReplyDiary = onClickReplyDiary,
+                )
+                DiaryDeleteButton(
+                    showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet
                 )
             }
             Spacer(modifier = Modifier.height(12.dp))
-            DailyDiaryCardItem(dailyDiary.diary.map { it.content })
+            DailyDiaryCardContent(dailyDiary.diary.map { it.content })
         }
-    }
-
-    if (showDiaryDeleteSheet) {
-        DiaryDeleteSheet(
-            onDismiss = { showDiaryDeleteSheet = false },
-            onShowDiaryDeleteDialogStateChange = { newState -> showDiaryDeleteDialog = newState }
-        )
-    }
-
-    if (showDiaryDeleteDialog) {
-        ClodyDialog(
-            titleMassage = stringResource(R.string.delete_diary_dialog_title),
-            descriptionMassage = stringResource(R.string.delete_diary_dialog_description),
-            confirmOption = stringResource(R.string.delete_diary_dialog_confirm_option),
-            dismissOption = stringResource(R.string.delete_diary_dialog_dismiss_option),
-            confirmAction = {
-                onDeleteDiary(year, month, day)
-                showDiaryDeleteDialog = false
-            },
-            onDismiss = { showDiaryDeleteDialog = false },
-            confirmButtonColor = ClodyTheme.colors.red,
-            confirmButtonTextColor = ClodyTheme.colors.white
-        )
     }
 }
 

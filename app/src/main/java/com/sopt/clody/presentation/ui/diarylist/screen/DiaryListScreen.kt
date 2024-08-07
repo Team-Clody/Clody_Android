@@ -9,9 +9,13 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
+import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
+import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
@@ -29,8 +33,13 @@ fun DiaryListRoute(
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
-    val deleteDiaryState by diaryListViewModel.deleteDiaryState.collectAsState()
-    var showYearMonthPicker by remember { mutableStateOf(false) }
+    val selectedDiaryYear by diaryListViewModel.selectedDiaryYear.collectAsState()
+    val selectedDiaryMonth by diaryListViewModel.selectedDiaryMonth.collectAsState()
+    val selectedDiaryDay by diaryListViewModel.selectedDiaryDay.collectAsState()
+    val diaryDeleteState by diaryListViewModel.diaryDeleteState.collectAsState()
+    var yearMonthPickerState by remember { mutableStateOf(false) }
+    var diaryDeleteBottomSheetState by remember { mutableStateOf(false) }
+    var diaryDeleteDialogState by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedYearInDiaryList, selectedMonthInDiaryList) {
         diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
@@ -45,11 +54,19 @@ fun DiaryListRoute(
             selectedMonthInDiaryList = newMonth
         },
         diaryListState = diaryListState,
-        deleteDiaryState = deleteDiaryState,
-        showYearMonthPicker = showYearMonthPicker,
-        updateYearMonthPicker = { state -> showYearMonthPicker = state },
-        onClickCalendar = { selectedYearFromDiaryList, selectedMonthFromDiaryList -> navigator.navigateHome(selectedYearFromDiaryList, selectedMonthFromDiaryList) },
-        onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
+        diaryDeleteState = diaryDeleteState,
+        yearMonthPickerState = yearMonthPickerState,
+        showYearMonthPicker = { yearMonthPickerState = true },
+        dismissYearMonthPicker = { yearMonthPickerState = false },
+        diaryDeleteBottomSheetState = diaryDeleteBottomSheetState,
+        showDiaryDeleteBottomSheet = { diaryDeleteBottomSheetState = true },
+        dismissDiaryDeleteBottomSheet = { diaryDeleteBottomSheetState = false },
+        diaryDeleteDialogState = diaryDeleteDialogState,
+        showDiaryDeleteDialog = { diaryDeleteDialogState = true },
+        dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
+        onClickDiaryDelete = { diaryListViewModel.deleteDailyDiary(selectedDiaryYear,selectedDiaryMonth,selectedDiaryDay) },
+        onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
+        onClickReplyDiary = { navigator.navigateReplyLoading(selectedDiaryYear, selectedDiaryMonth, selectedDiaryDay) }
     )
 }
 
@@ -60,19 +77,27 @@ fun DiaryListScreen(
     selectedMonthInDiaryList: Int,
     updateYearAndMonth: (Int, Int) -> Unit,
     diaryListState: DiaryListState,
-    deleteDiaryState: DeleteDiaryState,
-    showYearMonthPicker: Boolean,
-    updateYearMonthPicker: (Boolean) -> Unit,
-    onClickCalendar: (Int, Int) -> Unit,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    diaryDeleteState: DiaryDeleteState,
+    yearMonthPickerState: Boolean,
+    showYearMonthPicker: () -> Unit,
+    dismissYearMonthPicker: () -> Unit,
+    diaryDeleteBottomSheetState: Boolean,
+    showDiaryDeleteBottomSheet: () -> Unit,
+    dismissDiaryDeleteBottomSheet: () -> Unit,
+    diaryDeleteDialogState: Boolean,
+    showDiaryDeleteDialog: () -> Unit,
+    dismissDiaryDeleteDialog: () -> Unit,
+    onClickDiaryDelete: () -> Unit,
+    onClickCalendar: () -> Unit,
+    onClickReplyDiary: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             DiaryListTopAppBar(
-                onClickCalendar = { onClickCalendar(selectedYearInDiaryList, selectedMonthInDiaryList) },
                 selectedYear = selectedYearInDiaryList,
                 selectedMonth = selectedMonthInDiaryList,
-                updateYearMonthPicker = updateYearMonthPicker
+                showYearMonthPicker = showYearMonthPicker,
+                onClickCalendar = onClickCalendar,
             )
         },
         containerColor = ClodyTheme.colors.gray08,
@@ -89,9 +114,10 @@ fun DiaryListScreen(
                 is DiaryListState.Success -> {
                     MonthlyDiaryList(
                         paddingValues = innerPadding,
-                        onClickReplyDiary = onClickReplyDiary,
+                        diaryListViewModel = diaryListViewModel,
                         diaries = diaryListState.data.diaries,
-                        diaryListViewModel = diaryListViewModel
+                        showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
+                        onClickReplyDiary = onClickReplyDiary
                     )
                 }
 
@@ -100,36 +126,59 @@ fun DiaryListScreen(
                 }
             }
 
-            when (deleteDiaryState) {
-                is DeleteDiaryState.Idle -> {
+            when (diaryDeleteState) {
+                is DiaryDeleteState.Idle -> {
 
                 }
 
-                is DeleteDiaryState.Loading -> {
+                is DiaryDeleteState.Loading -> {
                     LoadingScreen()
                 }
 
-                is DeleteDiaryState.Success -> {
+                is DiaryDeleteState.Success -> {
                     LaunchedEffect(Unit) {
                         diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
                     }
                 }
 
-                is DeleteDiaryState.Failure -> {
+                is DiaryDeleteState.Failure -> {
                     FailureScreen()
                 }
             }
         }
     )
 
-    if (showYearMonthPicker) {
-        ClodyPopupBottomSheet(onDismissRequest = { updateYearMonthPicker(false) }) {
+    if (yearMonthPickerState) {
+        ClodyPopupBottomSheet(onDismissRequest = dismissYearMonthPicker) {
             YearMonthPicker(
-                onDismissRequest = { updateYearMonthPicker(false) },
+                onDismissRequest = dismissYearMonthPicker,
                 selectedYear = selectedYearInDiaryList,
                 selectedMonth = selectedMonthInDiaryList,
                 onYearMonthSelected = updateYearAndMonth
             )
         }
+    }
+
+    if (diaryDeleteBottomSheetState) {
+        DiaryDeleteSheet(
+            onDismiss = dismissDiaryDeleteBottomSheet,
+            showDiaryDeleteDialog = showDiaryDeleteDialog
+        )
+    }
+
+    if (diaryDeleteDialogState) {
+        ClodyDialog(
+            titleMassage = stringResource(R.string.delete_diary_dialog_title),
+            descriptionMassage = stringResource(R.string.delete_diary_dialog_description),
+            confirmOption = stringResource(R.string.delete_diary_dialog_confirm_option),
+            dismissOption = stringResource(R.string.delete_diary_dialog_dismiss_option),
+            confirmAction = {
+                onClickDiaryDelete()
+                dismissDiaryDeleteDialog()
+            },
+            onDismiss = dismissDiaryDeleteDialog,
+            confirmButtonColor = ClodyTheme.colors.red,
+            confirmButtonTextColor = ClodyTheme.colors.white
+        )
     }
 }

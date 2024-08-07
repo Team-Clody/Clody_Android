@@ -14,9 +14,10 @@ import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 @Composable
 fun MonthlyDiaryList(
     paddingValues: PaddingValues,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    diaryListViewModel: DiaryListViewModel,
     diaries: List<ResponseMonthlyDiaryDto.DailyDiary>,
-    diaryListViewModel: DiaryListViewModel
+    showDiaryDeleteBottomSheet: () -> Unit,
+    onClickReplyDiary: () -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -24,14 +25,13 @@ fun MonthlyDiaryList(
             .padding(paddingValues)
             .padding(top = 18.dp)
     ) {
-        itemsIndexed(diaries) { index, dailyDiary ->
+        itemsIndexed(items = diaries) { index, dailyDiary ->
             DailyDiaryCard(
                 index = index,
+                diaryListViewModel = diaryListViewModel,
                 dailyDiary = dailyDiary,
-                onClickReplyDiary = onClickReplyDiary,
-                onDeleteDiary = { year, month, day ->
-                    diaryListViewModel.deleteDailyDiary(year, month, day)
-                }
+                showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
+                onClickReplyDiary = onClickReplyDiary
             )
         }
     }

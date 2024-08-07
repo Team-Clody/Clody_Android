@@ -25,10 +25,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
+import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.home.calendar.ClodyCalendar
 import com.sopt.clody.presentation.ui.home.component.CloverCount
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
@@ -111,7 +111,7 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopAppBar(
-                onClickDiaryList = { onClickDiaryList(selectedYearInCalendar,selectedMonthInCalendar) },
+                onClickDiaryList = { onClickDiaryList(selectedYearInCalendar, selectedMonthInCalendar) },
                 onClickSetting = onClickSetting,
                 onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState },
                 selectedYear = selectedYearInCalendar,
@@ -183,7 +183,7 @@ fun HomeScreen(
     if (showDiaryDeleteState) {
         DiaryDeleteSheet(
             onDismiss = { showDiaryDeleteState = false },
-            onShowDiaryDeleteDialogStateChange = { newState -> showDiaryDeleteDialog = newState }
+            showDiaryDeleteDialog = { showDiaryDeleteDialog = true }
         )
     }
 

@@ -27,10 +27,10 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryListTopAppBar(
-    onClickCalendar: () -> Unit,
     selectedYear: Int,
     selectedMonth: Int,
-    updateYearMonthPicker: (Boolean) -> Unit,
+    showYearMonthPicker: () -> Unit,
+    onClickCalendar: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -40,7 +40,7 @@ fun DiaryListTopAppBar(
                 Row(
                     modifier = Modifier
                         .padding(start = 16.dp)
-                        .clickable(onClick = { updateYearMonthPicker(true) }),
+                        .clickable(onClick = showYearMonthPicker),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
