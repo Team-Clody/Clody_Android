@@ -49,10 +49,7 @@ fun DiaryListRoute(
         diaryListViewModel = diaryListViewModel,
         selectedYearInDiaryList = selectedYearInDiaryList,
         selectedMonthInDiaryList = selectedMonthInDiaryList,
-        updateYearAndMonth = { newYear, newMonth ->
-            selectedYearInDiaryList = newYear
-            selectedMonthInDiaryList = newMonth
-        },
+        updateYearAndMonth = { newYear, newMonth -> selectedYearInDiaryList = newYear; selectedMonthInDiaryList = newMonth },
         diaryListState = diaryListState,
         diaryDeleteState = diaryDeleteState,
         yearMonthPickerState = yearMonthPickerState,
@@ -64,7 +61,7 @@ fun DiaryListRoute(
         diaryDeleteDialogState = diaryDeleteDialogState,
         showDiaryDeleteDialog = { diaryDeleteDialogState = true },
         dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
-        onClickDiaryDelete = { diaryListViewModel.deleteDailyDiary(selectedDiaryYear,selectedDiaryMonth,selectedDiaryDay) },
+        onClickDiaryDelete = { diaryListViewModel.deleteDailyDiary(selectedDiaryYear, selectedDiaryMonth, selectedDiaryDay) },
         onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
         onClickReplyDiary = { navigator.navigateReplyLoading(selectedDiaryYear, selectedDiaryMonth, selectedDiaryDay) }
     )
