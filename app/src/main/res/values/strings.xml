@@ -42,10 +42,10 @@
     <string name="diarylist_check_reply">답장 확인</string>
 
     <!-- 일기 삭제 다이얼로그-->
-    <string name="delete_diary_dialog_title">정말 일기를 삭제할까요?</string>
-    <string name="delete_diary_dialog_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
-    <string name="delete_diary_dialog_confirm_option">삭제할래요</string>
-    <string name="delete_diary_dialog_dismiss_option">아니요</string>
+    <string name="diary_delete_dialog_title">정말 일기를 삭제할까요?</string>
+    <string name="diary_delete_dialog_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
+    <string name="diary_delete_dialog_confirm_option">삭제할래요</string>
+    <string name="diary_delete_dialog_dismiss_option">아니요</string>
 
     <!-- 일기 모아보기 -->
     <string name="diarylist_selected_year_month">%1$s년 %2$s월</string>
