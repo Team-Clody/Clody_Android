@@ -170,11 +170,45 @@ fun DailyDiaryCard(
     }
 }
 
-fun getDayOfWeek(dateString: String): String {
-    val parts = dateString.split("-")
-    val year = parts[0].toInt()
-    val month = parts[1].toInt()
-    val day = parts[2].toInt()
+@Composable
+fun ReplyDiaryButton(
+    dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
+    onClickReplyDiary: () -> Unit,
+) {
+    Box(
+        contentAlignment = Alignment.TopEnd
+    ) {
+        Button(
+            modifier = Modifier
+                .height(33.dp)
+                .padding(horizontal = 3.dp, vertical = 3.dp),
+            colors =
+            if (dailyDiary.replyStatus == "UNREADY") ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.gray04)
+            else ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
+            shape = RoundedCornerShape(size = 9.dp),
+            onClick = onClickReplyDiary,
+            contentPadding = PaddingValues(0.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.diarylist_check_reply),
+                modifier = Modifier
+                    .padding(horizontal = 10.dp, vertical = 2.dp),
+                style = ClodyTheme.typography.detail1SemiBold,
+                color =
+                if (dailyDiary.replyStatus == "UNREADY") ClodyTheme.colors.gray02
+                else ClodyTheme.colors.blue
+            )
+        }
+        if (dailyDiary.replyStatus == "READY_NOT_READ") {
+            Image(
+                painter = painterResource(id = R.drawable.ic_reply_diary_new),
+                modifier = Modifier
+                    .align(Alignment.TopEnd),
+                contentDescription = null,
+            )
+        }
+    }
+}
 
     return LocalDate.of(year, month, day).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN)
 }
