@@ -210,5 +210,14 @@ fun ReplyDiaryButton(
     }
 }
 
-    return LocalDate.of(year, month, day).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN)
+@Composable
+fun DiaryDeleteButton(
+    showDiaryDeleteBottomSheet: () -> Unit
+) {
+    Image(
+        painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
+        contentDescription = "kebab menu",
+        modifier = Modifier
+            .clickable(onClick = showDiaryDeleteBottomSheet)
+    )
 }
