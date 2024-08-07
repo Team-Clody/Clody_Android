@@ -23,9 +23,13 @@ class ReplyLoadingViewModel @Inject constructor(
             val result = diaryTimeRepository.getDiaryTime(year, month, date)
             _replyLoadingState.value = result.fold(
                 onSuccess = { data ->
+                    val newHH = data.HH
+                    val newMM = data.MM + 1
+                    val finalMM = newMM % 60
+                    val finalHH = (newHH + newMM / 60) % 24
                     ReplyLoadingState.Success(
-                        HH = data.HH,
-                        MM = data.MM,
+                        HH = finalHH,
+                        MM = finalMM,
                         SS = data.SS
                     )
                 },
