@@ -69,9 +69,10 @@ class HomeViewModel @Inject constructor(
 
     private fun initialize() {
         if (!isInitialized) {
-            updateIsToday(LocalDate.now().year, LocalDate.now().monthValue)
-            loadCalendarData(LocalDate.now().year, LocalDate.now().monthValue)
-            updateSelectedDate(LocalDate.now())
+            val now = LocalDate.now()
+            updateIsToday(now.year, now.monthValue)
+            loadCalendarData(now.year, now.monthValue)
+            updateSelectedDate(now)
             isInitialized = true
         }
     }
@@ -166,7 +167,8 @@ class HomeViewModel @Inject constructor(
         isCalendarDataLoaded = false
     }
 
-    fun setInitialized() {
-        isInitialized = true
+    fun refreshCalendarAndDiaries(year: Int, month: Int, date: LocalDate) {
+        loadCalendarData(year, month)
+        loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
     }
 }

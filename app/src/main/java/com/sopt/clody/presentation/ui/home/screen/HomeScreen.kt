@@ -85,21 +85,16 @@ fun HomeScreen(
     val showDiaryDeleteState by homeViewModel.showDiaryDeleteState.collectAsStateWithLifecycle()
     val showDiaryDeleteDialog by homeViewModel.showDiaryDeleteDialog.collectAsStateWithLifecycle()
 
-    LaunchedEffect(Unit) {
-        if (homeViewModel.isInitialized.not()) {
-            homeViewModel.updateSelectedYearMonth(selectedYear, selectedMonth)
-            homeViewModel.loadCalendarData(selectedYear, selectedMonth)
-            if (selectedYear == currentDate.year && selectedMonth == currentDate.monthValue) {
-                homeViewModel.updateSelectedDate(currentDate)
-            }
-            homeViewModel.setInitialized()
+    LaunchedEffect(selectedYearInCalendar, selectedMonthInCalendar) {
+        homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
+        if (selectedYearInCalendar == currentDate.year && selectedMonthInCalendar == currentDate.monthValue) {
+            homeViewModel.updateSelectedDate(currentDate)
         }
     }
 
     LaunchedEffect(dailyDiariesState) {
         if (dailyDiariesState is DailyDiariesState.Success) {
-            homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
-            homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+            homeViewModel.refreshCalendarAndDiaries(selectedYearInCalendar, selectedMonthInCalendar, selectedDate)
         }
     }
 
