@@ -47,6 +47,9 @@ fun HomeRoute(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
+    LaunchedEffect(selectedYear, selectedMonth) {
+        homeViewModel.updateSelectedYearMonth(selectedYear, selectedMonth)
+    }
     HomeScreen(
         homeViewModel = homeViewModel,
         onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
@@ -82,10 +85,14 @@ fun HomeScreen(
     val showDiaryDeleteState by homeViewModel.showDiaryDeleteState.collectAsStateWithLifecycle()
     val showDiaryDeleteDialog by homeViewModel.showDiaryDeleteDialog.collectAsStateWithLifecycle()
 
-    LaunchedEffect(selectedYearInCalendar, selectedMonthInCalendar) {
-        homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
-        if (selectedYearInCalendar == currentDate.year && selectedMonthInCalendar == currentDate.monthValue) {
-            homeViewModel.updateSelectedDate(currentDate)
+    LaunchedEffect(Unit) {
+        if (homeViewModel.isInitialized.not()) {
+            homeViewModel.updateSelectedYearMonth(selectedYear, selectedMonth)
+            homeViewModel.loadCalendarData(selectedYear, selectedMonth)
+            if (selectedYear == currentDate.year && selectedMonth == currentDate.monthValue) {
+                homeViewModel.updateSelectedDate(currentDate)
+            }
+            homeViewModel.setInitialized()
         }
     }
 
