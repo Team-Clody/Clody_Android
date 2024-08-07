@@ -58,12 +58,6 @@ class HomeViewModel @Inject constructor(
     private val _selectedMonthInCalendar = MutableStateFlow(LocalDate.now().monthValue)
     val selectedMonthInCalendar: StateFlow<Int> get() = _selectedMonthInCalendar
 
-//    init {
-//        updateIsToday(LocalDate.now().year, LocalDate.now().monthValue)
-//        loadCalendarData(LocalDate.now().year, LocalDate.now().monthValue)
-//        updateSelectedDate(LocalDate.now())
-//    }
-//
     private var isCalendarDataLoaded = false
     private var isDailyDiariesDataLoaded = false
 
