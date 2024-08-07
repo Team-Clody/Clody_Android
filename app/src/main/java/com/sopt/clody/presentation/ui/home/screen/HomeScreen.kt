@@ -192,12 +192,6 @@ fun HomeScreen(
                 selectedMonth = selectedMonthInCalendar,
                 onYearMonthSelected = { year, month ->
                     homeViewModel.updateSelectedYearMonth(year, month)
-                    val newDate = if (year == currentDate.year && month == currentDate.monthValue) {
-                        currentDate
-                    } else {
-                        LocalDate.of(year, month, 1)
-                    }
-                    homeViewModel.updateSelectedDate(newDate)
                     homeViewModel.loadCalendarData(year, month)
                 }
             )
