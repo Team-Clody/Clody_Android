@@ -20,6 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -28,7 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
-import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -68,7 +68,7 @@ fun DailyDiaryCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
-                    .padding(start = 20.dp, end = 12.dp),
+                    .padding(start = 20.dp, end = 12.dp, bottom = 18.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -77,18 +77,22 @@ fun DailyDiaryCard(
                     modifier = Modifier
                         .padding(end = 6.dp)
                 )
-                Text(
-                    text = stringResource(R.string.diarylist_daily_diary_day, diaryListViewModel.selectedDiaryDay),
-                    modifier = Modifier
-                        .padding(end = 2.dp),
-                    color = ClodyTheme.colors.gray01,
-                    style = ClodyTheme.typography.body1SemiBold
-                )
-                Text(
-                    text = stringResource(R.string.diarylist_daily_diary_day_of_week, diaryListViewModel.selectedDiaryDayOfWeek),
-                    color = ClodyTheme.colors.gray04,
-                    style = ClodyTheme.typography.body2SemiBold
-                )
+                Row(
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        text = stringResource(R.string.diarylist_daily_diary_day, diaryListViewModel.selectedDiaryDay.collectAsState().value),
+                        modifier = Modifier
+                            .padding(end = 2.dp),
+                        color = ClodyTheme.colors.gray01,
+                        style = ClodyTheme.typography.body1SemiBold
+                    )
+                    Text(
+                        text = stringResource(R.string.diarylist_daily_diary_day_of_week, diaryListViewModel.selectedDiaryDayOfWeek.collectAsState().value),
+                        color = ClodyTheme.colors.gray04,
+                        style = ClodyTheme.typography.body2SemiBold
+                    )
+                }
                 Spacer(modifier = Modifier.weight(1f))
                 ReplyDiaryButton(
                     dailyDiary = dailyDiary,
@@ -112,14 +116,18 @@ fun ReplyDiaryButton(
         contentAlignment = Alignment.TopEnd
     ) {
         Button(
+            onClick = onClickReplyDiary,
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),
-            colors =
-            if (dailyDiary.replyStatus == "UNREADY") ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.gray04)
-            else ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.lightBlue),
+            enabled = dailyDiary.replyStatus != "UNREADY",
+            colors = ButtonDefaults.buttonColors(
+                containerColor = ClodyTheme.colors.lightBlue,
+                contentColor = ClodyTheme.colors.blue,
+                disabledContainerColor = ClodyTheme.colors.gray08,
+                disabledContentColor = ClodyTheme.colors.gray06
+            ),
             shape = RoundedCornerShape(size = 9.dp),
-            onClick = onClickReplyDiary,
             contentPadding = PaddingValues(0.dp),
         ) {
             Text(
@@ -127,9 +135,6 @@ fun ReplyDiaryButton(
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 2.dp),
                 style = ClodyTheme.typography.detail1SemiBold,
-                color =
-                if (dailyDiary.replyStatus == "UNREADY") ClodyTheme.colors.gray02
-                else ClodyTheme.colors.blue
             )
         }
         if (dailyDiary.replyStatus == "READY_NOT_READ") {
