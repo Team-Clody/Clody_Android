@@ -19,8 +19,17 @@ class DiaryListViewModel @Inject constructor(
     private val _diaryListState = MutableStateFlow<DiaryListState>(DiaryListState.Idle)
     val diaryListState: StateFlow<DiaryListState> = _diaryListState
 
-    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
-    val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryState
+    private val _selectedDiaryYear = MutableStateFlow(0)
+    val selectedDiaryYear: StateFlow<Int> = _selectedDiaryYear
+
+    private val _selectedDiaryMonth = MutableStateFlow(0)
+    val selectedDiaryMonth: StateFlow<Int> = _selectedDiaryMonth
+
+    private val _selectedDiaryDay = MutableStateFlow(0)
+    val selectedDiaryDay: StateFlow<Int> = _selectedDiaryDay
+
+    private val _diaryDeleteState = MutableStateFlow<DiaryDeleteState>(DiaryDeleteState.Idle)
+    val diaryDeleteState: StateFlow<DiaryDeleteState> get() = _diaryDeleteState
 
     fun fetchMonthlyDiary(year: Int, month: Int) {
         _diaryListState.value = DiaryListState.Loading
@@ -33,16 +42,22 @@ class DiaryListViewModel @Inject constructor(
         }
     }
 
+    fun setSelectedDiaryDate(selectedDiaryYear: Int, selectedDiaryMonth: Int, selectedDiaryDay: Int) {
+        _selectedDiaryYear.value = selectedDiaryYear
+        _selectedDiaryMonth.value = selectedDiaryMonth
+        _selectedDiaryDay.value = selectedDiaryDay
+    }
+
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
-            _deleteDiaryState.value = DeleteDiaryState.Loading
+            _diaryDeleteState.value = DiaryDeleteState.Loading
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
-            _deleteDiaryState.value = result.fold(
+            _diaryDeleteState.value = result.fold(
                 onSuccess = {
-                    DeleteDiaryState.Success
+                    DiaryDeleteState.Success
                 },
                 onFailure = {
-                    DeleteDiaryState.Failure(it.message ?: "Unknown error")
+                    DiaryDeleteState.Failure(it.message ?: "Unknown error")
                 }
             )
         }
