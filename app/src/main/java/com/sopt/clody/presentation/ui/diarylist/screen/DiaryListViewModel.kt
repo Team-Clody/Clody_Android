@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.DiaryListRepository
+import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -28,6 +29,9 @@ class DiaryListViewModel @Inject constructor(
     private val _selectedDiaryDay = MutableStateFlow(0)
     val selectedDiaryDay: StateFlow<Int> = _selectedDiaryDay
 
+    private val _selectedDiaryDayOfWeek = MutableStateFlow("")
+    val selectedDiaryDayOfWeek: StateFlow<String> = _selectedDiaryDayOfWeek
+
     private val _diaryDeleteState = MutableStateFlow<DiaryDeleteState>(DiaryDeleteState.Idle)
     val diaryDeleteState: StateFlow<DiaryDeleteState> get() = _diaryDeleteState
 
@@ -42,10 +46,12 @@ class DiaryListViewModel @Inject constructor(
         }
     }
 
-    fun setSelectedDiaryDate(selectedDiaryYear: Int, selectedDiaryMonth: Int, selectedDiaryDay: Int) {
-        _selectedDiaryYear.value = selectedDiaryYear
-        _selectedDiaryMonth.value = selectedDiaryMonth
-        _selectedDiaryDay.value = selectedDiaryDay
+    fun setSelectedDiaryDate(selectedDiaryDate: String) {
+        val diaryDate = selectedDiaryDate.split("-")
+        _selectedDiaryYear.value = diaryDate[0].toInt()
+        _selectedDiaryMonth.value = diaryDate[1].toInt()
+        _selectedDiaryDay.value = diaryDate[2].toInt()
+        _selectedDiaryDayOfWeek.value = getDayOfWeek(_selectedDiaryYear.value, _selectedDiaryMonth.value, _selectedDiaryDay.value)
     }
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {

@@ -49,12 +49,7 @@ fun DailyDiaryCard(
         else -> R.drawable.ic_home_ungiven_clover
     }
 
-    val diaryDay = dailyDiary.date.split("-")
-    val year = diaryDay[0].toInt()
-    val month = diaryDay[1].toInt()
-    val day = diaryDay[2].toInt()
-    val dayOfWeek = getDayOfWeek(year, month, day)
-    diaryListViewModel.setSelectedDiaryDate(year, month, day)
+    diaryListViewModel.setSelectedDiaryDate(selectedDiaryDate = dailyDiary.date)
 
     Card(
         modifier = Modifier
@@ -75,8 +70,7 @@ fun DailyDiaryCard(
                     .wrapContentHeight()
                     .padding(start = 20.dp, end = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
-            )
-            {
+            ) {
                 Image(
                     painter = painterResource(id = iconRes),
                     contentDescription = "clover",
@@ -84,14 +78,14 @@ fun DailyDiaryCard(
                         .padding(end = 6.dp)
                 )
                 Text(
-                    text = stringResource(R.string.diarylist_daily_diary_day, day),
+                    text = stringResource(R.string.diarylist_daily_diary_day, diaryListViewModel.selectedDiaryDay),
                     modifier = Modifier
                         .padding(end = 2.dp),
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body1SemiBold
                 )
                 Text(
-                    text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
+                    text = stringResource(R.string.diarylist_daily_diary_day_of_week, diaryListViewModel.selectedDiaryDayOfWeek),
                     color = ClodyTheme.colors.gray04,
                     style = ClodyTheme.typography.body2SemiBold
                 )

@@ -146,7 +146,9 @@ fun DiaryListScreen(
     )
 
     if (yearMonthPickerState) {
-        ClodyPopupBottomSheet(onDismissRequest = dismissYearMonthPicker) {
+        ClodyPopupBottomSheet(
+            onDismissRequest = dismissYearMonthPicker
+        ) {
             YearMonthPicker(
                 onDismissRequest = dismissYearMonthPicker,
                 selectedYear = selectedYearInDiaryList,
