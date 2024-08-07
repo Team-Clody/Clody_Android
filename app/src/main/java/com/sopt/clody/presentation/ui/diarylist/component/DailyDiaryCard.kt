@@ -67,8 +67,7 @@ fun DailyDiaryCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp)
-                .padding(bottom = 8.dp)
+                .padding(vertical = 20.dp)
         ) {
             Row(
                 modifier = Modifier
@@ -105,7 +104,6 @@ fun DailyDiaryCard(
                     showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet
                 )
             }
-            Spacer(modifier = Modifier.height(12.dp))
             DailyDiaryCardContent(dailyDiary.diary.map { it.content })
         }
     }
