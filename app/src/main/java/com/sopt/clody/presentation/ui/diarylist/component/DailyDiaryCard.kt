@@ -63,6 +63,7 @@ fun DailyDiaryCard(
     val month = diaryDay[1].toInt()
     val day = diaryDay[2].toInt()
     val dayOfWeek = getDayOfWeek(dailyDiary.date)
+    val dayOfWeek = getDayOfWeek(year, month, day)
 
     Card(
         modifier = Modifier
