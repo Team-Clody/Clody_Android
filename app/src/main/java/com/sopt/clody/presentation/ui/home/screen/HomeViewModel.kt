@@ -93,7 +93,6 @@ class HomeViewModel @Inject constructor(
         updateIsToday(year, month)
     }
 
-
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         if (isDailyDiariesDataLoaded) return
         viewModelScope.launch {
