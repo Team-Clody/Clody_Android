@@ -27,6 +27,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,6 +35,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.container.PickerBox
 import com.sopt.clody.presentation.ui.auth.component.timepicker.BottomSheetTimePicker
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
@@ -132,7 +134,7 @@ fun TimeReminderScreen(
             val guideline = createGuidelineFromTop(0.123f)
 
             Text(
-                text = "몇시에 감사일기\n작성 알림을 드릴까요?",
+                text = stringResource(id = R.string.time_reminder_title),
                 style = ClodyTheme.typography.head1,
                 color = ClodyTheme.colors.gray01,
                 modifier = Modifier.constrainAs(title) {
@@ -166,7 +168,7 @@ fun TimeReminderScreen(
 
             ClodyButton(
                 onClick = onCompleteClick,
-                text = "완료",
+                text = stringResource(id = R.string.time_reminder_complete_button),
                 enabled = true,
                 modifier = Modifier.constrainAs(completeButton) {
                     bottom.linkTo(parent.bottom, margin = 46.dp)
@@ -187,7 +189,7 @@ fun TimeReminderScreen(
                 contentPadding = PaddingValues(0.dp)
             ) {
                 Text(
-                    text = "다음에 설정할게요",
+                    text = stringResource(id = R.string.time_reminder_next_setting_button),
                     modifier = Modifier.wrapContentHeight(),
                     style = ClodyTheme.typography.detail1Medium,
                     color = ClodyTheme.colors.gray05,
