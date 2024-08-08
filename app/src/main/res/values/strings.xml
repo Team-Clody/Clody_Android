@@ -19,6 +19,11 @@
     <!-- 타임피커 -->
     <string name="time_picker_title">발송 시간 변경</string>
 
+    <!--온보딩 알림설정-->
+    <string name="time_reminder_title">몇시에 감사일기\n작성 알림을 드릴까요?</string>
+    <string name="time_reminder_next_setting_button">다음에 설정할게요</string>
+    <string name="time_reminder_complete_button">완료</string>
+
     <!-- 가이드 화면 -->
     <string name="guide_page1_title">안녕하세요!</string>
     <string name="guide_page1_subtitle">저는 로디라고 해요</string>
