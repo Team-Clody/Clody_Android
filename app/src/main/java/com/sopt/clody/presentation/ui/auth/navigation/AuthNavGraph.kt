@@ -6,7 +6,7 @@ import androidx.navigation.navigation
 import com.sopt.clody.presentation.ui.auth.screen.GuideRoute
 import com.sopt.clody.presentation.ui.auth.screen.NicknameRoute
 import com.sopt.clody.presentation.ui.auth.screen.TermsOfServiceRoute
-import com.sopt.clody.presentation.ui.auth.screen.TimeReminderRoute
+import com.sopt.clody.presentation.ui.auth.timereminder.TimeReminderRoute
 import com.sopt.clody.presentation.ui.auth.signup.SignUpRoute
 
 
