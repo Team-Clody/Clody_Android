@@ -1,5 +1,10 @@
-package com.sopt.clody.presentation.ui.auth.screen
+package com.sopt.clody.presentation.ui.auth.timereminder
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,39 +14,97 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.presentation.ui.auth.component.container.PickerBox
 import com.sopt.clody.presentation.ui.auth.component.timepicker.BottomSheetTimePicker
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
+import com.sopt.clody.presentation.utils.extension.showLongToast
 import com.sopt.clody.ui.theme.ClodyTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun TimeReminderRoute(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
+    viewModel: TimeReminderViewModel = hiltViewModel()
 ) {
+    val timeReminderState by viewModel.timeReminderState.collectAsState()
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val isNotificationPermissionGranted = remember { mutableStateOf(false) }
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        isNotificationPermissionGranted.value = isGranted
+    }
+    // 알림 권한 요청
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
+            if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(notificationPermission)
+            } else {
+                isNotificationPermissionGranted.value = true
+            }
+        } else {
+            isNotificationPermissionGranted.value = true
+        }
+    }
+
+    // 알림 권한 요청 결과에 따른 처리
+    LaunchedEffect(timeReminderState) {
+        if (timeReminderState is TimeReminderState.Success) {
+            navigator.navigateGuide()
+        } else if (timeReminderState is TimeReminderState.Failure) {
+            coroutineScope.launch {
+                showLongToast(context, (timeReminderState as TimeReminderState.Failure).error)
+            }
+        }
+    }
+
     TimeReminderScreen(
-        onStartClick = { navigator.navigateGuide() }
+        onStartClick = {
+            viewModel.setFixedTime("21", "30")
+            viewModel.sendNotification(context, isNotificationPermissionGranted.value)
+        },
+        onTimeSelected = { amPm, hour, minute ->
+            viewModel.setSelectedTime(amPm, hour, minute)
+        },
+        onCompleteClick = {
+            viewModel.sendNotification(context, isNotificationPermissionGranted.value)
+        },
+        timeReminderState = timeReminderState
     )
 }
 
 @Composable
 fun TimeReminderScreen(
-    onStartClick: () -> Unit
+    onStartClick: () -> Unit,
+    onTimeSelected: (String, String, String) -> Unit,
+    onCompleteClick: () -> Unit,
+    timeReminderState: TimeReminderState
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedAmPm by remember { mutableStateOf("오후") }
@@ -52,20 +115,20 @@ fun TimeReminderScreen(
         selectedAmPm = amPm
         selectedHour = hour
         selectedMinute = minute
+        onTimeSelected(amPm, hour, minute)
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(color = ClodyTheme.colors.white)
-
     ) {
         ConstraintLayout(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(24.dp)
         ) {
-            val (title, pickerBox, spacer, completeButton, nextSettingButton) = createRefs()
+            val (title, pickerBox, spacer, completeButton, nextSettingButton, loading) = createRefs()
             val guideline = createGuidelineFromTop(0.123f)
 
             Text(
@@ -79,7 +142,7 @@ fun TimeReminderScreen(
             )
 
             PickerBox(
-                time = "${selectedAmPm} ${selectedHour}시 ${selectedMinute}분", // 수정: 선택된 시간을 전달
+                time = "${selectedAmPm} ${selectedHour}시 ${selectedMinute}분",
                 modifier = Modifier
                     .constrainAs(pickerBox) {
                         top.linkTo(title.bottom, margin = 46.dp)
@@ -101,9 +164,8 @@ fun TimeReminderScreen(
                     .background(color = ClodyTheme.colors.gray07)
             )
 
-
             ClodyButton(
-                onClick = { onStartClick() },
+                onClick = onCompleteClick,
                 text = "완료",
                 enabled = true,
                 modifier = Modifier.constrainAs(completeButton) {
@@ -132,8 +194,17 @@ fun TimeReminderScreen(
                     textDecoration = TextDecoration.Underline
                 )
             }
-        }
 
+            if (timeReminderState is TimeReminderState.Loading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.constrainAs(loading) {
+                        top.linkTo(completeButton.bottom, margin = 16.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                )
+            }
+        }
         if (showBottomSheet) {
             ClodyPopupBottomSheet(onDismissRequest = { showBottomSheet = false }) {
                 BottomSheetTimePicker(
@@ -145,11 +216,13 @@ fun TimeReminderScreen(
     }
 }
 
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewTimeReminderScreen() {
     TimeReminderScreen(
-        onStartClick = { }
+        onStartClick = {},
+        onTimeSelected = { _, _, _ -> },
+        onCompleteClick = {},
+        timeReminderState = TimeReminderState.Idle
     )
 }
