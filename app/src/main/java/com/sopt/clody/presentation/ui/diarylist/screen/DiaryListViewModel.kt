@@ -20,17 +20,8 @@ class DiaryListViewModel @Inject constructor(
     private val _diaryListState = MutableStateFlow<DiaryListState>(DiaryListState.Idle)
     val diaryListState: StateFlow<DiaryListState> = _diaryListState
 
-    private val _selectedDiaryYear = MutableStateFlow(0)
-    val selectedDiaryYear: StateFlow<Int> = _selectedDiaryYear
-
-    private val _selectedDiaryMonth = MutableStateFlow(0)
-    val selectedDiaryMonth: StateFlow<Int> = _selectedDiaryMonth
-
-    private val _selectedDiaryDay = MutableStateFlow(0)
-    val selectedDiaryDay: StateFlow<Int> = _selectedDiaryDay
-
-    private val _selectedDiaryDayOfWeek = MutableStateFlow("")
-    val selectedDiaryDayOfWeek: StateFlow<String> = _selectedDiaryDayOfWeek
+    private val _selectedDiaryDate = MutableStateFlow(DiaryDate())
+    val selectedDiaryDate: StateFlow<DiaryDate> = _selectedDiaryDate
 
     private val _diaryDeleteState = MutableStateFlow<DiaryDeleteState>(DiaryDeleteState.Idle)
     val diaryDeleteState: StateFlow<DiaryDeleteState> get() = _diaryDeleteState
@@ -48,10 +39,11 @@ class DiaryListViewModel @Inject constructor(
 
     fun setSelectedDiaryDate(selectedDiaryDate: String) {
         val diaryDate = selectedDiaryDate.split("-")
-        _selectedDiaryYear.value = diaryDate[0].toInt()
-        _selectedDiaryMonth.value = diaryDate[1].toInt()
-        _selectedDiaryDay.value = diaryDate[2].toInt()
-        _selectedDiaryDayOfWeek.value = getDayOfWeek(_selectedDiaryYear.value, _selectedDiaryMonth.value, _selectedDiaryDay.value)
+        val year = diaryDate[0].toInt()
+        val month = diaryDate[1].toInt()
+        val day = diaryDate[2].toInt()
+        val dayOfWeek = getDayOfWeek(year, month, day)
+        _selectedDiaryDate.value = DiaryDate(year, month, day, dayOfWeek)
     }
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
@@ -68,4 +60,11 @@ class DiaryListViewModel @Inject constructor(
             )
         }
     }
+
+    data class DiaryDate(
+        val year: Int = 0,
+        val month: Int = 0,
+        val day: Int = 0,
+        val dayOfWeek: String = ""
+    )
 }

@@ -20,7 +20,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -36,8 +35,12 @@ fun DailyDiaryCard(
     index: Int,
     diaryListViewModel: DiaryListViewModel,
     dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
+    year: Int,
+    month: Int,
+    day: Int,
+    dayOfWeek: String,
     showDiaryDeleteBottomSheet: () -> Unit,
-    onClickReplyDiary: () -> Unit,
+    onClickReplyDiary: (Int, Int, Int) -> Unit,
 ) {
     val iconRes = when {
         dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
@@ -48,8 +51,6 @@ fun DailyDiaryCard(
         dailyDiary.diaryCount == 5 -> R.drawable.ic_home_top_clover
         else -> R.drawable.ic_home_ungiven_clover
     }
-
-    diaryListViewModel.setSelectedDiaryDate(selectedDiaryDate = dailyDiary.date)
 
     Card(
         modifier = Modifier
@@ -81,14 +82,14 @@ fun DailyDiaryCard(
                     verticalAlignment = Alignment.Bottom
                 ) {
                     Text(
-                        text = stringResource(R.string.diarylist_daily_diary_day, diaryListViewModel.selectedDiaryDay.collectAsState().value),
+                        text = stringResource(R.string.diarylist_daily_diary_day, day),
                         modifier = Modifier
                             .padding(end = 2.dp),
                         color = ClodyTheme.colors.gray01,
                         style = ClodyTheme.typography.body1SemiBold
                     )
                     Text(
-                        text = stringResource(R.string.diarylist_daily_diary_day_of_week, diaryListViewModel.selectedDiaryDayOfWeek.collectAsState().value),
+                        text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
                         color = ClodyTheme.colors.gray04,
                         style = ClodyTheme.typography.body2SemiBold
                     )
@@ -96,9 +97,14 @@ fun DailyDiaryCard(
                 Spacer(modifier = Modifier.weight(1f))
                 ReplyDiaryButton(
                     dailyDiary = dailyDiary,
+                    year = year,
+                    month = month,
+                    day = day,
                     onClickReplyDiary = onClickReplyDiary,
                 )
                 DiaryDeleteButton(
+                    diaryListViewModel = diaryListViewModel,
+                    dailyDiary = dailyDiary,
                     showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet
                 )
             }
@@ -110,13 +116,16 @@ fun DailyDiaryCard(
 @Composable
 fun ReplyDiaryButton(
     dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
-    onClickReplyDiary: () -> Unit,
+    year: Int,
+    month: Int,
+    day: Int,
+    onClickReplyDiary: (Int, Int, Int) -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.TopEnd
     ) {
         Button(
-            onClick = onClickReplyDiary,
+            onClick = { onClickReplyDiary(year,month,day) },
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),
@@ -150,12 +159,19 @@ fun ReplyDiaryButton(
 
 @Composable
 fun DiaryDeleteButton(
+    diaryListViewModel: DiaryListViewModel,
+    dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
     showDiaryDeleteBottomSheet: () -> Unit
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
         contentDescription = "kebab menu",
         modifier = Modifier
-            .clickable(onClick = showDiaryDeleteBottomSheet)
+            .clickable(
+                onClick = {
+                    diaryListViewModel.setSelectedDiaryDate(dailyDiary.date)
+                    showDiaryDeleteBottomSheet()
+                }
+            )
     )
 }

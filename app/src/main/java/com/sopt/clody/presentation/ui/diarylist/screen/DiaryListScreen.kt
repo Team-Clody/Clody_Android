@@ -33,9 +33,7 @@ fun DiaryListRoute(
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
-    val selectedDiaryYear by diaryListViewModel.selectedDiaryYear.collectAsState()
-    val selectedDiaryMonth by diaryListViewModel.selectedDiaryMonth.collectAsState()
-    val selectedDiaryDay by diaryListViewModel.selectedDiaryDay.collectAsState()
+    val selectedDiaryDate by diaryListViewModel.selectedDiaryDate.collectAsState()
     val diaryDeleteState by diaryListViewModel.diaryDeleteState.collectAsState()
     var yearMonthPickerState by remember { mutableStateOf(false) }
     var diaryDeleteBottomSheetState by remember { mutableStateOf(false) }
@@ -51,6 +49,7 @@ fun DiaryListRoute(
         selectedMonthInDiaryList = selectedMonthInDiaryList,
         updateYearAndMonth = { newYear, newMonth -> selectedYearInDiaryList = newYear; selectedMonthInDiaryList = newMonth },
         diaryListState = diaryListState,
+        selectedDiaryDate = selectedDiaryDate,
         diaryDeleteState = diaryDeleteState,
         yearMonthPickerState = yearMonthPickerState,
         showYearMonthPicker = { yearMonthPickerState = true },
@@ -61,9 +60,9 @@ fun DiaryListRoute(
         diaryDeleteDialogState = diaryDeleteDialogState,
         showDiaryDeleteDialog = { diaryDeleteDialogState = true },
         dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
-        onClickDiaryDelete = { diaryListViewModel.deleteDailyDiary(selectedDiaryYear, selectedDiaryMonth, selectedDiaryDay) },
+        onClickDiaryDelete = { year, month, day -> diaryListViewModel.deleteDailyDiary(year, month, day) },
         onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
-        onClickReplyDiary = { navigator.navigateReplyLoading(selectedDiaryYear, selectedDiaryMonth, selectedDiaryDay) }
+        onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) }
     )
 }
 
@@ -74,6 +73,7 @@ fun DiaryListScreen(
     selectedMonthInDiaryList: Int,
     updateYearAndMonth: (Int, Int) -> Unit,
     diaryListState: DiaryListState,
+    selectedDiaryDate: DiaryListViewModel.DiaryDate,
     diaryDeleteState: DiaryDeleteState,
     yearMonthPickerState: Boolean,
     showYearMonthPicker: () -> Unit,
@@ -84,9 +84,9 @@ fun DiaryListScreen(
     diaryDeleteDialogState: Boolean,
     showDiaryDeleteDialog: () -> Unit,
     dismissDiaryDeleteDialog: () -> Unit,
-    onClickDiaryDelete: () -> Unit,
+    onClickDiaryDelete: (Int, Int, Int) -> Unit,
     onClickCalendar: () -> Unit,
-    onClickReplyDiary: () -> Unit,
+    onClickReplyDiary: (Int, Int, Int) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -172,7 +172,7 @@ fun DiaryListScreen(
             confirmOption = stringResource(R.string.diary_delete_dialog_confirm_option),
             dismissOption = stringResource(R.string.diary_delete_dialog_dismiss_option),
             confirmAction = {
-                onClickDiaryDelete()
+                onClickDiaryDelete(selectedDiaryDate.year, selectedDiaryDate.month, selectedDiaryDate.day)
                 dismissDiaryDeleteDialog()
             },
             onDismiss = dismissDiaryDeleteDialog,
