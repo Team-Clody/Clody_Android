@@ -36,9 +36,13 @@ import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun FailureDialog(message: String = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.") {
+fun FailureDialog(
+    message: String = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.",
+    confirmAction: () -> Unit = {},
+    onDismiss: () -> Unit = {}
+) {
     Dialog(
-        onDismissRequest = { /*TODO*/ },
+        onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnClickOutside = false,
             usePlatformDefaultWidth = false
@@ -74,7 +78,7 @@ fun FailureDialog(message: String = "일시적인 오류가 발생했어요.\n�
                         style = ClodyTheme.typography.body3Medium
                     )
                     Button(
-                        onClick = { /*TODO*/ },
+                        onClick = confirmAction,
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
