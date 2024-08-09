@@ -16,6 +16,7 @@ class SettingViewModel @Inject constructor(
 ) : ViewModel() {
     var versionInfo by mutableStateOf(APP_VERSION)
         private set
+
     fun getVersionInfo() {
         val info: PackageInfo = context.packageManager.getPackageInfo(context.packageName, 0)
         versionInfo = info.versionName
