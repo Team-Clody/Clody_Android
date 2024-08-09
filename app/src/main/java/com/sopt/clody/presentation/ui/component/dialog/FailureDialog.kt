@@ -55,12 +55,10 @@ fun FailureDialog(message: String = "일시적인 오류가 발생했어요.\n�
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white),
                 modifier = Modifier
-                    .fillMaxSize()
                     .wrapContentHeight()
             ) {
                 Column(
                     modifier = Modifier
-                        .height(194.dp)
                         .padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -71,10 +69,10 @@ fun FailureDialog(message: String = "일시적인 오류가 발생했어요.\n�
                     )
                     Text(
                         text = message,
+                        modifier = Modifier.padding(bottom = 30.dp),
                         color = ClodyTheme.colors.gray04,
                         style = ClodyTheme.typography.body3Medium
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     Button(
                         onClick = { /*TODO*/ },
                         modifier = Modifier
