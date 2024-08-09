@@ -56,6 +56,10 @@ class AccountManagementViewModel @Inject constructor(
         }
     }
 
+    fun resetUserNicknameState() {
+        _userNicknameState.value = UserNicknameState.Idle
+    }
+
     fun logOutAccount() {
         viewModelScope.launch {
             tokenDataStore.clearInfo()
