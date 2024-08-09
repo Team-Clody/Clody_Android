@@ -1,31 +1,38 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
-import com.sopt.clody.presentation.ui.setting.component.SettingAppVersion
 import com.sopt.clody.presentation.ui.setting.component.SettingOption
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
+import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun SettingRoute(
-    navigator: SettingNavigator
+    navigator: SettingNavigator,
+    settingViewModel: SettingViewModel = hiltViewModel()
 ) {
+    val versionInfo by settingViewModel::versionInfo
+
+    LaunchedEffect(Unit) {
+        settingViewModel.getVersionInfo()
+    }
+
     SettingScreen(
+        versionInfo = versionInfo,
         onClickBack = { navigator.navigateBack() },
         onClickAccountManagement = { navigator.navigateAccountManagement() },
         onClickNotificationSetting = { navigator.navigateNotificationSetting() }
@@ -35,6 +42,7 @@ fun SettingRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingScreen(
+    versionInfo: String,
     onClickBack: () -> Unit,
     onClickAccountManagement: () -> Unit,
     onClickNotificationSetting: () -> Unit,
@@ -63,7 +71,7 @@ fun SettingScreen(
 
             SettingOption(option = stringResource(R.string.setting_option_terms_of_service), { /* TODO : 서비스 이용 약관 이동 */ })
             SettingOption(option = stringResource(R.string.setting_option_privacy_policy), { /* TODO : 개인정보 처리방침 이동 */ })
-            SettingAppVersion()
+            SettingVersionInfo(versionInfo = versionInfo)
         }
     }
 }
