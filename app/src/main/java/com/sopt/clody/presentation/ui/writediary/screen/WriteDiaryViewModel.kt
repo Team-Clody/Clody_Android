@@ -60,7 +60,7 @@ class WriteDiaryViewModel @Inject constructor(
     }
 
     fun addEntry() {
-        if (_entries.size < 5) {
+        if (_entries.size < MAX_ENTRIES) {
             _entries.add("")
             _showWarnings.add(false)
             checkLimitMessage()
@@ -99,7 +99,7 @@ class WriteDiaryViewModel @Inject constructor(
 
     private fun isValidEntry(text: String): Boolean {
         val textWithoutSpaces = text.replace("\\s".toRegex(), "")
-        return textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"))
+        return textWithoutSpaces.matches(Regex(ENTRY_REGEX))
     }
 
     private fun checkLimitMessage() {
@@ -128,5 +128,9 @@ class WriteDiaryViewModel @Inject constructor(
 
     fun setEntryToDeleteIndex(index: Int) {
         entryToDelete = index
+    }
+    companion object {
+        const val MAX_ENTRIES = 5
+        const val ENTRY_REGEX = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"
     }
 }
