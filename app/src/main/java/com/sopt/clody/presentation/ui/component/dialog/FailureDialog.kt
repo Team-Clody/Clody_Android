@@ -75,6 +75,7 @@ fun FailureDialog(
                         text = message,
                         modifier = Modifier.padding(bottom = 30.dp),
                         color = ClodyTheme.colors.gray04,
+                        textAlign = TextAlign.Center,
                         style = ClodyTheme.typography.body3Medium
                     )
                     Button(
