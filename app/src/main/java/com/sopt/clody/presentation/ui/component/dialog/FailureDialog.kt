@@ -79,7 +79,10 @@ fun FailureDialog(
                         style = ClodyTheme.typography.body3Medium
                     )
                     Button(
-                        onClick = confirmAction,
+                        onClick = {
+                            confirmAction()
+                            onDismiss()
+                        },
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
