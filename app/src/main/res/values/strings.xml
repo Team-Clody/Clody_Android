@@ -62,6 +62,7 @@
 
     <!-- 일기 모아보기 -->
     <string name="diarylist_selected_year_month">%1$s년 %2$s월</string>
+    <string name="diary_list_empty_diary_list">작성된 감사일기가 없어요</string>
     <string name="diarylist_daily_diary_day">%1$s일</string>
     <string name="diarylist_daily_diary_day_of_week">/%1$s</string>
 

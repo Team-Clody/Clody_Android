@@ -1,6 +1,9 @@
 package com.sopt.clody.presentation.ui.diarylist.screen
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -9,6 +12,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -19,6 +24,7 @@ import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
+import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -109,13 +115,16 @@ fun DiaryListScreen(
                 }
 
                 is DiaryListState.Success -> {
-                    MonthlyDiaryList(
-                        paddingValues = innerPadding,
-                        diaryListViewModel = diaryListViewModel,
-                        diaries = diaryListState.data.diaries,
-                        showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
-                        onClickReplyDiary = onClickReplyDiary
-                    )
+                    if (diaryListState.data.diaries.isEmpty()) EmptyDiaryList()
+                    else {
+                        MonthlyDiaryList(
+                            paddingValues = innerPadding,
+                            diaryListViewModel = diaryListViewModel,
+                            diaries = diaryListState.data.diaries,
+                            showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
+                            onClickReplyDiary = onClickReplyDiary
+                        )
+                    }
                 }
 
                 is DiaryListState.Failure -> {
