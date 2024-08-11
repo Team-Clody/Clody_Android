@@ -103,5 +103,7 @@
     <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
     <string name="notification_setting_timepicker_confirm">완료</string>
     <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
+    <string name="failure_screen_refresh_btn">다시 시도</string>
+    <string name="failure_dialog_confirm_btn">확인</string>
 
 </resources>
