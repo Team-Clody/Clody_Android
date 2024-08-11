@@ -1,11 +1,14 @@
 package com.sopt.clody.presentation.ui.diarylist.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -24,44 +27,52 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryListTopAppBar(
-    onClickCalendar: () -> Unit,
     selectedYear: Int,
     selectedMonth: Int,
-    onShowYearMonthPickerStateChange: (Boolean) -> Unit,
+    showYearMonthPicker: () -> Unit,
+    onClickCalendar: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
-    CenterAlignedTopAppBar(
-        title = {
-            Row(
-                modifier = Modifier
-                    .padding(start = 16.dp)
-                    .clickable(onClick = { onShowYearMonthPickerStateChange(true) }),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.diarylist_selected_year_month, selectedYear, selectedMonth),
-                    color = ClodyTheme.colors.gray01,
-                    style = ClodyTheme.typography.head4
-                )
-                Image(
-                    painter = painterResource(id = R.drawable.ic_listview_arrow_down),
-                    contentDescription = null
-                )
-            }
-        },
-        navigationIcon = {
-            IconButton(
-                onClick = onClickCalendar,
-                modifier = Modifier.padding(start = 8.dp)
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_listview_calendar),
-                    contentDescription = "go to calenderView"
-                )
-            }
-        },
-        colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
-        scrollBehavior = scrollBehavior,
-    )
+    Column {
+        CenterAlignedTopAppBar(
+            title = {
+                Row(
+                    modifier = Modifier
+                        .padding(start = 16.dp)
+                        .clickable(onClick = showYearMonthPicker),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.diarylist_selected_year_month, selectedYear, selectedMonth),
+                        color = ClodyTheme.colors.gray01,
+                        style = ClodyTheme.typography.head4
+                    )
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_listview_arrow_down),
+                        contentDescription = null
+                    )
+                }
+            },
+            navigationIcon = {
+                IconButton(
+                    onClick = onClickCalendar,
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_listview_calendar),
+                        contentDescription = "go to calenderView"
+                    )
+                }
+            },
+            colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
+            scrollBehavior = scrollBehavior,
+        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .background(ClodyTheme.colors.gray07)
+        )
+    }
 }
