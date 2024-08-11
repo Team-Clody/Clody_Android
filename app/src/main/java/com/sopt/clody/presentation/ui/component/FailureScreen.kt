@@ -68,4 +68,3 @@ fun FailureScreen(
 fun showFailureScreen() {
     FailureScreen()
 }
-

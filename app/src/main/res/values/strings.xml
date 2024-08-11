@@ -41,16 +41,30 @@
     <string name="complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
     <string name="diarylist_check_reply">답장 확인</string>
 
+    <!--일기 작성 다이얼로그-->
+    <string name="write_diary_dialog_title">일기를 저장할까요?</string>
+    <string name="write_diary_dialog_description">저장한 일기는 수정이 어려워요.</string>
+    <string name="write_diary_dialog_confirm_option">저장하기</string>
+    <string name="write_diary_dialog_dismiss_option">아니오</string>
+
+    <!--토스트메시지-->
+    <string name="toast_limit_message">최대 5개까지 작성할 수 있어요.</string>
+    <string name="toast_empty_fields_message">모든 감사 일기 작성이 필요해요.</string>
+
+    <!--헬프 메시지-->
+    <string name="write_diary_help_message">신조어, 비속어, 이모지 작성은 불가능해요</string>
+
     <!-- 일기 삭제 다이얼로그-->
-    <string name="delete_diary_dialog_title">정말 일기를 삭제할까요?</string>
-    <string name="delete_diary_dialog_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
-    <string name="delete_diary_dialog_confirm_option">삭제할래요</string>
-    <string name="delete_diary_dialog_dismiss_option">아니요</string>
+    <string name="diary_delete_dialog_title">정말 일기를 삭제할까요?</string>
+    <string name="diary_delete_dialog_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
+    <string name="diary_delete_dialog_confirm_option">삭제할래요</string>
+    <string name="diary_delete_dialog_dismiss_option">아니요</string>
 
     <!-- 일기 모아보기 -->
     <string name="diarylist_selected_year_month">%1$s년 %2$s월</string>
     <string name="diarylist_daily_diary_day">%1$s일</string>
     <string name="diarylist_daily_diary_day_of_week">/%1$s</string>
+
 
     <!-- 설정 -->
     <string name="setting_title">설정</string>
