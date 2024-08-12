@@ -1,8 +1,10 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,13 +13,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.setting.component.AccountManagementLogoutOption
 import com.sopt.clody.presentation.ui.setting.component.AccountManagementNicknameOption
 import com.sopt.clody.presentation.ui.setting.component.AccountManagementRevokeOption
@@ -36,6 +41,8 @@ fun AccountManagementRoute(
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
     val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
     var showNicknameChangeBottomSheet by remember { mutableStateOf(false) }
+    val isValidNickname by accountManagementViewModel.isValidNickname.collectAsState()
+    val nicknameMessage by accountManagementViewModel.nicknameMessage.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showRevokeDialog by remember { mutableStateOf(false) }
 
@@ -52,8 +59,11 @@ fun AccountManagementRoute(
     AccountManagementScreen(
         accountManagementViewModel = accountManagementViewModel,
         userInfoState = userInfoState,
+        userNicknameState = userNicknameState,
         showNicknameChangeBottomSheet = showNicknameChangeBottomSheet,
         updateNicknameChangeBottomSheet = { state -> showNicknameChangeBottomSheet = state },
+        isValidNickname = isValidNickname,
+        nicknameMessage = nicknameMessage,
         showLogoutDialog = showLogoutDialog,
         updateLogoutDialog = { state -> showLogoutDialog = state },
         showRevokeDialog = showRevokeDialog,
@@ -66,8 +76,11 @@ fun AccountManagementRoute(
 fun AccountManagementScreen(
     accountManagementViewModel: AccountManagementViewModel,
     userInfoState: UserInfoState,
+    userNicknameState: UserNicknameState,
     showNicknameChangeBottomSheet: Boolean,
     updateNicknameChangeBottomSheet: (Boolean) -> Unit,
+    isValidNickname: Boolean,
+    nicknameMessage: String,
     showLogoutDialog: Boolean,
     updateLogoutDialog: (Boolean) -> Unit,
     showRevokeDialog: Boolean,
@@ -122,8 +135,28 @@ fun AccountManagementScreen(
         NicknameChangeBottomSheet(
             accountManagementViewModel = accountManagementViewModel,
             userName = (userInfoState as UserInfoState.Success).data.name,
+            isValidNickname = isValidNickname,
+            nicknameMessage = nicknameMessage,
             onDismiss = { updateNicknameChangeBottomSheet(false) }
         )
+    }
+
+    if(userNicknameState is UserNicknameState.Success) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(20.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            ClodyToastMessage(
+                message = stringResource(R.string.account_management_nickname_change_toast),
+                iconResId = R.drawable.ic_toast_check_on_18,
+                backgroundColor = ClodyTheme.colors.gray04,
+                contentColor = ClodyTheme.colors.white,
+                durationMillis = 3000,
+                onDismiss = { accountManagementViewModel.resetUserNicknameState() },
+            )
+        }
     }
 
     if (showLogoutDialog) {
@@ -146,7 +179,7 @@ fun AccountManagementScreen(
             confirmAction = { accountManagementViewModel.revokeAccount() },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white,
-            onDismiss = { updateRevokeDialog(false) },
+            onDismiss = { updateRevokeDialog(false) }
         )
     }
 }

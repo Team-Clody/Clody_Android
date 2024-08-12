@@ -80,18 +80,17 @@ fun ReplyLoadingScreen(
     onBackClick: () -> Unit,
     replyLoadingState: ReplyLoadingState
 ) {
-    var remainingTime by remember { mutableStateOf(0) }
+    var remainingTime by remember { mutableStateOf(0L) }
     var isComplete by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyLoadingState) {
         if (replyLoadingState is ReplyLoadingState.Success) {
             val diaryTime = with(replyLoadingState as ReplyLoadingState.Success) {
-                HH * 3600 + MM * 60 + SS
+                (HH * 3600 + MM * 60 + SS).toLong()
             }
-            val currentTime = LocalTime.now().toSecondOfDay()
+            val currentTime = LocalTime.now().toSecondOfDay().toLong()
             val timeDiff = diaryTime - currentTime
             remainingTime = if (timeDiff > 0) timeDiff else 0
-            remainingTime = minOf(remainingTime, 30)  // 30초를 넘지 않도록 제한
             isComplete = remainingTime <= 0
         }
     }
@@ -106,9 +105,9 @@ fun ReplyLoadingScreen(
         }
     }
 
-    val hours = remainingTime / 3600
-    val minutes = (remainingTime % 3600) / 60
-    val seconds = remainingTime % 60
+    val hours = (remainingTime / 3600).toInt()
+    val minutes = ((remainingTime % 3600) / 60).toInt()
+    val seconds = (remainingTime % 60).toInt()
 
     val loadingMessage = stringResource(id = R.string.loading_message)
     val completeMessage = stringResource(id = R.string.complete_message)
