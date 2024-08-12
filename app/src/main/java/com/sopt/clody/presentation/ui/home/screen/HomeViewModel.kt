@@ -1,6 +1,5 @@
 package com.sopt.clody.presentation.ui.home.screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
@@ -8,6 +7,7 @@ import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.repository.DailyDiariesRepository
 import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
+import com.sopt.clody.domain.model.DiaryDateData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,6 +40,9 @@ class HomeViewModel @Inject constructor(
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
 
+    private val _selectedDiaryDate = MutableStateFlow(DiaryDateData())
+    val selectedDiaryDate: StateFlow<DiaryDateData> get() = _selectedDiaryDate
+
     private val _selectedDate = MutableStateFlow(LocalDate.now())
     val selectedDate: StateFlow<LocalDate> get() = _selectedDate
 
@@ -51,12 +54,6 @@ class HomeViewModel @Inject constructor(
 
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
-
-    private val _selectedYearInCalendar = MutableStateFlow(LocalDate.now().year)
-    val selectedYearInCalendar: StateFlow<Int> get() = _selectedYearInCalendar
-
-    private val _selectedMonthInCalendar = MutableStateFlow(LocalDate.now().monthValue)
-    val selectedMonthInCalendar: StateFlow<Int> get() = _selectedMonthInCalendar
 
     private var isCalendarDataLoaded = false
     private var isDailyDiariesDataLoaded = false
@@ -161,9 +158,8 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedYearMonth(year: Int, month: Int) {
-        _selectedYearInCalendar.value = year
-        _selectedMonthInCalendar.value = month
+    fun updateSelectedDiaryDate(diaryDate: DiaryDateData) {
+        _selectedDiaryDate.value = diaryDate
         isCalendarDataLoaded = false
     }
 

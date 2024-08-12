@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.DiaryDateData
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
@@ -48,7 +49,7 @@ fun HomeRoute(
     selectedMonth: Int,
 ) {
     LaunchedEffect(selectedYear, selectedMonth) {
-        homeViewModel.updateSelectedYearMonth(selectedYear, selectedMonth)
+        homeViewModel.updateSelectedDiaryDate(DiaryDateData(selectedYear, selectedMonth))
     }
     HomeScreen(
         homeViewModel = homeViewModel,
@@ -72,8 +73,7 @@ fun HomeScreen(
     selectedMonth: Int
 ) {
     val currentDate = LocalDate.now()
-    val selectedYearInCalendar by homeViewModel.selectedYearInCalendar.collectAsStateWithLifecycle()
-    val selectedMonthInCalendar by homeViewModel.selectedMonthInCalendar.collectAsStateWithLifecycle()
+    val selectedDiaryDate by homeViewModel.selectedDiaryDate.collectAsStateWithLifecycle()
 
     val selectedDate by homeViewModel.selectedDate.collectAsStateWithLifecycle()
     val diaryCount by homeViewModel.diaryCount.collectAsStateWithLifecycle()
@@ -85,16 +85,16 @@ fun HomeScreen(
     val showDiaryDeleteState by homeViewModel.showDiaryDeleteState.collectAsStateWithLifecycle()
     val showDiaryDeleteDialog by homeViewModel.showDiaryDeleteDialog.collectAsStateWithLifecycle()
 
-    LaunchedEffect(selectedYearInCalendar, selectedMonthInCalendar) {
-        homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
-        if (selectedYearInCalendar == currentDate.year && selectedMonthInCalendar == currentDate.monthValue) {
+    LaunchedEffect(selectedDiaryDate) {
+        homeViewModel.loadCalendarData(selectedDiaryDate.year, selectedDiaryDate.month)
+        if (selectedDiaryDate.year == currentDate.year && selectedDiaryDate.month == currentDate.monthValue) {
             homeViewModel.updateSelectedDate(currentDate)
         }
     }
 
     LaunchedEffect(dailyDiariesState) {
         if (dailyDiariesState is DailyDiariesState.Success) {
-            homeViewModel.refreshCalendarAndDiaries(selectedYearInCalendar, selectedMonthInCalendar, selectedDate)
+            homeViewModel.refreshCalendarAndDiaries(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate)
         }
     }
 
@@ -116,11 +116,11 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopAppBar(
-                onClickDiaryList = { onClickDiaryList(selectedYearInCalendar, selectedMonthInCalendar) },
+                onClickDiaryList = { onClickDiaryList(selectedDiaryDate.year, selectedDiaryDate.month) },
                 onClickSetting = onClickSetting,
                 onShowYearMonthPickerStateChange = { newState -> homeViewModel.setShowYearMonthPickerState(newState) },
-                selectedYear = selectedYearInCalendar,
-                selectedMonth = selectedMonthInCalendar,
+                selectedYear = selectedDiaryDate.year,
+                selectedMonth = selectedDiaryDate.month,
             )
         },
         content = { innerPadding ->
@@ -142,8 +142,8 @@ fun HomeScreen(
 
                 is CalendarState.Success -> {
                     ScrollableCalendarView(
-                        selectedYear = selectedYearInCalendar,
-                        selectedMonth = selectedMonthInCalendar,
+                        selectedYear = selectedDiaryDate.year,
+                        selectedMonth = selectedDiaryDate.month,
                         cloverCount = state.data.totalCloverCount,
                         diaries = state.data.diaries,
                         homeViewModel = homeViewModel,
@@ -183,10 +183,10 @@ fun HomeScreen(
         ClodyPopupBottomSheet(onDismissRequest = { homeViewModel.setShowYearMonthPickerState(false) }) {
             YearMonthPicker(
                 onDismissRequest = { homeViewModel.setShowYearMonthPickerState(false) },
-                selectedYear = selectedYearInCalendar,
-                selectedMonth = selectedMonthInCalendar,
+                selectedYear = selectedDiaryDate.year,
+                selectedMonth = selectedDiaryDate.month,
                 onYearMonthSelected = { year, month ->
-                    homeViewModel.updateSelectedYearMonth(year, month)
+                    homeViewModel.updateSelectedDiaryDate(DiaryDateData(year, month))
                     homeViewModel.loadCalendarData(year, month)
                 }
             )
@@ -207,7 +207,7 @@ fun HomeScreen(
             confirmOption = "삭제할래요",
             dismissOption = "아니요",
             confirmAction = {
-                homeViewModel.deleteDailyDiary(selectedYearInCalendar, selectedMonthInCalendar, selectedDate.dayOfMonth)
+                homeViewModel.deleteDailyDiary(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate.dayOfMonth)
                 homeViewModel.setShowDiaryDeleteDialog(false)
             },
             onDismiss = { homeViewModel.setShowDiaryDeleteDialog(false) },
