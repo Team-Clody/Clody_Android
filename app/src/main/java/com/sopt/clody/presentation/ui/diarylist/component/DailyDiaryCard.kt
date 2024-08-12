@@ -129,7 +129,7 @@ fun ReplyDiaryButton(
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),
-            enabled = dailyDiary.replyStatus != "UNREADY",
+            enabled = !(dailyDiary.isDeleted),
             colors = ButtonDefaults.buttonColors(
                 containerColor = ClodyTheme.colors.lightBlue,
                 contentColor = ClodyTheme.colors.blue,
