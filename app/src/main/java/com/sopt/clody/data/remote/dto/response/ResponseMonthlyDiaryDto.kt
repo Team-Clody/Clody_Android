@@ -13,7 +13,8 @@ data class ResponseMonthlyDiaryDto(
         @SerialName("diaryCount") val diaryCount: Int,
         @SerialName("replyStatus") val replyStatus: String,
         @SerialName("date") val date: String,
-        @SerialName("diary") val diary: List<DailyDiaryContent>
+        @SerialName("diary") val diary: List<DailyDiaryContent>,
+        @SerialName("isDeleted") val isDeleted: Boolean
     ) {
         @Serializable
         data class DailyDiaryContent(
