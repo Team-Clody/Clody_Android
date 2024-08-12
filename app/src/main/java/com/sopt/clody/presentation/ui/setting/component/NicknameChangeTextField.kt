@@ -30,6 +30,7 @@ fun NickNameChangeTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     isFocused: Boolean,
+    isValid: Boolean,
     onRemove: () -> Unit,
     onFocusChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -91,7 +92,11 @@ fun NickNameChangeTextField(
                         modifier = Modifier
                             .height(2.dp)
                             .fillMaxWidth()
-                            .background(if (isFocused) ClodyTheme.colors.mainYellow else ClodyTheme.colors.gray07)
+                            .background(when {
+                                isValid.not() -> ClodyTheme.colors.red
+                                isFocused -> ClodyTheme.colors.mainYellow
+                                else -> ClodyTheme.colors.gray08
+                            })
                     )
                 }
             }

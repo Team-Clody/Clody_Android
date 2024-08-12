@@ -37,6 +37,8 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NicknameChangeBottomSheet(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
+    isValidNickname: Boolean,
+    nicknameMessage: String,
     onDismiss: () -> Unit
 ) {
     ClodyBottomSheet(
@@ -44,6 +46,8 @@ fun NicknameChangeBottomSheet(
             NicknameChangeBottomSheetItem(
                 accountManagementViewModel = accountManagementViewModel,
                 userName = userName,
+                isValidNickname = isValidNickname,
+                nicknameMessage = nicknameMessage,
                 onDismiss = onDismiss
             )
         },
@@ -55,6 +59,8 @@ fun NicknameChangeBottomSheet(
 fun NicknameChangeBottomSheetItem(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
+    isValidNickname: Boolean,
+    nicknameMessage: String,
     onDismiss: () -> Unit
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
@@ -102,9 +108,11 @@ fun NicknameChangeBottomSheetItem(
                 value = nickname,
                 onValueChange = {
                     nickname = it
+                    accountManagementViewModel.validateNickname(nickname.text)
                     nicknameChangeState = it.text.isNotEmpty()
                 },
                 isFocused = isFocusedState,
+                isValid = isValidNickname,
                 onRemove = {
                     nickname = TextFieldValue("")
                     nicknameChangeState = false
@@ -124,8 +132,12 @@ fun NicknameChangeBottomSheetItem(
                     .padding(horizontal = 24.dp)
             ) {
                 Text(
-                    text = stringResource(R.string.account_management_nickname_change_notice),
-                    color = ClodyTheme.colors.gray04,
+                    text = nicknameMessage,
+                    color = when {
+                        nickname.text.isEmpty() -> ClodyTheme.colors.gray04
+                        isValidNickname -> ClodyTheme.colors.gray04
+                        else -> ClodyTheme.colors.red
+                    },
                     style = ClodyTheme.typography.detail1Regular
                 )
 
@@ -151,7 +163,7 @@ fun NicknameChangeBottomSheetItem(
                     onDismiss()
                 },
                 text = stringResource(R.string.account_management_nickname_change_confirm),
-                enabled = nicknameChangeState,
+                enabled = nicknameChangeState && isValidNickname,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 18.dp)

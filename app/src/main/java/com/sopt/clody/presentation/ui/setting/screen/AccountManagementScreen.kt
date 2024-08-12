@@ -41,6 +41,8 @@ fun AccountManagementRoute(
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
     val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
     var showNicknameChangeBottomSheet by remember { mutableStateOf(false) }
+    val isValidNickname by accountManagementViewModel.isValidNickname.collectAsState()
+    val nicknameMessage by accountManagementViewModel.nicknameMessage.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showRevokeDialog by remember { mutableStateOf(false) }
 
@@ -60,6 +62,8 @@ fun AccountManagementRoute(
         userNicknameState = userNicknameState,
         showNicknameChangeBottomSheet = showNicknameChangeBottomSheet,
         updateNicknameChangeBottomSheet = { state -> showNicknameChangeBottomSheet = state },
+        isValidNickname = isValidNickname,
+        nicknameMessage = nicknameMessage,
         showLogoutDialog = showLogoutDialog,
         updateLogoutDialog = { state -> showLogoutDialog = state },
         showRevokeDialog = showRevokeDialog,
@@ -75,6 +79,8 @@ fun AccountManagementScreen(
     userNicknameState: UserNicknameState,
     showNicknameChangeBottomSheet: Boolean,
     updateNicknameChangeBottomSheet: (Boolean) -> Unit,
+    isValidNickname: Boolean,
+    nicknameMessage: String,
     showLogoutDialog: Boolean,
     updateLogoutDialog: (Boolean) -> Unit,
     showRevokeDialog: Boolean,
@@ -129,6 +135,8 @@ fun AccountManagementScreen(
         NicknameChangeBottomSheet(
             accountManagementViewModel = accountManagementViewModel,
             userName = (userInfoState as UserInfoState.Success).data.name,
+            isValidNickname = isValidNickname,
+            nicknameMessage = nicknameMessage,
             onDismiss = { updateNicknameChangeBottomSheet(false) }
         )
     }
