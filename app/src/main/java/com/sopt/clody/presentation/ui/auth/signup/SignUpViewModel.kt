@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import com.sopt.clody.data.ClodyFirebaseMessagingService
 import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.repository.AuthRepository
@@ -82,7 +83,7 @@ class SignUpViewModel @Inject constructor(
             val tokenResult = runCatching { loginWithKakao(context) }
             tokenResult.onSuccess { token ->
                 accessToken = token.accessToken
-                performSignUp()
+                performSignUp(context)
             }.onFailure {
                 _signUpState.value = SignUpState(UiState.Failure(it.localizedMessage ?: UNKNOWN_ERROR))
             }
@@ -147,12 +148,13 @@ class SignUpViewModel @Inject constructor(
         _nickname.value = nickname
     }
 
-    private fun performSignUp() {
+    private fun performSignUp(context: Context) {
         val authorization = "Bearer ${accessToken.orEmpty()}"
+        val fcmToken = ClodyFirebaseMessagingService.getTokenFromPreferences(context) ?: ""
         viewModelScope.launch {
             authRepository.signUp(
                 authorization,
-                SignUpRequestDto(platform = KAKAO_PLATFORM, name = nickname.value)
+                SignUpRequestDto(platform = KAKAO_PLATFORM, name = nickname.value, fcmToken = fcmToken)
             ).fold(
                 onSuccess = { response ->
                     _signUpState.value = SignUpState(UiState.Success(SIGN_UP_SUCCESS))

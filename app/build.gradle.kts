@@ -15,6 +15,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -99,6 +100,7 @@ dependencies {
 
     // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
+//    implementation(libs.firebase.messaging.ktx)
     ksp(libs.hilt.compiler)
     implementation(libs.javax.inject)
 
@@ -138,5 +140,9 @@ dependencies {
     // Kakao
     implementation(libs.kakao.user)
     implementation(libs.process.phoenix)
-    implementation (libs.lottie.compose)
+    implementation(libs.lottie.compose)
+
+    //fcm
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.messaging.ktx)
 }

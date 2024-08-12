@@ -70,6 +70,10 @@ constraintlayout = "2.1.4"
 
 # Process Phoenix
 phoenix = "3.0.0"
+# google
+google-services = "4.4.2"
+firebaseBom = "33.1.2"
+firebaseMessagingKtx = "24.0.0"
 
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Kotlin Symbol Processing (KSP) 플러그인
@@ -80,7 +84,7 @@ ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" } # Kotl
 android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" } # Android 애플리케이션 플러그인
 android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" } # Android 라이브러리 플러그인
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" } # Hilt DI 플러그인
-#google-services = { id = "com.google.gms.google-services", version.ref = "google-service" } # Google 서비스 플러그인 (주석 처리됨)
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 
 [libraries]
 # Compose
@@ -137,7 +141,8 @@ viewpager-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # AndroidX Activity 라이브러리
 process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version.ref = "phoenix" } # Process Phoenix 라이브러리
 
-#firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx" } # Firebase 메시징 라이브러리 (주석 처리됨)
+firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 #firebase-remoteConfig = { group = "com.google.firebase", name = "firebase-config-ktx" } # Firebase 원격 구성 라이브러리 (주석 처리됨)
 kakao-user = {group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoVersion"}
 

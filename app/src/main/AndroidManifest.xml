@@ -3,6 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
 
     <application
         android:name=".ClodyApp"
@@ -16,6 +19,15 @@
         android:theme="@style/Theme.CLODY"
         tools:targetApi="31"
         android:usesCleartextTraffic="true">
+
+        <service
+            android:name=".data.ClodyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
 
         <activity
             android:name=".presentation.ui.main.MainActivity"
@@ -45,7 +57,6 @@
                     android:scheme="${kakaoRedirectUri}" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

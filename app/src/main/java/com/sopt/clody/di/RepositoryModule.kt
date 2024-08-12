@@ -7,17 +7,19 @@ import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.DiaryListRepository
 import com.sopt.clody.data.repository.DiaryTimeRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
+import com.sopt.clody.data.repository.NotificationRepository
 import com.sopt.clody.data.repository.ReissueTokenRepository
 import com.sopt.clody.data.repository.ReplyDiaryRepository
 import com.sopt.clody.data.repository.TokenRepository
-import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
 import com.sopt.clody.data.repository.WriteDiaryRepository
+import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DailyDiariesRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DailyDiaryListRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryListRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryTimeRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.MonthlyCalendarRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.NotificationRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.ReissueTokenRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.ReplyDiaryRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
@@ -98,4 +100,10 @@ abstract class RepositoryModule {
     abstract fun bindDiaryTimeRepository(
         diaryTimeRepositoryImpl: DiaryTimeRepositoryImpl
     ): DiaryTimeRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(
+        notificationRepositoryImpl: NotificationRepositoryImpl
+    ): NotificationRepository
 }
