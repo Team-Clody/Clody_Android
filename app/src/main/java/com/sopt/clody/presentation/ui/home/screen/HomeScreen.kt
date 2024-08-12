@@ -196,7 +196,7 @@ fun HomeScreen(
     if (showDiaryDeleteState) {
         DiaryDeleteSheet(
             onDismiss = { homeViewModel.setShowDiaryDeleteState(false) },
-            onShowDiaryDeleteDialogStateChange = { newState -> homeViewModel.setShowDiaryDeleteDialog(newState) }
+            showDiaryDeleteDialog = { homeViewModel.setShowDiaryDeleteDialog(true) }
         )
     }
 
