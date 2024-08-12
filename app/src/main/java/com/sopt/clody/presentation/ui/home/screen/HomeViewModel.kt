@@ -141,21 +141,15 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setShowYearMonthPickerState(state: Boolean) {
-        viewModelScope.launch {
-            _showYearMonthPickerState.emit(state)
-        }
+        _showYearMonthPickerState.value = state
     }
 
     fun setShowDiaryDeleteState(state: Boolean) {
-        viewModelScope.launch {
-            _showDiaryDeleteState.emit(state)
-        }
+        _showDiaryDeleteState.value = state
     }
 
     fun setShowDiaryDeleteDialog(state: Boolean) {
-        viewModelScope.launch {
-            _showDiaryDeleteDialog.emit(state)
-        }
+        _showDiaryDeleteDialog.value = state
     }
 
     fun updateSelectedDiaryDate(diaryDate: DiaryDateData) {
