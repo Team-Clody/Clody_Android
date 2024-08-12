@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.domain.model.generateCalendarDates
+import com.sopt.clody.presentation.ui.component.FailureScreen
+import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
 import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
@@ -78,13 +80,10 @@ fun ClodyCalendar(
         HorizontalDivider()
         when (val state = dailyDiariesUiState) {
             is DailyDiariesState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+                LoadingScreen()
             }
             is DailyDiariesState.Error -> {
-                Text(
-                    text = "Failed to load daily diaries data: ${state.message}",
-                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+                FailureScreen()
             }
             is DailyDiariesState.Success -> {
                 DailyDiaryListItem(
