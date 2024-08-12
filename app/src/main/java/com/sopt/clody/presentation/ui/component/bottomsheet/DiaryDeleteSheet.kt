@@ -26,14 +26,14 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun DiaryDeleteSheet(
     onDismiss: () -> Unit,
-    onShowDiaryDeleteDialogStateChange: (Boolean) -> Unit
+    showDiaryDeleteDialog: () -> Unit
 ) {
     ClodyBottomSheet(
         onDismissRequest = onDismiss,
         content = {
             DiaryDeleteBottomSheetItem(
                 onDismiss = onDismiss,
-                onShowDiaryDeleteDialogStateChange = onShowDiaryDeleteDialogStateChange
+                showDiaryDeleteDialog = showDiaryDeleteDialog
             )
         }
     )
@@ -42,7 +42,7 @@ fun DiaryDeleteSheet(
 @Composable
 fun DiaryDeleteBottomSheetItem(
     onDismiss: () -> Unit,
-    onShowDiaryDeleteDialogStateChange: (Boolean) -> Unit,
+    showDiaryDeleteDialog: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -58,7 +58,7 @@ fun DiaryDeleteBottomSheetItem(
                 .clip(RoundedCornerShape(10.dp))
                 .clickable {
                     onDismiss()
-                    onShowDiaryDeleteDialogStateChange(true)
+                    showDiaryDeleteDialog()
                 }
                 .padding(start = 24.dp)
         ) {

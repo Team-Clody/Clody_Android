@@ -70,6 +70,9 @@ class AccountManagementViewModel @Inject constructor(
             _isValidNickname.value = true
             _nicknameMessage.value = DEFAULT_NICKNAME_MESSAGE
         }
+
+    fun resetUserNicknameState() {
+        _userNicknameState.value = UserNicknameState.Idle
     }
 
     fun logOutAccount() {

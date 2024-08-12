@@ -1,10 +1,10 @@
 package com.sopt.clody.presentation.ui.diarylist.navigation
 
-import DiaryListRoute
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListRoute
 import java.time.LocalDate
 
 fun NavGraphBuilder.diaryListNavGraph(
@@ -12,7 +12,7 @@ fun NavGraphBuilder.diaryListNavGraph(
 ) {
     composable(
         route = "diary_list/{selectedYearFromHome}/{selectedMonthFromHome}",
-        arguments = listOf(
+        arguments = listOf (
             navArgument("selectedYearFromHome") { type = NavType.IntType },
             navArgument("selectedMonthFromHome") { type = NavType.IntType }
         )

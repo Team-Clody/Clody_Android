@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun DailyDiaryCardItem(
+fun DailyDiaryCardContent(
     diary: List<String>
 ) {
     Column(
