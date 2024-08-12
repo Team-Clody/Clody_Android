@@ -84,6 +84,7 @@
     <string name="account_management_nickname_change_title">닉네임 변경</string>
     <string name="account_management_nickname_change_notice">특수문자, 띄어쓰기 없이 작성해주세요</string>
     <string name="account_management_nickname_change_confirm">변경하기</string>
+    <string name="account_management_nickname_change_toast">변경을 완료했어요.</string>
     <string name="account_management_logout_button">로그아웃</string>
     <string name="account_management_logout_dialog_title">로그아웃 하시겠어요?</string>
     <string name="account_management_logout_dialog_description">기다릴게요, 다음에 다시 만나요!</string>
