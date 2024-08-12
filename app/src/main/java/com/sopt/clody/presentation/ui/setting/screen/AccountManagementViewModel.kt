@@ -62,33 +62,34 @@ class AccountManagementViewModel @Inject constructor(
             _isValidNickname.value = true
             _nicknameMessage.value = DEFAULT_NICKNAME_MESSAGE
         }
+    }
 
-        fun resetUserNicknameState() {
-            _userNicknameState.value = UserNicknameState.Idle
+    fun resetUserNicknameState() {
+        _userNicknameState.value = UserNicknameState.Idle
+    }
+
+    fun logOutAccount() {
+        viewModelScope.launch {
+            tokenDataStore.clearInfo()
+            Handler(Looper.getMainLooper()).post {
+                ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
+            }
         }
+    }
 
-        fun logOutAccount() {
-            viewModelScope.launch {
+    fun revokeAccount() {
+        viewModelScope.launch {
+            val result = accountManagementRepository.revokeAccount()
+            _revokeAccountState.value = result.fold(onSuccess = {
                 tokenDataStore.clearInfo()
                 Handler(Looper.getMainLooper()).post {
                     ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
                 }
-            }
-        }
-
-        fun revokeAccount() {
-            viewModelScope.launch {
-                val result = accountManagementRepository.revokeAccount()
-                _revokeAccountState.value = result.fold(onSuccess = {
-                    tokenDataStore.clearInfo()
-                    Handler(Looper.getMainLooper()).post {
-                        ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
-                    }
-                    RevokeAccountState.Success(it)
-                }, onFailure = { RevokeAccountState.Failure(it.message ?: "Unknown error") })
-            }
+                RevokeAccountState.Success(it)
+            }, onFailure = { RevokeAccountState.Failure(it.message ?: "Unknown error") })
         }
     }
+
     companion object {
         private const val NICKNAME_PATTERN = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$"
         private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
