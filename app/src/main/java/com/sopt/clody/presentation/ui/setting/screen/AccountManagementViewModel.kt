@@ -20,9 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountManagementViewModel @Inject constructor(
-    private val accountManagementRepository: AccountManagementRepository,
-    private val tokenDataStore: TokenDataStore,
-    @ApplicationContext private val context: Context
+    private val accountManagementRepository: AccountManagementRepository, private val tokenDataStore: TokenDataStore, @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
@@ -43,10 +41,7 @@ class AccountManagementViewModel @Inject constructor(
         _userInfoState.value = UserInfoState.Loading
         viewModelScope.launch {
             val result = accountManagementRepository.getUserInfo()
-            _userInfoState.value = result.fold(
-                onSuccess = { UserInfoState.Success(it) },
-                onFailure = { UserInfoState.Failure(it.message ?: "Unknown error") }
-            )
+            _userInfoState.value = result.fold(onSuccess = { UserInfoState.Success(it) }, onFailure = { UserInfoState.Failure(it.message ?: "Unknown error") })
         }
     }
 
@@ -54,10 +49,7 @@ class AccountManagementViewModel @Inject constructor(
         _userNicknameState.value = UserNicknameState.Loading
         viewModelScope.launch {
             val result = accountManagementRepository.modifyNickname(requestModifyNicknameDto)
-            _userNicknameState.value = result.fold(
-                onSuccess = { UserNicknameState.Success(it) },
-                onFailure = { UserNicknameState.Failure(it.message ?: "Unknown error") }
-            )
+            _userNicknameState.value = result.fold(onSuccess = { UserNicknameState.Success(it) }, onFailure = { UserNicknameState.Failure(it.message ?: "Unknown error") })
         }
     }
 
@@ -70,6 +62,7 @@ class AccountManagementViewModel @Inject constructor(
             _isValidNickname.value = true
             _nicknameMessage.value = DEFAULT_NICKNAME_MESSAGE
         }
+    }
 
     fun resetUserNicknameState() {
         _userNicknameState.value = UserNicknameState.Idle
@@ -87,16 +80,13 @@ class AccountManagementViewModel @Inject constructor(
     fun revokeAccount() {
         viewModelScope.launch {
             val result = accountManagementRepository.revokeAccount()
-            _revokeAccountState.value = result.fold(
-                onSuccess = {
-                    tokenDataStore.clearInfo()
-                    Handler(Looper.getMainLooper()).post {
-                        ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
-                    }
-                    RevokeAccountState.Success(it)
-                },
-                onFailure = { RevokeAccountState.Failure(it.message ?: "Unknown error") }
-            )
+            _revokeAccountState.value = result.fold(onSuccess = {
+                tokenDataStore.clearInfo()
+                Handler(Looper.getMainLooper()).post {
+                    ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
+                }
+                RevokeAccountState.Success(it)
+            }, onFailure = { RevokeAccountState.Failure(it.message ?: "Unknown error") })
         }
     }
 

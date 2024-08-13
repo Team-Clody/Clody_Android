@@ -4,6 +4,7 @@ import android.app.Activity
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,20 +12,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.DiaryDateData
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
@@ -44,6 +48,9 @@ fun HomeRoute(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
+    LaunchedEffect(selectedYear, selectedMonth) {
+        homeViewModel.updateSelectedDiaryDate(DiaryDateData(selectedYear, selectedMonth))
+    }
     HomeScreen(
         homeViewModel = homeViewModel,
         onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
@@ -65,31 +72,29 @@ fun HomeScreen(
     selectedYear: Int,
     selectedMonth: Int
 ) {
-    var showYearMonthPickerState by remember { mutableStateOf(false) }
-    var showDiaryDeleteState by remember { mutableStateOf(false) }
-    var showDiaryDeleteDialog by remember { mutableStateOf(false) }
     val currentDate = LocalDate.now()
-    var selectedYearInCalendar by remember { mutableIntStateOf(selectedYear) }
-    var selectedMonthInCalendar by remember { mutableIntStateOf(selectedMonth) }
+    val selectedDiaryDate by homeViewModel.selectedDiaryDate.collectAsStateWithLifecycle()
 
     val selectedDate by homeViewModel.selectedDate.collectAsStateWithLifecycle()
     val diaryCount by homeViewModel.diaryCount.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
     val isToday by homeViewModel.isToday.collectAsStateWithLifecycle()
-    val deleteDiaryResult by homeViewModel.deleteDiaryResult.collectAsStateWithLifecycle()
-    val calendarData by homeViewModel.monthlyCalendarData.collectAsStateWithLifecycle()
+    val calendarState by homeViewModel.calendarUiState.collectAsStateWithLifecycle()
+    val dailyDiariesState by homeViewModel.dailyDiariesUiState.collectAsStateWithLifecycle()
+    val showYearMonthPickerState by homeViewModel.showYearMonthPickerState.collectAsStateWithLifecycle()
+    val showDiaryDeleteState by homeViewModel.showDiaryDeleteState.collectAsStateWithLifecycle()
+    val showDiaryDeleteDialog by homeViewModel.showDiaryDeleteDialog.collectAsStateWithLifecycle()
 
-    LaunchedEffect(selectedYearInCalendar, selectedMonthInCalendar) {
-        homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
-        if (selectedYearInCalendar == currentDate.year && selectedMonthInCalendar == currentDate.monthValue) {
+    LaunchedEffect(selectedDiaryDate) {
+        homeViewModel.loadCalendarData(selectedDiaryDate.year, selectedDiaryDate.month)
+        if (selectedDiaryDate.year == currentDate.year && selectedDiaryDate.month == currentDate.monthValue) {
             homeViewModel.updateSelectedDate(currentDate)
         }
     }
 
-    LaunchedEffect(deleteDiaryResult) {
-        if (deleteDiaryResult is DeleteDiaryState.Success) {
-            homeViewModel.loadCalendarData(selectedYearInCalendar, selectedMonthInCalendar)
-            homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
+    LaunchedEffect(dailyDiariesState) {
+        if (dailyDiariesState is DailyDiariesState.Success) {
+            homeViewModel.refreshCalendarAndDiaries(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate)
         }
     }
 
@@ -111,34 +116,49 @@ fun HomeScreen(
     Scaffold(
         topBar = {
             HomeTopAppBar(
-                onClickDiaryList = { onClickDiaryList(selectedYearInCalendar, selectedMonthInCalendar) },
+                onClickDiaryList = { onClickDiaryList(selectedDiaryDate.year, selectedDiaryDate.month) },
                 onClickSetting = onClickSetting,
-                onShowYearMonthPickerStateChange = { newState -> showYearMonthPickerState = newState },
-                selectedYear = selectedYearInCalendar,
-                selectedMonth = selectedMonthInCalendar,
+                onShowYearMonthPickerStateChange = { newState -> homeViewModel.setShowYearMonthPickerState(newState) },
+                selectedYear = selectedDiaryDate.year,
+                selectedMonth = selectedDiaryDate.month,
             )
         },
         content = { innerPadding ->
-            calendarData?.let { result ->
-                result.fold(
-                    onSuccess = { data ->
-                        ScrollableCalendarView(
-                            selectedYear = selectedYearInCalendar,
-                            selectedMonth = selectedMonthInCalendar,
-                            cloverCount = data.totalCloverCount,
-                            diaries = data.diaries,
-                            homeViewModel = homeViewModel,
-                            onShowDiaryDeleteStateChange = { newState -> showDiaryDeleteState = newState },
-                            selectedDate = selectedDate,
-                            onDiaryDataUpdated = { diaryCount, replyStatus ->
-                                homeViewModel.updateDiaryState(data.diaries)
-                            },
-                            modifier = Modifier.padding(innerPadding)
-                        )
-                    }, onFailure = { throwable ->
-                        Log.e("HomeScreen", "Failed to load calendar data: ${throwable.message}")
+            when (val state = calendarState) {
+                is CalendarState.Loading -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
                     }
-                )
+                }
+
+                is CalendarState.Error -> {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        Text(
+                            text = "Failed to load calendar data: ${state.message}",
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                }
+
+                is CalendarState.Success -> {
+                    ScrollableCalendarView(
+                        selectedYear = selectedDiaryDate.year,
+                        selectedMonth = selectedDiaryDate.month,
+                        cloverCount = state.data.totalCloverCount,
+                        diaries = state.data.diaries,
+                        homeViewModel = homeViewModel,
+                        onShowDiaryDeleteStateChange = { newState -> homeViewModel.setShowDiaryDeleteState(newState) },
+                        selectedDate = selectedDate,
+                        onDiaryDataUpdated = { diaryCount, replyStatus ->
+                            homeViewModel.updateDiaryState(state.data.diaries)
+                        },
+                        modifier = Modifier.padding(innerPadding)
+                    )
+                }
+
+                else -> {
+
+                }
             }
         },
         bottomBar = {
@@ -160,20 +180,13 @@ fun HomeScreen(
     )
 
     if (showYearMonthPickerState) {
-        ClodyPopupBottomSheet(onDismissRequest = { showYearMonthPickerState = false }) {
+        ClodyPopupBottomSheet(onDismissRequest = { homeViewModel.setShowYearMonthPickerState(false) }) {
             YearMonthPicker(
-                onDismissRequest = { showYearMonthPickerState = false },
-                selectedYear = selectedYearInCalendar,
-                selectedMonth = selectedMonthInCalendar,
+                onDismissRequest = { homeViewModel.setShowYearMonthPickerState(false) },
+                selectedYear = selectedDiaryDate.year,
+                selectedMonth = selectedDiaryDate.month,
                 onYearMonthSelected = { year, month ->
-                    selectedYearInCalendar = year
-                    selectedMonthInCalendar = month
-                    val newDate = if (year == currentDate.year && month == currentDate.monthValue) {
-                        currentDate
-                    } else {
-                        LocalDate.of(year, month, 1)
-                    }
-                    homeViewModel.updateSelectedDate(newDate)
+                    homeViewModel.updateSelectedDiaryDate(DiaryDateData(year, month))
                     homeViewModel.loadCalendarData(year, month)
                 }
             )
@@ -182,8 +195,8 @@ fun HomeScreen(
 
     if (showDiaryDeleteState) {
         DiaryDeleteSheet(
-            onDismiss = { showDiaryDeleteState = false },
-            showDiaryDeleteDialog = { showDiaryDeleteDialog = true }
+            onDismiss = { homeViewModel.setShowDiaryDeleteState(false) },
+            showDiaryDeleteDialog = { homeViewModel.setShowDiaryDeleteDialog(true) }
         )
     }
 
@@ -194,10 +207,10 @@ fun HomeScreen(
             confirmOption = "삭제할래요",
             dismissOption = "아니요",
             confirmAction = {
-                homeViewModel.deleteDailyDiary(selectedYearInCalendar, selectedMonthInCalendar, selectedDate.dayOfMonth)
-                showDiaryDeleteDialog = false
+                homeViewModel.deleteDailyDiary(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate.dayOfMonth)
+                homeViewModel.setShowDiaryDeleteDialog(false)
             },
-            onDismiss = { showDiaryDeleteDialog = false },
+            onDismiss = { homeViewModel.setShowDiaryDeleteDialog(false) },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white
         )
