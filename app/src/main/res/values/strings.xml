@@ -74,6 +74,7 @@
 
     <!-- 설정 -->
     <string name="setting_title">설정</string>
+    <string name="setting_version_info_failure">버전 정보를 불러오는데 실패했습니다.</string>
     <string name="setting_option_account_management">프로필 및 계정 관리</string>
     <string name="setting_option_notification_setting">알림 설정</string>
     <string name="setting_option_announcement">공지사항</string>

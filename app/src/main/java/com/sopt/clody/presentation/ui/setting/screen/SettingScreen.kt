@@ -32,7 +32,7 @@ fun SettingRoute(
     }
 
     SettingScreen(
-        versionInfo = versionInfo,
+        versionInfo = versionInfo ?: stringResource(R.string.setting_version_info_failure),
         onClickBack = { navigator.navigateBack() },
         onClickAccountManagement = { navigator.navigateAccountManagement() },
         onClickNotificationSetting = { navigator.navigateNotificationSetting() }
