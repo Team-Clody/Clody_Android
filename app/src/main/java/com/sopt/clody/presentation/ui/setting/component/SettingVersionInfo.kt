@@ -10,11 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun SettingAppVersion() {
+fun SettingVersionInfo(
+    versionInfo: String
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -29,9 +32,11 @@ fun SettingAppVersion() {
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.setting_app_version), /* TODO : 서버로부터 앱 버전 받아오기 */
+            text = versionInfo,
             color = ClodyTheme.colors.gray05,
-            style = ClodyTheme.typography.body4Medium
+            style = ClodyTheme.typography.body4Medium.copy(
+                letterSpacing = 2.sp
+            )
         )
     }
 }

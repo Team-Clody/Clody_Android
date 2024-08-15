@@ -26,7 +26,7 @@ fun SettingOption(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 4.dp)
+            .padding(vertical = 10.dp)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,

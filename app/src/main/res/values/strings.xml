@@ -81,7 +81,7 @@
     <string name="setting_option_terms_of_service">서비스 이용 약관</string>
     <string name="setting_option_privacy_policy">개인정보 처리방침</string>
     <string name="setting_option_app_version">앱 버전</string>
-    <string name="setting_app_version">최신버전</string>
+    <string name="setting_option_app_version_info_failure">버전 정보를 불러오는데 실패했습니다.</string>
 
     <!-- 프로필 및 계정 관리 -->
     <string name="account_management_title">프로필 및 계정 관리</string>
