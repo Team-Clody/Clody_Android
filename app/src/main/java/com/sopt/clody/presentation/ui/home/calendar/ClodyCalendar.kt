@@ -27,6 +27,7 @@ import com.sopt.clody.domain.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
+import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
 import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
 import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
@@ -46,14 +47,10 @@ fun ClodyCalendar(
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
-    val dateList by remember(currentMonth.year, currentMonth.monthValue) {
-        mutableStateOf(generateCalendarDates(currentMonth.year, currentMonth.monthValue))
+    val dateList = remember(currentMonth.year, currentMonth.monthValue) {
+        generateCalendarDates(currentMonth.year, currentMonth.monthValue)
     }
     val initialDayOfWeek = selectedDate.dayOfWeek
-
-    LaunchedEffect(selectedDate) {
-        homeViewModel.loadDailyDiariesData(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth)
-    }
 
     val dailyDiariesUiState by homeViewModel.dailyDiariesUiState.collectAsStateWithLifecycle()
 
@@ -67,10 +64,7 @@ fun ClodyCalendar(
             selectedDate = selectedDate,
             onDayClick = { date ->
                 onDateSelected(date)
-                val diary = diaries.getOrNull(date.dayOfMonth - 1)
-                val diaryCount = diary?.diaryCount ?: 0
-                val replyStatus = diary?.replyStatus ?: "UNREADY"
-                onDiaryDataUpdated(diaryCount, replyStatus)
+                updateDiaryDataForSelectedDate(date, diaries, onDiaryDataUpdated)
             },
             getDiaryDataForDate = { date ->
                 diaries.getOrNull(date.dayOfMonth - 1)
@@ -78,42 +72,28 @@ fun ClodyCalendar(
         )
         Spacer(modifier = Modifier.height(10.dp))
         HorizontalDivider()
+
         when (val state = dailyDiariesUiState) {
-            is DailyDiariesState.Loading -> {
-                LoadingScreen()
-            }
-            is DailyDiariesState.Error -> {
-                FailureScreen()
-            }
-            is DailyDiariesState.Success -> {
-                DailyDiaryListItem(
-                    date = selectedDate,
-                    dayOfWeek = initialDayOfWeek,
-                    dailyDiaries = state.data.diaries,
-                    onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
-                )
-            }
-            else -> {
-            }
+            is DailyDiariesState.Loading -> LoadingScreen()
+            is DailyDiariesState.Error -> FailureScreen()
+            is DailyDiariesState.Success -> DailyDiaryListItem(
+                date = selectedDate,
+                dayOfWeek = initialDayOfWeek,
+                dailyDiaries = state.data.diaries,
+                onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
+            )
+            else -> Unit
         }
     }
 }
 
-@Composable
-fun HorizontalDivider(
-    color: Color = ClodyTheme.colors.gray08,
-    thickness: Dp = 6.dp,
-    modifier: Modifier = Modifier
+private fun updateDiaryDataForSelectedDate(
+    date: LocalDate,
+    diaries: List<MonthlyCalendarResponseDto.Diary>,
+    onDiaryDataUpdated: (Int, String) -> Unit
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(thickness)
-            .background(color)
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ClodyCalendarPreview() {
+    val diary = diaries.getOrNull(date.dayOfMonth - 1)
+    val diaryCount = diary?.diaryCount ?: 0
+    val replyStatus = diary?.replyStatus ?: "UNREADY"
+    onDiaryDataUpdated(diaryCount, replyStatus)
 }
