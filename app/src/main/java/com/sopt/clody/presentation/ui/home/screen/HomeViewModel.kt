@@ -22,6 +22,9 @@ class HomeViewModel @Inject constructor(
     private val dailyDiaryListRepository: DailyDiaryListRepository
 ) : ViewModel() {
 
+    private val _loadedCalendarDate = MutableStateFlow<Pair<Int, Int>?>(null)
+    val loadedCalendarDate: StateFlow<Pair<Int, Int>?> = _loadedCalendarDate
+
     private val _calendarUiState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
     val calendarUiState: StateFlow<CalendarState<MonthlyCalendarResponseDto>> get() = _calendarUiState
 
@@ -55,8 +58,9 @@ class HomeViewModel @Inject constructor(
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
 
-    private var isCalendarDataLoaded = false
-    private var isDailyDiariesDataLoaded = false
+    // 상태 플래그
+     var isCalendarDataLoadedFlag = false
+     var isDailyDiariesDataLoaded = false
 
     var isInitialized = false
 
@@ -74,15 +78,21 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun shouldUpdateCalendar(year: Int, month: Int): Boolean {
+        return loadedCalendarDate.value != Pair(year, month)
+    }
+
     fun loadCalendarData(year: Int, month: Int) {
-        if (isCalendarDataLoaded) return
+        if (isCalendarDataLoadedFlag && !shouldUpdateCalendar(year, month)) return
+
         viewModelScope.launch {
             _calendarUiState.value = CalendarState.Loading
             val result = calendarRepository.getMonthlyCalendarData(year, month)
             _calendarUiState.value = result.fold(
                 onSuccess = { data ->
                     updateDiaryState(data.diaries)
-                    isCalendarDataLoaded = true
+                    _loadedCalendarDate.value = Pair(year, month)
+                    isCalendarDataLoadedFlag = true
                     CalendarState.Success(data)
                 },
                 onFailure = { CalendarState.Error(it.message ?: "Unknown error") }
@@ -93,6 +103,7 @@ class HomeViewModel @Inject constructor(
 
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         if (isDailyDiariesDataLoaded) return
+
         viewModelScope.launch {
             _dailyDiariesUiState.value = DailyDiariesState.Loading
             val result = diariesRepository.getDailyDiariesData(year, month, date)
@@ -112,10 +123,7 @@ class HomeViewModel @Inject constructor(
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
             _deleteDiaryUiState.value = result.fold(
                 onSuccess = {
-                    isCalendarDataLoaded = false
-                    isDailyDiariesDataLoaded = false
-                    loadCalendarData(year, month)
-                    loadDailyDiariesData(year, month, day)
+                    refreshDataAfterDelete(year, month, day)
                     DeleteDiaryState.Success
                 },
                 onFailure = { DeleteDiaryState.Failure(it.message ?: "Unknown error") }
@@ -154,11 +162,26 @@ class HomeViewModel @Inject constructor(
 
     fun updateSelectedDiaryDate(diaryDate: DiaryDateData) {
         _selectedDiaryDate.value = diaryDate
-        isCalendarDataLoaded = false
+        isCalendarDataLoadedFlag = false
     }
 
     fun refreshCalendarAndDiaries(year: Int, month: Int, date: LocalDate) {
         loadCalendarData(year, month)
         loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
+    }
+
+    private fun resetDataLoadFlags() {
+        isCalendarDataLoadedFlag = false
+        isDailyDiariesDataLoaded = false
+    }
+
+    private fun refreshDataAfterDelete(year: Int, month: Int, day: Int) {
+        loadCalendarData(year, month)
+        loadDailyDiariesData(year, month, day)
+
+        if (_selectedDate.value.year == year && _selectedDate.value.monthValue == month && _selectedDate.value.dayOfMonth == day) {
+            isDailyDiariesDataLoaded = false
+            loadDailyDiariesData(year, month, day)
+        }
     }
 }
