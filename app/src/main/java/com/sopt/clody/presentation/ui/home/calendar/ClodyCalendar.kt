@@ -62,15 +62,26 @@ fun ClodyCalendar(
         HorizontalDivider()
 
         when (val state = dailyDiariesUiState) {
-            is DailyDiariesState.Loading -> LoadingScreen()
-            is DailyDiariesState.Error -> FailureScreen()
-            is DailyDiariesState.Success -> DailyDiaryListItem(
-                date = selectedDate,
-                dayOfWeek = initialDayOfWeek,
-                dailyDiaries = state.data.diaries,
-                onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
-            )
-            else -> Unit
+            is DailyDiariesState.Idle -> {
+
+            }
+
+            is DailyDiariesState.Loading -> {
+                LoadingScreen()
+            }
+
+            is DailyDiariesState.Success -> {
+                DailyDiaryListItem(
+                    date = selectedDate,
+                    dayOfWeek = initialDayOfWeek,
+                    dailyDiaries = state.data.diaries,
+                    onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
+                )
+            }
+
+            is DailyDiariesState.Error -> {
+                FailureScreen()
+            }
         }
     }
 }

@@ -111,18 +111,7 @@ fun HomeScreen(
                 }
 
                 is CalendarState.Loading -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                }
-
-                is CalendarState.Error -> {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        Text(
-                            text = "Failed to load calendar data: ${state.message}",
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
+                    LoadingScreen()
                 }
 
                 is CalendarState.Success -> {
@@ -139,6 +128,10 @@ fun HomeScreen(
                         },
                         modifier = Modifier.padding(innerPadding)
                     )
+                }
+
+                is CalendarState.Error -> {
+                    FailureScreen()
                 }
             }
 
