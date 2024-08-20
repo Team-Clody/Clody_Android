@@ -17,7 +17,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 
 @Composable
-fun ScrollableCalendarUI(
+fun ScrollableCalendar(
     selectedYear: Int,
     selectedMonth: Int,
     cloverCount: Int,
