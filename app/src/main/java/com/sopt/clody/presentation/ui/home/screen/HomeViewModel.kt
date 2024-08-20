@@ -8,12 +8,14 @@ import com.sopt.clody.data.repository.DailyDiariesRepository
 import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
 import com.sopt.clody.domain.model.DiaryDateData
+import com.sopt.clody.presentation.ui.diarylist.screen.DiaryDeleteState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
+
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -22,14 +24,20 @@ class HomeViewModel @Inject constructor(
     private val dailyDiaryListRepository: DailyDiaryListRepository
 ) : ViewModel() {
 
-    private val _calendarUiState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
-    val calendarUiState: StateFlow<CalendarState<MonthlyCalendarResponseDto>> get() = _calendarUiState
+    private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
+    val calendarState: StateFlow<CalendarState<MonthlyCalendarResponseDto>> get() = _calendarState
 
-    private val _dailyDiariesUiState = MutableStateFlow<DailyDiariesState<DailyDiariesResponseDto>>(DailyDiariesState.Idle)
-    val dailyDiariesUiState: StateFlow<DailyDiariesState<DailyDiariesResponseDto>> get() = _dailyDiariesUiState
+    private val _dailyDiariesState = MutableStateFlow<DailyDiariesState<DailyDiariesResponseDto>>(DailyDiariesState.Idle)
+    val dailyDiariesState: StateFlow<DailyDiariesState<DailyDiariesResponseDto>> get() = _dailyDiariesState
 
-    private val _deleteDiaryUiState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
-    val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryUiState
+    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
+    val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryState
+
+    private val _selectedDiaryDate = MutableStateFlow(DiaryDateData())
+    val selectedDiaryDate: StateFlow<DiaryDateData> get() = _selectedDiaryDate
+
+    private val _selectedDate = MutableStateFlow(LocalDate.now())
+    val selectedDate: StateFlow<LocalDate> get() = _selectedDate
 
     private val _diaryCount = MutableStateFlow(0)
     val diaryCount: StateFlow<Int> get() = _diaryCount
@@ -40,12 +48,6 @@ class HomeViewModel @Inject constructor(
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
 
-    private val _selectedDiaryDate = MutableStateFlow(DiaryDateData())
-    val selectedDiaryDate: StateFlow<DiaryDateData> get() = _selectedDiaryDate
-
-    private val _selectedDate = MutableStateFlow(LocalDate.now())
-    val selectedDate: StateFlow<LocalDate> get() = _selectedDate
-
     private val _showYearMonthPickerState = MutableStateFlow(false)
     val showYearMonthPickerState: StateFlow<Boolean> get() = _showYearMonthPickerState
 
@@ -55,10 +57,7 @@ class HomeViewModel @Inject constructor(
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
 
-    private var isCalendarDataLoaded = false
-    private var isDailyDiariesDataLoaded = false
-
-    var isInitialized = false
+    private var isInitialized = false
 
     init {
         initialize()
@@ -67,40 +66,28 @@ class HomeViewModel @Inject constructor(
     private fun initialize() {
         if (!isInitialized) {
             val now = LocalDate.now()
-            updateIsToday(now.year, now.monthValue)
-            loadCalendarData(now.year, now.monthValue)
-            updateSelectedDate(now)
+            _selectedDiaryDate.value = DiaryDateData(now.year, now.monthValue)
             isInitialized = true
         }
     }
 
     fun loadCalendarData(year: Int, month: Int) {
-        if (isCalendarDataLoaded) return
         viewModelScope.launch {
-            _calendarUiState.value = CalendarState.Loading
+            _calendarState.value = CalendarState.Loading
             val result = calendarRepository.getMonthlyCalendarData(year, month)
-            _calendarUiState.value = result.fold(
-                onSuccess = { data ->
-                    updateDiaryState(data.diaries)
-                    isCalendarDataLoaded = true
-                    CalendarState.Success(data)
-                },
+            _calendarState.value = result.fold(
+                onSuccess = { CalendarState.Success(it) },
                 onFailure = { CalendarState.Error(it.message ?: "Unknown error") }
             )
         }
-        updateIsToday(year, month)
     }
 
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
-        if (isDailyDiariesDataLoaded) return
         viewModelScope.launch {
-            _dailyDiariesUiState.value = DailyDiariesState.Loading
+            _dailyDiariesState.value = DailyDiariesState.Loading
             val result = diariesRepository.getDailyDiariesData(year, month, date)
-            _dailyDiariesUiState.value = result.fold(
-                onSuccess = {
-                    isDailyDiariesDataLoaded = true
-                    DailyDiariesState.Success(it)
-                },
+            _dailyDiariesState.value = result.fold(
+                onSuccess = { DailyDiariesState.Success(it) },
                 onFailure = { DailyDiariesState.Error(it.message ?: "Unknown error") }
             )
         }
@@ -108,36 +95,40 @@ class HomeViewModel @Inject constructor(
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
-            _deleteDiaryUiState.value = DeleteDiaryState.Loading
+            _deleteDiaryState.value = DeleteDiaryState.Loading
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
-            _deleteDiaryUiState.value = result.fold(
+            _deleteDiaryState.value = result.fold(
                 onSuccess = {
-                    isCalendarDataLoaded = false
-                    isDailyDiariesDataLoaded = false
-                    loadCalendarData(year, month)
-                    loadDailyDiariesData(year, month, day)
                     DeleteDiaryState.Success
                 },
-                onFailure = { DeleteDiaryState.Failure(it.message ?: "Unknown error") }
+                onFailure = {
+                    DeleteDiaryState.Failure(it.message ?: "Unknown error")
+                }
             )
         }
     }
 
+    fun refreshCalendarDataCalendarData(year: Int, month: Int) {
+        if (calendarState.value is CalendarState.Success && _selectedDiaryDate.value.year == year && _selectedDiaryDate.value.month == month) {
+            return
+        }
+        _selectedDiaryDate.value = DiaryDateData(year, month)
+        loadCalendarData(year, month)
+    }
+
     fun updateSelectedDate(date: LocalDate) {
         _selectedDate.value = date
-        isDailyDiariesDataLoaded = false
         loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
+    }
+
+    fun updateSelectedDiaryDate(diaryDate: DiaryDateData) {
+        _selectedDiaryDate.value = diaryDate
     }
 
     fun updateDiaryState(diaries: List<MonthlyCalendarResponseDto.Diary>) {
         val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
         _diaryCount.value = selectedDiary?.diaryCount ?: 0
         _replyStatus.value = selectedDiary?.replyStatus ?: "UNREADY"
-    }
-
-    fun updateIsToday(year: Int, month: Int) {
-        val currentDate = LocalDate.now()
-        _isToday.value = currentDate.year == year && currentDate.monthValue == month
     }
 
     fun setShowYearMonthPickerState(state: Boolean) {
@@ -151,14 +142,5 @@ class HomeViewModel @Inject constructor(
     fun setShowDiaryDeleteDialog(state: Boolean) {
         _showDiaryDeleteDialog.value = state
     }
-
-    fun updateSelectedDiaryDate(diaryDate: DiaryDateData) {
-        _selectedDiaryDate.value = diaryDate
-        isCalendarDataLoaded = false
-    }
-
-    fun refreshCalendarAndDiaries(year: Int, month: Int, date: LocalDate) {
-        loadCalendarData(year, month)
-        loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
-    }
 }
+
