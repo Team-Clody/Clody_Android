@@ -14,8 +14,8 @@ class ReplyLoadingNavigator(
         }
     }
 
-    fun navigateReplyDiary(year: Int, month: Int, day: Int) {
-        navController.navigate("reply_diary/$year/$month/$day")
+    fun navigateReplyDiary(year: Int, month: Int, day: Int, replyStatus: String) {
+        navController.navigate("reply_diary/$year/$month/$day?replyStatus=$replyStatus")
     }
 
     fun navigateBack(selectedYear: Int, selectedMonth: Int, from: String) {
@@ -38,5 +38,3 @@ class ReplyLoadingNavigator(
         }
     }
 }
-
-
