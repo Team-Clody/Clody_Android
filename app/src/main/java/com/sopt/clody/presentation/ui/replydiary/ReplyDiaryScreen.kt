@@ -46,6 +46,7 @@ fun ReplyDiaryRoute(
     year: Int,
     month: Int,
     date: Int,
+    replyStatus: String,
     viewModel: ReplyDiaryViewModel = hiltViewModel(),
 ) {
     LaunchedEffect(Unit) {
@@ -66,7 +67,8 @@ fun ReplyDiaryRoute(
 
     ReplyDiaryScreen(
         viewModel = viewModel,
-        onClickBack = { navigator.navigateHome() }
+        onClickBack = { navigator.navigateHome() },
+        replyStatus = replyStatus
     )
 }
 
@@ -75,13 +77,14 @@ fun ReplyDiaryRoute(
 fun ReplyDiaryScreen(
     viewModel: ReplyDiaryViewModel,
     onClickBack: () -> Unit,
+    replyStatus: String
 ) {
     val replyDiaryState by viewModel.replyDiaryState.collectAsState()
 
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyDiaryState) {
-        if (replyDiaryState is ReplyDiaryState.Success) {
+        if (replyStatus == "READY_NOT_READ" && replyDiaryState is ReplyDiaryState.Success) {
             showDialog = true
         }
     }
