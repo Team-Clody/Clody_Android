@@ -18,7 +18,7 @@ fun MonthlyDiaryList(
     diaryListViewModel: DiaryListViewModel,
     diaries: List<ResponseMonthlyDiaryDto.DailyDiary>,
     showDiaryDeleteBottomSheet: () -> Unit,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
