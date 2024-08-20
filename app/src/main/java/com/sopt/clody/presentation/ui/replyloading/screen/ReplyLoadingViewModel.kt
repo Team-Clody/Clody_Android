@@ -7,6 +7,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,15 +24,12 @@ class ReplyLoadingViewModel @Inject constructor(
             val result = diaryTimeRepository.getDiaryTime(year, month, date)
             _replyLoadingState.value = result.fold(
                 onSuccess = { data ->
-                    val newHH = data.HH
-                    val newMM = data.MM + 1
-                    val finalMM = newMM % 60
-                    val finalHH = (newHH + newMM / 60) % 24
-                    ReplyLoadingState.Success(
-                        HH = finalHH,
-                        MM = finalMM,
-                        SS = data.SS
-                    )
+                    val targetDateTime = LocalDateTime.of(
+                        year, month, date,
+                        data.HH, data.MM, data.SS
+                    ).plusMinutes(1)
+
+                    ReplyLoadingState.Success(targetDateTime)
                 },
                 onFailure = { ReplyLoadingState.Failure(it.message ?: "Unknown error") }
             )
