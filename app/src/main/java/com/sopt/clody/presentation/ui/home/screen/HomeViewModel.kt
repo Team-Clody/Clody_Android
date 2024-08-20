@@ -7,8 +7,7 @@ import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.repository.DailyDiariesRepository
 import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
-import com.sopt.clody.domain.model.DiaryDateData
-import com.sopt.clody.presentation.ui.diarylist.screen.DiaryDeleteState
+import com.sopt.clody.presentation.ui.home.model.DiaryDateData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

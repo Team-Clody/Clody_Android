@@ -15,7 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.CalendarDate
+import com.sopt.clody.presentation.ui.home.model.CalendarDate
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 
