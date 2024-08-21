@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
@@ -38,7 +37,7 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
-import java.time.LocalTime
+import java.time.LocalDateTime
 
 @Composable
 fun ReplyLoadingRoute(
@@ -86,11 +85,10 @@ fun ReplyLoadingScreen(
 
     LaunchedEffect(replyLoadingState) {
         if (replyLoadingState is ReplyLoadingState.Success) {
-            val diaryTime = with(replyLoadingState as ReplyLoadingState.Success) {
-                (HH * 3600 + MM * 60 + SS).toLong()
-            }
-            val currentTime = LocalTime.now().toSecondOfDay().toLong()
-            val timeDiff = diaryTime - currentTime
+            val targetDateTime = (replyLoadingState as ReplyLoadingState.Success).targetDateTime
+            val currentDateTime = LocalDateTime.now()
+
+            val timeDiff = java.time.Duration.between(currentDateTime, targetDateTime).seconds
             remainingTime = if (timeDiff > 0) timeDiff else 0
             isComplete = remainingTime <= 0
         }
@@ -213,14 +211,4 @@ fun ReplyLoadingScreen(
                 .padding(horizontal = 12.dp)
         )
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewReplyLoadingScreen() {
-    ReplyLoadingScreen(
-        onCompleteClick = { /*TODO*/ },
-        onBackClick = { /*TODO*/ },
-        replyLoadingState = ReplyLoadingState.Success(1, 2, 3)
-    )
 }
