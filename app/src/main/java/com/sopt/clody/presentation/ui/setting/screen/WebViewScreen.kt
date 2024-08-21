@@ -21,10 +21,10 @@ import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 @Composable
 fun WebViewRoute(
     navigator: SettingNavigator,
-    encodeUrl: String
+    encodedUrl: String
 ) {
     WebViewScreen(
-        encodeUrl = encodeUrl,
+        encodedUrl = encodedUrl,
         onClickBack = { navigator.navigateBack() }
     )
 }
@@ -32,7 +32,7 @@ fun WebViewRoute(
 @SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun WebViewScreen(
-    encodeUrl: String,
+    encodedUrl: String,
     onClickBack: () -> Unit
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
@@ -55,7 +55,7 @@ fun WebViewScreen(
                             javaScriptCanOpenWindowsAutomatically = true
                             mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
                         }
-                        loadUrl(encodeUrl)
+                        loadUrl(encodedUrl)
                         webView = this
                     }
                 },

@@ -37,11 +37,11 @@ fun NavGraphBuilder.webViewNavGraph(
     navigator: SettingNavigator
 ) {
     composable(
-        route = "web_view/{encodeUrl}",
-        arguments = listOf(navArgument("encodeUrl") { type = NavType.StringType })
+        route = "web_view/{encodedUrl}",
+        arguments = listOf(navArgument("encodedUrl") { type = NavType.StringType })
     ) { backStackEntry ->
-        val encodeUrl = backStackEntry.arguments?.getString("encodeUrl")
-        encodeUrl?.let {
+        val encodedUrl = backStackEntry.arguments?.getString("encodedUrl")
+        encodedUrl?.let {
             WebViewRoute(navigator, it)
         }
     }
