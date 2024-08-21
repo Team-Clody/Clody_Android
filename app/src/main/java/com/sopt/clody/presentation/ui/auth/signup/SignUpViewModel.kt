@@ -11,6 +11,9 @@ import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.repository.AuthRepository
 import com.sopt.clody.data.repository.TokenRepository
 import com.sopt.clody.presentation.utils.base.UiState
+import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
+import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
+import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
 import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
@@ -207,7 +210,6 @@ class SignUpViewModel @Inject constructor(
         private const val AUTO_LOGIN_SUCCESS = "자동 로그인"
         private const val USER_EXISTS = "유저가 이미 존재합니다"
         private const val SIGN_UP_SUCCESS = "회원가입 성공"
-        private const val UNKNOWN_ERROR = "알수없는 에러"
         private const val USER_NOT_FOUND_ERROR = "유저를 찾을 수 없습니다"
         private const val KAKAO_PLATFORM = "kakao"
 
@@ -215,8 +217,5 @@ class SignUpViewModel @Inject constructor(
         private const val NICKNAME_PATTERN = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$"
         private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
         private const val FAILURE_NICKNAME_MESSAGE = "사용할 수 없는 닉네임이에요"
-
-        private const val FAILURE_NETWORK_MESSAGE = "서비스 접속이 원활하지 않아요.\n네트워크 연결을 확인해주세요."
-        private const val FAILURE_TEMPORARY_MESSAGE = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요."
     }
 }
