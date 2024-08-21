@@ -15,7 +15,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -39,10 +38,9 @@ import com.sopt.clody.presentation.ui.auth.component.textfield.NickNameTextField
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.auth.signup.SignUpViewModel
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.utils.base.UiState
-import com.sopt.clody.presentation.utils.extension.showLongToast
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun NicknameRoute(
@@ -54,7 +52,8 @@ fun NicknameRoute(
     val nicknameMessage by viewModel.nicknameMessage.collectAsState()
     val signUpState by viewModel.signUpState.collectAsState()
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
 
     NicknameScreen(
         nickname = nickname,
@@ -72,12 +71,21 @@ fun NicknameRoute(
                 navigator.navigateTimeReminder()
             }
             is UiState.Failure -> {
-                coroutineScope.launch {
-                    showLongToast(context, result.msg)
-                }
+                showDialog = true
+                dialogMessage = result.msg
             }
             else -> {}
         }
+    }
+
+    if (showDialog) {
+        FailureDialog(
+            message = dialogMessage,
+            onDismiss = {
+                showDialog = false
+                viewModel.resetSignUpState()
+            }
+        )
     }
 }
 

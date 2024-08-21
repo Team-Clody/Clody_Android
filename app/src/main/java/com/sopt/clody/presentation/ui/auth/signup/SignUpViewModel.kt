@@ -11,6 +11,7 @@ import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.repository.AuthRepository
 import com.sopt.clody.data.repository.TokenRepository
 import com.sopt.clody.presentation.utils.base.UiState
+import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -27,7 +28,8 @@ import kotlin.coroutines.resumeWithException
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
+    private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
     private val _signInState = MutableStateFlow(SignInState())
@@ -79,6 +81,10 @@ class SignUpViewModel @Inject constructor(
 
     fun proceedWithSignUp(context: Context) {
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                _signUpState.value = SignUpState(UiState.Failure(FAILURE_NETWORK_MESSAGE))
+                return@launch
+            }
             _signUpState.value = SignUpState(UiState.Loading)
             val tokenResult = runCatching { loginWithKakao(context) }
             tokenResult.onSuccess { token ->
@@ -160,8 +166,13 @@ class SignUpViewModel @Inject constructor(
                     _signUpState.value = SignUpState(UiState.Success(SIGN_UP_SUCCESS))
                     storeTokens(response.accessToken, response.refreshToken)
                 },
-                onFailure = {
-                    _signUpState.value = SignUpState(UiState.Failure(it.localizedMessage ?: UNKNOWN_ERROR))
+                onFailure = { error ->
+                    val errorMessage = if (error.message?.contains("200") == false) {
+                        FAILURE_TEMPORARY_MESSAGE
+                    } else {
+                        error.localizedMessage ?: UNKNOWN_ERROR
+                    }
+                    _signUpState.value = SignUpState(UiState.Failure(errorMessage))
                 }
             )
         }
@@ -188,6 +199,10 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    fun resetSignUpState() {
+        _signUpState.value = SignUpState()
+    }
+
     companion object {
         private const val AUTO_LOGIN_SUCCESS = "자동 로그인"
         private const val USER_EXISTS = "유저가 이미 존재합니다"
@@ -200,5 +215,8 @@ class SignUpViewModel @Inject constructor(
         private const val NICKNAME_PATTERN = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$"
         private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
         private const val FAILURE_NICKNAME_MESSAGE = "사용할 수 없는 닉네임이에요"
+
+        private const val FAILURE_NETWORK_MESSAGE = "서비스 접속이 원활하지 않아요.\n네트워크 연결을 확인해주세요."
+        private const val FAILURE_TEMPORARY_MESSAGE = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요."
     }
 }
