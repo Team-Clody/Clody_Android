@@ -49,7 +49,7 @@ fun HomeRoute(
         onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
         onClickSetting = { navigator.navigateSetting() },
         onClickWriteDiary = { year, month, day -> navigator.navigateWriteDiary(year, month, day) },
-        onClickReplyDiary = { year, month, day -> navigator.navigateReplyLoading(year, month, day) },
+        onClickReplyDiary = { year, month, day, replyStatus -> navigator.navigateReplyLoading(year, month, day, replyStatus) },
         selectedYear = selectedYear,
         selectedMonth = selectedMonth
     )
@@ -61,7 +61,7 @@ fun HomeScreen(
     onClickDiaryList: (Int, Int) -> Unit,
     onClickSetting: () -> Unit,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
     selectedYear: Int,
     selectedMonth: Int
 ) {
@@ -162,7 +162,7 @@ fun HomeScreen(
                     month = selectedDate.monthValue,
                     day = selectedDate.dayOfMonth,
                     onClickWriteDiary = onClickWriteDiary,
-                    onClickReplyDiary = { onClickReplyDiary(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth) }
+                    onClickReplyDiary = { onClickReplyDiary(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, replyStatus) }
                 )
                 Spacer(modifier = Modifier.height(14.dp))
             }

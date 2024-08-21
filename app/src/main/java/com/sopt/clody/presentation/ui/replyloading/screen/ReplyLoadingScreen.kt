@@ -47,6 +47,7 @@ fun ReplyLoadingRoute(
     month: Int,
     day: Int,
     from: String,
+    replyStatus: String,
     viewModel: ReplyLoadingViewModel = hiltViewModel()
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
@@ -68,7 +69,7 @@ fun ReplyLoadingRoute(
     }
 
     ReplyLoadingScreen(
-        onCompleteClick = { navigator.navigateReplyDiary(year, month, day) },
+        onCompleteClick = { navigator.navigateReplyDiary(year, month, day, replyStatus) },
         onBackClick = { navigator.navigateBack(year, month, from) },
         replyLoadingState = replyLoadingState
     )

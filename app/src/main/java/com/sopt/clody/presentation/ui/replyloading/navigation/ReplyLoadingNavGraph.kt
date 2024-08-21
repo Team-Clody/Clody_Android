@@ -15,31 +15,35 @@ fun NavGraphBuilder.replyLoadingNavGraph(
 ) {
     val currentDate = LocalDate.now()
     composable(
-        "reply_loading/{year}/{month}/{day}?from={from}",
+        "reply_loading/{year}/{month}/{day}?from={from}&replyStatus={replyStatus}",
         arguments = listOf(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
             navArgument("day") { type = NavType.IntType },
-            navArgument("from") { defaultValue = "home" }
+            navArgument("from") { defaultValue = "home" },
+            navArgument("replyStatus") { defaultValue = "UNREADY" }
         )
     ) { backStackEntry ->
         val year = backStackEntry.arguments?.getInt("year") ?: currentDate.year
         val month = backStackEntry.arguments?.getInt("month") ?: currentDate.monthValue
         val day = backStackEntry.arguments?.getInt("day") ?: currentDate.dayOfMonth
         val from = backStackEntry.arguments?.getString("from") ?: "home"
-        ReplyLoadingRoute(replyLoadingNavigator, year, month, day, from)
+        val replyStatus = backStackEntry.arguments?.getString("replyStatus") ?: "UNREADY"
+        ReplyLoadingRoute(replyLoadingNavigator, year, month, day, from, replyStatus)
     }
     composable(
-        "reply_diary/{year}/{month}/{day}",
+        "reply_diary/{year}/{month}/{day}?replyStatus={replyStatus}",
         arguments = listOf(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
-            navArgument("day") { type = NavType.IntType }
+            navArgument("day") { type = NavType.IntType },
+            navArgument("replyStatus") { defaultValue = "UNREADY" }
         )
     ) { backStackEntry ->
         val year = backStackEntry.arguments?.getInt("year") ?: currentDate.year
         val month = backStackEntry.arguments?.getInt("month") ?: currentDate.monthValue
-        val day = backStackEntry.arguments?.getInt("day") ?: currentDate.monthValue
-        ReplyDiaryRoute(replyDiaryNavigator, year, month, day)
+        val day = backStackEntry.arguments?.getInt("day") ?: currentDate.dayOfMonth
+        val replyStatus = backStackEntry.arguments?.getString("replyStatus") ?: "UNREADY"
+        ReplyDiaryRoute(replyDiaryNavigator, year, month, day, replyStatus)
     }
 }
