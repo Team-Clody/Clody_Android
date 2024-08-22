@@ -4,8 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.sopt.clody.presentation.ui.setting.screen.AccountManagementRoute
-import com.sopt.clody.presentation.ui.setting.screen.NotificationSettingRoute
+import com.sopt.clody.presentation.ui.setting.accountmanagement.screen.AccountManagementRoute
+import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingRoute
 import com.sopt.clody.presentation.ui.setting.screen.SettingRoute
 import com.sopt.clody.presentation.ui.setting.screen.WebViewRoute
 

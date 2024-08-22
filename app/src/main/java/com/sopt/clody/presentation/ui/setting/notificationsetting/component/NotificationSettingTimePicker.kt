@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.setting.component
+package com.sopt.clody.presentation.ui.setting.notificationsetting.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -27,10 +27,12 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
 import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
+import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NotificationSettingTimePicker(
+    notificationSettingViewModel: NotificationSettingViewModel,
     onTimeSelected: (String) -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -41,8 +43,6 @@ fun NotificationSettingTimePicker(
     val amPmPickerState = rememberPickerState()
     val hourPickerState = rememberPickerState()
     val minutePickerState = rememberPickerState()
-
-    val selectedTime = stringResource(R.string.notification_setting_selected_time, amPmPickerState.selectedItem, hourPickerState.selectedItem, minutePickerState.selectedItem)
 
     Surface(
         modifier = Modifier
@@ -134,7 +134,14 @@ fun NotificationSettingTimePicker(
                 }
             }
             ClodyButton(
-                onClick = { onTimeSelected(selectedTime) },
+                onClick = {
+                    val selectedTime = notificationSettingViewModel.convertTo24HourFormat(
+                        amPmPickerState.selectedItem,
+                        hourPickerState.selectedItem,
+                        minutePickerState.selectedItem
+                    )
+                    onTimeSelected(selectedTime)
+                },
                 text = stringResource(R.string.notification_setting_timepicker_confirm),
                 enabled = true,
                 modifier = Modifier
