@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.setting.component
+package com.sopt.clody.presentation.ui.setting.accountmanagement.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,7 +30,7 @@ import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
 import com.sopt.clody.presentation.ui.component.bottomsheet.ClodyBottomSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
-import com.sopt.clody.presentation.ui.setting.screen.AccountManagementViewModel
+import com.sopt.clody.presentation.ui.setting.accountmanagement.screen.AccountManagementViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable

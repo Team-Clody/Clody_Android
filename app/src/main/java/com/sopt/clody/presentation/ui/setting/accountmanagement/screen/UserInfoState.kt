@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.setting.screen
+package com.sopt.clody.presentation.ui.setting.accountmanagement.screen
 
 import com.sopt.clody.data.remote.dto.ResponseUserInfoDto
 

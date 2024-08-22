@@ -1,10 +1,9 @@
-package com.sopt.clody.presentation.ui.setting.screen
+package com.sopt.clody.presentation.ui.setting.accountmanagement.screen
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,11 +22,11 @@ import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
-import com.sopt.clody.presentation.ui.setting.component.AccountManagementLogoutOption
-import com.sopt.clody.presentation.ui.setting.component.AccountManagementNicknameOption
-import com.sopt.clody.presentation.ui.setting.component.AccountManagementRevokeOption
-import com.sopt.clody.presentation.ui.setting.component.LogoutDialog
-import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomSheet
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.LogoutDialog
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.NicknameChangeBottomSheet
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.AccountManagementLogoutOption
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.AccountManagementNicknameOption
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.AccountManagementRevokeOption
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
