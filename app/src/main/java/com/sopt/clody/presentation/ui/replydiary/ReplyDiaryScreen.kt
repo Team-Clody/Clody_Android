@@ -104,19 +104,6 @@ fun ReplyDiaryScreen(
         }
     }
 
-    if (showDialog) {
-        val nickname = replyDiaryState.nickname
-        CloverDialog(
-            onDismiss = { showDialog = false },
-            titleMassage = "${nickname}님을 위한 행운 도착",
-            descriptionMassage = "1개의 네잎클로버 획득",
-            confirmOption = "확인",
-            confirmAction = {
-                showDialog = false
-            },
-            confirmButtonColor = ClodyTheme.colors.mainYellow
-        )
-    } else {
         Scaffold(
             topBar = {
                 val month = replyDiaryState.month
@@ -206,5 +193,15 @@ fun ReplyDiaryScreen(
                 }
             }
         )
+
+        if (showDialog) {
+            CloverDialog(
+                onDismiss = { showDialog = false },
+                titleMassage = "${replyDiaryState.nickname}님을 위한 행운 도착",
+                descriptionMassage = "1개의 네잎클로버 획득",
+                confirmOption = "확인",
+                confirmAction = { showDialog = false },
+                confirmButtonColor = ClodyTheme.colors.mainYellow
+            )
+        }
     }
-}
