@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,6 +31,8 @@ import com.sopt.clody.presentation.ui.auth.component.button.NextButton
 import com.sopt.clody.presentation.ui.auth.component.checkbox.CustomCheckbox
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
+import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
+import com.sopt.clody.presentation.ui.setting.screen.onClickSettingOption
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 
@@ -69,6 +72,7 @@ fun TermsOfServiceScreen(
     var privacyChecked by remember { mutableStateOf(false) }
 
     val isAgreeButtonEnabled = serviceChecked && privacyChecked
+    val context = LocalContext.current
 
     ConstraintLayout(
         modifier = Modifier
@@ -165,7 +169,7 @@ fun TermsOfServiceScreen(
                 color = ClodyTheme.colors.gray01
             )
             NextButton(
-                onClick = { /*TODO : 이용약관으로 이동 */ },
+                onClick = { onClickSettingOption(context, SettingOptionUrls.TERMS_OF_SERVICE_URL) },
                 imageResource = R.drawable.ic_terms_next,
                 contentDescription = null
             )
@@ -200,7 +204,7 @@ fun TermsOfServiceScreen(
                 color = ClodyTheme.colors.gray01
             )
             NextButton(
-                onClick = { /*TODO : 개인정보 처리방침으로 이동 */ },
+                onClick = { onClickSettingOption(context, SettingOptionUrls.PRIVACY_POLICY_URL) },
                 imageResource = R.drawable.ic_terms_next,
                 contentDescription = null
             )
