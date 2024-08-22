@@ -135,12 +135,11 @@ fun WriteDiaryScreen(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                 }
-                .padding(top = 26.dp, start = 12.dp)
+                .padding(top = 26.dp, start = 4.dp),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_nickname_back),
-                contentDescription = "back",
-                modifier = Modifier.size(33.dp)
+                contentDescription = "back"
             )
         }
 
@@ -221,7 +220,7 @@ fun WriteDiaryScreen(
         Box(
             modifier = Modifier
                 .constrainAs(addButton) {
-                    bottom.linkTo(completeButton.top, margin = 24.dp)
+                    bottom.linkTo(completeButton.top, margin = 12.dp)
                     end.linkTo(completeButton.end)
                 }
                 .offset(x = (-24).dp)

@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -36,6 +37,7 @@ fun TooltipIcon(
 private fun Tooltip(
     modifier: Modifier,
     tooltip: String,
+    iconSize: Dp = 28.dp
 ) {
     var isShowTooltip by remember { mutableStateOf(false) }
 
@@ -43,6 +45,7 @@ private fun Tooltip(
         requesterView = { innerModifier ->
             Icon(
                 modifier = innerModifier
+                    .size(iconSize)
                     .clickable(
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() }
@@ -58,7 +61,7 @@ private fun Tooltip(
             Box(
                 modifier = Modifier
                     .padding(start = 8.dp)
-                    .padding(vertical = 4.dp)
+                    .padding(vertical = 2.dp)
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,

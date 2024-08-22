@@ -78,7 +78,7 @@ fun WriteDiaryTextField(
                 )
                 .heightIn(min = 50.dp)  // 최소 높이를 50dp로 설정
                 .fillMaxWidth()  // 너비를 부모의 너비로 채움
-                .padding(vertical = 15.dp, horizontal = 8.dp)
+                .padding(vertical = 12.dp, horizontal = 8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
