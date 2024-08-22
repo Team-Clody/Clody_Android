@@ -31,7 +31,7 @@ fun NextButton(
             .clickable(
                 interactionSource = interactionSource,
                 indication = rememberRipple(bounded = false, radius = 15.dp),
-                onClick = { }
+                onClick =  onClick
             ),
         contentAlignment = Alignment.Center
     ) {
