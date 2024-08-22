@@ -47,7 +47,7 @@ fun CloverDialog(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black.copy(alpha = 0.5f))
+                .background(Color.Black.copy(alpha = 0.2f))
                 .wrapContentSize(Alignment.Center)
                 .padding(horizontal = 50.dp)
         ) {
