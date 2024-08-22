@@ -22,11 +22,11 @@ import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
-import com.sopt.clody.presentation.ui.setting.accountmanagement.component.LogoutDialog
-import com.sopt.clody.presentation.ui.setting.accountmanagement.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.accountmanagement.component.AccountManagementLogoutOption
 import com.sopt.clody.presentation.ui.setting.accountmanagement.component.AccountManagementNicknameOption
 import com.sopt.clody.presentation.ui.setting.accountmanagement.component.AccountManagementRevokeOption
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.LogoutDialog
+import com.sopt.clody.presentation.ui.setting.accountmanagement.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
@@ -140,7 +140,7 @@ fun AccountManagementScreen(
         )
     }
 
-    if(userNicknameState is UserNicknameState.Success) {
+    if (userNicknameState is UserNicknameState.Success) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
