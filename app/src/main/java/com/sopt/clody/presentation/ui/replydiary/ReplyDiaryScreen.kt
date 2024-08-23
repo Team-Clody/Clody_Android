@@ -59,7 +59,7 @@ fun ReplyDiaryRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome()
+            navigator.navigateHome(year, month)
         } else {
             backPressedTime = currentTime
         }
@@ -79,7 +79,7 @@ fun ReplyDiaryRoute(
 
         is ReplyDiaryState.Success -> {
             ReplyDiaryScreen(
-                onClickBack = { navigator.navigateHome() },
+                onClickBack = { navigator.navigateHome(year, month) },
                 replyStatus = replyStatus,
                 replyDiaryState = replyDiaryState as ReplyDiaryState.Success
             )
@@ -104,107 +104,104 @@ fun ReplyDiaryScreen(
         }
     }
 
-    if (showDialog) {
-        val nickname = replyDiaryState.nickname
-        CloverDialog(
-            onDismiss = { showDialog = false },
-            titleMassage = "${nickname}님을 위한 행운 도착",
-            descriptionMassage = "1개의 네잎클로버 획득",
-            confirmOption = "확인",
-            confirmAction = {
-                showDialog = false
-            },
-            confirmButtonColor = ClodyTheme.colors.mainYellow
-        )
-    } else {
-        Scaffold(
-            topBar = {
-                val month = replyDiaryState.month
-                val date = replyDiaryState.date
-                CenterAlignedTopAppBar(
-                    title = {
-                        Text(
-                            text = "${month}월 ${date}일",
-                            style = ClodyTheme.typography.head4,
-                            color = ClodyTheme.colors.gray01,
+    Scaffold(
+        topBar = {
+            val month = replyDiaryState.month
+            val date = replyDiaryState.date
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = "${month}월 ${date}일",
+                        style = ClodyTheme.typography.head4,
+                        color = ClodyTheme.colors.gray01,
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = onClickBack) {
+                        Image(
+                            painterResource(id = R.drawable.ic_nickname_back),
+                            contentDescription = "back"
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = onClickBack) {
-                            Image(
-                                painterResource(id = R.drawable.ic_nickname_back),
-                                contentDescription = "back"
-                            )
-                        }
-                    },
-                    colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
-                )
-            },
-            content = { innerPadding ->
-                Column(
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(ClodyTheme.colors.white),
+            )
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(ClodyTheme.colors.white)
+                    .padding(innerPadding)
+                    .padding(horizontal = 24.dp)
+            ) {
+                Spacer(modifier = Modifier.height(13.dp))
+
+                Box(
+                    contentAlignment = Alignment.TopCenter,
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(ClodyTheme.colors.white)
-                        .padding(innerPadding)
-                        .padding(horizontal = 24.dp)
+                        .fillMaxWidth()
+                        .padding(bottom = 28.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(ClodyTheme.colors.gray08)
+                        .weight(1f)
                 ) {
-                    Spacer(modifier = Modifier.height(13.dp))
-
-                    Box(
-                        contentAlignment = Alignment.TopCenter,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 28.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(ClodyTheme.colors.gray08)
-                            .weight(1f)
+                    val content = replyDiaryState.content
+                    val nickname = replyDiaryState.nickname
+                    LazyColumn(
+                        modifier = Modifier.fillMaxSize()
                     ) {
-                        val content = replyDiaryState.content
-                        val nickname = replyDiaryState.nickname
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            item {
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Image(
-                                        painter = painterResource(id = R.drawable.img_reply_logo),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .padding(top = 20.dp)
-                                    )
-                                }
+                        item {
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.img_reply_logo),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .padding(top = 20.dp)
+                                )
+                            }
 
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = "${nickname}님을 위한 행운의 답장",
-                                        style = ClodyTheme.typography.body2Medium,
-                                        color = ClodyTheme.colors.gray01,
-                                        modifier = Modifier.padding(top = 8.dp)
-                                    )
-                                }
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = "${nickname}님을 위한 행운의 답장",
+                                    style = ClodyTheme.typography.body2Medium,
+                                    color = ClodyTheme.colors.gray01,
+                                    modifier = Modifier.padding(top = 8.dp)
+                                )
+                            }
 
-                                Box(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Text(
-                                        text = content,
-                                        modifier = Modifier.padding(24.dp),
-                                        style = ClodyTheme.typography.letterMedium,
-                                        color = ClodyTheme.colors.gray02,
-                                    )
-                                }
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    text = content,
+                                    modifier = Modifier.padding(24.dp),
+                                    style = ClodyTheme.typography.letterMedium,
+                                    color = ClodyTheme.colors.gray02,
+                                )
                             }
                         }
                     }
                 }
             }
+        }
+    )
+
+    if (showDialog) {
+        CloverDialog(
+            onDismiss = { showDialog = false },
+            titleMassage = "${replyDiaryState.nickname}님을 위한 행운 도착",
+            descriptionMassage = "1개의 네잎클로버 획득",
+            confirmOption = "확인",
+            confirmAction = { showDialog = false },
+            confirmButtonColor = ClodyTheme.colors.mainYellow
         )
     }
 }
