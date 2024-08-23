@@ -14,7 +14,6 @@ fun DiaryStateButton(
     diaryCount: Int,
     replyStatus: String,
     isToday: Boolean,
-    isDeleted: Boolean,
     year: Int,
     month: Int,
     day: Int,
@@ -25,16 +24,6 @@ fun DiaryStateButton(
     val isSelectedDateToday = year == today.year && month == today.monthValue && day == today.dayOfMonth
 
     when {
-        isDeleted -> {
-            ClodyButton(
-                onClick = { onClickWriteDiary(year, month, day) },
-                text = "일기쓰기",
-                enabled = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
         isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
@@ -45,21 +34,23 @@ fun DiaryStateButton(
                     .padding(horizontal = 16.dp)
             )
         }
-        diaryCount != 0 && (replyStatus == "UNREADY" || replyStatus == "READY_NOT_READ" || replyStatus == "READY_READ") -> {
-            ClodyReplyButton(
-                onClick = onClickReplyDiary,
-                text = "답장확인",
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
+
         !isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
                 enabled = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+
+        diaryCount != 0 && (replyStatus == "UNREADY" || replyStatus == "READY_NOT_READ" || replyStatus == "READY_READ") -> {
+            ClodyReplyButton(
+                onClick = onClickReplyDiary,
+                text = "답장확인",
+                enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
