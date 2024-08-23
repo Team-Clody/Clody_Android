@@ -86,6 +86,7 @@ object NetworkModule {
     ): Retrofit = provideRetrofit(okHttpClient, baseUrl)
 
     @Provides
+    @Singleton
     fun provideNetworkUtil(@ApplicationContext context: Context): NetworkUtil {
         val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         return NetworkUtil(connectivityManager)
