@@ -70,6 +70,7 @@ fun HomeScreen(
     val diaryCount by homeViewModel.diaryCount.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
     val isToday by homeViewModel.isToday.collectAsStateWithLifecycle()
+    val isDeleted by homeViewModel.isDeleted.collectAsStateWithLifecycle()
     val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
     val deleteDiaryState by homeViewModel.deleteDiaryState.collectAsStateWithLifecycle()
     val showYearMonthPickerState by homeViewModel.showYearMonthPickerState.collectAsStateWithLifecycle()
@@ -156,6 +157,7 @@ fun HomeScreen(
                     diaryCount = diaryCount,
                     replyStatus = replyStatus,
                     isToday = isToday,
+                    isDeleted = isDeleted,
                     year = selectedDate.year,
                     month = selectedDate.monthValue,
                     day = selectedDate.dayOfMonth,
