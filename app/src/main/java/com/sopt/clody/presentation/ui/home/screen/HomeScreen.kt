@@ -99,6 +99,7 @@ fun HomeScreen(
                 selectedMonth = selectedDiaryDate.month,
             )
         },
+        containerColor = ClodyTheme.colors.white,
         content = { innerPadding ->
             when (val state = calendarState) {
                 is CalendarState.Idle -> {
