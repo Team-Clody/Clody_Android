@@ -61,7 +61,7 @@ fun CloverDialog(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp),
+                        .padding(16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -69,7 +69,7 @@ fun CloverDialog(
                         painter = painterResource(id = R.drawable.ic_dialog_clover),
                         contentDescription = null,
                         modifier = Modifier
-                            .padding(bottom = 16.dp)
+                            .padding(bottom = 20.dp)
                     )
 
                     Text(
