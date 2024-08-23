@@ -26,10 +26,18 @@ class ReplyLoadingViewModel @Inject constructor(
     private var retryCount = 0
     private val maxRetryCount = 3
 
+    private var lastYear: Int = 0
+    private var lastMonth: Int = 0
+    private var lastDate: Int = 0
+
     fun getDiaryTime(year: Int, month: Int, date: Int) {
         if (retryCount >= maxRetryCount) {
             return
         }
+
+        lastYear = year
+        lastMonth = month
+        lastDate = date
 
         _replyLoadingState.value = ReplyLoadingState.Loading
 
@@ -70,11 +78,7 @@ class ReplyLoadingViewModel @Inject constructor(
     fun retryLastRequest() {
         if (retryCount < maxRetryCount) {
             _replyLoadingState.value = ReplyLoadingState.Loading
-            getDiaryTime(
-                LocalDateTime.now().year,
-                LocalDateTime.now().monthValue,
-                LocalDateTime.now().dayOfMonth
-            )
+            getDiaryTime(lastYear, lastMonth, lastDate)
         }
     }
 }
