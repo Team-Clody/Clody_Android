@@ -1,4 +1,4 @@
-package com.sopt.clody.domain.model
+package com.sopt.clody.presentation.ui.home.model
 
 import java.time.YearMonth
 
