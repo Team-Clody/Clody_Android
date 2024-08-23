@@ -1,6 +1,5 @@
 package com.sopt.clody.presentation.ui.home.screen
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
@@ -50,6 +49,9 @@ class HomeViewModel @Inject constructor(
 
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
+
+    private val _isDeleted = MutableStateFlow(false)
+    val isDeleted: StateFlow<Boolean> get() = _isDeleted
 
     private val _showYearMonthPickerState = MutableStateFlow(false)
     val showYearMonthPickerState: StateFlow<Boolean> get() = _showYearMonthPickerState
@@ -134,6 +136,7 @@ class HomeViewModel @Inject constructor(
         val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
         _diaryCount.value = selectedDiary?.diaryCount ?: 0
         _replyStatus.value = selectedDiary?.replyStatus ?: "UNREADY"
+        _isDeleted.value = selectedDiary?.isDeleted ?: false
     }
 
     fun setShowYearMonthPickerState(state: Boolean) {
