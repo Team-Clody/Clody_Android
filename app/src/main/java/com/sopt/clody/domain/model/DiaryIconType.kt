@@ -12,7 +12,7 @@ enum class DiaryCloverType(val iconRes: Int) {
     TOP_CLOVER(R.drawable.ic_home_top_clover);
 
     companion object {
-        fun getDiaryCloverType(diaryData: MonthlyCalendarResponseDto.Diary, isToday: Boolean): DiaryCloverType {
+        fun getCalendarCloverType(diaryData: MonthlyCalendarResponseDto.Diary, isToday: Boolean): DiaryCloverType {
             return when {
                 isToday && diaryData.diaryCount == 0 -> TODAY_UNWRITTEN
                 isToday && diaryData.diaryCount > 0 &&

@@ -36,7 +36,7 @@ fun DayItem(
     val today = LocalDate.now()
     val isToday = date == today
 
-    val iconRes = DiaryCloverType.getDiaryCloverType(diaryData, isToday).iconRes
+    val iconRes = DiaryCloverType.getCalendarCloverType(diaryData, isToday).iconRes
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
