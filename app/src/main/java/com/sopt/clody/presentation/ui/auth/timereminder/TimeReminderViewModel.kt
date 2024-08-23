@@ -22,7 +22,8 @@ class TimeReminderViewModel @Inject constructor(
     private val _timeReminderState = MutableStateFlow<TimeReminderState>(TimeReminderState.Idle)
     val timeReminderState: StateFlow<TimeReminderState> = _timeReminderState
 
-    var selectedTime by mutableStateOf("")
+    var selectedTime by mutableStateOf("21:30")
+        private set
 
     fun sendNotification(context: Context, isPermissionGranted: Boolean) {
         viewModelScope.launch {

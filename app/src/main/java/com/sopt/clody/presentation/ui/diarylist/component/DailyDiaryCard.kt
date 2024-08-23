@@ -40,7 +40,7 @@ fun DailyDiaryCard(
     day: Int,
     dayOfWeek: String,
     showDiaryDeleteBottomSheet: () -> Unit,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
 ) {
     val iconRes = when {
         dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
@@ -119,13 +119,13 @@ fun ReplyDiaryButton(
     year: Int,
     month: Int,
     day: Int,
-    onClickReplyDiary: (Int, Int, Int) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.TopEnd
     ) {
         Button(
-            onClick = { onClickReplyDiary(year,month,day) },
+            onClick = { onClickReplyDiary(year,month,day,dailyDiary.replyStatus) },
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),

@@ -1,5 +1,8 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -10,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -35,7 +39,8 @@ fun SettingRoute(
         versionInfo = versionInfo ?: stringResource(R.string.setting_version_info_failure),
         onClickBack = { navigator.navigateBack() },
         onClickAccountManagement = { navigator.navigateAccountManagement() },
-        onClickNotificationSetting = { navigator.navigateNotificationSetting() }
+        onClickNotificationSetting = { navigator.navigateNotificationSetting() },
+        onClickInquiriesSuggestions = { navigator.navigateWebView(SettingOptionUrls.INQUIRIES_SUGGESTIONS_URL) },
     )
 }
 
@@ -46,8 +51,10 @@ fun SettingScreen(
     onClickBack: () -> Unit,
     onClickAccountManagement: () -> Unit,
     onClickNotificationSetting: () -> Unit,
+    onClickInquiriesSuggestions: () -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val context = LocalContext.current
 
     Scaffold(
         modifier = Modifier
@@ -64,14 +71,19 @@ fun SettingScreen(
             SettingSeparateLine()
 
             SettingOption(option = stringResource(R.string.setting_option_notification_setting), onClickNotificationSetting)
-            SettingOption(option = stringResource(R.string.setting_option_announcement), { /* TODO : 공지사항 이동 */ })
-            SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), { /* TODO : 문의/제안하기 이동 */ })
+            SettingOption(option = stringResource(R.string.setting_option_announcement)) { onClickSettingOption(context, SettingOptionUrls.ANNOUNCEMENT_URL) }
+            SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), onClickInquiriesSuggestions)
 
             SettingSeparateLine()
 
-            SettingOption(option = stringResource(R.string.setting_option_terms_of_service), { /* TODO : 서비스 이용 약관 이동 */ })
-            SettingOption(option = stringResource(R.string.setting_option_privacy_policy), { /* TODO : 개인정보 처리방침 이동 */ })
+            SettingOption(option = stringResource(R.string.setting_option_terms_of_service)) { onClickSettingOption(context, SettingOptionUrls.TERMS_OF_SERVICE_URL) }
+            SettingOption(option = stringResource(R.string.setting_option_privacy_policy)) { onClickSettingOption(context, SettingOptionUrls.PRIVACY_POLICY_URL) }
             SettingVersionInfo(versionInfo = versionInfo)
         }
     }
+}
+
+fun onClickSettingOption(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    context.startActivity(intent)
 }

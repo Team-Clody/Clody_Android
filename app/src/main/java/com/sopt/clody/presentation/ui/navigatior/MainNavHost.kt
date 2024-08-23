@@ -26,6 +26,7 @@ import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
+import com.sopt.clody.presentation.ui.setting.navigation.webViewNavGraph
 import com.sopt.clody.presentation.ui.splash.SplashScreen
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
 import com.sopt.clody.presentation.ui.writediary.navigation.writeDiaryNavGraph
@@ -63,6 +64,7 @@ fun MainNavHost(
             settingNavGraph(settingNavigator)
             accountManagementNavGraph(settingNavigator)
             notificationSettingNavGraph(settingNavigator)
+            webViewNavGraph(settingNavigator)
             replyLoadingNavGraph(replyLoadingNavigator, replyDiaryNavigator)
         }
     }

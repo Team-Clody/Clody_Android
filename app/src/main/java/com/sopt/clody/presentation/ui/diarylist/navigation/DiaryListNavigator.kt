@@ -9,8 +9,8 @@ class DiaryListNavigator(
         navController.navigate("home/$selectedYear/$selectedMonth")
     }
 
-    fun navigateReplyLoading(year: Int, month: Int, day: Int) {
-        navController.navigate("reply_loading/$year/$month/$day?from=diary_list")
+    fun navigateReplyLoading(year: Int, month: Int, day: Int, replyStatus: String) {
+        navController.navigate("reply_loading/$year/$month/$day?from=diary_list&replyStatus=$replyStatus")
     }
 
     fun navigateBack() {
