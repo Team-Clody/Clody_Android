@@ -6,8 +6,9 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -178,24 +179,24 @@ fun TimeReminderScreen(
                 }
             )
 
-            TextButton(
-                onClick = { onStartClick() },
+            Text(
+                text = stringResource(id = R.string.time_reminder_next_setting_button),
                 modifier = Modifier
                     .constrainAs(nextSettingButton) {
-                        top.linkTo(completeButton.bottom)
+                        top.linkTo(completeButton.bottom, margin = 18.dp)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    },
-                contentPadding = PaddingValues(0.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.time_reminder_next_setting_button),
-                    modifier = Modifier.wrapContentHeight(),
-                    style = ClodyTheme.typography.detail1Medium,
-                    color = ClodyTheme.colors.gray05,
-                    textDecoration = TextDecoration.Underline
-                )
-            }
+                    }
+                    .wrapContentHeight()
+                    .clickable(
+                        onClick = onStartClick,
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ),
+                style = ClodyTheme.typography.detail1Medium,
+                color = ClodyTheme.colors.gray05,
+                textDecoration = TextDecoration.Underline
+            )
 
             if (timeReminderState is TimeReminderState.Loading) {
                 CircularProgressIndicator(
