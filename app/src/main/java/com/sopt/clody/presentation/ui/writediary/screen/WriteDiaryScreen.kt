@@ -88,7 +88,7 @@ fun WriteDiaryRoute(
         entryToDelete = entryToDelete,
         allFieldsEmpty = entries.all { it.isEmpty() },
         showDialog = showDialog,
-        onClickBack = { navigator.navigateBack() },
+        onClickBack = { navigator.navigateHome(year, month) },
         onCompleteClick = { viewModel.writeDiary(year, month, day, entries) },
         year = year,
         month = month,
@@ -241,10 +241,9 @@ fun WriteDiaryScreen(
                 enabled = entries.size < 5,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
+                Image(
+                    painter = painterResource(id = R.drawable.ic_writediary_add),
                     contentDescription = "Add",
-                    tint = ClodyTheme.colors.white
                 )
             }
         }
