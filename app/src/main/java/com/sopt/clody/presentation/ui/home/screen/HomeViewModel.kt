@@ -8,10 +8,13 @@ import com.sopt.clody.data.repository.DailyDiariesRepository
 import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
 import com.sopt.clody.presentation.ui.home.model.DiaryDateData
+import com.sopt.clody.presentation.utils.network.ErrorMessages
+import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -20,7 +23,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val calendarRepository: MonthlyCalendarRepository,
     private val diariesRepository: DailyDiariesRepository,
-    private val dailyDiaryListRepository: DailyDiaryListRepository
+    private val dailyDiaryListRepository: DailyDiaryListRepository,
+    private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -62,6 +66,9 @@ class HomeViewModel @Inject constructor(
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
 
+    private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
+    val errorState: StateFlow<Pair<Boolean, String>> = _errorState
+
     private var isInitialized = false
 
     init {
@@ -76,25 +83,59 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun setErrorState(isError: Boolean, message: String = ErrorMessages.FAILURE_TEMPORARY_MESSAGE) {
+        _errorState.value = isError to message
+    }
+
     fun loadCalendarData(year: Int, month: Int) {
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+                return@launch
+            }
+
             _calendarState.value = CalendarState.Loading
             val result = calendarRepository.getMonthlyCalendarData(year, month)
             _calendarState.value = result.fold(
-                onSuccess = { CalendarState.Success(it) },
-                onFailure = { CalendarState.Error(it.message ?: "Unknown error") }
-            )
+                onSuccess = {
+                    setErrorState(false)
+                    CalendarState.Success(it)
+                },
+                onFailure = { exception ->
+                    val message = if (exception is HttpException && exception.code() == 500) {
+                        ErrorMessages.FAILURE_TEMPORARY_MESSAGE
+                    } else {
+                        exception.message ?: ErrorMessages.UNKNOWN_ERROR
+                    }
+                    setErrorState(true, message)
+                }
+            ) as CalendarState<MonthlyCalendarResponseDto>
         }
     }
 
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+                return@launch
+            }
+
             _dailyDiariesState.value = DailyDiariesState.Loading
             val result = diariesRepository.getDailyDiariesData(year, month, date)
             _dailyDiariesState.value = result.fold(
-                onSuccess = { DailyDiariesState.Success(it) },
-                onFailure = { DailyDiariesState.Error(it.message ?: "Unknown error") }
-            )
+                onSuccess = {
+                    setErrorState(false)
+                    DailyDiariesState.Success(it)
+                },
+                onFailure = { exception ->
+                    val message = if (exception is HttpException && exception.code() == 500) {
+                        ErrorMessages.FAILURE_TEMPORARY_MESSAGE
+                    } else {
+                        exception.message ?: ErrorMessages.UNKNOWN_ERROR
+                    }
+                    setErrorState(true, message)
+                }
+            ) as DailyDiariesState<DailyDiariesResponseDto>
         }
     }
 
