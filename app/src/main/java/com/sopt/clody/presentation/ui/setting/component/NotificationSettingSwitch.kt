@@ -1,6 +1,5 @@
-package com.sopt.clody.presentation.ui.setting.notificationsetting.component
+package com.sopt.clody.presentation.ui.setting.component
 
-import android.content.Context
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,16 +12,11 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
-import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun DiaryAlarmSwitch(
-    notificationSettingViewModel: NotificationSettingViewModel,
-    context: Context,
+fun NotificationSettingSwitch(
     title: String,
-    notificationInfo: ResponseNotificationInfoDto,
     checkedState: MutableState<Boolean>
 ) {
     Row(
@@ -39,10 +33,7 @@ fun DiaryAlarmSwitch(
         Spacer(modifier = Modifier.weight(1f))
         Switch(
             checked = checkedState.value,
-            onCheckedChange = {
-                checkedState.value = it
-                notificationSettingViewModel.changeDiaryAlarm(context, notificationInfo, checkedState.value)
-            },
+            onCheckedChange = { checkedState.value = it },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = ClodyTheme.colors.white,
                 checkedTrackColor = ClodyTheme.colors.darkYellow.copy(alpha = 0.5f),
