@@ -1,16 +1,11 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
 import android.content.Context
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.jakewharton.processphoenix.ProcessPhoenix
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
 import com.sopt.clody.data.repository.AccountManagementRepository
-import com.sopt.clody.presentation.ui.main.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,6 +31,9 @@ class AccountManagementViewModel @Inject constructor(
 
     private val _revokeAccountState = MutableStateFlow<RevokeAccountState>(RevokeAccountState.Idle)
     val revokeAccountState: StateFlow<RevokeAccountState> = _revokeAccountState
+
+    private val _logOutState = MutableStateFlow<LogOutState>(LogOutState.Idle)
+    val logOutState: StateFlow<LogOutState> = _logOutState
 
     fun fetchUserInfo() {
         _userInfoState.value = UserInfoState.Loading
@@ -70,9 +68,12 @@ class AccountManagementViewModel @Inject constructor(
 
     fun logOutAccount() {
         viewModelScope.launch {
-            tokenDataStore.clearInfo()
-            Handler(Looper.getMainLooper()).post {
-                ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
+            runCatching {
+                tokenDataStore.clearInfo()
+            }.onSuccess {
+                _logOutState.value = LogOutState.Success
+            }.onFailure {
+                _logOutState.value = LogOutState.Failure("로그아웃에 실패했습니다")
             }
         }
     }
@@ -80,13 +81,15 @@ class AccountManagementViewModel @Inject constructor(
     fun revokeAccount() {
         viewModelScope.launch {
             val result = accountManagementRepository.revokeAccount()
-            _revokeAccountState.value = result.fold(onSuccess = {
-                tokenDataStore.clearInfo()
-                Handler(Looper.getMainLooper()).post {
-                    ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
+            result.fold(
+                onSuccess = {
+                    tokenDataStore.clearInfo()
+                    _revokeAccountState.value = RevokeAccountState.Success(it)
+                },
+                onFailure = {
+                    _revokeAccountState.value = RevokeAccountState.Failure(it.localizedMessage ?: "에러 발생")
                 }
-                RevokeAccountState.Success(it)
-            }, onFailure = { RevokeAccountState.Failure(it.message ?: "Unknown error") })
+            )
         }
     }
 
