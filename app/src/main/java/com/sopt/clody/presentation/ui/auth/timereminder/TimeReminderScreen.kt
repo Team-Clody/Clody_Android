@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -23,7 +22,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -39,11 +37,11 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.container.PickerBox
 import com.sopt.clody.presentation.ui.auth.component.timepicker.BottomSheetTimePicker
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
+import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
-import com.sopt.clody.presentation.utils.extension.showLongToast
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.launch
 
 @Composable
 fun TimeReminderRoute(
@@ -52,7 +50,8 @@ fun TimeReminderRoute(
 ) {
     val timeReminderState by viewModel.timeReminderState.collectAsState()
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
 
     val isNotificationPermissionGranted = remember { mutableStateOf(false) }
 
@@ -77,13 +76,26 @@ fun TimeReminderRoute(
 
     // 알림 권한 요청 결과에 따른 처리
     LaunchedEffect(timeReminderState) {
-        if (timeReminderState is TimeReminderState.Success) {
-            navigator.navigateGuide()
-        } else if (timeReminderState is TimeReminderState.Failure) {
-            coroutineScope.launch {
-                showLongToast(context, (timeReminderState as TimeReminderState.Failure).error)
+        when (val result = timeReminderState) {
+            is TimeReminderState.Success -> {
+                navigator.navigateGuide()
             }
+            is TimeReminderState.Failure -> {
+                showDialog = true
+                dialogMessage = result.error
+            }
+            else -> {}
         }
+    }
+
+    if (showDialog) {
+        FailureDialog(
+            message = dialogMessage,
+            onDismiss = {
+                showDialog = false
+                viewModel.resetTimeReminderState()
+            }
+        )
     }
 
     TimeReminderScreen(
@@ -198,13 +210,7 @@ fun TimeReminderScreen(
             }
 
             if (timeReminderState is TimeReminderState.Loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.constrainAs(loading) {
-                        top.linkTo(completeButton.bottom, margin = 16.dp)
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                    }
-                )
+                LoadingScreen()
             }
         }
         if (showBottomSheet) {
