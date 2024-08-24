@@ -25,7 +25,18 @@ fun DiaryStateButton(
     val isSelectedDateToday = year == today.year && month == today.monthValue && day == today.dayOfMonth
 
     when {
-        isDeleted && diaryCount > 0 -> {
+        isToday && diaryCount == 0 -> {
+            ClodyButton(
+                onClick = { onClickWriteDiary(year, month, day) },
+                text = "일기쓰기",
+                enabled = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
+
+        isDeleted && diaryCount != 0 -> {
             ClodyReplyButton(
                 onClick = onClickReplyDiary,
                 text = "답장확인",
@@ -36,7 +47,7 @@ fun DiaryStateButton(
             )
         }
 
-        !isDeleted && diaryCount != 0 && (replyStatus == "UNREADY" || replyStatus == "READY_NOT_READ" || replyStatus == "READY_READ") -> {
+        diaryCount != 0 && (replyStatus == "UNREADY" || replyStatus == "READY_NOT_READ" || replyStatus == "READY_READ") -> {
             ClodyReplyButton(
                 onClick = onClickReplyDiary,
                 text = "답장확인",
@@ -47,7 +58,7 @@ fun DiaryStateButton(
             )
         }
 
-        !isDeleted && isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
+        isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
