@@ -10,5 +10,4 @@ sealed class ReplyDiaryState {
         val date: Int
     ) : ReplyDiaryState()
     data class Failure(val error: String) : ReplyDiaryState()
-    object NotFound : ReplyDiaryState()
 }
