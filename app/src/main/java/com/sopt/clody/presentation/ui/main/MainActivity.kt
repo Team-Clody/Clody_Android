@@ -29,6 +29,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             CLODYTheme {
                 val navController = rememberNavController()
+
+                if (intent.getBooleanExtra("NAVIGATE_TO_LOGIN", false)) {
+                    navController.navigate("register_graph") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
+
                 val authNavigator = remember(navController) { AuthNavigator(navController) }
                 val homeNavigator = remember(navController) { HomeNavigator(navController) }
                 val diaryListNavigator = remember(navController) { DiaryListNavigator(navController) }
@@ -36,7 +43,6 @@ class MainActivity : ComponentActivity() {
                 val settingNavigator = remember(navController) { SettingNavigator(navController) }
                 val replyLoadingNavigator = remember(navController) { ReplyLoadingNavigator(navController) }
                 val replyDiaryNavigator = remember(navController) { ReplyDiaryNavigator(navController) }
-
 
                 Scaffold(
                     containerColor = MaterialTheme.colorScheme.background,
