@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.home.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -30,7 +31,9 @@ fun HomeTopAppBar(
 
     TopAppBar(
         title = {
-            Box(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .background(ClodyTheme.colors.white)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,

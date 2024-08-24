@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sopt.clody.domain.model.DiaryDateData
+import com.sopt.clody.presentation.ui.home.model.DiaryDateData
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
@@ -99,6 +99,7 @@ fun HomeScreen(
                 selectedMonth = selectedDiaryDate.month,
             )
         },
+        containerColor = ClodyTheme.colors.white,
         content = { innerPadding ->
             when (val state = calendarState) {
                 is CalendarState.Idle -> {

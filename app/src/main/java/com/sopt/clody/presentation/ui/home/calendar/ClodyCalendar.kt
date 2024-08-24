@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.generateCalendarDates
+import com.sopt.clody.presentation.ui.home.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
