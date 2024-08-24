@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.setting.accountmanagement.component
+package com.sopt.clody.presentation.ui.setting.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

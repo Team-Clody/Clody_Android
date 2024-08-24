@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.setting.accountmanagement.component
+package com.sopt.clody.presentation.ui.setting.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -92,13 +92,11 @@ fun NickNameChangeTextField(
                         modifier = Modifier
                             .height(2.dp)
                             .fillMaxWidth()
-                            .background(
-                                when {
-                                    isValid.not() -> ClodyTheme.colors.red
-                                    isFocused -> ClodyTheme.colors.mainYellow
-                                    else -> ClodyTheme.colors.gray08
-                                }
-                            )
+                            .background(when {
+                                isValid.not() -> ClodyTheme.colors.red
+                                isFocused -> ClodyTheme.colors.mainYellow
+                                else -> ClodyTheme.colors.gray08
+                            })
                     )
                 }
             }

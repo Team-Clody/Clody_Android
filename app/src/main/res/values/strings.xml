@@ -113,6 +113,5 @@
     <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
     <string name="failure_screen_refresh_btn">다시 시도</string>
     <string name="failure_dialog_confirm_btn">확인</string>
-    <string name="notification_setting_change_success_toast">알람 시간 설정을 완료했어요.</string>
 
 </resources>

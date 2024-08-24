@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.setting.accountmanagement.screen
+package com.sopt.clody.presentation.ui.setting.screen
 
 sealed class RevokeAccountState {
     data object Idle : RevokeAccountState()
