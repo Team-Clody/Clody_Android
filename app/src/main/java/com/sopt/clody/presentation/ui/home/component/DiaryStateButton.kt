@@ -25,6 +25,7 @@ fun DiaryStateButton(
     val isSelectedDateToday = year == today.year && month == today.monthValue && day == today.dayOfMonth
 
     when {
+
         isToday && diaryCount == 0 -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
