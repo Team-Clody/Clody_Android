@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -125,7 +126,7 @@ fun ReplyDiaryButton(
         contentAlignment = Alignment.TopEnd
     ) {
         Button(
-            onClick = { onClickReplyDiary(year,month,day,dailyDiary.replyStatus) },
+            onClick = { onClickReplyDiary(year, month, day, dailyDiary.replyStatus) },
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),
@@ -167,11 +168,12 @@ fun DiaryDeleteButton(
         painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
         contentDescription = "kebab menu",
         modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
             .clickable(
                 onClick = {
                     diaryListViewModel.setSelectedDiaryDate(dailyDiary.date)
                     showDiaryDeleteBottomSheet()
-                }
+                },
             )
     )
 }
