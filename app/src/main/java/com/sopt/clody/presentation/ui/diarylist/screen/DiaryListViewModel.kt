@@ -42,12 +42,12 @@ class DiaryListViewModel @Inject constructor(
 
     fun fetchMonthlyDiary(year: Int, month: Int) {
         if (retryCount >= maxRetryCount) return
+        _diaryListState.value = DiaryListState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
                 _diaryListState.value = DiaryListState.Failure(FAILURE_NETWORK_MESSAGE)
                 return@launch
             }
-            _diaryListState.value = DiaryListState.Loading
             val result = diaryListRepository.getMonthlyDiary(year, month)
             _diaryListState.value = result.fold(
                 onSuccess = {
@@ -79,6 +79,7 @@ class DiaryListViewModel @Inject constructor(
     }
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
+        _diaryDeleteState.value = DiaryDeleteState.Loading
         viewModelScope.launch {
             if(!networkUtil.isNetworkAvailable()) {
                 _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
@@ -86,7 +87,6 @@ class DiaryListViewModel @Inject constructor(
                 _showDiaryDeleteFailureDialog.value = true
                 return@launch
             }
-            _diaryDeleteState.value = DiaryDeleteState.Loading
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
             _diaryDeleteState.value = result.fold(
                 onSuccess = {
