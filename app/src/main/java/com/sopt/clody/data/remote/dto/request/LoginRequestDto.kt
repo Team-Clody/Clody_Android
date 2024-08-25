@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 // 로그인
 @Serializable
 data class LoginRequestDto(
-   @SerialName("platform") val platform: String
+   @SerialName("platform") val platform: String,
+   @SerialName("fcmToken") val fcmToken: String
 )

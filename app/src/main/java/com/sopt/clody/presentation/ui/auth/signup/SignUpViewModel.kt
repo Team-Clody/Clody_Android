@@ -75,7 +75,7 @@ class SignUpViewModel @Inject constructor(
             val tokenResult = runCatching { loginWithKakao(context) }
             tokenResult.onSuccess { token ->
                 accessToken = token.accessToken
-                fetchKakaoUserInfo()
+                fetchKakaoUserInfo(context)
             }.onFailure {
                 _signInState.value = SignInState(UiState.Failure(it.localizedMessage ?: UNKNOWN_ERROR))
             }
@@ -116,12 +116,13 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun fetchKakaoUserInfo() {
+    private fun fetchKakaoUserInfo(context: Context) {
         UserApiClient.instance.me { user, error ->
             if (error != null) {
                 _signInState.value = SignInState(UiState.Failure(error.localizedMessage))
             } else if (user != null) {
-                val requestSignInDto = LoginRequestDto(platform = KAKAO_PLATFORM)
+                val fcmToken = ClodyFirebaseMessagingService.getTokenFromPreferences(context) ?: ""
+                val requestSignInDto = LoginRequestDto(platform = KAKAO_PLATFORM, fcmToken = fcmToken)
                 validateUser("Bearer ${accessToken.orEmpty()}", requestSignInDto)
             }
         }
