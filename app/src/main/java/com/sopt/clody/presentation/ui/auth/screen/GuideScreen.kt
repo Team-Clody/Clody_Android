@@ -163,7 +163,7 @@ fun GuideScreen(
             text = if (pagerState.currentPage < pages.size - 1) "다음" else "시작하기",
             enabled = true,
             modifier = Modifier.constrainAs(nextButton) {
-                bottom.linkTo(parent.bottom, margin = 46.dp)
+                bottom.linkTo(parent.bottom, margin = 26.dp)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 width = Dimension.fillToConstraints

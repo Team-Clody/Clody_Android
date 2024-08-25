@@ -88,7 +88,7 @@ fun WriteDiaryRoute(
         entryToDelete = entryToDelete,
         allFieldsEmpty = entries.all { it.isEmpty() },
         showDialog = showDialog,
-        onClickBack = { navigator.navigateBack() },
+        onClickBack = { navigator.navigateHome(year, month) },
         onCompleteClick = { viewModel.writeDiary(year, month, day, entries) },
         year = year,
         month = month,
@@ -135,7 +135,7 @@ fun WriteDiaryScreen(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                 }
-                .padding(top = 26.dp, start = 12.dp)
+                .padding(top = 26.dp, start = 4.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_nickname_back),
@@ -147,7 +147,7 @@ fun WriteDiaryScreen(
         Row(
             modifier = Modifier
                 .constrainAs(titleRow) {
-                    top.linkTo(backButton.bottom, margin = 16.dp)
+                    top.linkTo(backButton.bottom, margin = 12.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
@@ -206,7 +206,7 @@ fun WriteDiaryScreen(
                     }
                 }
             },
-            text = stringResource(R.string.write_diary_dialog_confirm_option),
+            text = stringResource(R.string.write_diary_confirm_button),
             enabled = !allFieldsEmpty,
             modifier = Modifier
                 .constrainAs(completeButton) {
@@ -221,7 +221,7 @@ fun WriteDiaryScreen(
         Box(
             modifier = Modifier
                 .constrainAs(addButton) {
-                    bottom.linkTo(completeButton.top, margin = 24.dp)
+                    bottom.linkTo(completeButton.top, margin = 12.dp)
                     end.linkTo(completeButton.end)
                 }
                 .offset(x = (-24).dp)
@@ -241,10 +241,9 @@ fun WriteDiaryScreen(
                 enabled = entries.size < 5,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
+                Image(
+                    painter = painterResource(id = R.drawable.ic_writediary_add),
                     contentDescription = "Add",
-                    tint = ClodyTheme.colors.white
                 )
             }
         }

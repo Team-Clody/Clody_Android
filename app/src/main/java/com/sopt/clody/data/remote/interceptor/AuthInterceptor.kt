@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
-import com.jakewharton.processphoenix.ProcessPhoenix
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.repository.ReissueTokenRepository
 import com.sopt.clody.presentation.ui.main.MainActivity
@@ -66,7 +65,7 @@ class AuthInterceptor @Inject constructor(
             val newRequest = originalRequest.newBuilder().addAuthorizationHeader().build()
             chain.proceed(newRequest)
         } else {
-            clearUserInfoAndRestart()
+            clearUserInfoAndNavigateToLogin()
             throw IOException("Token expired and reissue failed")
         }
     }
@@ -95,10 +94,14 @@ class AuthInterceptor @Inject constructor(
         }
     }
 
-    private fun clearUserInfoAndRestart() {
+    private fun clearUserInfoAndNavigateToLogin() {
         tokenDataStore.clearInfo()
         Handler(Looper.getMainLooper()).post {
-            ProcessPhoenix.triggerRebirth(context, Intent(context, MainActivity::class.java))
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                putExtra("NAVIGATE_TO_LOGIN", true)
+            }
+            context.startActivity(intent)
         }
     }
 

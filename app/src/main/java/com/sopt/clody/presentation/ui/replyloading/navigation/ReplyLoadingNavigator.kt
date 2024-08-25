@@ -1,12 +1,11 @@
 package com.sopt.clody.presentation.ui.replyloading.navigation
 
 import androidx.navigation.NavHostController
-import java.time.LocalDate
 
 class ReplyLoadingNavigator(
     private val navController: NavHostController
 ) {
-    fun navigateHome(selectedYear: Int = LocalDate.now().year, selectedMonth: Int = LocalDate.now().monthValue) {
+    fun navigateHome(selectedYear: Int, selectedMonth: Int) {
         navController.navigate("home/$selectedYear/$selectedMonth") {
             popUpTo(navController.graph.startDestinationId) {
                 inclusive = true
@@ -18,18 +17,27 @@ class ReplyLoadingNavigator(
         navController.navigate("reply_diary/$year/$month/$day?replyStatus=$replyStatus")
     }
 
+    private fun navigateWithPopUp(route: String, inclusive: Boolean = false) {
+        navController.navigate(route) {
+            popUpTo(navController.graph.startDestinationId) {
+                this.inclusive = inclusive
+            }
+        }
+    }
+
     fun navigateBack(selectedYear: Int, selectedMonth: Int, from: String) {
+
         when (from) {
             "diary_list" -> {
-                navController.popBackStack("diary_list", false)
+                navigateWithPopUp("diary_list/$selectedYear/$selectedMonth")
             }
 
-            "home/$selectedYear/$selectedMonth" -> {
-                navController.popBackStack("home/$selectedYear/$selectedMonth", false)
+            "home" -> {
+                navigateWithPopUp("home/$selectedYear/$selectedMonth")
             }
 
             "write_diary" -> {
-                navController.popBackStack("home/$selectedYear/$selectedMonth", false) // 예외적으로 홈으로 이동
+                navigateWithPopUp("home/$selectedYear/$selectedMonth") // 예외적으로 홈으로
             }
 
             else -> {

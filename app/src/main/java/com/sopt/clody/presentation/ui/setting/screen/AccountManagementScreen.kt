@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,6 +39,8 @@ fun AccountManagementRoute(
 ) {
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
     val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
+    val revokeAccountState by accountManagementViewModel.revokeAccountState.collectAsState()
+    val logOutState by accountManagementViewModel.logOutState.collectAsState()
     var showNicknameChangeBottomSheet by remember { mutableStateOf(false) }
     val isValidNickname by accountManagementViewModel.isValidNickname.collectAsState()
     val nicknameMessage by accountManagementViewModel.nicknameMessage.collectAsState()
@@ -53,6 +54,22 @@ fun AccountManagementRoute(
     LaunchedEffect(userNicknameState) {
         if (userNicknameState is UserNicknameState.Success) {
             accountManagementViewModel.fetchUserInfo()
+        }
+    }
+
+    LaunchedEffect(revokeAccountState) {
+        if (revokeAccountState is RevokeAccountState.Success) {
+            navigator.navController.navigate("register_graph") {
+                popUpTo("home") { inclusive = true }
+            }
+        }
+    }
+
+    LaunchedEffect(logOutState) {
+        if (logOutState is LogOutState.Success) {
+            navigator.navController.navigate("register_graph") {
+                popUpTo("home") { inclusive = true }
+            }
         }
     }
 

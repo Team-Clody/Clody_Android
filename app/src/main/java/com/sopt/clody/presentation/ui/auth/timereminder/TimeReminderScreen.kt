@@ -144,7 +144,7 @@ fun TimeReminderScreen(
                 .padding(24.dp)
         ) {
             val (title, pickerBox, spacer, completeButton, nextSettingButton, loading) = createRefs()
-            val guideline = createGuidelineFromTop(0.123f)
+            val guideline = createGuidelineFromTop(0.115f)
 
             Text(
                 text = stringResource(id = R.string.time_reminder_title),
