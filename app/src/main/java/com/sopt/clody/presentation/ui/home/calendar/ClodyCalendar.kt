@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
 import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
+import com.sopt.clody.presentation.ui.home.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
 import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
 import java.time.LocalDate
@@ -31,7 +31,6 @@ fun ClodyCalendar(
     onDateSelected: (LocalDate) -> Unit,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     homeViewModel: HomeViewModel,
-    onDiaryDataUpdated: (Int, String) -> Unit,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit
 ) {
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
@@ -52,7 +51,7 @@ fun ClodyCalendar(
             selectedDate = selectedDate,
             onDayClick = { date ->
                 onDateSelected(date)
-                updateDiaryDataForSelectedDate(date, diaries, onDiaryDataUpdated)
+                homeViewModel.updateDiaryState(diaries)
             },
             getDiaryDataForDate = { date ->
                 diaries.getOrNull(date.dayOfMonth - 1)
@@ -84,15 +83,4 @@ fun ClodyCalendar(
             }
         }
     }
-}
-
-private fun updateDiaryDataForSelectedDate(
-    date: LocalDate,
-    diaries: List<MonthlyCalendarResponseDto.Diary>,
-    onDiaryDataUpdated: (Int, String) -> Unit
-) {
-    val diary = diaries.getOrNull(date.dayOfMonth - 1)
-    val diaryCount = diary?.diaryCount ?: 0
-    val replyStatus = diary?.replyStatus ?: "UNREADY"
-    onDiaryDataUpdated(diaryCount, replyStatus)
 }

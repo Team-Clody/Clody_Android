@@ -52,6 +52,9 @@
     <string name="write_diary_dialog_confirm_option">저장하기</string>
     <string name="write_diary_dialog_dismiss_option">아니오</string>
 
+    <!--일기 작성-->
+    <string name="write_diary_confirm_button">저장</string>
+
     <!--토스트메시지-->
     <string name="toast_limit_message">최대 5개까지 작성할 수 있어요.</string>
     <string name="toast_empty_fields_message">모든 감사 일기 작성이 필요해요.</string>

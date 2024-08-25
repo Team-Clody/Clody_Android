@@ -33,6 +33,8 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.component.FailureScreen
+import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -61,17 +63,31 @@ fun ReplyLoadingRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome()
+            navigator.navigateHome(year, month)
         } else {
             backPressedTime = currentTime
         }
     }
 
-    ReplyLoadingScreen(
-        onCompleteClick = { navigator.navigateReplyDiary(year, month, day, replyStatus) },
-        onBackClick = { navigator.navigateBack(year, month, from) },
-        replyLoadingState = replyLoadingState
-    )
+    when (replyLoadingState) {
+        is ReplyLoadingState.Loading -> {
+            LoadingScreen()
+        }
+        is ReplyLoadingState.Success -> {
+            ReplyLoadingScreen(
+                onCompleteClick = { navigator.navigateReplyDiary(year, month, day, replyStatus) },
+                onBackClick = { navigator.navigateBack(year, month, from) },
+                replyLoadingState = replyLoadingState
+            )
+        }
+        is ReplyLoadingState.Failure -> {
+            FailureScreen(
+                message = (replyLoadingState as ReplyLoadingState.Failure).error,
+                confirmAction = { viewModel.retryLastRequest() }
+            )
+        }
+        else -> {}
+    }
 }
 
 @Composable

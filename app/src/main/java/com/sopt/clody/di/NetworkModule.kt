@@ -2,11 +2,13 @@ package com.sopt.clody.di
 
 
 import android.content.Context
+import android.net.ConnectivityManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.interceptor.AuthInterceptor
 import com.sopt.clody.data.repository.ReissueTokenRepository
+import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -82,4 +84,11 @@ object NetworkModule {
         @CLODY okHttpClient: OkHttpClient,
         @CLODY baseUrl: String
     ): Retrofit = provideRetrofit(okHttpClient, baseUrl)
+
+    @Provides
+    @Singleton
+    fun provideNetworkUtil(@ApplicationContext context: Context): NetworkUtil {
+        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        return NetworkUtil(connectivityManager)
+    }
 }

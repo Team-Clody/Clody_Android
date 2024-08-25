@@ -1,6 +1,5 @@
 package com.sopt.clody.presentation.ui.writediary.screen
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -33,8 +31,10 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.writediary.component.bottomsheet.DeleteWriteDiaryBottomSheet
 import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
@@ -60,6 +60,22 @@ fun WriteDiaryRoute(
     val entryToDelete by viewModel::entryToDelete
     val showDialog by viewModel::showDialog
     val writeDiaryState by viewModel.writeDiaryState.collectAsState()
+    val showFailureDialog by viewModel.showFailureDialog.collectAsState()
+    val failureMessage by viewModel.failureMessage.collectAsState()
+
+    LaunchedEffect(writeDiaryState) {
+        when (writeDiaryState) {
+            is WriteDiaryState.Success -> {
+                navigator.navigateReplyLoading(year, month, day)
+            }
+
+            is WriteDiaryState.Failure -> {
+                viewModel.updateShowDialog(false)
+            }
+
+            else -> {}
+        }
+    }
 
     WriteDiaryScreen(
         viewModel = viewModel,
@@ -72,12 +88,19 @@ fun WriteDiaryRoute(
         entryToDelete = entryToDelete,
         allFieldsEmpty = entries.all { it.isEmpty() },
         showDialog = showDialog,
-        onClickBack = { navigator.navigateBack() },
-        onCompleteClick = { navigator.navigateReplyLoading(year, month, day) },
+        onClickBack = { navigator.navigateHome(year, month) },
+        onCompleteClick = { viewModel.writeDiary(year, month, day, entries) },
         year = year,
         month = month,
         day = day
     )
+
+    if (showFailureDialog) {
+        FailureDialog(
+            message = failureMessage,
+            onDismiss = { viewModel.resetFailureDialog() }
+        )
+    }
 }
 
 @Composable
@@ -98,12 +121,6 @@ fun WriteDiaryScreen(
     month: Int,
     day: Int
 ) {
-    LaunchedEffect(writeDiaryState) {
-        if (writeDiaryState is WriteDiaryState.Success) {
-            onCompleteClick()
-        }
-    }
-
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
@@ -118,7 +135,7 @@ fun WriteDiaryScreen(
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                 }
-                .padding(top = 26.dp, start = 12.dp)
+                .padding(top = 26.dp, start = 4.dp)
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_nickname_back),
@@ -130,7 +147,7 @@ fun WriteDiaryScreen(
         Row(
             modifier = Modifier
                 .constrainAs(titleRow) {
-                    top.linkTo(backButton.bottom, margin = 16.dp)
+                    top.linkTo(backButton.bottom, margin = 12.dp)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
@@ -189,7 +206,7 @@ fun WriteDiaryScreen(
                     }
                 }
             },
-            text = stringResource(R.string.write_diary_dialog_confirm_option),
+            text = stringResource(R.string.write_diary_confirm_button),
             enabled = !allFieldsEmpty,
             modifier = Modifier
                 .constrainAs(completeButton) {
@@ -204,7 +221,7 @@ fun WriteDiaryScreen(
         Box(
             modifier = Modifier
                 .constrainAs(addButton) {
-                    bottom.linkTo(completeButton.top, margin = 24.dp)
+                    bottom.linkTo(completeButton.top, margin = 12.dp)
                     end.linkTo(completeButton.end)
                 }
                 .offset(x = (-24).dp)
@@ -224,10 +241,9 @@ fun WriteDiaryScreen(
                 enabled = entries.size < 5,
                 modifier = Modifier.fillMaxSize()
             ) {
-                Icon(
-                    imageVector = Icons.Filled.Add,
+                Image(
+                    painter = painterResource(id = R.drawable.ic_writediary_add),
                     contentDescription = "Add",
-                    tint = ClodyTheme.colors.white
                 )
             }
         }
@@ -243,6 +259,10 @@ fun WriteDiaryScreen(
             )
         }
 
+        if (writeDiaryState is WriteDiaryState.Loading) {
+            LoadingScreen()
+        }
+
         if (showDialog) {
             ClodyDialog(
                 onDismiss = { viewModel.updateShowDialog(false) },
@@ -250,11 +270,12 @@ fun WriteDiaryScreen(
                 descriptionMassage = stringResource(R.string.write_diary_dialog_description),
                 confirmOption = stringResource(R.string.write_diary_dialog_confirm_option),
                 dismissOption = stringResource(R.string.write_diary_dialog_dismiss_option),
-                confirmAction = { viewModel.writeDiary(year, month, day, entries) },
+                confirmAction = { onCompleteClick() },
                 confirmButtonColor = ClodyTheme.colors.mainYellow,
                 confirmButtonTextColor = ClodyTheme.colors.gray01
             )
         }
+
 
         ShowToastMessages(
             showLimitMessage = showLimitMessage,
@@ -267,28 +288,6 @@ fun WriteDiaryScreen(
                 end.linkTo(parent.end)
             }
         )
-    }
-
-    when (writeDiaryState) {
-        is WriteDiaryState.Loading -> {
-            CircularProgressIndicator(
-                modifier = Modifier.fillMaxSize(),
-                color = ClodyTheme.colors.mainYellow
-            )
-        }
-
-        is WriteDiaryState.Success -> {
-            val createdAt = (writeDiaryState as WriteDiaryState.Success).createdAt
-            Log.d("WriteDiaryScreen", "Diary created at $createdAt")
-        }
-
-        is WriteDiaryState.Failure -> {
-            val error = (writeDiaryState as WriteDiaryState.Failure).error
-            Log.e("WriteDiaryScreen", "Failed: $error")
-            viewModel.updateShowDialog(false) // 상태가 실패일 때 다이얼로그 닫기
-        }
-
-        else -> {}
     }
 }
 

@@ -16,6 +16,7 @@ import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
@@ -36,12 +37,24 @@ fun DiaryListRoute(
     val diaryListState by diaryListViewModel.diaryListState.collectAsState()
     val selectedDiaryDate by diaryListViewModel.selectedDiaryDate.collectAsState()
     val diaryDeleteState by diaryListViewModel.diaryDeleteState.collectAsState()
+    val showDiaryDeleteFailureDialog by diaryListViewModel.showDiaryDeleteFailureDialog.collectAsState()
+    val failureDialogMessage by diaryListViewModel.failureDialogMessage.collectAsState()
     var yearMonthPickerState by remember { mutableStateOf(false) }
     var diaryDeleteBottomSheetState by remember { mutableStateOf(false) }
     var diaryDeleteDialogState by remember { mutableStateOf(false) }
 
     LaunchedEffect(selectedYearInDiaryList, selectedMonthInDiaryList) {
         diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
+    }
+
+    when (diaryDeleteState) {
+        is DiaryDeleteState.Success -> {
+            LaunchedEffect(Unit) {
+                diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
+            }
+        }
+
+        else -> {}
     }
 
     DiaryListScreen(
@@ -51,7 +64,8 @@ fun DiaryListRoute(
         updateYearAndMonth = { newYear, newMonth -> selectedYearInDiaryList = newYear; selectedMonthInDiaryList = newMonth },
         diaryListState = diaryListState,
         selectedDiaryDate = selectedDiaryDate,
-        diaryDeleteState = diaryDeleteState,
+        showDiaryDeleteFailureDialog = showDiaryDeleteFailureDialog,
+        failureDialogMessage = failureDialogMessage,
         yearMonthPickerState = yearMonthPickerState,
         showYearMonthPicker = { yearMonthPickerState = true },
         dismissYearMonthPicker = { yearMonthPickerState = false },
@@ -75,7 +89,8 @@ fun DiaryListScreen(
     updateYearAndMonth: (Int, Int) -> Unit,
     diaryListState: DiaryListState,
     selectedDiaryDate: DiaryListViewModel.DiaryDate,
-    diaryDeleteState: DiaryDeleteState,
+    showDiaryDeleteFailureDialog: Boolean,
+    failureDialogMessage: String,
     yearMonthPickerState: Boolean,
     showYearMonthPicker: () -> Unit,
     dismissYearMonthPicker: () -> Unit,
@@ -123,27 +138,10 @@ fun DiaryListScreen(
                 }
 
                 is DiaryListState.Failure -> {
-                    FailureScreen()
-                }
-            }
-
-            when (diaryDeleteState) {
-                is DiaryDeleteState.Idle -> {
-
-                }
-
-                is DiaryDeleteState.Loading -> {
-                    LoadingScreen()
-                }
-
-                is DiaryDeleteState.Success -> {
-                    LaunchedEffect(Unit) {
-                        diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
-                    }
-                }
-
-                is DiaryDeleteState.Failure -> {
-                    FailureScreen()
+                    FailureScreen(
+                        message = diaryListState.errorMessage,
+                        confirmAction = { diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList) }
+                    )
                 }
             }
         }
@@ -182,6 +180,13 @@ fun DiaryListScreen(
             onDismiss = dismissDiaryDeleteDialog,
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white
+        )
+    }
+
+    if (showDiaryDeleteFailureDialog) {
+        FailureDialog(
+            message = failureDialogMessage,
+            onDismiss = { diaryListViewModel.dismissDiaryDeleteFailureDialog() }
         )
     }
 }

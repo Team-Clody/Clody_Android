@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -78,17 +77,18 @@ fun WriteDiaryTextField(
                 )
                 .heightIn(min = 50.dp)  // 최소 높이를 50dp로 설정
                 .fillMaxWidth()  // 너비를 부모의 너비로 채움
-                .padding(vertical = 15.dp, horizontal = 8.dp)
+                .padding(vertical = 12.dp, horizontal = 8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .fillMaxHeight()  // Row의 높이를 Box의 높이로 채움
+                    .fillMaxWidth()  // Row의 너비를 Box의 너비로 채움
             ) {
                 Text(
                     text = "$entryNumber.",
                     modifier = Modifier
-                        .padding(start = 16.dp),
+                        .padding(start = 16.dp, top = 5.dp)
+                        .align(Alignment.Top),
                     style = ClodyTheme.typography.body2SemiBold,
                     color = if (text.isNotEmpty()) ClodyTheme.colors.gray01 else ClodyTheme.colors.gray06
                 )

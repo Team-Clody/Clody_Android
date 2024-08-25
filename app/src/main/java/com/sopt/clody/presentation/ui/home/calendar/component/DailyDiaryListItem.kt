@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,7 +37,7 @@ fun DailyDiaryListItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -60,7 +61,9 @@ fun DailyDiaryListItem(
             Image(
                 painter = painterResource(id = R.drawable.ic_home_kebab),
                 contentDescription = "go to delete",
-                modifier = Modifier.clickable(onClick = { onShowDiaryDeleteStateChange(true) })
+                modifier = Modifier
+                    .clip(RoundedCornerShape(12.dp))
+                    .clickable(onClick = { onShowDiaryDeleteStateChange(true) })
             )
         }
         if (dailyDiaries.isEmpty()) {

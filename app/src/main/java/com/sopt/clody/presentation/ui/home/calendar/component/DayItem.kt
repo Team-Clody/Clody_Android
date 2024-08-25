@@ -13,12 +13,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.DiaryCloverType
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
@@ -35,22 +37,14 @@ fun DayItem(
     val today = LocalDate.now()
     val isToday = date == today
 
-    val iconRes = when {
-        isToday && diaryData.diaryCount == 0 -> R.drawable.ic_home_today_unwritten_clover
-        diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
-        diaryData.replyStatus == "UNREADY" && diaryData.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
-        diaryData.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
-        diaryData.diaryCount in 1..2-> R.drawable.ic_home_bottom_clover
-        diaryData.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
-        diaryData.diaryCount == 5 -> R.drawable.ic_home_top_clover
-        else -> R.drawable.ic_home_ungiven_clover
-    }
+    val iconRes = DiaryCloverType.getCalendarCloverType(diaryData, isToday).iconRes
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .padding(8.dp)
+            .clip(RoundedCornerShape(12.dp))
             .clickable { onDayClick(date) }
     ) {
         Box(
