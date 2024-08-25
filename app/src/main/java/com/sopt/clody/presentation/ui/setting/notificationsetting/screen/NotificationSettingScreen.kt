@@ -25,6 +25,7 @@ import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
@@ -45,6 +46,8 @@ fun NotificationSettingRoute(
     val diaryAlarmChangeState by notificationSettingViewModel.diaryAlarmChangeState.collectAsState()
     val notificationTimeChangeState by notificationSettingViewModel.notificationTimeChangeState.collectAsState()
     val replyAlarmChangeState by notificationSettingViewModel.replyAlarmChangeState.collectAsState()
+    val showFailureDialog by notificationSettingViewModel.showFailureDialog.collectAsState()
+    val failureDialogMessage by notificationSettingViewModel.failureDialogMessage.collectAsState()
     var showNotificationTimePicker by remember { mutableStateOf(false) }
     var notificationInfo by remember { mutableStateOf<ResponseNotificationInfoDto?>(null) }
 
@@ -70,6 +73,8 @@ fun NotificationSettingRoute(
         notificationTimeChangeState = notificationTimeChangeState,
         showNotificationTimePicker = showNotificationTimePicker,
         updateNotificationTimePicker = { state -> showNotificationTimePicker = state },
+        showFailureDialog = showFailureDialog,
+        failureDialogMessage = failureDialogMessage,
         onClickBack = { navigator.navigateBack() },
         onNotificationInfoAvailable = { notificationInfo = it }
     )
@@ -84,6 +89,8 @@ fun NotificationSettingScreen(
     notificationTimeChangeState: NotificationTimeChangeState,
     showNotificationTimePicker: Boolean,
     updateNotificationTimePicker: (Boolean) -> Unit,
+    showFailureDialog: Boolean,
+    failureDialogMessage: String,
     onClickBack: () -> Unit,
     onNotificationInfoAvailable: (ResponseNotificationInfoDto) -> Unit
 ) {
@@ -136,7 +143,10 @@ fun NotificationSettingScreen(
             }
 
             is NotificationInfoState.Failure -> {
-                FailureScreen()
+                FailureScreen(
+                    message = notificationInfoState.errorMessage,
+                    confirmAction = { notificationSettingViewModel.getNotificationInfo() }
+                )
             }
         }
     }
@@ -172,6 +182,13 @@ fun NotificationSettingScreen(
                 onDismiss = { notificationSettingViewModel.resetNotificationChangeState() }
             )
         }
+    }
+
+    if (showFailureDialog) {
+        FailureDialog(
+            message = failureDialogMessage,
+            onDismiss = { notificationSettingViewModel.dismissFailureDialog() }
+        )
     }
 }
 
