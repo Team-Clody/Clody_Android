@@ -21,6 +21,7 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.setting.component.AccountManagementLogoutOption
 import com.sopt.clody.presentation.ui.setting.component.AccountManagementNicknameOption
@@ -39,13 +40,15 @@ fun AccountManagementRoute(
 ) {
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
     val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
-    val revokeAccountState by accountManagementViewModel.revokeAccountState.collectAsState()
     val logOutState by accountManagementViewModel.logOutState.collectAsState()
+    val revokeAccountState by accountManagementViewModel.revokeAccountState.collectAsState()
     var showNicknameChangeBottomSheet by remember { mutableStateOf(false) }
     val isValidNickname by accountManagementViewModel.isValidNickname.collectAsState()
     val nicknameMessage by accountManagementViewModel.nicknameMessage.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
     var showRevokeDialog by remember { mutableStateOf(false) }
+    val showFailureDialog by accountManagementViewModel.showFailureDialog.collectAsState()
+    val failureDialogMessage by accountManagementViewModel.failureDialogMessage.collectAsState()
 
     LaunchedEffect(Unit) {
         accountManagementViewModel.fetchUserInfo()
@@ -85,6 +88,8 @@ fun AccountManagementRoute(
         updateLogoutDialog = { state -> showLogoutDialog = state },
         showRevokeDialog = showRevokeDialog,
         updateRevokeDialog = { state -> showRevokeDialog = state },
+        showFailureDialog = showFailureDialog,
+        failureDialogMessage = failureDialogMessage,
         onBackClick = { navigator.navigateBack() }
     )
 }
@@ -102,6 +107,8 @@ fun AccountManagementScreen(
     updateLogoutDialog: (Boolean) -> Unit,
     showRevokeDialog: Boolean,
     updateRevokeDialog: (Boolean) -> Unit,
+    showFailureDialog: Boolean,
+    failureDialogMessage: String,
     onBackClick: () -> Unit
 ) {
     Scaffold(
@@ -143,7 +150,10 @@ fun AccountManagementScreen(
             }
 
             is UserInfoState.Failure -> {
-                FailureScreen()
+                FailureScreen(
+                    message = userInfoState.errorMessage,
+                    confirmAction = { accountManagementViewModel.fetchUserInfo() }
+                )
             }
         }
     }
@@ -197,6 +207,13 @@ fun AccountManagementScreen(
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white,
             onDismiss = { updateRevokeDialog(false) }
+        )
+    }
+
+    if (showFailureDialog) {
+        FailureDialog(
+            message = failureDialogMessage,
+            onDismiss = { accountManagementViewModel.dismissFailureDialog() }
         )
     }
 }

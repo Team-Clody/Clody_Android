@@ -47,14 +47,10 @@ fun DiaryListRoute(
         diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
     }
 
-    when (diaryDeleteState) {
-        is DiaryDeleteState.Success -> {
-            LaunchedEffect(Unit) {
-                diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
-            }
+    LaunchedEffect(diaryDeleteState) {
+        if (diaryDeleteState is DiaryDeleteState.Success) {
+            diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
         }
-
-        else -> {}
     }
 
     DiaryListScreen(
