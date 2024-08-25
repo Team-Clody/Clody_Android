@@ -2,6 +2,7 @@ package com.sopt.clody.presentation.ui.replydiary
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +61,7 @@ fun CloverDialog(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
+                        .padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -83,18 +83,16 @@ fun CloverDialog(
                         text = descriptionMassage,
                         style = ClodyTheme.typography.head3,
                         color = ClodyTheme.colors.gray01,
-                        modifier = Modifier.padding(bottom = 24.dp)
+                        modifier = Modifier.padding(bottom = 30.dp)
                     )
 
-                    TextButton(
-                        onClick = confirmAction,
-                    ) {
-                        Text(
-                            text = confirmOption,
-                            style = ClodyTheme.typography.body2SemiBold,
-                            color = ClodyTheme.colors.mainYellow
-                        )
-                    }
+                    Text(
+                        text = confirmOption,
+                        style = ClodyTheme.typography.body2SemiBold,
+                        color = ClodyTheme.colors.mainYellow,
+                        modifier = Modifier.clickable(onClick = confirmAction)
+                    )
+
                 }
             }
         }

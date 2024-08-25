@@ -26,8 +26,8 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 10
+        versionName = "1.0.0"
 
         val clodyBaseUrl: String = localProperties.getProperty("clody.base.url") ?: ""
         val anotherBaseUrl: String = localProperties.getProperty("another.base.url") ?: ""
@@ -43,11 +43,20 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    signingConfigs {
+        create("release") {
+            storeFile = file(localProperties.getProperty("storeFile") ?: "path/to/your/keystore.jks")
+            storePassword = localProperties.getProperty("storePassword") ?: ""
+            keyAlias = localProperties.getProperty("keyAlias") ?: ""
+            keyPassword = localProperties.getProperty("keyPassword") ?: ""
+        }
+    }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
