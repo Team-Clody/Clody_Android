@@ -26,8 +26,8 @@ fun ClodyReplyButton(
         colors = ButtonDefaults.buttonColors(
             containerColor = backgroundColor,
             contentColor = contentColor,
-            disabledContainerColor = ClodyTheme.colors.lightYellow,
-            disabledContentColor = ClodyTheme.colors.gray06
+            disabledContainerColor = ClodyTheme.colors.gray07,
+            disabledContentColor = ClodyTheme.colors.gray04
         ),
         shape = RoundedCornerShape(10.dp),
         enabled = enabled,

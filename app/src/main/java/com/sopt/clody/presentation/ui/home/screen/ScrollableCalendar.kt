@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
@@ -28,6 +29,10 @@ fun ScrollableCalendar(
     onDiaryDataUpdated: (Int, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    LaunchedEffect(selectedDate) {
+        homeViewModel.updateDiaryState(diaries)
+        onDiaryDataUpdated(homeViewModel.diaryCount.value, homeViewModel.replyStatus.value)
+    }
     val scrollState = rememberScrollState()
 
     Column(
@@ -47,7 +52,6 @@ fun ScrollableCalendar(
             },
             diaries = diaries,
             homeViewModel = homeViewModel,
-            onDiaryDataUpdated = onDiaryDataUpdated,
             onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
         )
     }

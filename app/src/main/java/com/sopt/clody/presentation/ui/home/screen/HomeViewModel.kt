@@ -32,6 +32,9 @@ class HomeViewModel @Inject constructor(
     private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
     val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryState
 
+    private val _deleteDiaryResult = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
+    val deleteDiaryResult: StateFlow<DeleteDiaryState> get() = _deleteDiaryResult
+
     private val _selectedDiaryDate = MutableStateFlow(DiaryDateData())
     val selectedDiaryDate: StateFlow<DiaryDateData> get() = _selectedDiaryDate
 
@@ -46,6 +49,9 @@ class HomeViewModel @Inject constructor(
 
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
+
+    private val _isDeleted = MutableStateFlow(false)
+    val isDeleted: StateFlow<Boolean> get() = _isDeleted
 
     private val _showYearMonthPickerState = MutableStateFlow(false)
     val showYearMonthPickerState: StateFlow<Boolean> get() = _showYearMonthPickerState
@@ -94,10 +100,12 @@ class HomeViewModel @Inject constructor(
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
-            _deleteDiaryState.value = DeleteDiaryState.Loading
+            _deleteDiaryResult.value = DeleteDiaryState.Loading
             val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
-            _deleteDiaryState.value = result.fold(
+            _deleteDiaryResult.value = result.fold(
                 onSuccess = {
+                    loadCalendarData(year, month)
+                    loadDailyDiariesData(year, month, day)
                     DeleteDiaryState.Success
                 },
                 onFailure = {
@@ -128,6 +136,7 @@ class HomeViewModel @Inject constructor(
         val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
         _diaryCount.value = selectedDiary?.diaryCount ?: 0
         _replyStatus.value = selectedDiary?.replyStatus ?: "UNREADY"
+        _isDeleted.value = selectedDiary?.isDeleted ?: false
     }
 
     fun setShowYearMonthPickerState(state: Boolean) {
@@ -142,4 +151,3 @@ class HomeViewModel @Inject constructor(
         _showDiaryDeleteDialog.value = state
     }
 }
-
