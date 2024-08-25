@@ -6,6 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
 import com.sopt.clody.data.repository.AccountManagementRepository
+import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
+import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
+import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +19,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AccountManagementViewModel @Inject constructor(
-    private val accountManagementRepository: AccountManagementRepository, private val tokenDataStore: TokenDataStore, @ApplicationContext private val context: Context
+    private val accountManagementRepository: AccountManagementRepository,
+    private val tokenDataStore: TokenDataStore,
+    private val networkUtil: NetworkUtil,
+    @ApplicationContext private val context: Context
 ) : ViewModel() {
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
@@ -29,25 +36,72 @@ class AccountManagementViewModel @Inject constructor(
     private val _nicknameMessage = MutableStateFlow(DEFAULT_NICKNAME_MESSAGE)
     val nicknameMessage: StateFlow<String> = _nicknameMessage
 
-    private val _revokeAccountState = MutableStateFlow<RevokeAccountState>(RevokeAccountState.Idle)
-    val revokeAccountState: StateFlow<RevokeAccountState> = _revokeAccountState
-
     private val _logOutState = MutableStateFlow<LogOutState>(LogOutState.Idle)
     val logOutState: StateFlow<LogOutState> = _logOutState
 
+    private val _revokeAccountState = MutableStateFlow<RevokeAccountState>(RevokeAccountState.Idle)
+    val revokeAccountState: StateFlow<RevokeAccountState> = _revokeAccountState
+
+    private val _showFailureDialog = MutableStateFlow(false)
+    val showFailureDialog: StateFlow<Boolean> = _showFailureDialog
+
+    private val _failureDialogMessage = MutableStateFlow("")
+    val failureDialogMessage: StateFlow<String> = _failureDialogMessage
+
+    private val maxRetryCount = 3
+    private var retryCount = 0
+
     fun fetchUserInfo() {
+        if (retryCount >= maxRetryCount) return
         _userInfoState.value = UserInfoState.Loading
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                _userInfoState.value = UserInfoState.Failure(FAILURE_NETWORK_MESSAGE)
+                return@launch
+            }
             val result = accountManagementRepository.getUserInfo()
-            _userInfoState.value = result.fold(onSuccess = { UserInfoState.Success(it) }, onFailure = { UserInfoState.Failure(it.message ?: "Unknown error") })
+            _userInfoState.value = result.fold(
+                onSuccess = {
+                    retryCount = 0
+                    UserInfoState.Success(it)
+                },
+                onFailure = {
+                    retryCount++
+                    if(retryCount >= maxRetryCount) {
+                        UserInfoState.Failure(FAILURE_TEMPORARY_MESSAGE)
+                    } else {
+                        val errorMessage = if (it.message?.contains("200") == false) {
+                            FAILURE_TEMPORARY_MESSAGE
+                        } else {
+                            UNKNOWN_ERROR
+                        }
+                        UserInfoState.Failure(errorMessage)
+                    }
+                }
+            )
         }
     }
 
     fun changeNickname(requestModifyNicknameDto: RequestModifyNicknameDto) {
-        _userNicknameState.value = UserNicknameState.Loading
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+                _showFailureDialog.value = true
+            }
+            _userNicknameState.value = UserNicknameState.Loading
             val result = accountManagementRepository.modifyNickname(requestModifyNicknameDto)
-            _userNicknameState.value = result.fold(onSuccess = { UserNicknameState.Success(it) }, onFailure = { UserNicknameState.Failure(it.message ?: "Unknown error") })
+            _userNicknameState.value = result.fold(
+                onSuccess = { UserNicknameState.Success(it) },
+                onFailure = {
+                    _failureDialogMessage.value = if (it.message?.contains("200") == false) {
+                        FAILURE_TEMPORARY_MESSAGE
+                    } else {
+                        UNKNOWN_ERROR
+                    }
+                    _showFailureDialog.value = true
+                    UserNicknameState.Failure(_failureDialogMessage.value)
+                }
+            )
         }
     }
 
@@ -79,7 +133,12 @@ class AccountManagementViewModel @Inject constructor(
     }
 
     fun revokeAccount() {
+        _revokeAccountState.value = RevokeAccountState.Loading
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+                _showFailureDialog.value = true
+            }
             val result = accountManagementRepository.revokeAccount()
             result.fold(
                 onSuccess = {
@@ -87,10 +146,21 @@ class AccountManagementViewModel @Inject constructor(
                     _revokeAccountState.value = RevokeAccountState.Success(it)
                 },
                 onFailure = {
-                    _revokeAccountState.value = RevokeAccountState.Failure(it.localizedMessage ?: "에러 발생")
+                    _failureDialogMessage.value = if (it.message?.contains("200") == false) {
+                        FAILURE_TEMPORARY_MESSAGE
+                    } else {
+                        it.localizedMessage ?: UNKNOWN_ERROR
+                    }
+                    _showFailureDialog.value = true
+                    RevokeAccountState.Failure(_failureDialogMessage.value)
                 }
             )
         }
+    }
+
+    fun dismissFailureDialog() {
+        _showFailureDialog.value = false
+        _failureDialogMessage.value = ""
     }
 
     companion object {
