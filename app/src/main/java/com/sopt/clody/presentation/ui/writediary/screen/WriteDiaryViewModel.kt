@@ -67,9 +67,10 @@ class WriteDiaryViewModel @Inject constructor(
             val result = writeDiaryRepository.writeDiary(date, contents)
             _writeDiaryState.value = result.fold(
                 onSuccess = { response ->
-                    response.createdAt.let {
-                        WriteDiaryState.Success(it)
-                    } ?: WriteDiaryState.Failure(UNKNOWN_ERROR)
+                    when (response.replyType) {
+                        "NO_REPLY" -> WriteDiaryState.NoReply
+                        else -> WriteDiaryState.Success(response.createdAt)
+                    }
                 },
                 onFailure = {
                     _failureMessage.value = if (it.message?.contains("200") == false) {

@@ -8,4 +8,5 @@ sealed class WriteDiaryState {
     data object Loading : WriteDiaryState()
     data class Success(val createdAt: String) : WriteDiaryState()
     data class Failure(val error: String) : WriteDiaryState()
+    data object NoReply : WriteDiaryState()
 }
