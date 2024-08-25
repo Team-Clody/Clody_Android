@@ -6,5 +6,6 @@ import kotlinx.serialization.Serializable
 data class ResponseDiaryTimeDto(
     val HH: Int,
     val MM: Int,
-    val SS: Int
+    val SS: Int,
+    val isFirst: Boolean,
 )
