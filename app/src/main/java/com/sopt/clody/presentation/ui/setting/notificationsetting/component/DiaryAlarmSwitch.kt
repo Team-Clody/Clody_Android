@@ -45,11 +45,11 @@ fun DiaryAlarmSwitch(
             },
             colors = SwitchDefaults.colors(
                 checkedThumbColor = ClodyTheme.colors.white,
-                checkedTrackColor = ClodyTheme.colors.darkYellow.copy(alpha = 0.5f),
+                checkedTrackColor = ClodyTheme.colors.mainYellow,
                 uncheckedThumbColor = ClodyTheme.colors.white,
                 uncheckedTrackColor = ClodyTheme.colors.gray06,
                 uncheckedBorderColor = ClodyTheme.colors.gray06
-            )
+            ),
         )
     }
 }
