@@ -17,7 +17,7 @@
     <string name="terms_next">다음</string>
 
     <!-- 타임피커 -->
-    <string name="time_picker_title">발송 시간 변경</string>
+    <string name="time_picker_title">다른 시간 보기</string>
 
     <!--온보딩 알림설정-->
     <string name="time_reminder_title">몇시에 감사일기\n작성 알림을 드릴까요?</string>
