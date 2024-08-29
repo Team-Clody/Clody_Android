@@ -64,7 +64,7 @@ fun DailyDiaryCard(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(vertical = 20.dp)
+                .padding(top = 20.dp)
         ) {
             Row(
                 modifier = Modifier
