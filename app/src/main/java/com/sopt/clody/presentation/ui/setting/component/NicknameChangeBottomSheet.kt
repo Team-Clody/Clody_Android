@@ -86,7 +86,8 @@ fun NicknameChangeBottomSheetItem(
                 Text(
                     text = stringResource(R.string.account_management_nickname_change_title),
                     modifier = Modifier.align(Alignment.Center),
-                    style = ClodyTheme.typography.head4
+                    color = ClodyTheme.colors.gray01,
+                    style = ClodyTheme.typography.body2SemiBold
                 )
 
                 IconButton(

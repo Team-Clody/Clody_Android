@@ -36,6 +36,7 @@ fun SettingOption(
         Spacer(modifier = Modifier.width(24.dp))
         Text(
             text = option,
+            color = ClodyTheme.colors.gray03,
             style = ClodyTheme.typography.body1Medium
         )
         Spacer(modifier = Modifier.weight(1f))

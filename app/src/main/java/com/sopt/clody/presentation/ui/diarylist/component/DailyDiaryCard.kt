@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.diarylist.component
+        package com.sopt.clody.presentation.ui.diarylist.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -87,12 +87,12 @@ fun DailyDiaryCard(
                         modifier = Modifier
                             .padding(end = 2.dp),
                         color = ClodyTheme.colors.gray01,
-                        style = ClodyTheme.typography.body1SemiBold
+                        style = ClodyTheme.typography.body2SemiBold
                     )
                     Text(
                         text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
                         color = ClodyTheme.colors.gray04,
-                        style = ClodyTheme.typography.body2SemiBold
+                        style = ClodyTheme.typography.body4Medium
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))

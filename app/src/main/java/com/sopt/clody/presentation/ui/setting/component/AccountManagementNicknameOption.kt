@@ -33,10 +33,12 @@ fun AccountManagementNicknameOption(
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = userName,
+            color = ClodyTheme.colors.gray03,
             style = ClodyTheme.typography.body1SemiBold
         )
         Text(
             text = stringResource(R.string.account_management_nickname),
+            color = ClodyTheme.colors.gray03,
             style = ClodyTheme.typography.body1Medium
         )
         Spacer(modifier = Modifier.weight(1f))

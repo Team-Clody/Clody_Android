@@ -36,6 +36,7 @@ fun AccountManagementLogoutOption(
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = userEmail,
+            color = ClodyTheme.colors.gray03,
             style = ClodyTheme.typography.body1Medium
         )
         Spacer(modifier = Modifier.weight(1f))
