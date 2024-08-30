@@ -71,15 +71,3 @@ fun HomeTopAppBar(
         )
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun ShowTopAppBar() {
-    HomeTopAppBar(
-        onClickDiaryList = { /*TODO*/ },
-        onClickSetting = { /*TODO*/ },
-        onShowYearMonthPickerStateChange = {},
-        selectedYear = 2024,
-        selectedMonth = 8
-    )
-}
