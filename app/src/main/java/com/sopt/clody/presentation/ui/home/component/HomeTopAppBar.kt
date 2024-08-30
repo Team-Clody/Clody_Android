@@ -1,9 +1,8 @@
 package com.sopt.clody.presentation.ui.home.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -15,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -33,44 +33,53 @@ fun HomeTopAppBar(
         title = {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(ClodyTheme.colors.white)
+                    .padding(start = 16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier.padding(start = 4.dp),
-
-                        ) {
-                        IconButton(onClick = { onClickDiaryList() }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_home_list), contentDescription = "go to list"
-                            )
-                        }
-                    }
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
-                        YearAndMonthTitle(
-                            onShowYearMonthPickerStateChange, selectedYear, selectedMonth
-                        )
-                    }
-                    Box(
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        IconButton(
-                            onClick = { onClickSetting() }, modifier = Modifier.padding(end = 10.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_home_setting), contentDescription = "go to setting"
-                            )
-                        }
-                    }
-                }
+                YearAndMonthTitle(
+                    onShowYearMonthPickerStateChange, selectedYear, selectedMonth
+                )
             }
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = ClodyTheme.colors.white, titleContentColor = ClodyTheme.colors.gray01, navigationIconContentColor = ClodyTheme.colors.gray01, actionIconContentColor = ClodyTheme.colors.gray01
+        },
+        navigationIcon = {
+                IconButton(
+                    onClick = { onClickDiaryList() },
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_home_list),
+                        contentDescription = "go to list"
+                    )
+                }
+        },
+        actions = {
+                IconButton(
+                    onClick = { onClickSetting() },
+                    modifier = Modifier.padding(end = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_home_setting),
+                        contentDescription = "go to setting"
+                    )
+                }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = ClodyTheme.colors.white,
+            titleContentColor = ClodyTheme.colors.gray01,
+            navigationIconContentColor = ClodyTheme.colors.gray01,
+            actionIconContentColor = ClodyTheme.colors.gray01
         )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ShowTopAppBar() {
+    HomeTopAppBar(
+        onClickDiaryList = { /*TODO*/ },
+        onClickSetting = { /*TODO*/ },
+        onShowYearMonthPickerStateChange = {},
+        selectedYear = 2024,
+        selectedMonth = 8
     )
 }
