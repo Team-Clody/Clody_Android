@@ -16,6 +16,7 @@ plugins {
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -57,6 +58,14 @@ android {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("release")
+            firebaseCrashlytics {
+                mappingFileUploadEnabled = true
+            }
+        }
+        debug {
+            firebaseCrashlytics {
+                mappingFileUploadEnabled = true
+            }
         }
     }
     compileOptions {
@@ -109,7 +118,6 @@ dependencies {
 
     // Hilt (Dependency Injection)
     implementation(libs.hilt.android)
-//    implementation(libs.firebase.messaging.ktx)
     ksp(libs.hilt.compiler)
     implementation(libs.javax.inject)
 
@@ -151,7 +159,10 @@ dependencies {
     implementation(libs.process.phoenix)
     implementation(libs.lottie.compose)
 
-    //fcm
+    //firebase
     implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.firebase.analytics)
+    //fcm
     implementation(libs.firebase.messaging.ktx)
 }

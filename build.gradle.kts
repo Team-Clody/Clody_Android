@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.hilt) apply false
     alias(libs.plugins.ktlint) apply false
     alias(libs.plugins.google.services) apply false
+    alias(libs.plugins.firebaseCrashlyticsPlugin) apply false
 }
 
 buildscript {
