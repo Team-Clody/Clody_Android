@@ -201,7 +201,7 @@ fun NicknameScreen(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
                 .constrainAs(nicknameLength) {
-                    top.linkTo(nicknameField.bottom, 4.dp)
+                    top.linkTo(nicknameField.bottom, 2.dp)
                     end.linkTo(parent.end)
                     width = Dimension.wrapContent
                 }

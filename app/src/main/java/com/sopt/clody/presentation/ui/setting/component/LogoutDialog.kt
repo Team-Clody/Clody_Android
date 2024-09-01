@@ -54,6 +54,7 @@ fun LogoutDialog(
 
                 Text(
                     text = titleMassage,
+                    color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body1SemiBold
                 )
 

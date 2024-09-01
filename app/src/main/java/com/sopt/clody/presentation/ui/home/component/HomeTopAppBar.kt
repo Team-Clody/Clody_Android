@@ -1,14 +1,10 @@
 package com.sopt.clody.presentation.ui.home.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -33,44 +29,41 @@ fun HomeTopAppBar(
         title = {
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(ClodyTheme.colors.white)
+                    .padding(start = 16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier.padding(start = 4.dp),
-
-                        ) {
-                        IconButton(onClick = { onClickDiaryList() }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_home_list), contentDescription = "go to list"
-                            )
-                        }
-                    }
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
-                        YearAndMonthTitle(
-                            onShowYearMonthPickerStateChange, selectedYear, selectedMonth
-                        )
-                    }
-                    Box(
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        IconButton(
-                            onClick = { onClickSetting() }, modifier = Modifier.padding(end = 10.dp)
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_home_setting), contentDescription = "go to setting"
-                            )
-                        }
-                    }
-                }
+                YearAndMonthTitle(
+                    onShowYearMonthPickerStateChange, selectedYear, selectedMonth
+                )
             }
-        }, colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = ClodyTheme.colors.white, titleContentColor = ClodyTheme.colors.gray01, navigationIconContentColor = ClodyTheme.colors.gray01, actionIconContentColor = ClodyTheme.colors.gray01
+        },
+        navigationIcon = {
+                IconButton(
+                    onClick = { onClickDiaryList() },
+                    modifier = Modifier.padding(start = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_home_list),
+                        contentDescription = "go to list"
+                    )
+                }
+        },
+        actions = {
+                IconButton(
+                    onClick = { onClickSetting() },
+                    modifier = Modifier.padding(end = 8.dp)
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_home_setting),
+                        contentDescription = "go to setting"
+                    )
+                }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = ClodyTheme.colors.white,
+            titleContentColor = ClodyTheme.colors.gray01,
+            navigationIconContentColor = ClodyTheme.colors.gray01,
+            actionIconContentColor = ClodyTheme.colors.gray01
         )
     )
 }

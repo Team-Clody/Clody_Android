@@ -20,10 +20,11 @@ fun DailyDiaryCardContent(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
+            .padding(bottom = 2.dp)
     ) {
         diary.forEachIndexed { index, content ->
             Row(
-                modifier = Modifier.padding(bottom = 14.dp)
+                modifier = Modifier.padding(bottom = 24.dp)
             ) {
                 Text(
                     text = "${index + 1}.",

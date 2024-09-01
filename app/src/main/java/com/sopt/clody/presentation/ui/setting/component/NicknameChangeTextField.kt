@@ -56,7 +56,7 @@ fun NickNameChangeTextField(
                 },
             singleLine = true,
             textStyle = TextStyle(color = ClodyTheme.colors.gray01),
-            cursorBrush = SolidColor(ClodyTheme.colors.gray01),
+            cursorBrush = if(isValid) SolidColor(ClodyTheme.colors.gray01) else SolidColor(ClodyTheme.colors.red),
             decorationBox = { innerTextField ->
                 Column(
                     Modifier
