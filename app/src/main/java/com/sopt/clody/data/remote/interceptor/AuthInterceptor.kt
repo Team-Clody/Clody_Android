@@ -8,7 +8,11 @@ import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.repository.ReissueTokenRepository
 import com.sopt.clody.presentation.ui.main.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
@@ -23,13 +27,15 @@ class AuthInterceptor @Inject constructor(
     @ApplicationContext private val context: Context
 ) : Interceptor {
 
+    private val mutex = Mutex()
+    private var tokenRefreshJob: Deferred<Boolean>? = null
+
     override fun intercept(chain: Interceptor.Chain): Response {
         val originalRequest = chain.request()
         val url = originalRequest.url.toString()
 
         return if (shouldAddAuthorization(url)) {
-            val authRequest = addAuthorization(originalRequest)
-            var response = chain.proceed(authRequest)
+            val response = proceedWithAuthorization(chain, originalRequest)
             if (response.code == TOKEN_EXPIRED) {
                 response.close()
                 return handleTokenExpiration(chain, originalRequest)
@@ -46,27 +52,40 @@ class AuthInterceptor @Inject constructor(
                 !url.contains("api/v1/auth/reissue")
     }
 
-    private fun addAuthorization(request: Request): Request {
-        return if (tokenDataStore.accessToken.isNotBlank()) {
-            request.newBuilder().addAuthorizationHeader().build()
-        } else {
-            request
-        }
+    private fun addAuthorizationHeader(request: Request): Request {
+        return request.newBuilder()
+            .addHeader(AUTHORIZATION, "$BEARER ${tokenDataStore.accessToken}")
+            .build()
     }
 
-    private fun Request.Builder.addAuthorizationHeader() =
-        this.addHeader(AUTHORIZATION, "$BEARER ${tokenDataStore.accessToken}")
+    private fun proceedWithAuthorization(chain: Interceptor.Chain, request: Request): Response {
+        val authRequest = addAuthorizationHeader(request)
+        return chain.proceed(authRequest)
+    }
 
     private fun handleTokenExpiration(
         chain: Interceptor.Chain,
         originalRequest: Request
     ): Response {
-        return if (tryReissueToken()) {
-            val newRequest = originalRequest.newBuilder().addAuthorizationHeader().build()
-            chain.proceed(newRequest)
-        } else {
-            clearUserInfoAndNavigateToLogin()
-            throw IOException("Token expired and reissue failed")
+        return runBlocking {
+            mutex.withLock {
+                // 토큰 재발급 중인지 확인하고 이미 진행 중이면 결과를 기달리게 해야됨
+                if (tokenRefreshJob == null || tokenRefreshJob?.isCompleted == true) {
+                    tokenRefreshJob = async {
+                        tryReissueToken()
+                    }
+                }
+            }
+
+            val tokenRefreshed = tokenRefreshJob?.await() ?: false
+
+            if (tokenRefreshed) {
+                proceedWithAuthorization(chain, originalRequest) // 새 토큰으로 요청 재시도
+            } else {
+                // 토큰 재발급 실패 시 로그인으로
+                clearUserInfoAndNavigateToLogin()
+                throw IOException("Token expired and reissue failed")
+            }
         }
     }
 
