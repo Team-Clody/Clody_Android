@@ -54,6 +54,7 @@ android {
     }
 
     buildTypes {
+        val baseUrl = localProperties.getProperty("clody.base.url") ?: ""
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -61,11 +62,13 @@ android {
             firebaseCrashlytics {
                 mappingFileUploadEnabled = true
             }
+            buildConfigField("String", "CLODY_BASE_URL", "\"$baseUrl\"")
         }
         debug {
             firebaseCrashlytics {
                 mappingFileUploadEnabled = true
             }
+            buildConfigField("String", "CLODY_BASE_URL", "\"${baseUrl}/test/\"")
         }
     }
     compileOptions {
