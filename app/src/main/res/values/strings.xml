@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Clody</string>
+    <string name="app_name">클로디</string>
 
     <!--회원가입 -->
     <string name="signup_title">행운을 전하는 감사일기</string>
