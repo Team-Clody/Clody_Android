@@ -68,7 +68,7 @@ class WriteDiaryViewModel @Inject constructor(
             _writeDiaryState.value = result.fold(
                 onSuccess = { response ->
                     when (response.replyType) {
-                        "NO_REPLY" -> WriteDiaryState.NoReply
+                        "DELETED" -> WriteDiaryState.NoReply
                         else -> WriteDiaryState.Success(response.createdAt)
                     }
                 },
