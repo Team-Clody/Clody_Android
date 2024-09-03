@@ -27,8 +27,8 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 10
-        versionName = "1.0.0"
+        versionCode = 16
+        versionName = "1.0.3"
 
         val clodyBaseUrl: String = localProperties.getProperty("clody.base.url") ?: ""
         val anotherBaseUrl: String = localProperties.getProperty("another.base.url") ?: ""
