@@ -50,7 +50,7 @@ class ReplyDiaryViewModel @Inject constructor(
                 onSuccess = { data ->
                     retryCount = 0
                     ReplyDiaryState.Success(
-                        content = data.content,
+                        content = data.content ?: "", //content가 널이 아님을 보장함, 널이면 onFailure로 감
                         nickname = data.nickname,
                         month = data.month,
                         date = data.date
@@ -61,11 +61,7 @@ class ReplyDiaryViewModel @Inject constructor(
                     if (retryCount >= maxRetryCount) {
                         ReplyDiaryState.Failure(FAILURE_TEMPORARY_MESSAGE)
                     } else {
-                        val message = if (it.message?.contains("200") == false) {
-                            FAILURE_TEMPORARY_MESSAGE
-                        } else {
-                            it.localizedMessage ?: UNKNOWN_ERROR
-                        }
+                        val message = it.localizedMessage ?: UNKNOWN_ERROR
                         ReplyDiaryState.Failure(message)
                     }
                 }
