@@ -53,7 +53,7 @@ class ReplyLoadingViewModel @Inject constructor(
                     retryCount = 0
                     val targetDateTime = LocalDateTime.of(
                         year, month, date,
-                        data.HH, data.MM, data.SS
+                        data.HH, data.mm, data.ss
                     ).plusMinutes(if (data.isFirst) 1 else 12 * 60)
 
                     ReplyLoadingState.Success(targetDateTime)
