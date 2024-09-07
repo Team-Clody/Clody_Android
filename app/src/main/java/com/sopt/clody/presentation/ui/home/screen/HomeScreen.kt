@@ -38,8 +38,15 @@ fun HomeRoute(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
+    val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
     val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
-    val (isError, errorMessage) = homeViewModel.errorState.collectAsStateWithLifecycle().value
+
+    val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
+    val errorMessage = when {
+        calendarState is CalendarState.Error -> (calendarState as CalendarState.Error).message
+        dailyDiariesState is DailyDiariesState.Error -> (dailyDiariesState as DailyDiariesState.Error).message
+        else -> ""
+    }
 
     LaunchedEffect(selectedYear, selectedMonth) {
         homeViewModel.refreshCalendarDataCalendarData(selectedYear, selectedMonth)
@@ -52,6 +59,7 @@ fun HomeRoute(
             message = errorMessage,
             confirmAction = {
                 val selectedDate = homeViewModel.selectedDate.value
+                homeViewModel.refreshCalendarDataCalendarData(selectedYear, selectedMonth)
                 homeViewModel.loadDailyDiariesData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
             }
         )
