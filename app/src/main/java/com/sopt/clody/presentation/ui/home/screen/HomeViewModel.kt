@@ -14,7 +14,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -102,14 +101,10 @@ class HomeViewModel @Inject constructor(
                     CalendarState.Success(it)
                 },
                 onFailure = { exception ->
-                    val message = if (exception is HttpException && exception.code() == 500) {
-                        ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-                    } else {
-                        exception.message ?: ErrorMessages.UNKNOWN_ERROR
-                    }
-                    setErrorState(true, message)
+                    setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
+                    CalendarState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
                 }
-            ) as CalendarState<MonthlyCalendarResponseDto>
+            )
         }
     }
 
@@ -128,14 +123,10 @@ class HomeViewModel @Inject constructor(
                     DailyDiariesState.Success(it)
                 },
                 onFailure = { exception ->
-                    val message = if (exception is HttpException && exception.code() == 500) {
-                        ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-                    } else {
-                        exception.message ?: ErrorMessages.UNKNOWN_ERROR
-                    }
-                    setErrorState(true, message)
+                    setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
+                    DailyDiariesState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
                 }
-            ) as DailyDiariesState<DailyDiariesResponseDto>
+            )
         }
     }
 
