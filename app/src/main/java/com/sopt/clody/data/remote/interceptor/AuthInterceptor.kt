@@ -47,9 +47,9 @@ class AuthInterceptor @Inject constructor(
     }
 
     private fun shouldAddAuthorization(url: String): Boolean {
-        return !url.contains("api/v1/auth/signin") &&
-                !url.contains("api/v1/auth/signup") &&
-                !url.contains("api/v1/auth/reissue")
+        return !url.contains(AUTH_SIGNIN_URL) &&
+                !url.contains(AUTH_SIGNUP_URL) &&
+                !url.contains(AUTH_REISSUE_URL)
     }
 
     private fun addAuthorizationHeader(request: Request): Request {
@@ -95,6 +95,10 @@ class AuthInterceptor @Inject constructor(
             runBlocking {
                 reissueTokenRepository.getReissueToken(tokenDataStore.refreshToken).onSuccess { data ->
                     updateTokens(data.accessToken, data.refreshToken)
+                }.onFailure { error ->
+                    if (error.message?.contains(REFRESH_TOKEN_EXPIRED.toString()) == true) {
+                        clearUserInfoAndNavigateToLogin()
+                    }
                 }
             }
             true
@@ -126,7 +130,11 @@ class AuthInterceptor @Inject constructor(
 
     companion object {
         private const val TOKEN_EXPIRED = 401
+        private const val REFRESH_TOKEN_EXPIRED = 500
         private const val BEARER = "Bearer"
         private const val AUTHORIZATION = "Authorization"
+        private const val AUTH_SIGNIN_URL = "api/v1/auth/signin"
+        private const val AUTH_SIGNUP_URL = "api/v1/auth/signup"
+        private const val AUTH_REISSUE_URL = "api/v1/auth/reissue"
     }
 }

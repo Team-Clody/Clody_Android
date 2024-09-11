@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -30,9 +31,11 @@ class MainActivity : ComponentActivity() {
             CLODYTheme {
                 val navController = rememberNavController()
 
-                if (intent.getBooleanExtra("NAVIGATE_TO_LOGIN", false)) {
-                    navController.navigate("register_graph") {
-                        popUpTo(0) { inclusive = true }
+                LaunchedEffect(key1 = intent.getBooleanExtra("NAVIGATE_TO_LOGIN", false)) {
+                    if (intent.getBooleanExtra("NAVIGATE_TO_LOGIN", false)) {
+                        navController.navigate("register_graph") {
+                            popUpTo(0) { inclusive = true }
+                        }
                     }
                 }
 
