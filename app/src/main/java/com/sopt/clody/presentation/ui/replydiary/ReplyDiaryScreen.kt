@@ -10,8 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -29,12 +30,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
+import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 
 
@@ -70,18 +73,19 @@ fun ReplyDiaryRoute(
             LoadingScreen()
         }
 
+        is ReplyDiaryState.Success -> {
+            val successState = replyDiaryState as ReplyDiaryState.Success
+            ReplyDiaryScreen(
+                onClickBack = { navigator.navigateHome(year, month) },
+                replyStatus = replyStatus,
+                replyDiaryState = successState
+            )
+        }
+
         is ReplyDiaryState.Failure -> {
             FailureScreen(
                 message = (replyDiaryState as ReplyDiaryState.Failure).error,
                 confirmAction = { viewModel.retryLastRequest() }
-            )
-        }
-
-        is ReplyDiaryState.Success -> {
-            ReplyDiaryScreen(
-                onClickBack = { navigator.navigateHome(year, month) },
-                replyStatus = replyStatus,
-                replyDiaryState = replyDiaryState as ReplyDiaryState.Success
             )
         }
 
@@ -99,7 +103,7 @@ fun ReplyDiaryScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyDiaryState) {
-        if (replyStatus == "READY_NOT_READ" && replyDiaryState is ReplyDiaryState.Success) {
+        if (replyStatus == "READY_NOT_READ") {
             showDialog = true
         }
     }
@@ -111,7 +115,7 @@ fun ReplyDiaryScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "${month}월 ${date}일",
+                        text = stringResource(R.string.reply_month_and_date, month, date),
                         style = ClodyTheme.typography.head4,
                         color = ClodyTheme.colors.gray01,
                     )
@@ -128,66 +132,49 @@ fun ReplyDiaryScreen(
             )
         },
         content = { innerPadding ->
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(ClodyTheme.colors.white)
                     .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
             ) {
-                Spacer(modifier = Modifier.height(13.dp))
-
-                Box(
-                    contentAlignment = Alignment.TopCenter,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
                         .padding(bottom = 28.dp)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(ClodyTheme.colors.gray08)
-                        .weight(1f)
+                        .background(ClodyTheme.colors.gray08),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     val content = replyDiaryState.content
                     val nickname = replyDiaryState.nickname
-                    LazyColumn(
-                        modifier = Modifier.fillMaxSize()
+                    val replyMessage = stringResource(R.string.reply_message, nickname)
+
+                    Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
+                    Image(
+                        painter = painterResource(id = R.drawable.img_reply_logo),
+                        contentDescription = null
+                    )
+                    Spacer(modifier = Modifier.heightForScreenPercentage(0.03f))
+                    Text(
+                        text = replyMessage,
+                        style = ClodyTheme.typography.body2SemiBold,
+                        color = ClodyTheme.colors.gray01,
+                    )
+                    Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 24.dp)
+                            .verticalScroll(rememberScrollState())
                     ) {
-                        item {
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.img_reply_logo),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .padding(top = 20.dp)
-                                )
-                            }
-
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = "${nickname}님을 위한 행운의 답장",
-                                    style = ClodyTheme.typography.body2Medium,
-                                    color = ClodyTheme.colors.gray01,
-                                    modifier = Modifier.padding(top = 8.dp)
-                                )
-                            }
-
-                            Box(
-                                modifier = Modifier.fillMaxWidth(),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = content,
-                                    modifier = Modifier.padding(24.dp),
-                                    style = ClodyTheme.typography.letterMedium,
-                                    color = ClodyTheme.colors.gray02,
-                                )
-                            }
-                        }
+                        Text(
+                            text = content,
+                            style = ClodyTheme.typography.letterMedium,
+                            color = ClodyTheme.colors.gray02,
+                        )
+                        Spacer(modifier = Modifier.height(32.dp))
                     }
                 }
             }
@@ -197,9 +184,9 @@ fun ReplyDiaryScreen(
     if (showDialog) {
         CloverDialog(
             onDismiss = { showDialog = false },
-            titleMassage = "${replyDiaryState.nickname}님을 위한 행운 도착",
-            descriptionMassage = "1개의 네잎클로버 획득",
-            confirmOption = "확인",
+            titleMassage = stringResource(R.string.clover_dialog_title, replyDiaryState.nickname),
+            descriptionMassage = stringResource(R.string.clover_dialog_description),
+            confirmOption = stringResource(R.string.clover_dialog_confirm_option),
             confirmAction = { showDialog = false },
             confirmButtonColor = ClodyTheme.colors.mainYellow
         )

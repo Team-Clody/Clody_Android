@@ -8,10 +8,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,12 +23,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
@@ -37,6 +40,7 @@ import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
+import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
@@ -73,19 +77,24 @@ fun ReplyLoadingRoute(
         is ReplyLoadingState.Loading -> {
             LoadingScreen()
         }
+
         is ReplyLoadingState.Success -> {
+            val successState = replyLoadingState as ReplyLoadingState.Success
             ReplyLoadingScreen(
                 onCompleteClick = { navigator.navigateReplyDiary(year, month, day, replyStatus) },
                 onBackClick = { navigator.navigateBack(year, month, from) },
-                replyLoadingState = replyLoadingState
+                replyLoadingState = successState
             )
         }
+
         is ReplyLoadingState.Failure -> {
+            val failureState = replyLoadingState as ReplyLoadingState.Failure
             FailureScreen(
-                message = (replyLoadingState as ReplyLoadingState.Failure).error,
+                message = failureState.error,
                 confirmAction = { viewModel.retryLastRequest() }
             )
         }
+
         else -> {}
     }
 }
@@ -94,20 +103,18 @@ fun ReplyLoadingRoute(
 fun ReplyLoadingScreen(
     onCompleteClick: () -> Unit,
     onBackClick: () -> Unit,
-    replyLoadingState: ReplyLoadingState
+    replyLoadingState: ReplyLoadingState.Success
 ) {
     var remainingTime by remember { mutableStateOf(0L) }
     var isComplete by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyLoadingState) {
-        if (replyLoadingState is ReplyLoadingState.Success) {
-            val targetDateTime = (replyLoadingState as ReplyLoadingState.Success).targetDateTime
-            val currentDateTime = LocalDateTime.now()
+        val targetDateTime = replyLoadingState.targetDateTime
+        val currentDateTime = LocalDateTime.now()
 
-            val timeDiff = java.time.Duration.between(currentDateTime, targetDateTime).seconds
-            remainingTime = if (timeDiff > 0) timeDiff else 0
-            isComplete = remainingTime <= 0
-        }
+        val timeDiff = java.time.Duration.between(currentDateTime, targetDateTime).seconds
+        remainingTime = if (timeDiff > 0) timeDiff else 0
+        isComplete = remainingTime <= 0
     }
 
     LaunchedEffect(remainingTime) {
@@ -125,106 +132,89 @@ fun ReplyLoadingScreen(
     val seconds = (remainingTime % 60).toInt()
 
     val loadingMessage = stringResource(id = R.string.loading_message)
-    val completeMessage = stringResource(id = R.string.complete_message)
+    val completeMessage = stringResource(id = R.string.loading_complete_message)
 
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(ClodyTheme.colors.white)
-            .padding(horizontal = 12.dp)
-    ) {
-        val (backButton, animation, timer, message, completeButton) = createRefs()
-        val guideline = createGuidelineFromTop(0.25f)
+    val fadeInOutAnimationSpec = tween<Float>(durationMillis = 3000) // 3000ms = 3s
 
-        val fadeInOutAnimationSpec = tween<Float>(durationMillis = 3000) // 3000ms = 3s
-
-        IconButton(
-            onClick = onBackClick,
-            modifier = Modifier
-                .padding(top = 6.dp)
-                .constrainAs(backButton) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_nickname_back),
-                contentDescription = null,
+    Scaffold(
+        topBar = {
+            IconButton(
+                onClick = onBackClick,
+                modifier = Modifier
+                    .padding(top = 6.dp)
+                    .padding(start = 8.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_nickname_back),
+                    contentDescription = null
+                )
+            }
+        },
+        bottomBar = {
+            ClodyButton(
+                onClick = { onCompleteClick() },
+                text = if (isComplete) stringResource(R.string.loading_button_open) else stringResource(R.string.loading_button_confirm),
+                enabled = isComplete,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 28.dp)
             )
-        }
-        Box(
-            modifier = Modifier
-                .constrainAs(animation) {
-                    top.linkTo(guideline)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-        ) {
-            AnimatedVisibility(
-                visible = !isComplete,
-                enter = fadeIn(animationSpec = fadeInOutAnimationSpec),
-                exit = fadeOut(animationSpec = fadeInOutAnimationSpec)
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(ClodyTheme.colors.white)
+                    .padding(innerPadding),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.writing_rody))
-                val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
-                LottieAnimation(
-                    composition,
-                    { progress },
+                Spacer(modifier = Modifier.heightForScreenPercentage(0.2f))
+                Box(
                     modifier = Modifier.fillMaxWidth()
+                ) {
+                    this@Column.AnimatedVisibility(
+                        visible = !isComplete,
+                        enter = fadeIn(animationSpec = fadeInOutAnimationSpec),
+                        exit = fadeOut(animationSpec = fadeInOutAnimationSpec)
+                    ) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.writing_rody))
+                        val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+                        LottieAnimation(
+                            composition,
+                            { progress },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
+                    this@Column.AnimatedVisibility(
+                        visible = isComplete,
+                        enter = fadeIn(animationSpec = fadeInOutAnimationSpec),
+                        exit = fadeOut(animationSpec = fadeInOutAnimationSpec)
+                    ) {
+                        val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.excepted_rody))
+                        val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
+                        LottieAnimation(
+                            composition,
+                            { progress },
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.heightForScreenPercentage(0.015f))
+                Text(
+                    text = String.format("%02d:%02d:%02d", hours, minutes, seconds),
+                    style = ClodyTheme.typography.head2,
+                    color = ClodyTheme.colors.gray01
+                )
+                Spacer(modifier = Modifier.heightForScreenPercentage(0.005f))
+                Text(
+                    text = if (isComplete) completeMessage else loadingMessage,
+                    style = ClodyTheme.typography.body2Medium,
+                    color = ClodyTheme.colors.gray04
                 )
             }
-
-            AnimatedVisibility(
-                visible = isComplete,
-                enter = fadeIn(animationSpec = fadeInOutAnimationSpec),
-                exit = fadeOut(animationSpec = fadeInOutAnimationSpec)
-            ) {
-                val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.excepted_rody))
-                val progress by animateLottieCompositionAsState(composition, iterations = LottieConstants.IterateForever)
-                LottieAnimation(
-                    composition,
-                    { progress },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
         }
-
-        Text(
-            text = String.format("%02d:%02d:%02d", hours, minutes, seconds),
-            style = ClodyTheme.typography.head2,
-            color = ClodyTheme.colors.gray01,
-            modifier = Modifier.constrainAs(timer) {
-                top.linkTo(animation.bottom, margin = 24.dp)
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-            }
-        )
-
-        Text(
-            text = if (isComplete) completeMessage else loadingMessage,
-            style = ClodyTheme.typography.body2Medium,
-            color = ClodyTheme.colors.gray04,
-            modifier = Modifier
-                .constrainAs(message) {
-                    top.linkTo(timer.bottom, margin = 8.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        )
-
-        ClodyButton(
-            onClick = { onCompleteClick() },
-            text = if (isComplete) "열어보기" else "확인",
-            enabled = isComplete,
-            modifier = Modifier
-                .constrainAs(completeButton) {
-                    bottom.linkTo(parent.bottom, margin = 26.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(horizontal = 12.dp)
-        )
-    }
+    )
 }
