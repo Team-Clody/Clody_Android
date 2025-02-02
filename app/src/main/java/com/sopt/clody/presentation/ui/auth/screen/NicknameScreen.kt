@@ -3,11 +3,16 @@ package com.sopt.clody.presentation.ui.auth.screen
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -30,16 +36,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.textfield.NickNameTextField
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.auth.signup.SignUpViewModel
+import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.utils.base.UiState
+import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -70,10 +76,12 @@ fun NicknameRoute(
             is UiState.Success -> {
                 navigator.navigateTimeReminder()
             }
+
             is UiState.Failure -> {
                 showDialog = true
                 dialogMessage = result.msg
             }
+
             else -> {}
         }
     }
@@ -104,139 +112,106 @@ fun NicknameScreen(
     var isFocused by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    ConstraintLayout(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = ClodyTheme.colors.white)
-            .padding(12.dp)
-            .imePadding()
-    ) {
-        val (backButton, title, nicknameField, nicknameRegex, nicknameLength, completeButton, progressBar) = createRefs()
-        val guideline = createGuidelineFromTop(0.124f)
-
-        IconButton(
-            onClick = { onBackClick() },
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .constrainAs(backButton) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                }
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.ic_nickname_back),
-                contentDescription = null,
-            )
+    val annotatedString = buildAnnotatedString {
+        withStyle(style = SpanStyle(color = ClodyTheme.colors.gray04)) {
+            append("${nicknameTextField.text.length}")
         }
+        withStyle(style = SpanStyle(color = ClodyTheme.colors.gray06)) {
+            append(" / ")
+        }
+        withStyle(style = SpanStyle(color = ClodyTheme.colors.gray06)) {
+            append("10")
+        }
+    }
 
-        Text(
-            text = stringResource(id = R.string.nickname_title),
-            style = ClodyTheme.typography.head1,
-            color = ClodyTheme.colors.gray01,
-            modifier = Modifier
-                .padding(start = 12.dp)
-                .constrainAs(title) {
-                    top.linkTo(guideline)
-                    start.linkTo(parent.start)
+    Scaffold(
+        topBar = {
+            IconButton(
+                onClick = { onBackClick() },
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .padding(start = 8.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_nickname_back),
+                    contentDescription = null
+                )
+            }
+        },
+        bottomBar = {
+            ClodyButton(
+                onClick = {
+                    focusManager.clearFocus()
+                    onCompleteClick()
                 },
-        )
-
-        NickNameTextField(
-            value = nicknameTextField,
-            onValueChange = {
-                nicknameTextField = it
-                onNicknameChange(it.text)
-            },
-            hint = stringResource(id = R.string.nickname_input_hint),
-            isFocused = isFocused,
-            isValid = isValidNickname,
-            onFocusChanged = { isFocused = it },
-            onRemove = { nicknameTextField = TextFieldValue("") },
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .constrainAs(nicknameField) {
-                    top.linkTo(title.bottom, margin = 52.dp)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .focusRequester(focusRequester)
-                .clickable { focusRequester.requestFocus() }
-        )
-
-        Text(
-            text = nicknameMessage,
-            style = ClodyTheme.typography.detail1Regular,
-            color = when {
-                nicknameTextField.text.isEmpty() -> ClodyTheme.colors.gray04
-                isValidNickname -> ClodyTheme.colors.gray04
-                else -> ClodyTheme.colors.red
-            },
-            modifier = Modifier
-                .padding(start = 12.dp)
-                .constrainAs(nicknameRegex) {
-                    top.linkTo(nicknameField.bottom, 4.dp)
-                    start.linkTo(parent.start)
-                    width = Dimension.fillToConstraints
-                }
-        )
-
-        val annotatedString = buildAnnotatedString {
-            withStyle(style = SpanStyle(color = ClodyTheme.colors.gray04)) {
-                append("${nicknameTextField.text.length}")
-            }
-            withStyle(style = SpanStyle(color = ClodyTheme.colors.gray06)) {
-                append(" / ")
-            }
-            withStyle(style = SpanStyle(color = ClodyTheme.colors.gray06)) {
-                append("10")
-            }
-        }
-
-        Text(
-            text = annotatedString,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            style = ClodyTheme.typography.detail1Medium,
-            modifier = Modifier
-                .padding(horizontal = 12.dp)
-                .constrainAs(nicknameLength) {
-                    top.linkTo(nicknameField.bottom, 2.dp)
-                    end.linkTo(parent.end)
-                    width = Dimension.wrapContent
-                }
-        )
-
-        ClodyButton(
-            onClick = {
-                focusManager.clearFocus()
-                onCompleteClick()
-            },
-            text = "다음",
-            enabled = nicknameTextField.text.isNotEmpty() && isValidNickname,
-            modifier = Modifier
-                .padding(bottom = 28.dp)
-                .padding(horizontal = 12.dp)
-                .constrainAs(completeButton) {
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .imePadding()
-        )
-
-        if (isLoading) {
-            CircularProgressIndicator(
-                color = ClodyTheme.colors.mainYellow,
-                modifier = Modifier.constrainAs(progressBar) {
-                    top.linkTo(parent.top)
-                    bottom.linkTo(parent.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
+                text = stringResource(id = R.string.nickname_next),
+                enabled = nicknameTextField.text.isNotEmpty() && isValidNickname,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 28.dp)
+                    .imePadding()
             )
+        },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(color = ClodyTheme.colors.white)
+                    .padding(paddingValues)
+                    .padding(horizontal = 24.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Spacer(modifier = Modifier.heightForScreenPercentage(0.056f))
+                Text(
+                    text = stringResource(id = R.string.nickname_title),
+                    style = ClodyTheme.typography.head1,
+                    color = ClodyTheme.colors.gray01
+                )
+                Spacer(modifier = Modifier.heightForScreenPercentage(0.06f))
+                NickNameTextField(
+                    value = nicknameTextField,
+                    onValueChange = {
+                        nicknameTextField = it
+                        onNicknameChange(it.text)
+                    },
+                    hint = stringResource(id = R.string.nickname_input_hint),
+                    isFocused = isFocused,
+                    isValid = isValidNickname,
+                    onFocusChanged = { isFocused = it },
+                    onRemove = { nicknameTextField = TextFieldValue("") },
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .clickable { focusRequester.requestFocus() }
+                        .fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.heightForScreenPercentage(0.005f))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = nicknameMessage,
+                        style = ClodyTheme.typography.detail1Regular,
+                        color = when {
+                            nicknameTextField.text.isEmpty() -> ClodyTheme.colors.gray04
+                            isValidNickname -> ClodyTheme.colors.gray04
+                            else -> ClodyTheme.colors.red
+                        }
+                    )
+                    Text(
+                        text = annotatedString,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = ClodyTheme.typography.detail1Medium,
+                    )
+                }
+            }
         }
+    )
+
+    if (isLoading) {
+        LoadingScreen()
     }
 }
 

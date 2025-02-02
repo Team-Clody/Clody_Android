@@ -8,6 +8,7 @@
     <!--닉네임 설정(온보딩)-->
     <string name="nickname_title">만나서 반가워요!\n어떻게 불러 드릴까요?</string>
     <string name="nickname_input_hint">닉네임을 입력해주세요</string>
+    <string name="nickname_next">다음</string>
 
     <!-- 이용약관 -->
     <string name="terms_title">"Clody 이용을 위해\n약관에 동의해 주세요"</string>
@@ -41,10 +42,24 @@
     <string name="guide_page4_subtitle">기다리고 있을게요!</string>
     <string name="guide_page4_description">두번째 일기부터는 네잎클로버를 찾는 데\n12시간이 걸리니 조금만 기다려 주세요</string>
 
+    <string name="guide_next">다음</string>
+    <string name="guide_start">시작하기</string>
+
     <!-- 답장 로딩 화면 -->
     <string name="loading_message">로디가 열심히 답장을 쓰고 있어요</string>
-    <string name="complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
+    <string name="loading_complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
+    <string name="loading_button_open">열어보기</string>
+    <string name="loading_button_confirm">확인</string>
     <string name="diarylist_check_reply">답장 확인</string>
+
+    <!-- 답장 확인 화면 -->
+    <string name="reply_month_and_date">%1$d월 %2$d일</string>
+    <string name="reply_message">%1$s님을 위한 행운의 답장</string>
+
+    <!-- 클로버 획득 다이얼로그 -->
+    <string name="clover_dialog_title">%1$s님을 위한 행운 도착</string>
+    <string name="clover_dialog_description">1개의 네잎클로버 획득</string>
+    <string name="clover_dialog_confirm_option">확인</string>
 
     <!--일기 작성 다이얼로그-->
     <string name="write_diary_dialog_title">일기를 저장할까요?</string>
@@ -54,6 +69,7 @@
 
     <!--일기 작성-->
     <string name="write_diary_confirm_button">저장</string>
+    <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
 
     <!--토스트메시지-->
     <string name="toast_limit_message">최대 5개까지 작성할 수 있어요.</string>

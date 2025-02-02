@@ -76,7 +76,7 @@ fun BottomSheetTimePicker(
                 }
             }
 
-            val amPmItems = remember { listOf("오전", "오후") }
+            val amPmItems = remember { listOf("오후", "오전") }
             val hourItems = remember { (1..12).map { it.toString() } }
             val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
 
