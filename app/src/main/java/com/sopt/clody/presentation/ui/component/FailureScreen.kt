@@ -7,12 +7,13 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -20,10 +21,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.google.firebase.Firebase
-import com.google.firebase.analytics.analytics
-import com.google.firebase.analytics.logEvent
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -32,16 +29,6 @@ fun FailureScreen(
     message: String = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.",
     confirmAction: () -> Unit = {}
 ) {
-    val analytics = Firebase.analytics
-
-    LaunchedEffect(Unit) {
-        analytics.logEvent("failure_screen_view") {
-            param("screen_name", "FailureScreen")
-            param("message", message)
-        }
-        FirebaseCrashlytics.getInstance().log("FailureScreen viewed with message: $message")
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -62,13 +49,7 @@ fun FailureScreen(
         )
         Spacer(modifier = Modifier.weight(1f))
         Button(
-            onClick = {
-                analytics.logEvent("failure_screen_retry_clicked") {
-                    param("screen_name", "FailureScreen")
-                }
-                FirebaseCrashlytics.getInstance().log("Retry button clicked on FailureScreen")
-                confirmAction()
-            },
+            onClick = confirmAction,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(24.dp),

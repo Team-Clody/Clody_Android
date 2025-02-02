@@ -1,7 +1,5 @@
 package com.sopt.clody.di
 
-import com.sopt.clody.data.local.repository.AppUpdateRepository
-import com.sopt.clody.data.local.repositoryimpl.AppUpdateRepositoryImpl
 import com.sopt.clody.data.repository.AccountManagementRepository
 import com.sopt.clody.data.repository.AuthRepository
 import com.sopt.clody.data.repository.DailyDiariesRepository
@@ -108,10 +106,4 @@ abstract class RepositoryModule {
     abstract fun bindNotificationRepository(
         notificationRepositoryImpl: NotificationRepositoryImpl
     ): NotificationRepository
-
-    @Binds
-    @Singleton
-    abstract fun bindAppUpdateRepository(
-        appUpdateRepositoryImpl: AppUpdateRepositoryImpl
-    ): AppUpdateRepository
 }
