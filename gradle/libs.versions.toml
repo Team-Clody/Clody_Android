@@ -78,6 +78,8 @@ firebaseAnalytics = "22.1.0"
 firebaseCrashlytics = "19.0.3"
 firebaseCrashlyticsPlugin = "3.0.2"
 
+app-update-ktx = "2.1.0"
+
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Kotlin Symbol Processing (KSP) 플러그인
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" } # Kotlin Android 플러그인
@@ -159,6 +161,9 @@ hilt-testing-compiler = { module = "com.google.dagger:hilt-android-compiler", ve
 
 # Javax
 javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javax" } # Javax Inject 라이브러리
+
+app-update = { module = "com.google.android.play:app-update", version.ref = "app-update-ktx" }
+app-update-ktx = { module = "com.google.android.play:app-update-ktx", version.ref = "app-update-ktx" }
 
 # Test
 junit = { group = "junit", name = "junit", version.ref = "junit" } # JUnit 테스트 라이브러리

@@ -168,4 +168,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     //fcm
     implementation(libs.firebase.messaging.ktx)
+
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
 }
