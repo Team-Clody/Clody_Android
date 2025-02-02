@@ -47,9 +47,9 @@ class AuthInterceptor @Inject constructor(
     }
 
     private fun shouldAddAuthorization(url: String): Boolean {
-        return !url.contains(AUTH_SIGNIN_URL) &&
-                !url.contains(AUTH_SIGNUP_URL) &&
-                !url.contains(AUTH_REISSUE_URL)
+        return !url.contains("api/v1/auth/signin") &&
+                !url.contains("api/v1/auth/signup") &&
+                !url.contains("api/v1/auth/reissue")
     }
 
     private fun addAuthorizationHeader(request: Request): Request {
@@ -69,8 +69,7 @@ class AuthInterceptor @Inject constructor(
     ): Response {
         return runBlocking {
             mutex.withLock {
-                // 토큰 재발급 중인지 확인하고 이미 진행 중이면 결과를 기달리게 해야됨
-                if (tokenRefreshJob == null || tokenRefreshJob?.isCompleted == true) {
+                if (tokenRefreshJob?.isCompleted != false) { // 실패했거나 완료된 경우
                     tokenRefreshJob = async {
                         tryReissueToken()
                     }
@@ -82,7 +81,6 @@ class AuthInterceptor @Inject constructor(
             if (tokenRefreshed) {
                 proceedWithAuthorization(chain, originalRequest) // 새 토큰으로 요청 재시도
             } else {
-                // 토큰 재발급 실패 시 로그인으로
                 clearUserInfoAndNavigateToLogin()
                 throw IOException("Token expired and reissue failed")
             }
@@ -94,16 +92,23 @@ class AuthInterceptor @Inject constructor(
         return try {
             runBlocking {
                 reissueTokenRepository.getReissueToken(tokenDataStore.refreshToken).onSuccess { data ->
-                    updateTokens(data.accessToken, data.refreshToken)
-                }.onFailure { error ->
-                    if (error.message?.contains(REFRESH_TOKEN_EXPIRED.toString()) == true) {
+                    if (data.accessToken.isEmpty() || data.refreshToken.isEmpty()) {
+                        // 빈 토큰 데이터가 반환된 경우
+                        Timber.e("Token reissue returned empty tokens")
                         clearUserInfoAndNavigateToLogin()
+                    } else {
+                        // 정상적인 토큰 데이터가 반환된 경우
+                        updateTokens(data.accessToken, data.refreshToken)
                     }
+                }.onFailure { throwable ->
+                    Timber.e("Token reissue failed: ${throwable.message}")
+                    clearUserInfoAndNavigateToLogin()
                 }
             }
             true
         } catch (t: Throwable) {
-            Timber.d(t.message)
+            Timber.e("Unexpected error during token reissue: ${t.message}")
+            clearUserInfoAndNavigateToLogin()
             false
         }
     }
@@ -130,11 +135,7 @@ class AuthInterceptor @Inject constructor(
 
     companion object {
         private const val TOKEN_EXPIRED = 401
-        private const val REFRESH_TOKEN_EXPIRED = 500
         private const val BEARER = "Bearer"
         private const val AUTHORIZATION = "Authorization"
-        private const val AUTH_SIGNIN_URL = "api/v1/auth/signin"
-        private const val AUTH_SIGNUP_URL = "api/v1/auth/signup"
-        private const val AUTH_REISSUE_URL = "api/v1/auth/reissue"
     }
 }
