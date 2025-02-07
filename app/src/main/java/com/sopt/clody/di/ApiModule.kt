@@ -2,6 +2,7 @@ package com.sopt.clody.di
 
 import com.sopt.clody.data.remote.api.AccountManagementService
 import com.sopt.clody.data.remote.api.AuthService
+import com.sopt.clody.data.remote.api.DiaryService
 import com.sopt.clody.data.remote.api.NotificationService
 import com.sopt.clody.data.remote.api.ReIssueService
 import dagger.Module
@@ -16,26 +17,6 @@ import javax.inject.Singleton
 object ApiModule {
     @Provides
     @Singleton
-    fun provideMonthlyCalendarService(retrofit: Retrofit): CalendarApiService =
-        retrofit.create(CalendarApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDiaryListService(retrofit: Retrofit): DiaryListService =
-        retrofit.create(DiaryListService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDailyDiaryListService(retrofit: Retrofit): DailyDiaryListService =
-        retrofit.create(DailyDiaryListService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideAccountManagementService(retrofit: Retrofit): AccountManagementService =
-        retrofit.create(AccountManagementService::class.java)
-
-    @Provides
-    @Singleton
     fun provideAuthService(retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
 
@@ -46,18 +27,13 @@ object ApiModule {
 
     @Provides
     @Singleton
-    fun provideWriteDiaryService(retrofit: Retrofit): WriteDiaryService =
-        retrofit.create(WriteDiaryService::class.java)
+    fun provideDiaryService(retrofit: Retrofit): DiaryService =
+        retrofit.create(DiaryService::class.java)
 
     @Provides
     @Singleton
-    fun provideReplyDiaryService(retrofit: Retrofit): ReplyDiaryService =
-        retrofit.create(ReplyDiaryService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDiaryTimeService(retrofit: Retrofit): DiaryTimeService =
-        retrofit.create(DiaryTimeService::class.java)
+    fun provideAccountManagementService(retrofit: Retrofit): AccountManagementService =
+        retrofit.create(AccountManagementService::class.java)
 
     @Provides
     @Singleton

@@ -7,8 +7,8 @@ import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFact
 import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.util.AuthInterceptor
-import com.sopt.clody.data.repository.ReissueTokenRepository
 import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.data.repository.ReissueTokenRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +26,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
