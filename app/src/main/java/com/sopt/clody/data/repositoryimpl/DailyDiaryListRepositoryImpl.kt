@@ -1,6 +1,5 @@
 package com.sopt.clody.data.repositoryimpl
 
-import com.sopt.clody.data.remote.api.DailyDiaryListService
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.repository.DailyDiaryListRepository
 import com.sopt.clody.data.remote.util.handleApiResponse

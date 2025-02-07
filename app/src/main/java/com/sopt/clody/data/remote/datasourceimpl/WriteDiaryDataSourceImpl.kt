@@ -1,6 +1,5 @@
 package com.sopt.clody.data.remote.datasourceimpl
 
-import com.sopt.clody.data.remote.api.WriteDiaryService
 import com.sopt.clody.data.remote.datasource.WriteDiaryDataSource
 import com.sopt.clody.data.remote.dto.request.WriteDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto

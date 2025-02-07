@@ -2,14 +2,8 @@ package com.sopt.clody.di
 
 import com.sopt.clody.data.remote.api.AccountManagementService
 import com.sopt.clody.data.remote.api.AuthService
-import com.sopt.clody.data.remote.api.CalendarApiService
-import com.sopt.clody.data.remote.api.DailyDiaryListService
-import com.sopt.clody.data.remote.api.DiaryListService
-import com.sopt.clody.data.remote.api.DiaryTimeService
 import com.sopt.clody.data.remote.api.NotificationService
 import com.sopt.clody.data.remote.api.ReIssueService
-import com.sopt.clody.data.remote.api.ReplyDiaryService
-import com.sopt.clody.data.remote.api.WriteDiaryService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

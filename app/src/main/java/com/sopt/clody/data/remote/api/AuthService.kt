@@ -21,6 +21,4 @@ interface AuthService {
         @Header("Authorization") authorization: String,
         @Body signUpRequestDto: SignUpRequestDto
     ): ApiResponse<SignUpResponseDto>
-
-
 }
