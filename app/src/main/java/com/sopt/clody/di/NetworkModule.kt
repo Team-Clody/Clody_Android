@@ -45,7 +45,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @CLODY
     fun provideClodyOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         oauthInterceptor: AuthInterceptor
@@ -60,7 +59,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @CLODY
     fun provideClodyBaseUrl(): String = BuildConfig.CLODY_BASE_URL
 
     @Provides
@@ -76,14 +74,6 @@ object NetworkModule {
             .client(okHttpClient)
             .build()
     }
-
-    @Provides
-    @Singleton
-    @CLODY
-    fun provideClodyRetrofit(
-        @CLODY okHttpClient: OkHttpClient,
-        @CLODY baseUrl: String
-    ): Retrofit = provideRetrofit(okHttpClient, baseUrl)
 
     @Provides
     @Singleton
