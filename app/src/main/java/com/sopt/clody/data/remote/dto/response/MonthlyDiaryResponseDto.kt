@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ResponseMonthlyDiaryDto(
+data class MonthlyDiaryResponseDto(
     @SerialName("totalCloverCount") val totalCloverCount: Int,
     @SerialName("diaries") val diaries: List<DailyDiary>
 ) {

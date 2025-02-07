@@ -5,7 +5,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -18,7 +17,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -27,7 +26,7 @@ fun DiaryAlarmSwitch(
     notificationSettingViewModel: NotificationSettingViewModel,
     context: Context,
     title: String,
-    notificationInfo: ResponseNotificationInfoDto,
+    notificationInfo: NotificationInfoResponseDto,
     checkedState: MutableState<Boolean>
 ) {
     Row(

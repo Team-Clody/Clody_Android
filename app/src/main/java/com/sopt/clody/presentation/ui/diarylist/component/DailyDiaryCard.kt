@@ -27,7 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
+import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -35,7 +35,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun DailyDiaryCard(
     index: Int,
     diaryListViewModel: DiaryListViewModel,
-    dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
+    dailyDiary: MonthlyDiaryResponseDto.DailyDiary,
     year: Int,
     month: Int,
     day: Int,
@@ -116,7 +116,7 @@ fun DailyDiaryCard(
 
 @Composable
 fun ReplyDiaryButton(
-    dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
+    dailyDiary: MonthlyDiaryResponseDto.DailyDiary,
     year: Int,
     month: Int,
     day: Int,
@@ -161,7 +161,7 @@ fun ReplyDiaryButton(
 @Composable
 fun DiaryDeleteButton(
     diaryListViewModel: DiaryListViewModel,
-    dailyDiary: ResponseMonthlyDiaryDto.DailyDiary,
+    dailyDiary: MonthlyDiaryResponseDto.DailyDiary,
     showDiaryDeleteBottomSheet: () -> Unit
 ) {
     Image(

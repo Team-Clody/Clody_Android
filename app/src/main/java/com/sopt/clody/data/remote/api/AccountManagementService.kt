@@ -1,8 +1,8 @@
 package com.sopt.clody.data.remote.api
 
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
-import com.sopt.clody.data.remote.dto.response.ResponseModifyNicknameDto
-import com.sopt.clody.data.remote.dto.response.ResponseUserInfoDto
+import com.sopt.clody.data.remote.dto.response.ModifyNicknameResponseDto
+import com.sopt.clody.data.remote.dto.response.UserInfoResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 import retrofit2.http.DELETE
 import retrofit2.http.Body
@@ -11,12 +11,12 @@ import retrofit2.http.PATCH
 
 interface AccountManagementService {
     @GET("api/v1/user/info")
-    suspend fun getUserInfo(): ApiResponse<ResponseUserInfoDto>
+    suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto>
 
     @PATCH("api/v1/user/nickname")
     suspend fun modifyNickname(
         @Body body: ModifyNicknameRequestDto
-    ) : ApiResponse<ResponseModifyNicknameDto>
+    ) : ApiResponse<ModifyNicknameResponseDto>
 
     @DELETE("api/v1/user/revoke")
     suspend fun revokeAccount() : ApiResponse<Unit>

@@ -1,8 +1,8 @@
 package com.sopt.clody.data.remote.datasource
 
-import com.sopt.clody.data.remote.dto.response.ResponseReplyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 
 interface ReplyDiaryDataSource {
-    suspend fun getReplyDiary(year: Int, month: Int, date: Int): ApiResponse<ResponseReplyDiaryDto>
+    suspend fun getReplyDiary(year: Int, month: Int, date: Int): ApiResponse<ReplyDiaryResponseDto>
 }

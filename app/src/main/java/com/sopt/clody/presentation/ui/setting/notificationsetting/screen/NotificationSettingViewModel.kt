@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
@@ -73,7 +73,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeDiaryAlarm(context: Context, notificationInfo: ResponseNotificationInfoDto, diaryAlarm: Boolean) {
+    fun changeDiaryAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, diaryAlarm: Boolean) {
         _diaryAlarmChangeState.value = DiaryAlarmChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -107,7 +107,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeNotificationTime(context: Context, notificationInfo: ResponseNotificationInfoDto, time: String) {
+    fun changeNotificationTime(context: Context, notificationInfo: NotificationInfoResponseDto, time: String) {
         _notificationTimeChangeState.value = NotificationTimeChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -141,7 +141,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeReplyAlarm(context: Context, notificationInfo: ResponseNotificationInfoDto, replyAlarm: Boolean) {
+    fun changeReplyAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, replyAlarm: Boolean) {
         _replyAlarmChangeState.value = ReplyAlarmChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {

@@ -6,9 +6,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -17,11 +14,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -30,7 +26,7 @@ fun ReplyAlarmSwitch(
     notificationSettingViewModel: NotificationSettingViewModel,
     context: Context,
     title: String,
-    notificationInfo: ResponseNotificationInfoDto,
+    notificationInfo: NotificationInfoResponseDto,
     checkedState: MutableState<Boolean>
 ) {
     Row(

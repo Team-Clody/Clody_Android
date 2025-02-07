@@ -8,7 +8,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
+import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 
@@ -16,7 +16,7 @@ import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 fun MonthlyDiaryList(
     paddingValues: PaddingValues,
     diaryListViewModel: DiaryListViewModel,
-    diaries: List<ResponseMonthlyDiaryDto.DailyDiary>,
+    diaries: List<MonthlyDiaryResponseDto.DailyDiary>,
     showDiaryDeleteBottomSheet: () -> Unit,
     onClickReplyDiary: (Int, Int, Int, String) -> Unit,
 ) {

@@ -1,16 +1,16 @@
 package com.sopt.clody.data.remote.datasource
 
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
-import com.sopt.clody.data.remote.dto.response.ResponseModifyNicknameDto
-import com.sopt.clody.data.remote.dto.response.ResponseUserInfoDto
+import com.sopt.clody.data.remote.dto.response.ModifyNicknameResponseDto
+import com.sopt.clody.data.remote.dto.response.UserInfoResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 
 interface AccountManagementDataSource {
-    suspend fun getUserInfo(): ApiResponse<ResponseUserInfoDto>
+    suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto>
 
     suspend fun ModifyNickname(
         modifyNicknameRequestDto: ModifyNicknameRequestDto
-    ) : ApiResponse<ResponseModifyNicknameDto>
+    ) : ApiResponse<ModifyNicknameResponseDto>
 
     suspend fun revokeAccount(): ApiResponse<Unit>
 }

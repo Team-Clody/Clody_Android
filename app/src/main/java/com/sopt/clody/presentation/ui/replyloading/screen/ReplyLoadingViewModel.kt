@@ -2,7 +2,7 @@ package com.sopt.clody.presentation.ui.replyloading.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.response.ResponseDiaryTimeDto
+import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.repository.DiaryTimeRepository
 import com.sopt.clody.presentation.utils.extension.throttleFirst
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
@@ -69,7 +69,7 @@ class ReplyLoadingViewModel @Inject constructor(
         }
     }
 
-    private fun handleResult(result: Result<ResponseDiaryTimeDto>) {
+    private fun handleResult(result: Result<DiaryTimeResponseDto>) {
         result.fold(
             onSuccess = { data ->
                 val targetDateTime = LocalDateTime.of(
