@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.utils.extension
+package com.sopt.clody.data.remote.util
 
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 

@@ -3,7 +3,7 @@ package com.sopt.clody.data.repositoryimpl
 import com.sopt.clody.data.remote.datasource.MonthlyCalendarDataSource
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.repository.MonthlyCalendarRepository
-import com.sopt.clody.presentation.utils.extension.handleApiResponse
+import com.sopt.clody.data.remote.util.handleApiResponse
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import retrofit2.HttpException
 import javax.inject.Inject

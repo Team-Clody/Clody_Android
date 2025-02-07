@@ -1,4 +1,4 @@
-package com.sopt.clody.data.remote.interceptor
+package com.sopt.clody.data.remote.util
 
 import android.content.Context
 import android.content.Intent

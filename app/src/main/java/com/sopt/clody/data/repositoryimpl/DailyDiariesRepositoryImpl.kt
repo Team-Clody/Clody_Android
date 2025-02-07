@@ -3,7 +3,7 @@ package com.sopt.clody.data.repositoryimpl
 import com.sopt.clody.data.remote.datasource.DailyDiariesDataSource
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.repository.DailyDiariesRepository
-import com.sopt.clody.presentation.utils.extension.handleApiResponse
+import com.sopt.clody.data.remote.util.handleApiResponse
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import retrofit2.HttpException
 import javax.inject.Inject

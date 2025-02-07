@@ -6,9 +6,9 @@ import android.net.ConnectivityManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
-import com.sopt.clody.data.remote.interceptor.AuthInterceptor
+import com.sopt.clody.data.remote.util.AuthInterceptor
 import com.sopt.clody.data.repository.ReissueTokenRepository
-import com.sopt.clody.presentation.utils.network.NetworkUtil
+import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

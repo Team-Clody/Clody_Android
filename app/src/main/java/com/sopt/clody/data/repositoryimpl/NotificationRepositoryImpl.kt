@@ -5,7 +5,7 @@ import com.sopt.clody.data.remote.dto.request.RequestSendNotificationDto
 import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
 import com.sopt.clody.data.remote.dto.response.ResponseSendNotificationDto
 import com.sopt.clody.data.repository.NotificationRepository
-import com.sopt.clody.presentation.utils.extension.handleApiResponse
+import com.sopt.clody.data.remote.util.handleApiResponse
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(

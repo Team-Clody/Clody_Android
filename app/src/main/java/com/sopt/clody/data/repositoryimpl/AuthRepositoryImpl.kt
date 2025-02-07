@@ -6,7 +6,7 @@ import com.sopt.clody.data.remote.dto.response.LoginResponseDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
 import com.sopt.clody.data.repository.AuthRepository
-import com.sopt.clody.presentation.utils.extension.handleApiResponse
+import com.sopt.clody.data.remote.util.handleApiResponse
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(

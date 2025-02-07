@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.utils.network
+package com.sopt.clody.data.remote.util
 
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities

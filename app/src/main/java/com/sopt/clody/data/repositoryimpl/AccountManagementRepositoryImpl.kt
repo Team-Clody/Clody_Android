@@ -5,7 +5,7 @@ import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
 import com.sopt.clody.data.remote.dto.ResponseModifyNicknameDto
 import com.sopt.clody.data.remote.dto.ResponseUserInfoDto
 import com.sopt.clody.data.repository.AccountManagementRepository
-import com.sopt.clody.presentation.utils.extension.handleApiResponse
+import com.sopt.clody.data.remote.util.handleApiResponse
 import javax.inject.Inject
 
 class AccountManagementRepositoryImpl @Inject constructor(

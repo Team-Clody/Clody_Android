@@ -3,7 +3,7 @@ package com.sopt.clody.data.repositoryimpl
 import com.sopt.clody.data.remote.datasource.DiaryListDataSource
 import com.sopt.clody.data.remote.dto.response.ResponseMonthlyDiaryDto
 import com.sopt.clody.data.repository.DiaryListRepository
-import com.sopt.clody.presentation.utils.extension.handleApiResponse
+import com.sopt.clody.data.remote.util.handleApiResponse
 import javax.inject.Inject
 
 class DiaryListRepositoryImpl @Inject constructor(
