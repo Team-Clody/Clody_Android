@@ -1,6 +1,6 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
-import com.sopt.clody.data.remote.dto.ResponseModifyNicknameDto
+import com.sopt.clody.data.remote.dto.response.ResponseModifyNicknameDto
 
 sealed class UserNicknameState {
     data object Idle : UserNicknameState()

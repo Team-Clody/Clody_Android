@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
+import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
 import com.sopt.clody.presentation.ui.component.bottomsheet.ClodyBottomSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.setting.screen.AccountManagementViewModel
@@ -160,7 +160,7 @@ fun NicknameChangeBottomSheetItem(
 
             ClodyButton(
                 onClick = {
-                    accountManagementViewModel.changeNickname(RequestModifyNicknameDto(name = nickname.text))
+                    accountManagementViewModel.changeNickname(ModifyNicknameRequestDto(name = nickname.text))
                     onDismiss()
                 },
                 text = stringResource(R.string.account_management_nickname_change_confirm),

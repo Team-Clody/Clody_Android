@@ -2,7 +2,7 @@ package com.sopt.clody.data.remote.datasourceimpl
 
 import com.sopt.clody.data.remote.api.ReplyDiaryService
 import com.sopt.clody.data.remote.datasource.ReplyDiaryDataSource
-import com.sopt.clody.data.remote.dto.ResponseReplyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ResponseReplyDiaryDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 import javax.inject.Inject
 

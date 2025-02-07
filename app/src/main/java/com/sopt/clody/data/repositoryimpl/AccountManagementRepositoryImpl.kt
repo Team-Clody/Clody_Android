@@ -1,9 +1,9 @@
 package com.sopt.clody.data.repositoryimpl
 
 import com.sopt.clody.data.remote.datasource.AccountManagementDataSource
-import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
-import com.sopt.clody.data.remote.dto.ResponseModifyNicknameDto
-import com.sopt.clody.data.remote.dto.ResponseUserInfoDto
+import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
+import com.sopt.clody.data.remote.dto.response.ResponseModifyNicknameDto
+import com.sopt.clody.data.remote.dto.response.ResponseUserInfoDto
 import com.sopt.clody.data.repository.AccountManagementRepository
 import com.sopt.clody.data.remote.util.handleApiResponse
 import javax.inject.Inject
@@ -18,10 +18,10 @@ class AccountManagementRepositoryImpl @Inject constructor(
     }
 
     override suspend fun modifyNickname(
-        requestModifyNicknameDto: RequestModifyNicknameDto
+        modifyNicknameRequestDto: ModifyNicknameRequestDto
     ): Result<ResponseModifyNicknameDto> {
         return runCatching {
-            accountManagementDataSource.ModifyNickname(requestModifyNicknameDto).handleApiResponse().getOrThrow()
+            accountManagementDataSource.ModifyNickname(modifyNicknameRequestDto).handleApiResponse().getOrThrow()
         }
     }
 

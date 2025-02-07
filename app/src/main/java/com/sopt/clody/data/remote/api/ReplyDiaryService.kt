@@ -1,6 +1,6 @@
 package com.sopt.clody.data.remote.api
 
-import com.sopt.clody.data.remote.dto.ResponseReplyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ResponseReplyDiaryDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Query

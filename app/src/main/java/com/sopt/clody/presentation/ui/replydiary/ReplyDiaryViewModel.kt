@@ -2,7 +2,7 @@ package com.sopt.clody.presentation.ui.replydiary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.ResponseReplyDiaryDto
+import com.sopt.clody.data.remote.dto.response.ResponseReplyDiaryDto
 import com.sopt.clody.data.repository.ReplyDiaryRepository
 import com.sopt.clody.presentation.utils.extension.throttleFirst
 import com.sopt.clody.presentation.utils.network.ErrorMessages

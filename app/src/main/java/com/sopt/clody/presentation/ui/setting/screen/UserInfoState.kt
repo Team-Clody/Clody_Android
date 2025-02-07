@@ -1,6 +1,6 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
-import com.sopt.clody.data.remote.dto.ResponseUserInfoDto
+import com.sopt.clody.data.remote.dto.response.ResponseUserInfoDto
 
 sealed class UserInfoState {
     data object Idle : UserInfoState()
