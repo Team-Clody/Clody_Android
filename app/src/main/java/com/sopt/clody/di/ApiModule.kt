@@ -1,7 +1,6 @@
 package com.sopt.clody.di
 
 import com.sopt.clody.data.remote.api.AccountManagementService
-import com.sopt.clody.data.remote.api.ApiService
 import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.api.CalendarApiService
 import com.sopt.clody.data.remote.api.DailyDiaryListService
@@ -21,11 +20,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-    @Provides
-    @Singleton
-    fun provideClodyService(retrofit: Retrofit): ApiService =
-        retrofit.create(ApiService::class.java)
-
     @Provides
     @Singleton
     fun provideMonthlyCalendarService(retrofit: Retrofit): CalendarApiService =
