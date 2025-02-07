@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
-import com.sopt.clody.data.ClodyFirebaseMessagingService
+import com.sopt.clody.ClodyFirebaseMessagingService
 import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.repository.AuthRepository

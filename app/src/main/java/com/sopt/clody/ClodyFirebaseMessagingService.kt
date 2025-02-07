@@ -1,4 +1,4 @@
-package com.sopt.clody.data
+package com.sopt.clody
 
 import android.content.Context
 import com.google.firebase.messaging.FirebaseMessagingService
