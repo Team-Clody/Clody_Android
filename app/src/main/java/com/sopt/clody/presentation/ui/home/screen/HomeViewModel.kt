@@ -4,9 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.data.repository.DailyDiariesRepository
-import com.sopt.clody.data.repository.DailyDiaryListRepository
-import com.sopt.clody.data.repository.MonthlyCalendarRepository
 import com.sopt.clody.presentation.ui.home.model.DiaryDateData
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import com.sopt.clody.data.remote.util.NetworkUtil

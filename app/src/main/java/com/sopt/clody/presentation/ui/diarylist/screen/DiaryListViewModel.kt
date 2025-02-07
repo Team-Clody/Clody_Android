@@ -2,8 +2,6 @@ package com.sopt.clody.presentation.ui.diarylist.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.repository.DailyDiaryListRepository
-import com.sopt.clody.data.repository.DiaryListRepository
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE

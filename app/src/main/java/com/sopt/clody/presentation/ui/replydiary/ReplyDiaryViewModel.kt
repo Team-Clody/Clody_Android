@@ -3,7 +3,6 @@ package com.sopt.clody.presentation.ui.replydiary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
-import com.sopt.clody.data.repository.ReplyDiaryRepository
 import com.sopt.clody.presentation.utils.extension.throttleFirst
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
