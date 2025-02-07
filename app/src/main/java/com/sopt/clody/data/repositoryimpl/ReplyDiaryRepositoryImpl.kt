@@ -1,6 +1,5 @@
 package com.sopt.clody.data.repositoryimpl
 
-import com.sopt.clody.data.remote.datasource.ReplyDiaryDataSource
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
 import com.sopt.clody.data.repository.ReplyDiaryRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE

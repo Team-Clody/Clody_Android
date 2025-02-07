@@ -1,6 +1,5 @@
 package com.sopt.clody.data.repositoryimpl
 
-import com.sopt.clody.data.remote.datasource.DiaryTimeDataSource
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.repository.DiaryTimeRepository
 import javax.inject.Inject
