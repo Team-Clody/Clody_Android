@@ -1,4 +1,4 @@
-package com.sopt.clody.domain.model
+package com.sopt.clody.domain
 
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto

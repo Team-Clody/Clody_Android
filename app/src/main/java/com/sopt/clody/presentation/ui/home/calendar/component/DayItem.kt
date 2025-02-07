@@ -20,7 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.DiaryCloverType
+import com.sopt.clody.domain.DiaryCloverType
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
