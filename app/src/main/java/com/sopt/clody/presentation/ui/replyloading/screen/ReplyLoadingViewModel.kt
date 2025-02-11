@@ -3,11 +3,12 @@ package com.sopt.clody.presentation.ui.replyloading.screen
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
+import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.extension.throttleFirst
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReplyLoadingViewModel @Inject constructor(
-    private val diaryTimeRepository: DiaryTimeRepository,
+    private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
@@ -63,7 +64,7 @@ class ReplyLoadingViewModel @Inject constructor(
                 return@launch
             }
 
-            val result = diaryTimeRepository.getDiaryTime(year, month, date)
+            val result = diaryRepository.getDiaryTime(year, month, date)
             handleResult(result)
         }
     }

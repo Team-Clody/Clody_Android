@@ -7,10 +7,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WriteDiaryViewModel @Inject constructor(
-    private val writeDiaryRepository: WriteDiaryRepository,
+    private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
@@ -63,7 +64,7 @@ class WriteDiaryViewModel @Inject constructor(
 
             _writeDiaryState.value = WriteDiaryState.Loading
             val date = String.format("%04d-%02d-%02d", year, month, day)
-            val result = writeDiaryRepository.writeDiary(date, contents)
+            val result = diaryRepository.writeDiary(date, contents)
             _writeDiaryState.value = result.fold(
                 onSuccess = { response ->
                     when (response.replyType) {
@@ -160,6 +161,7 @@ class WriteDiaryViewModel @Inject constructor(
     fun setEntryToDeleteIndex(index: Int) {
         entryToDelete = index
     }
+
     companion object {
         const val MAX_ENTRIES = 5
         const val ENTRY_REGEX = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"
