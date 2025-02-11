@@ -8,7 +8,7 @@ import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.util.AuthInterceptor
 import com.sopt.clody.data.remote.util.NetworkUtil
-import com.sopt.clody.data.repository.ReissueTokenRepository
+import com.sopt.clody.domain.repository.TokenReissueRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,11 +35,11 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOauthInterceptor(
-        reissueTokenRepository: Provider<ReissueTokenRepository>,
+        tokenReissueRepository: Provider<TokenReissueRepository>,
         tokenDataStore: TokenDataStore,
         @ApplicationContext context: Context
     ): AuthInterceptor {
-        return AuthInterceptor(reissueTokenRepository, tokenDataStore, context)
+        return AuthInterceptor(tokenReissueRepository, tokenDataStore, context)
     }
 
     @Provides

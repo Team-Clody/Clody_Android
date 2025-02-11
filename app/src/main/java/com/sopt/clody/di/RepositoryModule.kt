@@ -1,17 +1,17 @@
 package com.sopt.clody.di
 
-import com.sopt.clody.domain.repository.AccountManagementRepository
-import com.sopt.clody.domain.repository.AuthRepository
-import com.sopt.clody.domain.repository.DiaryRepository
-import com.sopt.clody.domain.repository.NotificationRepository
-import com.sopt.clody.data.repository.ReissueTokenRepository
-import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.NotificationRepositoryImpl
-import com.sopt.clody.data.repositoryimpl.ReissueTokenRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.TokenReissueRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
+import com.sopt.clody.domain.repository.AccountManagementRepository
+import com.sopt.clody.domain.repository.AuthRepository
+import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.domain.repository.TokenReissueRepository
+import com.sopt.clody.domain.repository.TokenRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -35,9 +35,9 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindReissueTokenRepository(
-        reissueTokenRepositoryImpl: ReissueTokenRepositoryImpl
-    ): ReissueTokenRepository
+    abstract fun bindTokenReissueRepository(
+        tokenReissueRepositoryImpl: TokenReissueRepositoryImpl
+    ): TokenReissueRepository
 
     @Binds
     @Singleton

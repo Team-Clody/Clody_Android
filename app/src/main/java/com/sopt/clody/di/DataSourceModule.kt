@@ -4,12 +4,12 @@ import com.sopt.clody.data.remote.datasource.AccountManagementDataSource
 import com.sopt.clody.data.remote.datasource.AuthDataSource
 import com.sopt.clody.data.remote.datasource.DiaryRemoteDataSource
 import com.sopt.clody.data.remote.datasource.NotificationDataSource
-import com.sopt.clody.data.remote.datasource.ReissueTokenDataSource
+import com.sopt.clody.data.remote.datasource.TokenReissueDataSource
 import com.sopt.clody.data.remote.datasourceimpl.AccountManagementDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.AuthDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.DiaryRemoteDataSourceImpl
 import com.sopt.clody.data.remote.datasourceimpl.NotificationDataSourceImpl
-import com.sopt.clody.data.remote.datasourceimpl.ReissueTokenDataSourceImpl
+import com.sopt.clody.data.remote.datasourceimpl.TokenReissueDataSourceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -27,9 +27,9 @@ abstract class DataSourceModule {
 
     @Binds
     @Singleton
-    abstract fun bindReissueTokenDataSource(
-        reissueTokenDataSourceImpl: ReissueTokenDataSourceImpl
-    ): ReissueTokenDataSource
+    abstract fun bindTokenReissueDataSource(
+        tokenReissueDataSourceImpl: TokenReissueDataSourceImpl
+    ): TokenReissueDataSource
 
     @Binds
     @Singleton
