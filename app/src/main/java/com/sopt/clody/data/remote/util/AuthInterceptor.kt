@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.sopt.clody.data.datastore.TokenDataStore
-import com.sopt.clody.data.repository.ReissueTokenRepository
+import com.sopt.clody.data.repository.TokenReissueRepository
 import com.sopt.clody.presentation.ui.main.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred
@@ -22,7 +22,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 
 class AuthInterceptor @Inject constructor(
-    private val reissueTokenRepositoryProvider: Provider<ReissueTokenRepository>,
+    private val tokenReissueRepositoryProvider: Provider<TokenReissueRepository>,
     private val tokenDataStore: TokenDataStore,
     @ApplicationContext private val context: Context
 ) : Interceptor {
@@ -88,7 +88,7 @@ class AuthInterceptor @Inject constructor(
     }
 
     private fun tryReissueToken(): Boolean {
-        val reissueTokenRepository = reissueTokenRepositoryProvider.get()
+        val reissueTokenRepository = tokenReissueRepositoryProvider.get()
         return try {
             runBlocking {
                 reissueTokenRepository.getReissueToken(tokenDataStore.refreshToken).onSuccess { data ->
