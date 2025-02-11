@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import com.sopt.clody.data.datastore.TokenDataStore
-import com.sopt.clody.data.repository.TokenReissueRepository
+import com.sopt.clody.domain.repository.TokenReissueRepository
 import com.sopt.clody.presentation.ui.main.MainActivity
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Deferred

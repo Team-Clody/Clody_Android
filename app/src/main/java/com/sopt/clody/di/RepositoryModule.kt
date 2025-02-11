@@ -1,11 +1,11 @@
 package com.sopt.clody.di
 
-import com.sopt.clody.data.repository.AccountManagementRepository
-import com.sopt.clody.data.repository.AuthRepository
-import com.sopt.clody.data.repository.DiaryRepository
-import com.sopt.clody.data.repository.NotificationRepository
+import com.sopt.clody.domain.repository.AccountManagementRepository
+import com.sopt.clody.domain.repository.AuthRepository
+import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.data.repository.ReissueTokenRepository
-import com.sopt.clody.data.repository.TokenRepository
+import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryRepositoryImpl

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
-import com.sopt.clody.data.repository.AccountManagementRepository
+import com.sopt.clody.domain.repository.AccountManagementRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR

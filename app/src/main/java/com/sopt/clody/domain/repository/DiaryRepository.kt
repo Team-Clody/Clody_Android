@@ -1,4 +1,4 @@
-package com.sopt.clody.data.repository
+package com.sopt.clody.domain.repository
 
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto

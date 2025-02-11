@@ -1,4 +1,4 @@
-package com.sopt.clody.data.repository
+package com.sopt.clody.domain.repository
 
 interface TokenRepository {
     fun getAccessToken(): String
