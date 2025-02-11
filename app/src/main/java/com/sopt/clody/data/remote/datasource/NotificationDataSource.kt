@@ -6,7 +6,6 @@ import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.remote.dto.response.SendNotificationResponseDto
 
 interface NotificationDataSource {
-
     suspend fun getNotificationInfo(): ApiResponse<NotificationInfoResponseDto>
     suspend fun sendNotification(sendNotificationRequestDto: SendNotificationRequestDto): ApiResponse<SendNotificationResponseDto>
 }

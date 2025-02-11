@@ -7,10 +7,6 @@ import com.sopt.clody.data.remote.dto.base.ApiResponse
 
 interface AccountManagementDataSource {
     suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto>
-
-    suspend fun modifyNickname(
-        modifyNicknameRequestDto: ModifyNicknameRequestDto
-    ) : ApiResponse<ModifyNicknameResponseDto>
-
+    suspend fun modifyNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto) : ApiResponse<ModifyNicknameResponseDto>
     suspend fun revokeAccount(): ApiResponse<Unit>
 }
