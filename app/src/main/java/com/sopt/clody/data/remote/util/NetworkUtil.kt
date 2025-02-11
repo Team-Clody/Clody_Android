@@ -4,7 +4,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 
 class NetworkUtil(private val connectivityManager: ConnectivityManager) {
-
     fun isNetworkAvailable(): Boolean {
         val network = connectivityManager.activeNetwork ?: return false
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network) ?: return false
