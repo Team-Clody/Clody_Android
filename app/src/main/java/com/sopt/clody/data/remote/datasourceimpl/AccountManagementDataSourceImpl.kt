@@ -15,7 +15,7 @@ class AccountManagementDataSourceImpl @Inject constructor(
         return accountManagementSevice.getUserInfo()
     }
 
-    override suspend fun ModifyNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto): ApiResponse<ModifyNicknameResponseDto> {
+    override suspend fun modifyNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto): ApiResponse<ModifyNicknameResponseDto> {
         return accountManagementSevice.modifyNickname(modifyNicknameRequestDto)
     }
 

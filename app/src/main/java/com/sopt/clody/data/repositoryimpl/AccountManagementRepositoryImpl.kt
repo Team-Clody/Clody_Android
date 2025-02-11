@@ -21,7 +21,7 @@ class AccountManagementRepositoryImpl @Inject constructor(
         modifyNicknameRequestDto: ModifyNicknameRequestDto
     ): Result<ModifyNicknameResponseDto> {
         return runCatching {
-            accountManagementDataSource.ModifyNickname(modifyNicknameRequestDto).handleApiResponse().getOrThrow()
+            accountManagementDataSource.modifyNickname(modifyNicknameRequestDto).handleApiResponse().getOrThrow()
         }
     }
 

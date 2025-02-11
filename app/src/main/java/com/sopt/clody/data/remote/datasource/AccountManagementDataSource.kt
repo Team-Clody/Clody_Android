@@ -8,7 +8,7 @@ import com.sopt.clody.data.remote.dto.base.ApiResponse
 interface AccountManagementDataSource {
     suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto>
 
-    suspend fun ModifyNickname(
+    suspend fun modifyNickname(
         modifyNicknameRequestDto: ModifyNicknameRequestDto
     ) : ApiResponse<ModifyNicknameResponseDto>
 
