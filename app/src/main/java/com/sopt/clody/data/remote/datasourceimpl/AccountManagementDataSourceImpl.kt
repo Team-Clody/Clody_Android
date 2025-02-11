@@ -9,17 +9,14 @@ import com.sopt.clody.data.remote.dto.base.ApiResponse
 import javax.inject.Inject
 
 class AccountManagementDataSourceImpl @Inject constructor(
-    private val accountManagementSevice: AccountManagementService,
+    private val accountManagementService: AccountManagementService,
 ) : AccountManagementDataSource {
-    override suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto> {
-        return accountManagementSevice.getUserInfo()
-    }
+    override suspend fun getUserInfo(): ApiResponse<UserInfoResponseDto> =
+        accountManagementService.getUserInfo()
 
-    override suspend fun modifyNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto): ApiResponse<ModifyNicknameResponseDto> {
-        return accountManagementSevice.modifyNickname(modifyNicknameRequestDto)
-    }
+    override suspend fun modifyNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto): ApiResponse<ModifyNicknameResponseDto> =
+        accountManagementService.modifyNickname(modifyNicknameRequestDto)
 
-    override suspend fun revokeAccount(): ApiResponse<Unit> {
-        return accountManagementSevice.revokeAccount()
-    }
+    override suspend fun revokeAccount(): ApiResponse<Unit> =
+        accountManagementService.revokeAccount()
 }

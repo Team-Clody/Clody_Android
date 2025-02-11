@@ -9,8 +9,7 @@ import javax.inject.Inject
 class TokenReissueDataSourceImpl @Inject constructor(
     private val tokenReissueService: TokenReissueService
 ) : TokenReissueDataSource {
-    override suspend fun getReissueToken(authorization: String): ApiResponse<TokenReissueResponseDto> {
-        return tokenReissueService.reissue(authorization)
-    }
+    override suspend fun getReissueToken(authorization: String): ApiResponse<TokenReissueResponseDto> =
+        tokenReissueService.reissue(authorization)
 }
 

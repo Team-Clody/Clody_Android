@@ -12,13 +12,9 @@ import javax.inject.Inject
 class AuthDataSourceImpl @Inject constructor(
     private val authService: AuthService
 ) : AuthDataSource {
+    override suspend fun signIn(authorization: String, requestSignInDto: LoginRequestDto): ApiResponse<LoginResponseDto> =
+        authService.postLogin(authorization, requestSignInDto)
 
-    override suspend fun signIn(authorization: String, requestSignInDto: LoginRequestDto): ApiResponse<LoginResponseDto> {
-        return authService.postLogin(authorization, requestSignInDto)
-    }
-
-    override suspend fun signUp(authorization: String, requestSignUpDto: SignUpRequestDto): ApiResponse<SignUpResponseDto> {
-        return authService.signUp(authorization, requestSignUpDto)
-    }
-
+    override suspend fun signUp(authorization: String, requestSignUpDto: SignUpRequestDto): ApiResponse<SignUpResponseDto> =
+        authService.signUp(authorization, requestSignUpDto)
 }

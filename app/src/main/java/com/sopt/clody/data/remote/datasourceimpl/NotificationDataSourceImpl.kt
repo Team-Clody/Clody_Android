@@ -11,11 +11,9 @@ import javax.inject.Inject
 class NotificationDataSourceImpl @Inject constructor(
     private val notificationService: NotificationService
 ) : NotificationDataSource {
-    override suspend fun getNotificationInfo(): ApiResponse<NotificationInfoResponseDto> {
-        return notificationService.getNotificationInfo()
-    }
+    override suspend fun getNotificationInfo(): ApiResponse<NotificationInfoResponseDto> =
+        notificationService.getNotificationInfo()
 
-    override suspend fun sendNotification(sendNotificationRequestDto: SendNotificationRequestDto): ApiResponse<SendNotificationResponseDto> {
-        return notificationService.sendNotification(sendNotificationRequestDto)
-    }
+    override suspend fun sendNotification(sendNotificationRequestDto: SendNotificationRequestDto): ApiResponse<SendNotificationResponseDto> =
+        notificationService.sendNotification(sendNotificationRequestDto)
 }
