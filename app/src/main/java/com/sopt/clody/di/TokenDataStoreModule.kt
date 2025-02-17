@@ -12,7 +12,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object TokenDataStoreModule {
-
     @Provides
     @Singleton
     fun provideTokenDataStore(sharedPreferences: SharedPreferences): TokenDataStore {

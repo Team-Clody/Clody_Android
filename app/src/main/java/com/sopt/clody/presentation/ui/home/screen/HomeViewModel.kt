@@ -4,12 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.data.repository.DailyDiariesRepository
-import com.sopt.clody.data.repository.DailyDiaryListRepository
-import com.sopt.clody.data.repository.MonthlyCalendarRepository
+import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.ui.home.model.DiaryDateData
 import com.sopt.clody.presentation.utils.network.ErrorMessages
-import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val calendarRepository: MonthlyCalendarRepository,
-    private val diariesRepository: DailyDiariesRepository,
-    private val dailyDiaryListRepository: DailyDiaryListRepository,
+    private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
@@ -94,7 +90,7 @@ class HomeViewModel @Inject constructor(
             }
 
             _calendarState.value = CalendarState.Loading
-            val result = calendarRepository.getMonthlyCalendarData(year, month)
+            val result = diaryRepository.getMonthlyCalendarData(year, month)
             _calendarState.value = result.fold(
                 onSuccess = {
                     setErrorState(false)
@@ -116,7 +112,7 @@ class HomeViewModel @Inject constructor(
             }
 
             _dailyDiariesState.value = DailyDiariesState.Loading
-            val result = diariesRepository.getDailyDiariesData(year, month, date)
+            val result = diaryRepository.getDailyDiariesData(year, month, date)
             _dailyDiariesState.value = result.fold(
                 onSuccess = {
                     setErrorState(false)
@@ -133,7 +129,7 @@ class HomeViewModel @Inject constructor(
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
             _deleteDiaryResult.value = DeleteDiaryState.Loading
-            val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
+            val result = diaryRepository.deleteDailyDiary(year, month, day)
             _deleteDiaryResult.value = result.fold(
                 onSuccess = {
                     loadCalendarData(year, month)

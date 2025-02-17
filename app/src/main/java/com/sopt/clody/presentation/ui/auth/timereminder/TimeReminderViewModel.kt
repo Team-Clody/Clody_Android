@@ -6,12 +6,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.request.RequestSendNotificationDto
-import com.sopt.clody.data.repository.NotificationRepository
+import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
+import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.presentation.utils.network.NetworkUtil
+import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +43,7 @@ class TimeReminderViewModel @Inject constructor(
                 return@launch
             }
 
-            val requestDto = RequestSendNotificationDto(
+            val requestDto = SendNotificationRequestDto(
                 isDiaryAlarm = isPermissionGranted,
                 isReplyAlarm = isPermissionGranted,
                 time = selectedTime,

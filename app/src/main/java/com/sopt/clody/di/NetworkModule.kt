@@ -6,9 +6,9 @@ import android.net.ConnectivityManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
-import com.sopt.clody.data.remote.interceptor.AuthInterceptor
-import com.sopt.clody.data.repository.ReissueTokenRepository
-import com.sopt.clody.presentation.utils.network.NetworkUtil
+import com.sopt.clody.data.remote.util.AuthInterceptor
+import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.repository.TokenReissueRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +26,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-
     @Provides
     @Singleton
     fun provideLoggingInterceptor(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
@@ -36,16 +35,15 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOauthInterceptor(
-        reissueTokenRepository: Provider<ReissueTokenRepository>,
+        tokenReissueRepository: Provider<TokenReissueRepository>,
         tokenDataStore: TokenDataStore,
         @ApplicationContext context: Context
     ): AuthInterceptor {
-        return AuthInterceptor(reissueTokenRepository, tokenDataStore, context)
+        return AuthInterceptor(tokenReissueRepository, tokenDataStore, context)
     }
 
     @Provides
     @Singleton
-    @CLODY
     fun provideClodyOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         oauthInterceptor: AuthInterceptor
@@ -60,7 +58,6 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @CLODY
     fun provideClodyBaseUrl(): String = BuildConfig.CLODY_BASE_URL
 
     @Provides
@@ -76,14 +73,6 @@ object NetworkModule {
             .client(okHttpClient)
             .build()
     }
-
-    @Provides
-    @Singleton
-    @CLODY
-    fun provideClodyRetrofit(
-        @CLODY okHttpClient: OkHttpClient,
-        @CLODY baseUrl: String
-    ): Retrofit = provideRetrofit(okHttpClient, baseUrl)
 
     @Provides
     @Singleton

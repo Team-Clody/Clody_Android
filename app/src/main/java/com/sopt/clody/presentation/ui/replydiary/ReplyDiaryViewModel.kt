@@ -2,13 +2,13 @@ package com.sopt.clody.presentation.ui.replydiary
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.ResponseReplyDiaryDto
-import com.sopt.clody.data.repository.ReplyDiaryRepository
+import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
+import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.extension.throttleFirst
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReplyDiaryViewModel @Inject constructor(
-    private val replyDiaryRepository: ReplyDiaryRepository,
+    private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
@@ -64,12 +64,12 @@ class ReplyDiaryViewModel @Inject constructor(
 
             updateState(ReplyDiaryState.Loading)
 
-            val result = replyDiaryRepository.getReplyDiary(year, month, date)
+            val result = diaryRepository.getReplyDiary(year, month, date)
             handleResult(result)
         }
     }
 
-    private fun handleResult(result: Result<ResponseReplyDiaryDto>) {
+    private fun handleResult(result: Result<ReplyDiaryResponseDto>) {
         result.fold(
             onSuccess = { data ->
                 updateState(

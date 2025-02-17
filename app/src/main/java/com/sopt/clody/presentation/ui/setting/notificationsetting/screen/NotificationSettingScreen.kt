@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
@@ -49,7 +49,7 @@ fun NotificationSettingRoute(
     val showFailureDialog by notificationSettingViewModel.showFailureDialog.collectAsState()
     val failureDialogMessage by notificationSettingViewModel.failureDialogMessage.collectAsState()
     var showNotificationTimePicker by remember { mutableStateOf(false) }
-    var notificationInfo by remember { mutableStateOf<ResponseNotificationInfoDto?>(null) }
+    var notificationInfo by remember { mutableStateOf<NotificationInfoResponseDto?>(null) }
 
     LaunchedEffect(Unit) {
         notificationSettingViewModel.getNotificationInfo()
@@ -85,14 +85,14 @@ fun NotificationSettingScreen(
     notificationSettingViewModel: NotificationSettingViewModel,
     context: Context,
     notificationInfoState: NotificationInfoState,
-    notificationInfo: ResponseNotificationInfoDto?,
+    notificationInfo: NotificationInfoResponseDto?,
     notificationTimeChangeState: NotificationTimeChangeState,
     showNotificationTimePicker: Boolean,
     updateNotificationTimePicker: (Boolean) -> Unit,
     showFailureDialog: Boolean,
     failureDialogMessage: String,
     onClickBack: () -> Unit,
-    onNotificationInfoAvailable: (ResponseNotificationInfoDto) -> Unit
+    onNotificationInfoAvailable: (NotificationInfoResponseDto) -> Unit
 ) {
     Scaffold(
         topBar = {

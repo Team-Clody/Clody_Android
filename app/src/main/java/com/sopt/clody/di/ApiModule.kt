@@ -1,103 +1,43 @@
 package com.sopt.clody.di
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.clody.data.remote.api.AccountManagementService
-import com.sopt.clody.data.remote.api.AnotherApiService
-import com.sopt.clody.data.remote.api.ApiService
 import com.sopt.clody.data.remote.api.AuthService
-import com.sopt.clody.data.remote.api.CalendarApiService
-import com.sopt.clody.data.remote.api.DailyDiaryListService
-import com.sopt.clody.data.remote.api.DiaryListService
-import com.sopt.clody.data.remote.api.DiaryTimeService
+import com.sopt.clody.data.remote.api.DiaryService
 import com.sopt.clody.data.remote.api.NotificationService
-import com.sopt.clody.data.remote.api.ReIssueService
-import com.sopt.clody.data.remote.api.ReplyDiaryService
-import com.sopt.clody.data.remote.api.WriteDiaryService
+import com.sopt.clody.data.remote.api.TokenReissueService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
-// Retrofit 객체를 제공하는 모듈
 @Module
 @InstallIn(SingletonComponent::class)
 object ApiModule {
-
     @Provides
     @Singleton
-    fun provideClodyService(@CLODY retrofit: Retrofit): ApiService =
-        retrofit.create(ApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideMonthlyCalendarService(@CLODY retrofit: Retrofit): CalendarApiService =
-        retrofit.create(CalendarApiService::class.java)
-
-
-    @Provides
-    @Singleton
-    fun provideDiaryListService(@CLODY retrofit: Retrofit): DiaryListService =
-        retrofit.create(DiaryListService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDailyDiaryListService(@CLODY retrofit: Retrofit): DailyDiaryListService =
-        retrofit.create(DailyDiaryListService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideAccountManagementService(@CLODY retrofit: Retrofit): AccountManagementService =
-        retrofit.create(AccountManagementService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideAnotherService(@ANOTHER retrofit: Retrofit): AnotherApiService =
-        retrofit.create(AnotherApiService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideAuthService(@CLODY retrofit: Retrofit): AuthService =
+    fun provideAuthService(retrofit: Retrofit): AuthService =
         retrofit.create(AuthService::class.java)
 
     @Provides
     @Singleton
-    fun provideReissueRetrofit(@CLODY okHttpClient: OkHttpClient, @CLODY baseUrl: String): Retrofit {
-        val json = Json { ignoreUnknownKeys = true }
-        return Retrofit.Builder()
-            .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl(baseUrl)
-            .client(okHttpClient)
-            .build()
-    }
+    fun provideTokenReissueService(reissueRetrofit: Retrofit): TokenReissueService =
+        reissueRetrofit.create(TokenReissueService::class.java)
 
     @Provides
     @Singleton
-    fun provideReissueTokenService(@CLODY reissueRetrofit: Retrofit): ReIssueService =
-        reissueRetrofit.create(ReIssueService::class.java)
+    fun provideDiaryService(retrofit: Retrofit): DiaryService =
+        retrofit.create(DiaryService::class.java)
 
     @Provides
     @Singleton
-    fun provideWriteDiaryService(@CLODY retrofit: Retrofit): WriteDiaryService =
-        retrofit.create(WriteDiaryService::class.java)
+    fun provideAccountManagementService(retrofit: Retrofit): AccountManagementService =
+        retrofit.create(AccountManagementService::class.java)
 
     @Provides
     @Singleton
-    fun provideReplyDiaryService(@CLODY retrofit: Retrofit): ReplyDiaryService =
-        retrofit.create(ReplyDiaryService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideDiaryTimeService(@CLODY retrofit: Retrofit): DiaryTimeService =
-        retrofit.create(DiaryTimeService::class.java)
-
-    @Provides
-    @Singleton
-    fun provideNotificationService(@CLODY retrofit: Retrofit): NotificationService =
+    fun provideNotificationService(retrofit: Retrofit): NotificationService =
         retrofit.create(NotificationService::class.java)
 }
 

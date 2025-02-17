@@ -3,13 +3,13 @@ package com.sopt.clody.presentation.ui.setting.notificationsetting.screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.dto.request.RequestSendNotificationDto
-import com.sopt.clody.data.remote.dto.response.ResponseNotificationInfoDto
-import com.sopt.clody.data.repository.NotificationRepository
+import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
+import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.presentation.utils.network.NetworkUtil
+import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -73,7 +73,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeDiaryAlarm(context: Context, notificationInfo: ResponseNotificationInfoDto, diaryAlarm: Boolean) {
+    fun changeDiaryAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, diaryAlarm: Boolean) {
         _diaryAlarmChangeState.value = DiaryAlarmChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -86,7 +86,7 @@ class NotificationSettingViewModel @Inject constructor(
                 _diaryAlarmChangeState.value = DiaryAlarmChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
-            val requestDto = RequestSendNotificationDto(
+            val requestDto = SendNotificationRequestDto(
                 isDiaryAlarm = diaryAlarm,
                 isReplyAlarm = notificationInfo.isReplyAlarm,
                 time = notificationInfo.time,
@@ -107,7 +107,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeNotificationTime(context: Context, notificationInfo: ResponseNotificationInfoDto, time: String) {
+    fun changeNotificationTime(context: Context, notificationInfo: NotificationInfoResponseDto, time: String) {
         _notificationTimeChangeState.value = NotificationTimeChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -120,7 +120,7 @@ class NotificationSettingViewModel @Inject constructor(
                 _notificationTimeChangeState.value = NotificationTimeChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
-            val requestDto = RequestSendNotificationDto(
+            val requestDto = SendNotificationRequestDto(
                 isDiaryAlarm = notificationInfo.isDiaryAlarm,
                 isReplyAlarm = notificationInfo.isReplyAlarm,
                 time = time,
@@ -141,7 +141,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeReplyAlarm(context: Context, notificationInfo: ResponseNotificationInfoDto, replyAlarm: Boolean) {
+    fun changeReplyAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, replyAlarm: Boolean) {
         _replyAlarmChangeState.value = ReplyAlarmChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -154,7 +154,7 @@ class NotificationSettingViewModel @Inject constructor(
                 _replyAlarmChangeState.value = ReplyAlarmChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
-            val requestDto = RequestSendNotificationDto(
+            val requestDto = SendNotificationRequestDto(
                 isDiaryAlarm = notificationInfo.isDiaryAlarm,
                 isReplyAlarm = replyAlarm,
                 time = notificationInfo.time,

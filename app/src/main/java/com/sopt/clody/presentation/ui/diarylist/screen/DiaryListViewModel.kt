@@ -2,13 +2,12 @@ package com.sopt.clody.presentation.ui.diarylist.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.repository.DailyDiaryListRepository
-import com.sopt.clody.data.repository.DiaryListRepository
+import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.presentation.utils.network.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DiaryListViewModel @Inject constructor(
-    private val diaryListRepository: DiaryListRepository,
-    private val dailyDiaryListRepository: DailyDiaryListRepository,
+    private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil
 ) : ViewModel() {
 
@@ -29,7 +27,7 @@ class DiaryListViewModel @Inject constructor(
     val selectedDiaryDate: StateFlow<DiaryDate> = _selectedDiaryDate
 
     private val _diaryDeleteState = MutableStateFlow<DiaryDeleteState>(DiaryDeleteState.Idle)
-    val diaryDeleteState: StateFlow<DiaryDeleteState>  = _diaryDeleteState
+    val diaryDeleteState: StateFlow<DiaryDeleteState> = _diaryDeleteState
 
     private val _showDiaryDeleteFailureDialog = MutableStateFlow(false)
     val showDiaryDeleteFailureDialog: StateFlow<Boolean> = _showDiaryDeleteFailureDialog
@@ -48,7 +46,7 @@ class DiaryListViewModel @Inject constructor(
                 _diaryListState.value = DiaryListState.Failure(FAILURE_NETWORK_MESSAGE)
                 return@launch
             }
-            val result = diaryListRepository.getMonthlyDiary(year, month)
+            val result = diaryRepository.getMonthlyDiary(year, month)
             _diaryListState.value = result.fold(
                 onSuccess = {
                     retryCount = 0
@@ -59,9 +57,11 @@ class DiaryListViewModel @Inject constructor(
                     if (retryCount >= maxRetryCount) {
                         DiaryListState.Failure(FAILURE_TEMPORARY_MESSAGE)
                     } else {
-                        val errorMessage = if(it.message?.contains("200") == false) {
+                        val errorMessage = if (it.message?.contains("200") == false) {
                             FAILURE_TEMPORARY_MESSAGE
-                        } else { it.localizedMessage ?: UNKNOWN_ERROR }
+                        } else {
+                            it.localizedMessage ?: UNKNOWN_ERROR
+                        }
                         DiaryListState.Failure(errorMessage)
                     }
                 }
@@ -81,13 +81,13 @@ class DiaryListViewModel @Inject constructor(
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         _diaryDeleteState.value = DiaryDeleteState.Loading
         viewModelScope.launch {
-            if(!networkUtil.isNetworkAvailable()) {
+            if (!networkUtil.isNetworkAvailable()) {
                 _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
                 DiaryDeleteState.Failure(_failureDialogMessage.value)
                 _showDiaryDeleteFailureDialog.value = true
                 return@launch
             }
-            val result = dailyDiaryListRepository.deleteDailyDiary(year, month, day)
+            val result = diaryRepository.deleteDailyDiary(year, month, day)
             _diaryDeleteState.value = result.fold(
                 onSuccess = {
                     DiaryDeleteState.Success

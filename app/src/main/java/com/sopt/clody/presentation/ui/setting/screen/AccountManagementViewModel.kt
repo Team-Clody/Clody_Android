@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.datastore.TokenDataStore
-import com.sopt.clody.data.remote.dto.RequestModifyNicknameDto
-import com.sopt.clody.data.repository.AccountManagementRepository
+import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
+import com.sopt.clody.domain.repository.AccountManagementRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.presentation.utils.network.NetworkUtil
+import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -82,14 +82,14 @@ class AccountManagementViewModel @Inject constructor(
         }
     }
 
-    fun changeNickname(requestModifyNicknameDto: RequestModifyNicknameDto) {
+    fun changeNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto) {
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
                 _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
                 _showFailureDialog.value = true
             }
             _userNicknameState.value = UserNicknameState.Loading
-            val result = accountManagementRepository.modifyNickname(requestModifyNicknameDto)
+            val result = accountManagementRepository.modifyNickname(modifyNicknameRequestDto)
             _userNicknameState.value = result.fold(
                 onSuccess = { UserNicknameState.Success(it) },
                 onFailure = {
