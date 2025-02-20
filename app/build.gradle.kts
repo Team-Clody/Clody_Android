@@ -168,4 +168,7 @@ dependencies {
     implementation(libs.firebase.analytics)
     //fcm
     implementation(libs.firebase.messaging.ktx)
+
+    // Amplitude
+    implementation(libs.amplitudeAnalyticsAndroid)
 }
