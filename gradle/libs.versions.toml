@@ -1,171 +1,172 @@
 [versions]
-# SDK Versions
-compileSdk = "34"
-minSdk = "28"
-targetSdk = "34"
-accompanist = "0.25.1"
-jvmTarget = "1.8"
+agp = "8.7.3"
+kotlin = "2.1.0"
+coroutines = "1.10.1"
+core-ktx = "1.15.0"
+junit = "4.13.2"
+androidx-junit = "1.2.1"
+espresso-core = "3.6.1"
+lifecycle-runtime = "2.8.7"
+activity-compose = "1.9.3"
+compose-bom = "2024.12.01"
+splash-screen = "1.0.1"
 
-# Compose
-compose-compiler = "1.5.1"
-compose-bom = "2024.03.00"
-compose-material3 = "1.2.0-alpha07"
-activity-compose = "1.9.0"
-androidx-hilt-navigation-compose = "1.0.0"
-constraintlayout-compose = "1.0.1"
+hilt = "2.54"
+hilt-navigation = "1.2.0"
+navigation = "2.8.5"
 
-# Kotlin
-kotlin = "1.9.0"
-kotlinx-coroutines = "1.7.3"
-kotlinx-serialization-json = "1.5.1"
-kotlinx-datetime = "0.4.0"
-kotlinx-collections = "0.3.7"
+ksp = "2.1.0-1.0.29"
+serialization-json = "1.8.0"
+retrofit = "2.11.0"
+okhttp = "4.12.0"
+retrofit-serialization = "1.0.0"
+
 ktlint = "11.5.1"
-ksp = "1.9.10-1.0.13"
 
-# AndroidX
-core-ktx = "1.12.0"
-androidx-core = "1.12.0"
-androidx-lifecycle = "2.8.3"
-androidx-navigation = "2.7.6"
-androidx-activity-ktx = "1.8.2"
-androidx-splash-screen = "1.0.1"
-androidx-datastore = "1.1.0"
-androidx-paging = "3.2.1"
-androidx-paging-compose = "3.3.0-rc01"
-activity = "1.8.0"
+paging = "3.3.0"
+paging-compose = "3.3.0"
+
+lottie = "6.4.1"
+timber = "5.0.1"
+coil = "2.4.0"
+kakao = "2.20.1"
+google-services = "4.4.2"
+
+firebase-bom = "33.1.2"
+firebase-messaging = "24.0.0"
+firebase-analytics = "22.2.0"
+firebase-crashlytics = "19.0.3"
+firebase-crashlytics-plugin = "3.0.2"
+
+#admob = "23.6.0"
+kotlinx-datetime = "0.4.0"
+accompanist = "0.25.1"
 accompanist-insets = "0.28.0"
 
-# Third-Party Libraries
-retrofit = "2.9.0"
-retrofit-kotlinx-serialization-json = "1.0.0"
-okhttp = "4.11.0"
-timber = "5.0.1"
-encrypted-datastore = "1.7.21-1.0.8-1.1.0-alpha01"
-coil = "2.4.0"
-lottie-compose = "6.4.1"
-## Kakao
-kakaoVersion = "2.20.1"
+[libraries]
+# AndroidX Core
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+lifecycle-runtime = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime" }
+activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splash-screen" }
+paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "paging" }
+paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging-compose" }
 
-google-service = "4.4.0"
-viewpager-indicator = "5.0"
 
-# Hilt
-hilt = "2.48"
+kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" }
 
-# Javax
-javax = "1"
+# Compose 관련
+ui = { group = "androidx.compose.ui", name = "ui" }
+ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+material3 = { group = "androidx.compose.material3", name = "material3" }
 
-# Testing
-junit = "4.13.2"
-androidx-test-ext-junit = "1.1.5"
-androidx-test-runner = "1.5.2"
-androidx-test = "1.5.0"
-espresso-core = "3.5.1"
+# Coroutines
+coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutines" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
-#agp
-android-gradle-plugin = "8.3.1"
-firebaseDatabaseKtx = "21.0.0"
-constraintlayout = "2.1.4"
+# Dependency Injection (Hilt)
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt" }
+hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation" }
 
-# Process Phoenix
-phoenix = "3.0.0"
-# google
-google-services = "4.4.2"
-firebaseBom = "33.1.2"
-firebaseMessagingKtx = "24.0.0"
-firebaseAnalytics = "22.1.0"
-firebaseCrashlytics = "19.0.3"
-firebaseCrashlyticsPlugin = "3.0.2"
+# Navigation
+navigation = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+
+# Network (OkHttp + Retrofit)
+okhttp-bom = { group = "com.squareup.okhttp3", name = "okhttp-bom", version.ref = "okhttp" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp" }
+okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-serialization" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization-json" }
+
+# Firebase
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebase-bom" }
+firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebase-messaging" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebase-analytics" }
+firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebase-crashlytics" }
+
+# ETC
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
+lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
+#admob = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "admob" }
+
+# Accompanist
+accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
+accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist-insets" }
 
 [plugins]
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Kotlin Symbol Processing (KSP) 플러그인
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" } # Kotlin Android 플러그인
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" } # Kotlin JVM 플러그인
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" } # Kotlin Serialization 플러그인
-ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" } # Kotlin 코드 스타일 검사 플러그인
-android-application = { id = "com.android.application", version.ref = "android-gradle-plugin" } # Android 애플리케이션 플러그인
-android-library = { id = "com.android.library", version.ref = "android-gradle-plugin" } # Android 라이브러리 플러그인
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" } # Hilt DI 플러그인
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
-firebaseCrashlyticsPlugin = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin" } # Firebase Crashlytics 플러그인
+firebase-crashlytics-plugin = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
 
-[libraries]
-# Compose
-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" } # Compose BOM
-compose-compiler = { group = "androidx.compose.compiler", name = "compiler", version.ref = "compose-compiler" } # Compose 컴파일러
-material3-compose = { group = "androidx.compose.material3", name = "material3", version.ref = "compose-material3" } # Material Design 3 Compose 라이브러리
-ui = { group = "androidx.compose.ui", name = "ui" } # Compose UI 라이브러리
-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" } # Compose 그래픽 라이브러리
-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" } # Compose UI 도구 라이브러리
-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" } # Compose UI 미리보기 도구 라이브러리
-ui-foundation = { group = "androidx.compose.foundation", name = "foundation" } # Compose 기초 라이브러리
-coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" } # 이미지 로딩 라이브러리 (Compose용)
-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" } # Compose용 Activity 라이브러리
-lifecycle-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" } # Compose용 Lifecycle 라이브러리
-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidx-navigation" } # Compose용 Navigation 라이브러리
-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt-navigation-compose" } # Compose용 Hilt Navigation 라이브러리
-constraintlayout-compose = { group = "androidx.constraintlayout", name = "constraintlayout-compose", version.ref = "constraintlayout-compose" } # Compose용 ConstraintLayout 라이브러리
-accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
+[bundles]
+androidx = [
+    "core-ktx",
+    "lifecycle-runtime",
+    "activity-compose",
+    "ui",
+    "ui-graphics",
+    "ui-tooling-preview",
+    "material3",
+    "navigation",
+    "splashscreen",
+    "paging",
+    "paging-compose"
+]
 
-# Kotlin
-kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" } # Kotlin Gradle 플러그인
-kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" } # Android용 Kotlin Coroutines
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" } # Kotlin Coroutines 핵심 라이브러리
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" } # Kotlinx JSON 직렬화 라이브러리
-kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" } # Kotlin Coroutines 테스트 라이브러리
-kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinx-datetime" } # Kotlinx 날짜/시간 라이브러리
-kotlinx-collections = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections" } # Kotlinx 불변 컬렉션 라이브러리
+coroutines = [
+    "coroutines-core",
+    "coroutines-android",
+]
 
-# AndroidX
-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" } # AndroidX Core KTX 라이브러리
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" } # AndroidX Core KTX 라이브러리 (중복)
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" } # AndroidX Lifecycle Runtime KTX 라이브러리
-androidx-lifecycle-runtime-compose = { group = "androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" } # Compose용 Lifecycle 라이브러리
-androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" } # AndroidX Lifecycle ViewModel KTX 라이브러리
-androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "androidx-activity-ktx" } # AndroidX Activity KTX 라이브러리
-androidx-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "androidx-splash-screen" } # AndroidX SplashScreen 라이브러리
-androidx-paging = { group = "androidx.paging", name = "paging-runtime", version.ref = "androidx-paging" } # AndroidX Paging 라이브러리
-androidx-paging-common = { group = "androidx.paging", name = "paging-common", version.ref = "androidx-paging" } # AndroidX Paging 공용 라이브러리
-androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "androidx-paging-compose" } # Compose용 AndroidX Paging 라이브러리
-accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist-insets" } #
+test = [
+    "junit",
+    "androidx-junit",
+    "espresso-core",
+    "ui-test-junit4",
+    "coroutines-test"
+]
 
-# Third-Party Libraries
-retrofit-core = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" } # Retrofit 네트워킹 라이브러리
-retrofit-kotlin-serialization = { group = "com.jakewharton.retrofit", name = "retrofit2-kotlinx-serialization-converter", version.ref = "retrofit-kotlinx-serialization-json" } # Retrofit Kotlinx Serialization 변환기
-okhttp-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" } # OkHttp 로깅 인터셉터
-timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" } # Timber 로깅 라이브러리
-androidx-datastore-core = { group = "androidx.datastore", name = "datastore", version.ref = "androidx-datastore" } # AndroidX DataStore 핵심 라이브러리
-androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidx-datastore" } # AndroidX DataStore Preferences 라이브러리
-encrypted-datastore-preference-ksp = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-ksp", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences KSP
-encrypted-datastore-preference-ksp-annotations = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-ksp-annotations", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences KSP 어노테이션
-encrypted-datastore-preference-security = { group = "tech.thdev", name = "useful-encrypted-data-store-preferences-security", version.ref = "encrypted-datastore" } # 암호화된 DataStore Preferences 보안 라이브러리
-lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie-compose" } # Lottie Compose 라이브러리
-viewpager-indicator = { group = "com.tbuonomo", name = "dotsindicator", version.ref = "viewpager-indicator" } # ViewPager 인디케이터 라이브러리
-androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" } # AndroidX Activity 라이브러리
-process-phoenix = { group = "com.jakewharton", name = "process-phoenix", version.ref = "phoenix" } # Process Phoenix 라이브러리
+debug = [
+    "ui-tooling",
+    "ui-test-manifest"
+]
 
-firebase-messaging-ktx = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebaseMessagingKtx" }
-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebaseAnalytics" }
-firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebaseCrashlytics" }
-kakao-user = {group = "com.kakao.sdk", name = "v2-user", version.ref = "kakaoVersion"}
+hilt = [
+    "hilt-android",
+    "hilt-navigation"
+]
 
-# Hilt
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" } # Hilt Android 라이브러리
-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" } # Hilt Android 컴파일러
-hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" } # Hilt Android 테스트 라이브러리
-hilt-testing-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" } # Hilt Android 테스트 컴파일러
+okhttp = [
+    "okhttp",
+    "okhttp-logging"
+]
 
-# Javax
-javax-inject = { group = "javax.inject", name = "javax.inject", version.ref = "javax" } # Javax Inject 라이브러리
+retrofit = [
+    "retrofit",
+    "retrofit-serialization"
+]
 
-# Test
-junit = { group = "junit", name = "junit", version.ref = "junit" } # JUnit 테스트 라이브러리
-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" } # Compose UI 테스트 매니페스트 라이브러리
-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" } # Compose UI JUnit4 테스트 라이브러리
-androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" } # AndroidX Test JUnit 확장 라이브러리
-androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidx-test-runner" } # AndroidX Test Runner 라이브러리
-androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test" } # AndroidX Test Core 라이브러리
-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
-firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
+firebase = [
+    "firebase-messaging",
+    "firebase-analytics",
+    "firebase-crashlytics"
+]
