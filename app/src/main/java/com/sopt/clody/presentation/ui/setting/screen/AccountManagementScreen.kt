@@ -31,6 +31,8 @@ import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomShee
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -85,9 +87,15 @@ fun AccountManagementRoute(
         isValidNickname = isValidNickname,
         nicknameMessage = nicknameMessage,
         showLogoutDialog = showLogoutDialog,
-        updateLogoutDialog = { state -> showLogoutDialog = state },
+        updateLogoutDialog = { state ->
+            showLogoutDialog = state
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
+        },
         showRevokeDialog = showRevokeDialog,
-        updateRevokeDialog = { state -> showRevokeDialog = state },
+        updateRevokeDialog = { state ->
+            showRevokeDialog = state
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REVOKE)
+        },
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
         onBackClick = { navigator.navigateBack() }
