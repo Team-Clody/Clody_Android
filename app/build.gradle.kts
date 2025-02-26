@@ -33,10 +33,12 @@ android {
         val clodyBaseUrl: String = localProperties.getProperty("clody.base.url") ?: ""
         val anotherBaseUrl: String = localProperties.getProperty("another.base.url") ?: ""
         val kakaoApiKey: String = localProperties.getProperty("kakao.api.key") ?: ""
+        val amplitudeApiKey: String = localProperties.getProperty("amplitude.api.key") ?: ""
 
         buildConfigField("String", "CLODY_BASE_URL", "\"$clodyBaseUrl\"")
         buildConfigField("String", "ANOTHER_BASE_URL", "\"$anotherBaseUrl\"")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
+        buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
 
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
 
@@ -55,6 +57,7 @@ android {
 
     buildTypes {
         val baseUrl = localProperties.getProperty("clody.base.url") ?: ""
+        val amplitudeApiKey: String = localProperties.getProperty("amplitude.api.key") ?: ""
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
@@ -63,12 +66,14 @@ android {
                 mappingFileUploadEnabled = true
             }
             buildConfigField("String", "CLODY_BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
         }
         debug {
             firebaseCrashlytics {
                 mappingFileUploadEnabled = true
             }
             buildConfigField("String", "CLODY_BASE_URL", "\"${baseUrl}/test/\"")
+            buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
         }
     }
     compileOptions {
