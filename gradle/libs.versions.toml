@@ -78,6 +78,9 @@ firebaseAnalytics = "22.1.0"
 firebaseCrashlytics = "19.0.3"
 firebaseCrashlyticsPlugin = "3.0.2"
 
+# Amplitude
+amplitude = "1.+"
+
 [plugins]
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Kotlin Symbol Processing (KSP) 플러그인
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" } # Kotlin Android 플러그인
@@ -171,4 +174,4 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 firebase-database-ktx = { group = "com.google.firebase", name = "firebase-database-ktx", version.ref = "firebaseDatabaseKtx" }
 
 # Amplitude
-amplitudeAnalyticsAndroid = { group = "com.amplitude", name = "analytics-android", version = "1.+" }
+amplitude = { group = "com.amplitude", name = "analytics-android", version.ref = "amplitude" }

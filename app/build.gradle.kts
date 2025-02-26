@@ -170,5 +170,5 @@ dependencies {
     implementation(libs.firebase.messaging.ktx)
 
     // Amplitude
-    implementation(libs.amplitudeAnalyticsAndroid)
+    implementation(libs.amplitude)
 }
