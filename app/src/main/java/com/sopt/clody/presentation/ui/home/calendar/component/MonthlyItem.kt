@@ -16,6 +16,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.presentation.ui.home.model.CalendarDate
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 
@@ -70,6 +72,7 @@ fun MonthlyItem(
                                             date = localDate,
                                             dayOfWeek = localDate.dayOfWeek,
                                             onDayClick = { clickedDate ->
+                                                AmplitudeUtils.trackEvent(AmplitudeConstraints.HOME_CALENDAR_CLOVER)
                                                 onDayClick(clickedDate)
                                             },
                                             isSelected = localDate == selectedDate,

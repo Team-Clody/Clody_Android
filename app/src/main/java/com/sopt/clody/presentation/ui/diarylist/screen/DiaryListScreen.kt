@@ -23,6 +23,8 @@ import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -42,6 +44,10 @@ fun DiaryListRoute(
     var yearMonthPickerState by remember { mutableStateOf(false) }
     var diaryDeleteBottomSheetState by remember { mutableStateOf(false) }
     var diaryDeleteDialogState by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST)
+    }
 
     LaunchedEffect(selectedYearInDiaryList, selectedMonthInDiaryList) {
         diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList)
@@ -69,11 +75,17 @@ fun DiaryListRoute(
         showDiaryDeleteBottomSheet = { diaryDeleteBottomSheetState = true },
         dismissDiaryDeleteBottomSheet = { diaryDeleteBottomSheetState = false },
         diaryDeleteDialogState = diaryDeleteDialogState,
-        showDiaryDeleteDialog = { diaryDeleteDialogState = true },
+        showDiaryDeleteDialog = {
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_DELETE_DIARY)
+            diaryDeleteDialogState = true
+        },
         dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
         onClickDiaryDelete = { year, month, day -> diaryListViewModel.deleteDailyDiary(year, month, day) },
         onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
-        onClickReplyDiary = { year, month, day, replyStatus -> navigator.navigateReplyLoading(year, month, day, replyStatus) }
+        onClickReplyDiary = { year, month, day, replyStatus ->
+            navigator.navigateReplyLoading(year, month, day, replyStatus)
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_REPLY)
+        }
     )
 }
 
@@ -173,7 +185,10 @@ fun DiaryListScreen(
                 onClickDiaryDelete(selectedDiaryDate.year, selectedDiaryDate.month, selectedDiaryDate.day)
                 dismissDiaryDeleteDialog()
             },
-            onDismiss = dismissDiaryDeleteDialog,
+            onDismiss = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_NO_DELETE_DIARY)
+                dismissDiaryDeleteDialog()
+            },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white
         )

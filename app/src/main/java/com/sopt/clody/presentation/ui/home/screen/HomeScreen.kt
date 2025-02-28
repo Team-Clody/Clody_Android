@@ -29,6 +29,8 @@ import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
 import com.sopt.clody.presentation.ui.home.model.DiaryDateData
 import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -46,6 +48,10 @@ fun HomeRoute(
         calendarState is CalendarState.Error -> (calendarState as CalendarState.Error).message
         dailyDiariesState is DailyDiariesState.Error -> (dailyDiariesState as DailyDiariesState.Error).message
         else -> ""
+    }
+
+    LaunchedEffect(Unit) {
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
     }
 
     LaunchedEffect(selectedYear, selectedMonth) {
@@ -68,8 +74,12 @@ fun HomeRoute(
             homeViewModel = homeViewModel,
             onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
             onClickSetting = { navigator.navigateSetting() },
-            onClickWriteDiary = { year, month, day -> navigator.navigateWriteDiary(year, month, day) },
-            onClickReplyDiary = { year, month, day, replyStatus -> navigator.navigateReplyLoading(year, month, day, replyStatus) },
+            onClickWriteDiary = { year, month, day ->
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
+                navigator.navigateWriteDiary(year, month, day) },
+            onClickReplyDiary = { year, month, day, replyStatus ->
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_REPLY)
+                navigator.navigateReplyLoading(year, month, day, replyStatus) },
             selectedYear = selectedYear,
             selectedMonth = selectedMonth
         )
@@ -126,7 +136,9 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 HomeTopAppBar(
-                    onClickDiaryList = { onClickDiaryList(selectedDiaryDate.year, selectedDiaryDate.month) },
+                    onClickDiaryList = {
+                        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_LIST_DIARY)
+                        onClickDiaryList(selectedDiaryDate.year, selectedDiaryDate.month) },
                     onClickSetting = onClickSetting,
                     onShowYearMonthPickerStateChange = { newState -> homeViewModel.setShowYearMonthPickerState(newState) },
                     selectedYear = selectedDiaryDate.year,
@@ -215,7 +227,9 @@ fun HomeScreen(
         if (showDiaryDeleteState) {
             DiaryDeleteSheet(
                 onDismiss = { homeViewModel.setShowDiaryDeleteState(false) },
-                showDiaryDeleteDialog = { homeViewModel.setShowDiaryDeleteDialog(true) }
+                showDiaryDeleteDialog = {
+                    AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_DELETE_DIARY)
+                    homeViewModel.setShowDiaryDeleteDialog(true) }
             )
         }
 
@@ -229,7 +243,9 @@ fun HomeScreen(
                     homeViewModel.deleteDailyDiary(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate.dayOfMonth)
                     homeViewModel.setShowDiaryDeleteDialog(false)
                 },
-                onDismiss = { homeViewModel.setShowDiaryDeleteDialog(false) },
+                onDismiss = {
+                    AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_NO_DELETE_DIARY)
+                    homeViewModel.setShowDiaryDeleteDialog(false) },
                 confirmButtonColor = ClodyTheme.colors.red,
                 confirmButtonTextColor = ClodyTheme.colors.white
             )

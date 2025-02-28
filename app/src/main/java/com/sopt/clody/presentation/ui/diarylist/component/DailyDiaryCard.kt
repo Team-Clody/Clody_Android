@@ -1,4 +1,4 @@
-        package com.sopt.clody.presentation.ui.diarylist.component
+package com.sopt.clody.presentation.ui.diarylist.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
