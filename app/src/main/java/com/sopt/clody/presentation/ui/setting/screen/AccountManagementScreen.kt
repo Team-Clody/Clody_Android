@@ -87,15 +87,9 @@ fun AccountManagementRoute(
         isValidNickname = isValidNickname,
         nicknameMessage = nicknameMessage,
         showLogoutDialog = showLogoutDialog,
-        updateLogoutDialog = { state ->
-            showLogoutDialog = state
-            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
-        },
+        updateLogoutDialog = { state -> showLogoutDialog = state },
         showRevokeDialog = showRevokeDialog,
-        updateRevokeDialog = { state ->
-            showRevokeDialog = state
-            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REVOKE)
-        },
+        updateRevokeDialog = { state -> showRevokeDialog = state },
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
         onBackClick = { navigator.navigateBack() }
@@ -200,7 +194,10 @@ fun AccountManagementScreen(
             descriptionMassage = stringResource(R.string.account_management_logout_dialog_description),
             confirmOption = stringResource(R.string.account_management_logout_dialog_confirm),
             dismissOption = stringResource(R.string.account_management_logout_dialog_dismiss),
-            confirmAction = { accountManagementViewModel.logOutAccount() },
+            confirmAction = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
+                accountManagementViewModel.logOutAccount()
+            },
             onDismiss = { updateLogoutDialog(false) }
         )
     }
@@ -211,7 +208,10 @@ fun AccountManagementScreen(
             descriptionMassage = stringResource(R.string.account_management_revoke_dialog_description),
             confirmOption = stringResource(R.string.account_management_revoke_dialog_confirm),
             dismissOption = stringResource(R.string.account_management_revoke_dialog_dismiss),
-            confirmAction = { accountManagementViewModel.revokeAccount() },
+            confirmAction = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REVOKE)
+                accountManagementViewModel.revokeAccount()
+            },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white,
             onDismiss = { updateRevokeDialog(false) }
