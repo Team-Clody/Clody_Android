@@ -1,4 +1,4 @@
-        package com.sopt.clody.presentation.ui.diarylist.component
+package com.sopt.clody.presentation.ui.diarylist.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -29,8 +29,6 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
-import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
-import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -173,7 +171,6 @@ fun DiaryDeleteButton(
             .clip(RoundedCornerShape(12.dp))
             .clickable(
                 onClick = {
-                    AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_DELETE_DIARY)
                     diaryListViewModel.setSelectedDiaryDate(dailyDiary.date)
                     showDiaryDeleteBottomSheet()
                 },

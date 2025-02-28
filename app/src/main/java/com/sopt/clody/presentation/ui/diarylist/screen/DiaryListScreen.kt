@@ -75,7 +75,10 @@ fun DiaryListRoute(
         showDiaryDeleteBottomSheet = { diaryDeleteBottomSheetState = true },
         dismissDiaryDeleteBottomSheet = { diaryDeleteBottomSheetState = false },
         diaryDeleteDialogState = diaryDeleteDialogState,
-        showDiaryDeleteDialog = { diaryDeleteDialogState = true },
+        showDiaryDeleteDialog = {
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_DELETE_DIARY)
+            diaryDeleteDialogState = true
+        },
         dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
         onClickDiaryDelete = { year, month, day -> diaryListViewModel.deleteDailyDiary(year, month, day) },
         onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
