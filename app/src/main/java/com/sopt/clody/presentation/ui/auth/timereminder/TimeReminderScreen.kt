@@ -42,6 +42,8 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -110,6 +112,7 @@ fun TimeReminderRoute(
             viewModel.setSelectedTime(amPm, hour, minute)
         },
         onCompleteClick = {
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.ONBOARDING_ALARM)
             viewModel.sendNotification(context, isNotificationPermissionGranted.value)
         },
         isLoading = timeReminderState is TimeReminderState.Loading
