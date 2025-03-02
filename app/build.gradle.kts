@@ -27,7 +27,9 @@ android {
         versionCode = 18
         versionName = "1.0.6"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
+        val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
+        buildConfigField("String","APLITUDE_API_KEY","\"$amplitudeApiKey\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -103,6 +105,9 @@ dependencies {
     // FireBase
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
+
+    // Amplitude
+    implementation(libs.amplitude)
 
     // Google Admob
 //    implementation(libs.admob)

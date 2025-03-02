@@ -22,6 +22,8 @@ import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -33,6 +35,7 @@ fun SettingRoute(
 
     LaunchedEffect(Unit) {
         settingViewModel.getVersionInfo()
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.SETTING)
     }
 
     SettingScreen(

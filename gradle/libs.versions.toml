@@ -38,6 +38,8 @@ firebase-analytics = "22.2.0"
 firebase-crashlytics = "19.0.3"
 firebase-crashlytics-plugin = "3.0.2"
 
+amplitude = "1.+"
+
 #admob = "23.6.0"
 kotlinx-datetime = "0.4.0"
 accompanist = "0.25.1"
@@ -94,6 +96,9 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebase-messaging" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebase-crashlytics" }
+
+# Amplitude
+amplitude = { group = "com.amplitude", name = "analytics-android", version.ref = "amplitude" }
 
 # ETC
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }

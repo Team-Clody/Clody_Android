@@ -40,6 +40,8 @@ import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
@@ -58,6 +60,7 @@ fun ReplyLoadingRoute(
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
 
     LaunchedEffect(Unit) {
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY)
         viewModel.getDiaryTime(year, month, day)
     }
 
@@ -152,7 +155,9 @@ fun ReplyLoadingScreen(
         },
         bottomBar = {
             ClodyButton(
-                onClick = { onCompleteClick() },
+                onClick = {
+                    if(isComplete) AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY_REPLY)
+                    onCompleteClick() },
                 text = if (isComplete) stringResource(R.string.loading_button_open) else stringResource(R.string.loading_button_confirm),
                 enabled = isComplete,
                 modifier = Modifier
