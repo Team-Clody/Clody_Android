@@ -1,54 +1,45 @@
 import java.util.Properties
 
-@Suppress("DSL_SCOPE_VIOLATION")
-
-// local.properties 파일 읽기
-val localProperties = Properties()
-file(rootProject.file("local.properties")).inputStream().use { inputStream ->
-    localProperties.load(inputStream)
+val properties = Properties().apply {
+    load(project.rootProject.file("local.properties").inputStream())
 }
 
 plugins {
-    id("com.android.application")
+    alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
-    id("com.google.gms.google-services")
-    id("com.google.firebase.crashlytics")
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics.plugin)
 }
 
 android {
     namespace = "com.sopt.clody"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.sopt.clody"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
+        minSdk = 28
+        targetSdk = 35
         versionCode = 18
         versionName = "1.0.6"
-
-        val clodyBaseUrl: String = localProperties.getProperty("clody.base.url") ?: ""
-        val anotherBaseUrl: String = localProperties.getProperty("another.base.url") ?: ""
-        val kakaoApiKey: String = localProperties.getProperty("kakao.api.key") ?: ""
-        val amplitudeApiKey: String = localProperties.getProperty("amplitude.api.key") ?: ""
-
-        buildConfigField("String", "CLODY_BASE_URL", "\"$clodyBaseUrl\"")
-        buildConfigField("String", "ANOTHER_BASE_URL", "\"$anotherBaseUrl\"")
+        val kakaoApiKey: String = properties.getProperty("kakao.api.key")
+        val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
-        buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
-
+        buildConfigField("String","APLITUDE_API_KEY","\"$amplitudeApiKey\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {
         create("release") {
-            storeFile = file(localProperties.getProperty("storeFile") ?: "path/to/your/keystore.jks")
+            val localProperties = Properties().apply {
+                load(project.rootProject.file("local.properties").inputStream())
+            }
+            storeFile = project.rootProject.file(localProperties.getProperty("storeFile"))
             storePassword = localProperties.getProperty("storePassword") ?: ""
             keyAlias = localProperties.getProperty("keyAlias") ?: ""
             keyPassword = localProperties.getProperty("keyPassword") ?: ""
@@ -56,124 +47,79 @@ android {
     }
 
     buildTypes {
-        val baseUrl = localProperties.getProperty("clody.base.url") ?: ""
-        val amplitudeApiKey: String = localProperties.getProperty("amplitude.api.key") ?: ""
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
-            firebaseCrashlytics {
-                mappingFileUploadEnabled = true
-            }
-            buildConfigField("String", "CLODY_BASE_URL", "\"$baseUrl\"")
-            buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
-        }
         debug {
-            firebaseCrashlytics {
-                mappingFileUploadEnabled = true
-            }
-            buildConfigField("String", "CLODY_BASE_URL", "\"${baseUrl}/test/\"")
-            buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
+            isMinifyEnabled = false
+            buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
+        }
+
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
     kotlinOptions {
-        jvmTarget = libs.versions.jvmTarget.get()
+        jvmTarget = "11"
     }
     buildFeatures {
+        buildConfig = true
         compose = true
-        buildConfig = true  // BuildConfig 기능 활성화
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
 }
 
-
 dependencies {
-    // Compose
-    implementation(libs.compose.compiler)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.ui)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.material3.compose)
-    implementation(libs.activity.compose)
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.lifecycle.compose)
-    implementation(libs.constraintlayout.compose)
 
-    // Kotlin
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.kotlinx.coroutines.test)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.collections)
-
-    // AndroidX Core
-    implementation(libs.core.ktx)
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.splashscreen)
-    implementation(libs.androidx.paging)
-    implementation(libs.androidx.paging.common)
-    implementation(libs.androidx.paging.compose)
-    implementation(libs.accompanist.insets)
-
-    // Hilt (Dependency Injection)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.javax.inject)
-
-    // Retrofit (Networking)
-    implementation(libs.retrofit.core)
-    implementation(libs.retrofit.kotlin.serialization)
-    implementation(libs.okhttp.logging)
-
-    // Image Loading
-    implementation(libs.coil.compose)
-
-
-    // Logging
-    implementation(libs.timber)
-
-    // DataStore (Local Storage)
-    implementation(libs.androidx.datastore.core)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.encrypted.datastore.preference.ksp)
-    implementation(libs.encrypted.datastore.preference.ksp.annotations)
-    implementation(libs.encrypted.datastore.preference.security)
-
-    // ViewPager Indicator
-    implementation(libs.viewpager.indicator)
-
-    // Testing
+    // Test
     testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    androidTestImplementation(libs.bundles.test)
 
-    // Accompanist System UI Controller
-    implementation(libs.accompanist.systemuicontroller)
-    // Kakao
-    implementation(libs.kakao.user)
-    implementation(libs.process.phoenix)
-    implementation(libs.lottie.compose)
+    // Debug
+    debugImplementation(libs.bundles.debug)
 
-    //firebase
+    // Androidx
+    implementation(libs.bundles.androidx)
+    implementation(platform(libs.compose.bom))
+
+    // Coroutine
+    implementation(libs.bundles.coroutines)
+
+    // DI
+    implementation(libs.bundles.hilt)
+    ksp(libs.hilt.compiler)
+
+    // Third-Party
+    implementation(platform(libs.okhttp.bom))
+    implementation(libs.bundles.okhttp)
+    implementation(libs.bundles.retrofit)
+    implementation(libs.kotlinx.serialization.json)
+
+    // FireBase
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.analytics)
-    //fcm
-    implementation(libs.firebase.messaging.ktx)
+    implementation(libs.bundles.firebase)
 
     // Amplitude
     implementation(libs.amplitude)
+
+    // Google Admob
+//    implementation(libs.admob)
+
+    // UI Enhance
+    implementation(libs.accompanist.systemuicontroller)
+    implementation(libs.accompanist.insets)
+
+    // ETC
+    implementation(libs.timber)
+    implementation(libs.lottie.compose)
+    implementation(libs.coil)
+    implementation(libs.kakao.user)
+    implementation(libs.kotlinx.datetime)
 }
