@@ -80,6 +80,5 @@ fun DiaryDeleteBottomSheetItem(
             )
         }
         Spacer(modifier = Modifier.navigationBarsPadding())
-        Spacer(modifier = Modifier.height(60.dp))
     }
 }
