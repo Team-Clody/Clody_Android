@@ -29,7 +29,7 @@ android {
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
-        buildConfigField("String","APLITUDE_API_KEY","\"$amplitudeApiKey\"")
+        buildConfigField("String","AMPLITUDE_API_KEY","\"$amplitudeApiKey\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -39,10 +39,10 @@ android {
             val localProperties = Properties().apply {
                 load(project.rootProject.file("local.properties").inputStream())
             }
-            storeFile = project.rootProject.file(localProperties.getProperty("storeFile"))
-            storePassword = localProperties.getProperty("storePassword") ?: ""
-            keyAlias = localProperties.getProperty("keyAlias") ?: ""
-            keyPassword = localProperties.getProperty("keyPassword") ?: ""
+//            storeFile = project.rootProject.file(localProperties.getProperty("storeFile"))
+//            storePassword = localProperties.getProperty("storePassword") ?: ""
+//            keyAlias = localProperties.getProperty("keyAlias") ?: ""
+//            keyPassword = localProperties.getProperty("keyPassword") ?: ""
         }
     }
 
