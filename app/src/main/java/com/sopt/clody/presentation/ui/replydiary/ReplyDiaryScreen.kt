@@ -37,6 +37,8 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -53,6 +55,7 @@ fun ReplyDiaryRoute(
     val replyDiaryState by viewModel.replyDiaryState.collectAsState()
 
     LaunchedEffect(Unit) {
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REPLY)
         viewModel.getReplyDiary(year, month, date)
     }
 

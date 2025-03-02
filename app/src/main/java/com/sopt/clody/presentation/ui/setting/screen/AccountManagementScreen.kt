@@ -31,6 +31,8 @@ import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomShee
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -192,7 +194,10 @@ fun AccountManagementScreen(
             descriptionMassage = stringResource(R.string.account_management_logout_dialog_description),
             confirmOption = stringResource(R.string.account_management_logout_dialog_confirm),
             dismissOption = stringResource(R.string.account_management_logout_dialog_dismiss),
-            confirmAction = { accountManagementViewModel.logOutAccount() },
+            confirmAction = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
+                accountManagementViewModel.logOutAccount()
+            },
             onDismiss = { updateLogoutDialog(false) }
         )
     }
@@ -203,7 +208,10 @@ fun AccountManagementScreen(
             descriptionMassage = stringResource(R.string.account_management_revoke_dialog_description),
             confirmOption = stringResource(R.string.account_management_revoke_dialog_confirm),
             dismissOption = stringResource(R.string.account_management_revoke_dialog_dismiss),
-            confirmAction = { accountManagementViewModel.revokeAccount() },
+            confirmAction = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REVOKE)
+                accountManagementViewModel.revokeAccount()
+            },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white,
             onDismiss = { updateRevokeDialog(false) }

@@ -44,6 +44,8 @@ import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.textfield.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -91,7 +93,9 @@ fun WriteDiaryRoute(
         entryToDelete = entryToDelete,
         allFieldsEmpty = allFieldsEmpty,
         showDialog = showDialog,
-        onClickBack = { navigator.navigateHome(year, month) },
+        onClickBack = {
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_BACK)
+            navigator.navigateHome(year, month) },
         onCompleteClick = { viewModel.writeDiary(year, month, day, entries) },
         year = year,
         month = month,
@@ -159,6 +163,7 @@ fun WriteDiaryScreen(
                     ) {
                         IconButton(
                             onClick = {
+                                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_ADD_LIST)
                                 if (entries.size < 5) {
                                     viewModel.addEntry()
                                 }
@@ -180,6 +185,7 @@ fun WriteDiaryScreen(
 
                     ClodyButton(
                         onClick = {
+                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_COMPLETE)
                             viewModel.validateEntries()
                             if (showWarnings.all { !it }) {
                                 if (entries.size > 1 && entries.any { it.isEmpty() }) {
@@ -267,6 +273,7 @@ fun WriteDiaryScreen(
                     DeleteWriteDiaryBottomSheet(
                         onDismissRequest = { viewModel.updateShowDeleteBottomSheet(false) },
                         onDeleteConfirm = {
+                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_DELETE_LIST)
                             if (entryToDelete != -1) {
                                 viewModel.removeEntry(entryToDelete)
                             }
@@ -276,7 +283,9 @@ fun WriteDiaryScreen(
 
                 if (showDialog) {
                     ClodyDialog(
-                        onDismiss = { viewModel.updateShowDialog(false) },
+                        onDismiss = {
+                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_NO_COMPLETE)
+                            viewModel.updateShowDialog(false) },
                         titleMassage = stringResource(R.string.write_diary_dialog_title),
                         descriptionMassage = stringResource(R.string.write_diary_dialog_description),
                         confirmOption = stringResource(R.string.write_diary_dialog_confirm_option),
