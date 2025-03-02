@@ -12,8 +12,6 @@ import java.time.LocalDate
 @Composable
 fun DiaryStateButton(
     diaryCount: Int,
-    replyStatus: String,
-    isToday: Boolean,
     isDeleted: Boolean,
     year: Int,
     month: Int,
@@ -22,11 +20,15 @@ fun DiaryStateButton(
     onClickReplyDiary: () -> Unit,
 ) {
     val today = LocalDate.now()
-    val isSelectedDateToday = year == today.year && month == today.monthValue && day == today.dayOfMonth
+    val isAvailableDay = year == today.year && month == today.monthValue && (day == today.dayOfMonth || day == today.dayOfMonth - 1)
+
+    val writeDiaryEnabled = diaryCount == 0  && isAvailableDay
+    val writeDiaryDisabled = diaryCount == 0 && !isAvailableDay
+    val checkReplyEnabled = diaryCount != 0 && !isDeleted
+    val checkReplyDisabled = diaryCount != 0 && isDeleted
 
     when {
-
-        isToday && diaryCount == 0 -> {
+        writeDiaryEnabled -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
@@ -37,40 +39,7 @@ fun DiaryStateButton(
             )
         }
 
-        isDeleted && diaryCount != 0 -> {
-            ClodyReplyButton(
-                onClick = onClickReplyDiary,
-                text = "답장확인",
-                enabled = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
-
-        diaryCount != 0 && (replyStatus == "UNREADY" || replyStatus == "READY_NOT_READ" || replyStatus == "READY_READ") -> {
-            ClodyReplyButton(
-                onClick = onClickReplyDiary,
-                text = "답장확인",
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
-
-        isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
-            ClodyButton(
-                onClick = { onClickWriteDiary(year, month, day) },
-                text = "일기쓰기",
-                enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            )
-        }
-
-        !isSelectedDateToday && diaryCount == 0 && replyStatus == "UNREADY" -> {
+        writeDiaryDisabled -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
                 text = "일기쓰기",
@@ -81,8 +50,26 @@ fun DiaryStateButton(
             )
         }
 
-        else -> {
+        checkReplyEnabled -> {
+            ClodyReplyButton(
+                onClick = onClickReplyDiary,
+                text = "답장확인",
+                enabled = true,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
+        }
 
+        checkReplyDisabled -> {
+            ClodyReplyButton(
+                onClick = onClickReplyDiary,
+                text = "답장확인",
+                enabled = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            )
         }
     }
 }
