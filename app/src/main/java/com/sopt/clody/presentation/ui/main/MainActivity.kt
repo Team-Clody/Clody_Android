@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
@@ -19,6 +21,8 @@ import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.CLODYTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,6 +34,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             CLODYTheme {
                 val navController = rememberNavController()
+                val currentIntent by rememberUpdatedState(newValue = intent)
+
+                LaunchedEffect(key1 = currentIntent) {
+                    if (currentIntent?.extras?.containsKey("google.message_id") == true) {
+                        logPushClickEvent()
+                    }
+                }
 
                 LaunchedEffect(key1 = intent.getBooleanExtra("NAVIGATE_TO_LOGIN", false)) {
                     if (intent.getBooleanExtra("NAVIGATE_TO_LOGIN", false)) {
@@ -65,5 +76,9 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    private fun logPushClickEvent() {
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.ALARM)
     }
 }
