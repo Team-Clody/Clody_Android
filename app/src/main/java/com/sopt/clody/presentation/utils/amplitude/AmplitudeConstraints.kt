@@ -31,7 +31,6 @@ object AmplitudeConstraints {
     const val SETTING = "setting"
     const val LOGOUT = "logout"
     const val REVOKE = "revoke"
-    // 알림 설정
-    const val ALARM_REMINDER = "alarm_reminder"
-    const val ALARM_REPLY = "alarm_reply"
+    // FCM
+    const val ALARM = "alarm"
 }
