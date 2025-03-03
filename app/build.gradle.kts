@@ -29,7 +29,7 @@ android {
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
-        buildConfigField("String","APLITUDE_API_KEY","\"$amplitudeApiKey\"")
+        buildConfigField("String","AMPLITUDE_API_KEY","\"$amplitudeApiKey\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
