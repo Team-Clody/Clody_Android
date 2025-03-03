@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,9 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
@@ -35,10 +39,19 @@ class MainActivity : ComponentActivity() {
             CLODYTheme {
                 val navController = rememberNavController()
                 val currentIntent by rememberUpdatedState(newValue = intent)
+                var processedIntent by remember { mutableStateOf<Intent?>(null) }
 
                 LaunchedEffect(key1 = currentIntent) {
-                    if (currentIntent?.extras?.containsKey("google.message_id") == true) {
-                        logPushClickEvent()
+                    if (processedIntent != currentIntent) {
+                        handleIntent(currentIntent)
+                        processedIntent = currentIntent
+                    }
+                }
+
+                SideEffect {
+                    if (processedIntent != intent) {
+                        handleIntent(intent)
+                        processedIntent = intent
                     }
                 }
 
@@ -75,6 +88,12 @@ class MainActivity : ComponentActivity() {
                     }
                 )
             }
+        }
+    }
+
+    private fun handleIntent(intent: Intent?) {
+        if (intent?.extras?.containsKey("google.message_id") == true) {
+            logPushClickEvent()
         }
     }
 
