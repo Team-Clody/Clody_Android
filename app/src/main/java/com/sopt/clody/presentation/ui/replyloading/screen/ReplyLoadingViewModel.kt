@@ -72,8 +72,9 @@ class ReplyLoadingViewModel @Inject constructor(
     private fun handleResult(result: Result<DiaryTimeResponseDto>) {
         result.fold(
             onSuccess = { data ->
+                val diaryWrittenDay = data.date.split("-")
                 val targetDateTime = LocalDateTime.of(
-                    lastYear, lastMonth, lastDate,
+                    diaryWrittenDay[0].toInt(), diaryWrittenDay[1].toInt(), diaryWrittenDay[2].toInt(),
                     data.HH, data.mm, data.ss
                 ).plusMinutes(if (data.isFirst) INITIAL_REMINDER_MINUTES else REGULAR_REMINDER_HOURS * 60)
 

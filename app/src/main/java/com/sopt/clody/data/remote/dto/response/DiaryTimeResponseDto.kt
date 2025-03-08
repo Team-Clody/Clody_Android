@@ -1,11 +1,13 @@
 package com.sopt.clody.data.remote.dto.response
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DiaryTimeResponseDto(
-    val HH: Int,
-    val mm: Int,
-    val ss: Int,
-    val isFirst: Boolean,
+    @SerialName("HH") val HH: Int,
+    @SerialName("mm") val mm: Int,
+    @SerialName("ss") val ss: Int,
+    @SerialName("date") val date: String,
+    @SerialName("isFirst") val isFirst: Boolean,
 )

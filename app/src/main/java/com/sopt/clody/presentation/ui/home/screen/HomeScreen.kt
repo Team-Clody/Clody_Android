@@ -196,8 +196,6 @@ fun HomeScreen(
                     Spacer(modifier = Modifier.height(14.dp))
                     DiaryStateButton(
                         diaryCount = diaryCount,
-                        replyStatus = replyStatus,
-                        isToday = isToday,
                         isDeleted = isDeleted,
                         year = selectedDate.year,
                         month = selectedDate.monthValue,
