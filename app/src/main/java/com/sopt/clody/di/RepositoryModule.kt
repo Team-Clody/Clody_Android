@@ -1,12 +1,14 @@
 package com.sopt.clody.di
 
 import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.AdRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.NotificationRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenReissueRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
 import com.sopt.clody.domain.repository.AccountManagementRepository
+import com.sopt.clody.domain.repository.AdRepository
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.NotificationRepository
@@ -56,4 +58,10 @@ abstract class RepositoryModule {
     abstract fun bindNotificationRepository(
         notificationRepositoryImpl: NotificationRepositoryImpl
     ): NotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAdRepository(
+        adRepositoryImpl: AdRepositoryImpl
+    ): AdRepository
 }
