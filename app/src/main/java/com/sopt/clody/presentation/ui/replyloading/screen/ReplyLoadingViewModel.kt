@@ -39,6 +39,9 @@ class ReplyLoadingViewModel @Inject constructor(
     private val _isAdLoading = MutableStateFlow(false)
     val isAdLoading: StateFlow<Boolean> = _isAdLoading
 
+    private val _adErrorMessage = MutableStateFlow<String?>(null)
+    val adErrorMessage: StateFlow<String?> = _adErrorMessage
+
     private var lastYear: Int = 0
     private var lastMonth: Int = 0
     private var lastDate: Int = 0
@@ -114,8 +117,7 @@ class ReplyLoadingViewModel @Inject constructor(
 
             startAdResult.onFailure {
                 _isAdLoading.value = false
-                _replyLoadingState.value = ReplyLoadingState.Failure("광고 시작 실패: ${it.localizedMessage}")
-                Timber.e("광고 시작 실패: ${it.localizedMessage}")
+                _adErrorMessage.value = "잠시후 다시 시도해주세요!"
                 return@launch
             }
 
@@ -126,17 +128,19 @@ class ReplyLoadingViewModel @Inject constructor(
                 showRewardedAdAndReloadDiaryTime(activity)
             }.onFailure {
                 _isAdLoading.value = false
-                _replyLoadingState.value = ReplyLoadingState.Failure("광고 로드 실패")
-                Timber.e("로드 실패 사유: ${it.localizedMessage}")
+                _adErrorMessage.value = "잠시후 다시 시도해주세요!"
             }
         }
     }
 
-
     private fun showRewardedAdAndReloadDiaryTime(activity: Activity) {
+        var isAdRewarded = false
+
         rewardAdShower.showAd(
             activity,
             onAdRewarded = {
+                isAdRewarded = true
+
                 viewModelScope.launch {
                     adRepository.endAd(lastYear, lastMonth, lastDate).onFailure {
                         Timber.e("종료 실패")
@@ -148,8 +152,8 @@ class ReplyLoadingViewModel @Inject constructor(
                 }
             },
             onAdDismissed = {
-                Timber.e("광고가 준비되지 않았습니다.")
-                // :TODO 광고 준비 실패 시 처리(Toast Message)
+                if (isAdRewarded) return@showAd
+                _adErrorMessage.value = "잠시후 다시 시도해주세요!"
             }
         )
     }
@@ -159,6 +163,11 @@ class ReplyLoadingViewModel @Inject constructor(
             _retryFlow.emit(Unit)
         }
     }
+
+    fun clearAdErrorMessage() {
+        _adErrorMessage.value = null
+    }
+
 
     companion object {
         private const val INITIAL_REMINDER_MINUTES = 1L
