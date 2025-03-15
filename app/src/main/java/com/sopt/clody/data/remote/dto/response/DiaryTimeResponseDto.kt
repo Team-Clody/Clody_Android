@@ -10,4 +10,5 @@ data class DiaryTimeResponseDto(
     @SerialName("ss") val ss: Int,
     @SerialName("date") val date: String,
     @SerialName("isFirst") val isFirst: Boolean,
+    @SerialName("isFromAd") val isFromAd: Boolean,
 )
