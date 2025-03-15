@@ -48,6 +48,7 @@
     <!-- 답장 로딩 화면 -->
     <string name="loading_message">로디가 열심히 답장을 쓰고 있어요</string>
     <string name="loading_complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
+    <string name="loading_nearly_done_message">로디가 답장을 거의 다 써가요!\n조금만 기다려주세요</string>
     <string name="loading_button_open">열어보기</string>
     <string name="loading_button_confirm">확인</string>
     <string name="diarylist_check_reply">답장 확인</string>
