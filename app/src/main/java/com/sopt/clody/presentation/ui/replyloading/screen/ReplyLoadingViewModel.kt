@@ -8,7 +8,6 @@ import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AdRepository
 import com.sopt.clody.domain.repository.DiaryRepository
-import com.sopt.clody.domain.usecase.LoadRewardedAdUseCase
 import com.sopt.clody.presentation.utils.extension.throttleFirst
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
@@ -26,7 +25,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ReplyLoadingViewModel @Inject constructor(
-    private val loadRewardedAdUseCase: LoadRewardedAdUseCase,
     private val diaryRepository: DiaryRepository,
     private val adRepository: AdRepository,
     private val networkUtil: NetworkUtil,
@@ -41,6 +39,14 @@ class ReplyLoadingViewModel @Inject constructor(
 
     private val _adErrorMessage = MutableStateFlow<String?>(null)
     val adErrorMessage: StateFlow<String?> = _adErrorMessage
+
+    // 응답 대기 상태
+    private val _isWaitingForPatchResponse = MutableStateFlow(false)
+    val isWaitingForPatchResponse: StateFlow<Boolean> = _isWaitingForPatchResponse
+
+    // 응답 완료
+    private val _isAdCompleted = MutableStateFlow(false)
+    val isAdCompleted: StateFlow<Boolean> = _isAdCompleted
 
     private var lastYear: Int = 0
     private var lastMonth: Int = 0
@@ -91,11 +97,12 @@ class ReplyLoadingViewModel @Inject constructor(
                     data.HH, data.mm, data.ss
                 ).plusMinutes(if (data.isFirst) INITIAL_REMINDER_MINUTES else REGULAR_REMINDER_HOURS * 60)
 
-                if (data.isFromAd) {
+                if (_isAdCompleted.value || data.isFromAd) {
                     targetDateTime = LocalDateTime.now()
                 }
 
                 _replyLoadingState.value = ReplyLoadingState.Success(targetDateTime)
+                _isWaitingForPatchResponse.value = false
             },
             onFailure = { throwable ->
                 _replyLoadingState.value = ReplyLoadingState.Failure(FAILURE_TEMPORARY_MESSAGE)
@@ -114,22 +121,23 @@ class ReplyLoadingViewModel @Inject constructor(
             Timber.d("광고 시작 API 호출: year=$lastYear, month=$lastMonth, day=$lastDate")
 
             val startAdResult = adRepository.startAd(lastYear, lastMonth, lastDate)
-
-            startAdResult.onFailure {
+            if (startAdResult.isFailure) {
                 _isAdLoading.value = false
-                _adErrorMessage.value = "잠시후 다시 시도해주세요!"
+                _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
+                Timber.e("📌 광고 시작 실패: ${startAdResult.exceptionOrNull()?.message}")
                 return@launch
             }
 
             Timber.d("광고 시작 성공, 광고 로드 시작")
 
-            loadRewardedAdUseCase().onSuccess {
+            val loadAdResult = adRepository.loadRewardedAd()
+            if (loadAdResult.isFailure) {
                 _isAdLoading.value = false
-                showRewardedAdAndReloadDiaryTime(activity)
-            }.onFailure {
-                _isAdLoading.value = false
-                _adErrorMessage.value = "잠시후 다시 시도해주세요!"
+                _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
+                return@launch
             }
+            _isAdLoading.value = false
+            showRewardedAdAndReloadDiaryTime(activity)
         }
     }
 
@@ -142,13 +150,17 @@ class ReplyLoadingViewModel @Inject constructor(
                 isAdRewarded = true
 
                 viewModelScope.launch {
-                    adRepository.endAd(lastYear, lastMonth, lastDate).onFailure {
-                        Timber.e("종료 실패")
-                        return@launch
-                    }
+                    _isWaitingForPatchResponse.value = true
 
-                    Timber.d("시간 조회 시작")
-                    getDiaryTimeInternal(lastYear, lastMonth, lastDate)
+                    adRepository.endAd(lastYear, lastMonth, lastDate).onSuccess {
+                        Timber.d("PATCH 응답 도착 - 답장이 준비됨")
+
+                        _replyLoadingState.value = ReplyLoadingState.Success(LocalDateTime.now())
+                        _isWaitingForPatchResponse.value = false
+                    }.onFailure {
+                        Timber.e("종료 실패: ${it.localizedMessage}")
+                        _isWaitingForPatchResponse.value = false
+                    }
                 }
             },
             onAdDismissed = {
