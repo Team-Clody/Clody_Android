@@ -28,22 +28,15 @@ android {
         versionName = "1.0.6"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
+        val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
+        val googleAdmobUnitId: String = properties.getProperty("GOOGLE_ADMOB_UNIT_ID", "")
+        buildConfigField("String", "GOOGLE_ADMOB_APP_ID", "\"$googleAdmobAppId\"")
+        buildConfigField("String", "GOOGLE_ADMOB_UNIT_ID", "\"$googleAdmobUnitId\"")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
-        buildConfigField("String","AMPLITUDE_API_KEY","\"$amplitudeApiKey\"")
+        buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
+        manifestPlaceholders["GOOGLE_ADMOB_APP_ID"] = googleAdmobAppId
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    signingConfigs {
-        create("release") {
-            val localProperties = Properties().apply {
-                load(project.rootProject.file("local.properties").inputStream())
-            }
-//            storeFile = project.rootProject.file(localProperties.getProperty("storeFile"))
-//            storePassword = localProperties.getProperty("storePassword") ?: ""
-//            keyAlias = localProperties.getProperty("keyAlias") ?: ""
-//            keyPassword = localProperties.getProperty("keyPassword") ?: ""
-        }
     }
 
     buildTypes {
@@ -110,7 +103,7 @@ dependencies {
     implementation(libs.amplitude)
 
     // Google Admob
-//    implementation(libs.admob)
+    implementation(libs.admob)
 
     // UI Enhance
     implementation(libs.accompanist.systemuicontroller)
