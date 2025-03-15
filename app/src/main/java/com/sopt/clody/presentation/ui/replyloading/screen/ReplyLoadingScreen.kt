@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -60,6 +61,8 @@ fun ReplyLoadingRoute(
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
     val isAdLoadingState by viewModel.isAdLoading.collectAsState()
+    val isWaitingForPatchResponse by viewModel.isWaitingForPatchResponse.collectAsState()
+    val isAdCompleted by viewModel.isAdCompleted.collectAsState()
     val adErrorMessage by viewModel.adErrorMessage.collectAsState()
     val activity = LocalContext.current as Activity
 
@@ -95,6 +98,8 @@ fun ReplyLoadingRoute(
                     viewModel.loadAndShowRewardedAd(activity)
                 },
                 isAdLoading = isAdLoadingState,
+                isWaitingForPatchResponse = isWaitingForPatchResponse,
+                isAdCompleted = isAdCompleted,
                 adErrorMessage = adErrorMessage,
                 onDismissToast = { viewModel.clearAdErrorMessage() }
             )
@@ -119,6 +124,8 @@ fun ReplyLoadingScreen(
     replyLoadingState: ReplyLoadingState.Success,
     onShowAdClick: () -> Unit,
     isAdLoading: Boolean,
+    isWaitingForPatchResponse: Boolean,
+    isAdCompleted: Boolean,
     adErrorMessage: String?,
     onDismissToast: () -> Unit
 ) {
@@ -155,7 +162,16 @@ fun ReplyLoadingScreen(
     val seconds = (remainingTime % 60).toInt()
 
     val loadingMessage = stringResource(id = R.string.loading_message)
+    val nearlyDoneMessage = stringResource(id = R.string.loading_nearly_done_message)
     val completeMessage = stringResource(id = R.string.loading_complete_message)
+
+    // 메시지 분기
+    val textToShow = when {
+        isComplete -> completeMessage
+        isWaitingForPatchResponse -> nearlyDoneMessage
+        isAdCompleted -> completeMessage
+        else -> loadingMessage
+    }
 
     Scaffold(
         topBar = {
@@ -209,22 +225,27 @@ fun ReplyLoadingScreen(
                 }
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.015f))
 
-                Text(
-                    text = String.format("%02d:%02d:%02d", hours, minutes, seconds),
-                    style = ClodyTheme.typography.head2,
-                    color = ClodyTheme.colors.gray01
-                )
+                if (!isWaitingForPatchResponse) {
+                    Text(
+                        text = String.format("%02d:%02d:%02d", hours, minutes, seconds),
+                        style = ClodyTheme.typography.head2,
+                        color = ClodyTheme.colors.gray01
+                    )
+                }
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.005f))
                 Text(
-                    text = if (isComplete) completeMessage else loadingMessage,
+                    text = textToShow,
                     style = ClodyTheme.typography.body2Medium,
-                    color = ClodyTheme.colors.gray04
+                    color = ClodyTheme.colors.gray04,
+                    textAlign = TextAlign.Center
                 )
 
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.036f))
-                QuickReplyAdButton(
-                    onClick = onShowAdClick
-                )
+                if (!isWaitingForPatchResponse && !isComplete) {
+                    QuickReplyAdButton(
+                        onClick = onShowAdClick
+                    )
+                }
             }
         }
     )
@@ -265,6 +286,8 @@ fun ReplyLoadingScreenPreview() {
         ),
         onShowAdClick = {},
         isAdLoading = false,
+        isWaitingForPatchResponse = false,
+        isAdCompleted = false,
         adErrorMessage = "잠시후 다시 시도해주세요!",
         onDismissToast = {}
     )
