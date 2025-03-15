@@ -2,8 +2,11 @@ package com.sopt.clody.presentation.ui.replyloading.screen
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -34,6 +37,7 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
+import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.replyloading.component.LottieAnimation
 import com.sopt.clody.presentation.ui.replyloading.component.QuickReplyAdButton
 import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
@@ -56,6 +60,7 @@ fun ReplyLoadingRoute(
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
     val isAdLoadingState by viewModel.isAdLoading.collectAsState()
+    val adErrorMessage by viewModel.adErrorMessage.collectAsState()
     val activity = LocalContext.current as Activity
 
     LaunchedEffect(Unit) {
@@ -89,7 +94,9 @@ fun ReplyLoadingRoute(
                 onShowAdClick = {
                     viewModel.loadAndShowRewardedAd(activity)
                 },
-                isAdLoading = isAdLoadingState
+                isAdLoading = isAdLoadingState,
+                adErrorMessage = adErrorMessage,
+                onDismissToast = { viewModel.clearAdErrorMessage() }
             )
         }
 
@@ -112,6 +119,8 @@ fun ReplyLoadingScreen(
     replyLoadingState: ReplyLoadingState.Success,
     onShowAdClick: () -> Unit,
     isAdLoading: Boolean,
+    adErrorMessage: String?,
+    onDismissToast: () -> Unit
 ) {
     var remainingTime by remember { mutableStateOf(0L) }
     var isComplete by remember { mutableStateOf(false) }
@@ -186,13 +195,18 @@ fun ReplyLoadingScreen(
             ) {
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.15f))
 
-                LottieAnimation(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(16f / 9f),
-                    resId = animationResId,
-                    iterations = LottieConstants.IterateForever
-                )
+                Crossfade(
+                    targetState = animationResId,
+                    animationSpec = tween(durationMillis = 300)
+                ) { targetResId ->
+                    LottieAnimation(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f),
+                        resId = targetResId,
+                        iterations = LottieConstants.IterateForever
+                    )
+                }
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.015f))
 
                 Text(
@@ -214,10 +228,29 @@ fun ReplyLoadingScreen(
             }
         }
     )
+
     if (isAdLoading) {
         LoadingScreen(
             backgroundColor = Color.Transparent
         )
+    }
+
+    if (adErrorMessage != null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(6.dp),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            ClodyToastMessage(
+                message = adErrorMessage,
+                iconResId = R.drawable.ic_toast_check_on_18,
+                backgroundColor = ClodyTheme.colors.gray04,
+                contentColor = ClodyTheme.colors.white,
+                durationMillis = 3000,
+                onDismiss = onDismissToast
+            )
+        }
     }
 }
 
@@ -231,6 +264,8 @@ fun ReplyLoadingScreenPreview() {
             targetDateTime = LocalDateTime.now().plusSeconds(10)
         ),
         onShowAdClick = {},
-        isAdLoading = false
+        isAdLoading = false,
+        adErrorMessage = "잠시후 다시 시도해주세요!",
+        onDismissToast = {}
     )
 }
