@@ -37,14 +37,14 @@ class ReplyLoadingViewModel @Inject constructor(
     private val _isAdLoading = MutableStateFlow(false)
     val isAdLoading: StateFlow<Boolean> = _isAdLoading
 
+    private var _isAdPreloaded = false
+
     private val _adErrorMessage = MutableStateFlow<String?>(null)
     val adErrorMessage: StateFlow<String?> = _adErrorMessage
 
-    // 응답 대기 상태
     private val _isWaitingForPatchResponse = MutableStateFlow(false)
     val isWaitingForPatchResponse: StateFlow<Boolean> = _isWaitingForPatchResponse
 
-    // 응답 완료
     private val _isAdCompleted = MutableStateFlow(false)
     val isAdCompleted: StateFlow<Boolean> = _isAdCompleted
 
@@ -59,6 +59,7 @@ class ReplyLoadingViewModel @Inject constructor(
 
     init {
         setupRetryFlow()
+        preloadAd()
     }
 
     private fun setupRetryFlow() {
@@ -116,36 +117,44 @@ class ReplyLoadingViewModel @Inject constructor(
         )
     }
 
-    //  광고 시작 → 광고 시청 → 광고 종료 후 응답 업데이트
+    private fun preloadAd() {
+        if (_isAdPreloaded) return
+
+        viewModelScope.launch {
+            val result = adRepository.loadRewardedAd()
+            _isAdPreloaded = result.isSuccess
+        }
+    }
+
     fun loadAndShowRewardedAd(activity: Activity) {
         if (_isAdLoading.value) return
 
         _isAdLoading.value = true
         viewModelScope.launch {
-            Timber.d("광고 시작 API 호출: year=$lastYear, month=$lastMonth, day=$lastDate")
-
             val startAdResult = adRepository.startAd(lastYear, lastMonth, lastDate)
             if (startAdResult.isFailure) {
                 _isAdLoading.value = false
                 _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
-                Timber.e("📌 광고 시작 실패: ${startAdResult.exceptionOrNull()?.message}")
                 return@launch
             }
 
-            Timber.d("광고 시작 성공, 광고 로드 시작")
-
-            val loadAdResult = adRepository.loadRewardedAd()
-            if (loadAdResult.isFailure) {
+            if (_isAdPreloaded) {
                 _isAdLoading.value = false
-                _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
-                return@launch
+                showRewardedAd(activity)
+            } else {
+                val loadAdResult = adRepository.loadRewardedAd()
+                _isAdLoading.value = false
+                if (loadAdResult.isSuccess) {
+                    _isAdPreloaded = true
+                    showRewardedAd(activity)
+                } else {
+                    _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
+                }
             }
-            _isAdLoading.value = false
-            showRewardedAdAndReloadDiaryTime(activity)
         }
     }
 
-    private fun showRewardedAdAndReloadDiaryTime(activity: Activity) {
+    private fun showRewardedAd(activity: Activity) {
         rewardAdShower.showAd(
             activity,
             onAdRewarded = {
@@ -153,17 +162,17 @@ class ReplyLoadingViewModel @Inject constructor(
                     _isWaitingForPatchResponse.value = true
 
                     adRepository.endAd(lastYear, lastMonth, lastDate).onSuccess {
-                        Timber.d("PATCH 응답 도착 - 답장이 준비됨")
-
                         _replyLoadingState.value = ReplyLoadingState.Success(LocalDateTime.now())
                         _isWaitingForPatchResponse.value = false
                     }.onFailure {
-                        Timber.e("종료 실패: ${it.localizedMessage}")
                         _isWaitingForPatchResponse.value = false
                     }
                 }
             },
-            onAdDismissed = {}
+            onAdDismissed = {
+                _isAdPreloaded = false
+                preloadAd()
+            }
         )
     }
 
