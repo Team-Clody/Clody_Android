@@ -40,7 +40,7 @@ firebase-crashlytics-plugin = "3.0.2"
 
 amplitude = "1.+"
 
-#admob = "23.6.0"
+admob = "23.6.0"
 kotlinx-datetime = "0.4.0"
 accompanist = "0.25.1"
 accompanist-insets = "0.28.0"
@@ -105,7 +105,7 @@ timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "tim
 lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
-#admob = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "admob" }
+admob = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "admob" }
 
 # Accompanist
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }

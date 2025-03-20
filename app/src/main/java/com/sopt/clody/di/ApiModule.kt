@@ -1,6 +1,7 @@
 package com.sopt.clody.di
 
 import com.sopt.clody.data.remote.api.AccountManagementService
+import com.sopt.clody.data.remote.api.AdService
 import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.api.DiaryService
 import com.sopt.clody.data.remote.api.NotificationService
@@ -39,5 +40,9 @@ object ApiModule {
     @Singleton
     fun provideNotificationService(retrofit: Retrofit): NotificationService =
         retrofit.create(NotificationService::class.java)
-}
 
+    @Provides
+    @Singleton
+    fun provideAdService(retrofit: Retrofit): AdService =
+        retrofit.create(AdService::class.java)
+}
