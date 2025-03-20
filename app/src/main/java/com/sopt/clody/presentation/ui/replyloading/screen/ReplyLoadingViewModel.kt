@@ -146,13 +146,9 @@ class ReplyLoadingViewModel @Inject constructor(
     }
 
     private fun showRewardedAdAndReloadDiaryTime(activity: Activity) {
-        var isAdRewarded = false
-
         rewardAdShower.showAd(
             activity,
             onAdRewarded = {
-                isAdRewarded = true
-
                 viewModelScope.launch {
                     _isWaitingForPatchResponse.value = true
 
@@ -167,10 +163,7 @@ class ReplyLoadingViewModel @Inject constructor(
                     }
                 }
             },
-            onAdDismissed = {
-                if (isAdRewarded) return@showAd
-                _adErrorMessage.value = "잠시후 다시 시도해주세요!"
-            }
+            onAdDismissed = {}
         )
     }
 
