@@ -48,6 +48,9 @@ class ReplyLoadingViewModel @Inject constructor(
     private val _isAdCompleted = MutableStateFlow(false)
     val isAdCompleted: StateFlow<Boolean> = _isAdCompleted
 
+    private val _isFirstDiary = MutableStateFlow(false)
+    val isFirstDiary: StateFlow<Boolean> = _isFirstDiary
+
     private var lastYear: Int = 0
     private var lastMonth: Int = 0
     private var lastDate: Int = 0
@@ -101,6 +104,7 @@ class ReplyLoadingViewModel @Inject constructor(
                     targetDateTime = LocalDateTime.now()
                 }
 
+                _isFirstDiary.value = data.isFirst
                 _replyLoadingState.value = ReplyLoadingState.Success(targetDateTime)
                 _isWaitingForPatchResponse.value = false
             },

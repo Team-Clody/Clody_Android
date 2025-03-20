@@ -63,6 +63,7 @@ fun ReplyLoadingRoute(
     val isAdLoadingState by viewModel.isAdLoading.collectAsState()
     val isWaitingForPatchResponse by viewModel.isWaitingForPatchResponse.collectAsState()
     val isAdCompleted by viewModel.isAdCompleted.collectAsState()
+    val isFirstDiary by viewModel.isFirstDiary.collectAsState()
     val adErrorMessage by viewModel.adErrorMessage.collectAsState()
     val activity = LocalContext.current as Activity
 
@@ -100,6 +101,7 @@ fun ReplyLoadingRoute(
                 isAdLoading = isAdLoadingState,
                 isWaitingForPatchResponse = isWaitingForPatchResponse,
                 isAdCompleted = isAdCompleted,
+                isFirstDiary = isFirstDiary,
                 adErrorMessage = adErrorMessage,
                 onDismissToast = { viewModel.clearAdErrorMessage() }
             )
@@ -126,6 +128,7 @@ fun ReplyLoadingScreen(
     isAdLoading: Boolean,
     isWaitingForPatchResponse: Boolean,
     isAdCompleted: Boolean,
+    isFirstDiary: Boolean,
     adErrorMessage: String?,
     onDismissToast: () -> Unit
 ) {
@@ -241,7 +244,7 @@ fun ReplyLoadingScreen(
                 )
 
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.036f))
-                if (!isWaitingForPatchResponse && !isComplete) {
+                if (!isWaitingForPatchResponse && !isAdCompleted && !isFirstDiary) {
                     QuickReplyAdButton(
                         onClick = onShowAdClick
                     )
@@ -288,7 +291,8 @@ fun ReplyLoadingScreenPreview() {
         isAdLoading = false,
         isWaitingForPatchResponse = false,
         isAdCompleted = false,
+        isFirstDiary = false,
         adErrorMessage = "잠시후 다시 시도해주세요!",
-        onDismissToast = {}
+        onDismissToast = {},
     )
 }
