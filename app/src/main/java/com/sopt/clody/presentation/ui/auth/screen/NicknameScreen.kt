@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -129,7 +131,7 @@ fun NicknameScreen(
             IconButton(
                 onClick = { onBackClick() },
                 modifier = Modifier
-                    .padding(top = 20.dp)
+                    .statusBarsPadding()
                     .padding(start = 8.dp)
             ) {
                 Image(
@@ -140,17 +142,18 @@ fun NicknameScreen(
         },
         bottomBar = {
             ClodyButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 28.dp)
+                    .imePadding(),
                 onClick = {
                     focusManager.clearFocus()
                     onCompleteClick()
                 },
                 text = stringResource(id = R.string.nickname_next),
                 enabled = nicknameTextField.text.isNotEmpty() && isValidNickname,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 28.dp)
-                    .imePadding()
             )
         },
         content = { paddingValues ->

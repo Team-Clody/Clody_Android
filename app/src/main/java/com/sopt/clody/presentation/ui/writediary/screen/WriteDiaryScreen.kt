@@ -11,8 +11,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -135,8 +137,9 @@ fun WriteDiaryScreen(
             IconButton(
                 onClick = onClickBack,
                 modifier = Modifier
+                    .statusBarsPadding()
                     .padding(top = 26.dp)
-                    .padding(start = 4.dp)
+                    .padding(start = 12.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
@@ -148,6 +151,7 @@ fun WriteDiaryScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .navigationBarsPadding()
                     .background(Color.Transparent),
                 contentAlignment = Alignment.Center
             ) {

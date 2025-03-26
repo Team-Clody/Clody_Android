@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -116,6 +117,7 @@ fun ReplyDiaryScreen(
             val month = replyDiaryState.month
             val date = replyDiaryState.date
             CenterAlignedTopAppBar(
+                modifier = Modifier.statusBarsPadding(),
                 title = {
                     Text(
                         text = stringResource(R.string.reply_month_and_date, month, date),
