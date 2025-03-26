@@ -1,9 +1,6 @@
 package com.sopt.clody.presentation.ui.navigatior
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
@@ -27,7 +24,7 @@ import com.sopt.clody.presentation.ui.setting.navigation.accountManagementNavGra
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.settingNavGraph
 import com.sopt.clody.presentation.ui.setting.navigation.webViewNavGraph
-import com.sopt.clody.presentation.ui.splash.SplashScreen
+import com.sopt.clody.presentation.ui.splash.SplashRoute
 import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
 import com.sopt.clody.presentation.ui.writediary.navigation.writeDiaryNavGraph
 
@@ -44,15 +41,13 @@ fun MainNavHost(
     replyDiaryNavigator: ReplyDiaryNavigator
 ) {
     Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+        modifier = modifier,
     ) {
         NavHost(
             navController = navController,
             startDestination = "splash",
         ) {
-            composable("splash") { SplashScreen(navController = authNavigator.navController) }
+            composable("splash") { SplashRoute(navigator = authNavigator) }
             registerNavGraph(authNavigator)
             termsOfServiceNavGraph(authNavigator)
             nicknameNavGraph(authNavigator)

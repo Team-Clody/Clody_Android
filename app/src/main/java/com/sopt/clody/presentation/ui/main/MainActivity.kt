@@ -1,12 +1,13 @@
 package com.sopt.clody.presentation.ui.main
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -14,8 +15,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
@@ -32,9 +31,21 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(
+                android.graphics.Color.TRANSPARENT,
+                android.graphics.Color.TRANSPARENT,
+            ),
+            navigationBarStyle = SystemBarStyle.light(
+                android.graphics.Color.WHITE,
+                android.graphics.Color.WHITE,
+            ),
+        )
         setContent {
             CLODYTheme {
                 val navController = rememberNavController()
@@ -71,21 +82,15 @@ class MainActivity : ComponentActivity() {
                 val replyLoadingNavigator = remember(navController) { ReplyLoadingNavigator(navController) }
                 val replyDiaryNavigator = remember(navController) { ReplyDiaryNavigator(navController) }
 
-                Scaffold(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    content = { paddingValues ->
-                        MainNavHost(
-                            modifier = Modifier.padding(paddingValues),
-                            navController = navController,
-                            authNavigator = authNavigator,
-                            homeNavigator = homeNavigator,
-                            diaryListNavigator = diaryListNavigator,
-                            writeDiaryNavigator = writeDiaryNavigator,
-                            settingNavigator = settingNavigator,
-                            replyLoadingNavigator = replyLoadingNavigator,
-                            replyDiaryNavigator = replyDiaryNavigator
-                        )
-                    }
+                MainNavHost(
+                    navController = navController,
+                    authNavigator = authNavigator,
+                    homeNavigator = homeNavigator,
+                    diaryListNavigator = diaryListNavigator,
+                    writeDiaryNavigator = writeDiaryNavigator,
+                    settingNavigator = settingNavigator,
+                    replyLoadingNavigator = replyLoadingNavigator,
+                    replyDiaryNavigator = replyDiaryNavigator
                 )
             }
         }
