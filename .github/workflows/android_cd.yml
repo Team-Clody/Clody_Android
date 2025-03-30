@@ -1,0 +1,95 @@
+name: Clody CD
+
+on:
+    pull_request:
+        branches: [ staging ]
+
+jobs:
+    cd:
+        name: Continuous Deployment
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Gradle Cache
+            - name: Cache Gradle dependencies
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.gradle/caches
+                      ~/.gradle/wrapper
+                  key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+                  restore-keys: |
+                      ${{ runner.os }}-gradle-
+
+            # JDK
+            - name: Set up JDK 17
+              uses: actions/setup-java@v4
+              with:
+                  java-version: 17
+                  distribution: 'corretto'
+                  cache: gradle
+
+            # Android SDK
+            - name: Setup Android SDK
+              uses: android-actions/setup-android@v3
+
+            # gradlew 권한
+            - name: Change gradlew permissions
+              run: chmod +x gradlew
+
+            # google-services.json
+            - name: Decode google-services.json
+              env:
+                  FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
+              run: echo $FIREBASE_SECRET | base64 --decode > app/google-services.json
+
+            # local.properties
+            - name: Generate local.properties
+              env:
+                  BASE_URL: ${{ secrets.BASE_URL }}
+                  KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
+                  AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+                  GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
+                  GOOGLE_ADMOB_UNIT_ID: ${{ secrets.GOOGLE_ADMOB_UNIT_ID }}
+              run: |
+                  echo "baseUrl=$BASE_URL" >> local.properties
+                  echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
+                  echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
+                  echo "googleAdmob.app.id=$GOOGLE_ADMOB_APP_ID" >> local.properties
+                  echo "googleAdmob.unit.id=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
+
+            # Release AAB 빌드
+            - name: Build Release AAB
+              run: ./gradlew bundleRelease --stacktrace
+
+            # Firebase 인증
+            - name: Set up Firebase Service Account Credentials
+              env:
+                  GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+              run: |
+                  echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 --decode > $HOME/firebase-credentials.json
+                  export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
+
+            # Firebase App Distribution
+            - name: Upload AAB to Firebase App Distribution
+              env:
+                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+              run: |
+                  firebase appdistribution:distribute app/build/outputs/bundle/release/app-release.aab \
+                  --app "$FIREBASE_APP_ID" \
+                  --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다!" \
+                  --groups "clody-tester-group"
+
+            # Discord Notification
+            - name: Notify Discord
+              env:
+                  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+              run: |
+                  curl -H "Content-Type: application/json" \
+                  -X POST \
+                  -d '{"content": "🍀 새로운 테스트 버전이 업로드되었습니다!"}' \
+                  $DISCORD_WEBHOOK_URL
