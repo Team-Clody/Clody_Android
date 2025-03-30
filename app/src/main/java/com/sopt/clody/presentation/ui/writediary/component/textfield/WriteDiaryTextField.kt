@@ -48,28 +48,35 @@ fun WriteDiaryTextField(
     isRemovable: Boolean,
     maxLength: Int,
     showWarning: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
-    var isTextValid by remember { mutableStateOf(text.replace("\\s".toRegex(), "").matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"))) }
+    var isTextValid by remember {
+        mutableStateOf(
+            text.replace("\\s".toRegex(), "").matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$")),
+        )
+    }
     var isFocused by remember { mutableStateOf(false) }
     var isTextTooLong by remember { mutableStateOf(false) }
 
     val customTextSelectionColors = TextSelectionColors(
         handleColor = ClodyTheme.colors.mainYellow,
-        backgroundColor = ClodyTheme.colors.mainYellow.copy(alpha = 0.4f)
+        backgroundColor = ClodyTheme.colors.mainYellow.copy(alpha = 0.4f),
     )
 
     CompositionLocalProvider(LocalTextSelectionColors provides customTextSelectionColors) {
         Column(
             modifier = modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Box(
                 modifier = Modifier
                     .background(
-                        if (isFocused || (showWarning && text.isEmpty())) ClodyTheme.colors.white
-                        else ClodyTheme.colors.gray09,
-                        shape = RoundedCornerShape(10.dp)
+                        if (isFocused || (showWarning && text.isEmpty())) {
+                            ClodyTheme.colors.white
+                        } else {
+                            ClodyTheme.colors.gray09
+                        },
+                        shape = RoundedCornerShape(10.dp),
                     )
                     .border(
                         if (isFocused || showWarning || isTextTooLong) {
@@ -84,16 +91,16 @@ fun WriteDiaryTextField(
                             showWarning && text.isEmpty() -> ClodyTheme.colors.red
                             else -> Color.Transparent
                         },
-                        RoundedCornerShape(10.dp)
+                        RoundedCornerShape(10.dp),
                     )
-                    .heightIn(min = 50.dp)  // 최소 높이를 50dp로 설정
-                    .fillMaxWidth()  // 너비를 부모의 너비로 채움
-                    .padding(vertical = 12.dp, horizontal = 8.dp)
+                    .heightIn(min = 50.dp) // 최소 높이를 50dp로 설정
+                    .fillMaxWidth() // 너비를 부모의 너비로 채움
+                    .padding(vertical = 12.dp, horizontal = 8.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .fillMaxWidth()  // Row의 너비를 Box의 너비로 채움
+                        .fillMaxWidth(), // Row의 너비를 Box의 너비로 채움
                 ) {
                     Text(
                         text = "$entryNumber.",
@@ -101,7 +108,7 @@ fun WriteDiaryTextField(
                             .padding(start = 16.dp, top = 5.dp)
                             .align(Alignment.Top),
                         style = ClodyTheme.typography.body2SemiBold,
-                        color = if (text.isNotEmpty()) ClodyTheme.colors.gray01 else ClodyTheme.colors.gray06
+                        color = if (text.isNotEmpty()) ClodyTheme.colors.gray01 else ClodyTheme.colors.gray06,
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     BasicTextField(
@@ -117,7 +124,7 @@ fun WriteDiaryTextField(
                             }
                         },
                         textStyle = TextStyle(
-                            color = if (text.isEmpty()) ClodyTheme.colors.gray06 else ClodyTheme.colors.gray01
+                            color = if (text.isEmpty()) ClodyTheme.colors.gray06 else ClodyTheme.colors.gray01,
                         ),
                         cursorBrush = SolidColor(ClodyTheme.colors.gray01),
                         decorationBox = { innerTextField ->
@@ -125,40 +132,39 @@ fun WriteDiaryTextField(
                                 Text(
                                     text = "일상 속 작은 감사함을 적어보세요",
                                     style = ClodyTheme.typography.body3Medium,
-                                    color = ClodyTheme.colors.gray06
+                                    color = ClodyTheme.colors.gray06,
                                 )
                             }
                             innerTextField()
                         },
                         modifier = Modifier
                             .weight(1f)
-                            .onFocusChanged { isFocused = it.isFocused }
+                            .onFocusChanged { isFocused = it.isFocused },
                     )
 
                     IconButton(
                         onClick = onRemove,
-                        modifier = Modifier.size(28.dp)
+                        modifier = Modifier.size(28.dp),
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_writediary_kebab),
-                            contentDescription = "Remove"
+                            contentDescription = "Remove",
                         )
                     }
-
                 }
             }
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 8.dp, top = 6.dp)
+                    .padding(start = 8.dp, top = 6.dp),
             ) {
                 if ((showWarning && !isTextValid && text.isNotEmpty()) || isTextTooLong) {
                     Text(
                         text = "2~50자 까지 입력할 수 있어요.",
                         color = ClodyTheme.colors.red,
                         style = ClodyTheme.typography.detail1Medium,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                 } else {
                     Spacer(modifier = Modifier.weight(1f))
@@ -181,7 +187,7 @@ fun WriteDiaryTextField(
                     style = ClodyTheme.typography.detail1Medium,
                     modifier = Modifier
                         .align(Alignment.CenterVertically)
-                        .padding(end = 8.dp)
+                        .padding(end = 8.dp),
                 )
             }
         }
@@ -198,6 +204,6 @@ fun PreviewWriteDiaryTextField() {
         onRemove = {},
         isRemovable = true,
         maxLength = 50,
-        showWarning = true
+        showWarning = true,
     )
 }

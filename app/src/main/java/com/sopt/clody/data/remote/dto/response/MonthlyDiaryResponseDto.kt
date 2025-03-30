@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MonthlyDiaryResponseDto(
     @SerialName("totalCloverCount") val totalCloverCount: Int,
-    @SerialName("diaries") val diaries: List<DailyDiary>
+    @SerialName("diaries") val diaries: List<DailyDiary>,
 ) {
     @Serializable
     data class DailyDiary(
@@ -14,11 +14,11 @@ data class MonthlyDiaryResponseDto(
         @SerialName("replyStatus") val replyStatus: String,
         @SerialName("date") val date: String,
         @SerialName("diary") val diary: List<DailyDiaryContent>,
-        @SerialName("isDeleted") val isDeleted: Boolean
+        @SerialName("isDeleted") val isDeleted: Boolean,
     ) {
         @Serializable
         data class DailyDiaryContent(
-            @SerialName("content") val content: String
+            @SerialName("content") val content: String,
         )
     }
 }

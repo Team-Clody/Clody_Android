@@ -37,7 +37,7 @@ fun YearMonthPickerItem(
     startIndex: Int = 0,
     visibleItemsCount: Int,
     textModifier: Modifier = Modifier,
-    infiniteScroll: Boolean = true
+    infiniteScroll: Boolean = true,
 ) {
     val visibleItemsMiddle = visibleItemsCount / 2
     val emptyItems = List(visibleItemsMiddle) { "" }
@@ -96,7 +96,7 @@ fun YearMonthPickerItem(
                 .drawWithContent {
                     drawContent()
                     drawRect(fadingEdgeGradient, size = size)
-                }
+                },
         ) {
             items(listScrollCount) { index ->
                 Text(
@@ -106,13 +106,12 @@ fun YearMonthPickerItem(
                     style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
                     modifier = Modifier
                         .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
-                        .then(textModifier)
+                        .then(textModifier),
                 )
             }
         }
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable

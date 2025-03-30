@@ -21,23 +21,23 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun AccountManagementLogoutOption(
     userEmail: String,
-    updateLogoutDialog: (Boolean) -> Unit
+    updateLogoutDialog: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
-            .padding(top = 12.dp, bottom = 24.dp, start = 22.dp, end = 24.dp)
+            .padding(top = 12.dp, bottom = 24.dp, start = 22.dp, end = 24.dp),
     ) {
         Image(
             painter = painterResource(id = R.drawable.img_account_management_kakao),
             modifier = Modifier
                 .size(24.dp),
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = userEmail,
             color = ClodyTheme.colors.gray03,
-            style = ClodyTheme.typography.body1Medium
+            style = ClodyTheme.typography.body1Medium,
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
@@ -45,11 +45,10 @@ fun AccountManagementLogoutOption(
             modifier = Modifier.clickable(
                 onClick = { updateLogoutDialog(true) },
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() }
+                interactionSource = remember { MutableInteractionSource() },
             ),
             color = ClodyTheme.colors.gray05,
-            style = ClodyTheme.typography.body4Medium
+            style = ClodyTheme.typography.body4Medium,
         )
-
     }
 }

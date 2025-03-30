@@ -6,4 +6,3 @@ interface TokenRepository {
     fun setTokens(accessToken: String, refreshToken: String)
     fun clearInfo()
 }
-

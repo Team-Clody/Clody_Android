@@ -2,21 +2,15 @@ package com.sopt.clody.presentation.ui.component.dialog
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,44 +33,44 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun FailureDialog(
     message: String = "일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.",
     confirmAction: () -> Unit = {},
-    onDismiss: () -> Unit = {}
+    onDismiss: () -> Unit = {},
 ) {
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
-        )
+            usePlatformDefaultWidth = false,
+        ),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.5f))
                 .wrapContentSize(Alignment.Center)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white),
                 modifier = Modifier
-                    .wrapContentHeight()
+                    .wrapContentHeight(),
             ) {
                 Column(
                     modifier = Modifier
                         .padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_failure_dialog),
                         contentDescription = null,
-                        modifier = Modifier.padding(bottom = 6.dp)
+                        modifier = Modifier.padding(bottom = 6.dp),
                     )
                     Text(
                         text = message,
                         modifier = Modifier.padding(bottom = 30.dp),
                         color = ClodyTheme.colors.gray04,
                         textAlign = TextAlign.Center,
-                        style = ClodyTheme.typography.body3Medium
+                        style = ClodyTheme.typography.body3Medium,
                     )
                     Button(
                         onClick = {
@@ -86,12 +80,12 @@ fun FailureDialog(
                         modifier = Modifier
                             .fillMaxWidth(),
                         shape = RoundedCornerShape(10.dp),
-                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.mainYellow)
+                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.mainYellow),
                     ) {
                         Text(
                             text = stringResource(R.string.failure_dialog_confirm_btn),
                             color = ClodyTheme.colors.gray02,
-                            style = ClodyTheme.typography.body3SemiBold
+                            style = ClodyTheme.typography.body3SemiBold,
                         )
                     }
                 }

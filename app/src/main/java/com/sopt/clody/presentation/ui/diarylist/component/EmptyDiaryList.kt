@@ -15,13 +15,13 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun EmptyDiaryList() {
     Box(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
-    ){
+        contentAlignment = Alignment.Center,
+    ) {
         Text(
-            text= stringResource(R.string.diary_list_empty_diary_list),
+            text = stringResource(R.string.diary_list_empty_diary_list),
             color = ClodyTheme.colors.gray06,
             textAlign = TextAlign.Center,
-            style = ClodyTheme.typography.body2SemiBold
+            style = ClodyTheme.typography.body2SemiBold,
         )
     }
 }

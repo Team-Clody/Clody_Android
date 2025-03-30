@@ -28,7 +28,7 @@ fun DisplayTooltipPopup(
     arrowHeight: Dp = 8.dp,
     horizontalPadding: Dp = 16.dp,
     onDismissRequest: (() -> Unit)? = null,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val horizontalPaddingInPx = with(LocalDensity.current) {
         horizontalPadding.toPx()
@@ -41,12 +41,12 @@ fun DisplayTooltipPopup(
         when (position.alignment) {
             TooltipAlignment.TopCenter -> {
                 Alignment.BottomCenter to position.offset.copy(
-                    y = position.offset.y - arrowPaddingPx + 80
+                    y = position.offset.y - arrowPaddingPx + 80,
                 )
             }
             TooltipAlignment.BottomCenter -> {
                 Alignment.TopCenter to position.offset.copy(
-                    y = position.offset.y + arrowPaddingPx - 80
+                    y = position.offset.y + arrowPaddingPx - 80,
                 )
             }
             else -> {

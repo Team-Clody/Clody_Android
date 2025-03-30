@@ -32,7 +32,7 @@ fun DiaryListRoute(
     navigator: DiaryListNavigator,
     diaryListViewModel: DiaryListViewModel = hiltViewModel(),
     selectedYearFromHome: Int,
-    selectedMonthFromHome: Int
+    selectedMonthFromHome: Int,
 ) {
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
@@ -85,7 +85,7 @@ fun DiaryListRoute(
         onClickReplyDiary = { year, month, day, replyStatus ->
             navigator.navigateReplyLoading(year, month, day, replyStatus)
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_REPLY)
-        }
+        },
     )
 }
 
@@ -125,7 +125,6 @@ fun DiaryListScreen(
         content = { innerPadding ->
             when (diaryListState) {
                 is DiaryListState.Idle -> {
-
                 }
 
                 is DiaryListState.Loading -> {
@@ -133,14 +132,15 @@ fun DiaryListScreen(
                 }
 
                 is DiaryListState.Success -> {
-                    if (diaryListState.data.diaries.isEmpty()) EmptyDiaryList()
-                    else {
+                    if (diaryListState.data.diaries.isEmpty()) {
+                        EmptyDiaryList()
+                    } else {
                         MonthlyDiaryList(
                             paddingValues = innerPadding,
                             diaryListViewModel = diaryListViewModel,
                             diaries = diaryListState.data.diaries,
                             showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
-                            onClickReplyDiary = onClickReplyDiary
+                            onClickReplyDiary = onClickReplyDiary,
                         )
                     }
                 }
@@ -148,22 +148,27 @@ fun DiaryListScreen(
                 is DiaryListState.Failure -> {
                     FailureScreen(
                         message = diaryListState.errorMessage,
-                        confirmAction = { diaryListViewModel.fetchMonthlyDiary(selectedYearInDiaryList, selectedMonthInDiaryList) }
+                        confirmAction = {
+                            diaryListViewModel.fetchMonthlyDiary(
+                                selectedYearInDiaryList,
+                                selectedMonthInDiaryList,
+                            )
+                        },
                     )
                 }
             }
-        }
+        },
     )
 
     if (yearMonthPickerState) {
         ClodyPopupBottomSheet(
-            onDismissRequest = dismissYearMonthPicker
+            onDismissRequest = dismissYearMonthPicker,
         ) {
             YearMonthPicker(
                 onDismissRequest = dismissYearMonthPicker,
                 selectedYear = selectedYearInDiaryList,
                 selectedMonth = selectedMonthInDiaryList,
-                onYearMonthSelected = updateYearAndMonth
+                onYearMonthSelected = updateYearAndMonth,
             )
         }
     }
@@ -171,7 +176,7 @@ fun DiaryListScreen(
     if (diaryDeleteBottomSheetState) {
         DiaryDeleteSheet(
             onDismiss = dismissDiaryDeleteBottomSheet,
-            showDiaryDeleteDialog = showDiaryDeleteDialog
+            showDiaryDeleteDialog = showDiaryDeleteDialog,
         )
     }
 
@@ -190,14 +195,14 @@ fun DiaryListScreen(
                 dismissDiaryDeleteDialog()
             },
             confirmButtonColor = ClodyTheme.colors.red,
-            confirmButtonTextColor = ClodyTheme.colors.white
+            confirmButtonTextColor = ClodyTheme.colors.white,
         )
     }
 
     if (showDiaryDeleteFailureDialog) {
         FailureDialog(
             message = failureDialogMessage,
-            onDismiss = { diaryListViewModel.dismissDiaryDeleteFailureDialog() }
+            onDismiss = { diaryListViewModel.dismissDiaryDeleteFailureDialog() },
         )
     }
 }

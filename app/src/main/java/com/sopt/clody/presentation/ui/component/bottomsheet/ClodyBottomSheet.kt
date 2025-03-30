@@ -36,7 +36,7 @@ fun ClodyBottomSheet(
         dragHandle = null,
         contentWindowInsets = { WindowInsets(0.dp, 0.dp, 0.dp, 0.dp) },
         modifier = modifier
-            .navigationBarsPadding()
+            .navigationBarsPadding(),
     ) {
         Box(
             Modifier
@@ -44,7 +44,7 @@ fun ClodyBottomSheet(
                 .wrapContentHeight()
                 .pointerInput(Unit) {
                     detectVerticalDragGestures { _, _ -> }
-                }
+                },
         ) {
             content()
         }
@@ -60,6 +60,6 @@ fun ClodyBottomSheet(
 fun ClodyBottomSheetPreview() {
     ClodyBottomSheet(
         content = {},
-        onDismissRequest = {}
+        onDismissRequest = {},
     )
 }

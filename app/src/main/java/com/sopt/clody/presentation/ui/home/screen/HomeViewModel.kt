@@ -15,17 +15,18 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
     val calendarState: StateFlow<CalendarState<MonthlyCalendarResponseDto>> get() = _calendarState
 
-    private val _dailyDiariesState = MutableStateFlow<DailyDiariesState<DailyDiariesResponseDto>>(DailyDiariesState.Idle)
+    private val _dailyDiariesState = MutableStateFlow<DailyDiariesState<DailyDiariesResponseDto>>(
+        DailyDiariesState.Idle,
+    )
     val dailyDiariesState: StateFlow<DailyDiariesState<DailyDiariesResponseDto>> get() = _dailyDiariesState
 
     private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
@@ -99,7 +100,7 @@ class HomeViewModel @Inject constructor(
                 onFailure = { exception ->
                     setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
                     CalendarState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
-                }
+                },
             )
         }
     }
@@ -121,7 +122,7 @@ class HomeViewModel @Inject constructor(
                 onFailure = { exception ->
                     setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
                     DailyDiariesState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
-                }
+                },
             )
         }
     }
@@ -138,7 +139,7 @@ class HomeViewModel @Inject constructor(
                 },
                 onFailure = {
                     DeleteDiaryState.Failure(it.message ?: "Unknown error")
-                }
+                },
             )
         }
     }

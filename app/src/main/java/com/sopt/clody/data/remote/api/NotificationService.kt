@@ -14,6 +14,6 @@ interface NotificationService {
 
     @POST("api/v1/alarm")
     suspend fun sendNotification(
-        @Body sendNotificationRequestDto: SendNotificationRequestDto
+        @Body sendNotificationRequestDto: SendNotificationRequestDto,
     ): ApiResponse<SendNotificationResponseDto>
 }

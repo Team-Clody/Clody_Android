@@ -31,7 +31,7 @@ fun ClodyCalendar(
     onDateSelected: (LocalDate) -> Unit,
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     homeViewModel: HomeViewModel,
-    onShowDiaryDeleteStateChange: (Boolean) -> Unit
+    onShowDiaryDeleteStateChange: (Boolean) -> Unit,
 ) {
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
     val dateList = remember(currentMonth.year, currentMonth.monthValue) {
@@ -44,7 +44,7 @@ fun ClodyCalendar(
     Column(
         modifier = Modifier
             .fillMaxSize(),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         MonthlyItem(
             dateList = dateList,
@@ -62,7 +62,6 @@ fun ClodyCalendar(
 
         when (val state = dailyDiariesUiState) {
             is DailyDiariesState.Idle -> {
-
             }
 
             is DailyDiariesState.Loading -> {
@@ -74,7 +73,7 @@ fun ClodyCalendar(
                     date = selectedDate,
                     dayOfWeek = initialDayOfWeek,
                     dailyDiaries = state.data.diaries,
-                    onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
+                    onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange,
                 )
             }
 

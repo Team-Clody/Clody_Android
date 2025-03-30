@@ -26,42 +26,42 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(
-        authRepositoryImpl: AuthRepositoryImpl
+        authRepositoryImpl: AuthRepositoryImpl,
     ): AuthRepository
 
     @Binds
     @Singleton
     abstract fun bindTokenRepository(
-        tokenRepositoryImpl: TokenRepositoryImpl
+        tokenRepositoryImpl: TokenRepositoryImpl,
     ): TokenRepository
 
     @Binds
     @Singleton
     abstract fun bindTokenReissueRepository(
-        tokenReissueRepositoryImpl: TokenReissueRepositoryImpl
+        tokenReissueRepositoryImpl: TokenReissueRepositoryImpl,
     ): TokenReissueRepository
 
     @Binds
     @Singleton
     abstract fun bindDiaryRepository(
-        diaryRepositoryImpl: DiaryRepositoryImpl
+        diaryRepositoryImpl: DiaryRepositoryImpl,
     ): DiaryRepository
 
     @Binds
     @Singleton
     abstract fun bindAccountManagementRepository(
-        accountManagementRepositoryImpl: AccountManagementRepositoryImpl
+        accountManagementRepositoryImpl: AccountManagementRepositoryImpl,
     ): AccountManagementRepository
 
     @Binds
     @Singleton
     abstract fun bindNotificationRepository(
-        notificationRepositoryImpl: NotificationRepositoryImpl
+        notificationRepositoryImpl: NotificationRepositoryImpl,
     ): NotificationRepository
 
     @Binds
     @Singleton
     abstract fun bindAdRepository(
-        adRepositoryImpl: AdRepositoryImpl
+        adRepositoryImpl: AdRepositoryImpl,
     ): AdRepository
 }

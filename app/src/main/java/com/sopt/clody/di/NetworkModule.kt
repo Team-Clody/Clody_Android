@@ -1,6 +1,5 @@
 package com.sopt.clody.di
 
-
 import android.content.Context
 import android.net.ConnectivityManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -37,7 +36,7 @@ object NetworkModule {
     fun provideOauthInterceptor(
         tokenReissueRepository: Provider<TokenReissueRepository>,
         tokenDataStore: TokenDataStore,
-        @ApplicationContext context: Context
+        @ApplicationContext context: Context,
     ): AuthInterceptor {
         return AuthInterceptor(tokenReissueRepository, tokenDataStore, context)
     }
@@ -46,7 +45,7 @@ object NetworkModule {
     @Singleton
     fun provideClodyOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
-        oauthInterceptor: AuthInterceptor
+        oauthInterceptor: AuthInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
@@ -64,7 +63,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
-        baseUrl: String
+        baseUrl: String,
     ): Retrofit {
         val json = Json { ignoreUnknownKeys = true }
         return Retrofit.Builder()

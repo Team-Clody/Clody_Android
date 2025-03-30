@@ -24,7 +24,7 @@ import javax.inject.Provider
 class AuthInterceptor @Inject constructor(
     private val tokenReissueRepositoryProvider: Provider<TokenReissueRepository>,
     private val tokenDataStore: TokenDataStore,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : Interceptor {
 
     private val mutex = Mutex()
@@ -48,8 +48,8 @@ class AuthInterceptor @Inject constructor(
 
     private fun shouldAddAuthorization(url: String): Boolean {
         return !url.contains("api/v1/auth/signin") &&
-                !url.contains("api/v1/auth/signup") &&
-                !url.contains("api/v1/auth/reissue")
+            !url.contains("api/v1/auth/signup") &&
+            !url.contains("api/v1/auth/reissue")
     }
 
     private fun addAuthorizationHeader(request: Request): Request {
@@ -65,7 +65,7 @@ class AuthInterceptor @Inject constructor(
 
     private fun handleTokenExpiration(
         chain: Interceptor.Chain,
-        originalRequest: Request
+        originalRequest: Request,
     ): Response {
         return runBlocking {
             mutex.withLock {

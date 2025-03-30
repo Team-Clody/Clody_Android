@@ -16,7 +16,7 @@ fun BubbleLayout(
     alignment: TooltipAlignment = TooltipAlignment.TopCenter,
     arrowHeight: Dp,
     arrowPositionX: Float,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val arrowHeightPx = with(LocalDensity.current) {
         arrowHeight.toPx()
@@ -57,7 +57,7 @@ fun BubbleLayout(
                     color = arrowColor,
                 )
                 path.close()
-            }
+            },
     ) {
         content()
     }

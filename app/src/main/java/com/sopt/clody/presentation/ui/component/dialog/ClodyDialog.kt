@@ -50,35 +50,34 @@ fun ClodyDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
-        )
+            usePlatformDefaultWidth = false,
+        ),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.5f))
                 .wrapContentSize(Alignment.Center)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white),
                 modifier = Modifier
                     .fillMaxSize()
-                    .wrapContentHeight()
+                    .wrapContentHeight(),
             ) {
                 Column(
                     modifier = Modifier
                         .padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
-
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
                         text = titleMassage,
-                        style = ClodyTheme.typography.body1SemiBold
+                        style = ClodyTheme.typography.body1SemiBold,
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
@@ -87,14 +86,14 @@ fun ClodyDialog(
                         text = descriptionMassage,
                         color = ClodyTheme.colors.gray04,
                         textAlign = TextAlign.Center,
-                        style = ClodyTheme.typography.body3Regular
+                        style = ClodyTheme.typography.body3Regular,
                     )
 
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Row(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxWidth(),
                     ) {
                         Button(
                             onClick = {
@@ -107,14 +106,14 @@ fun ClodyDialog(
                                 .weight(1f)
                                 .background(
                                     color = ClodyTheme.colors.gray07,
-                                    shape = RoundedCornerShape(size = 8.dp)
+                                    shape = RoundedCornerShape(size = 8.dp),
                                 ),
-                            colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07)
+                            colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07),
                         ) {
                             Text(
                                 text = dismissOption,
                                 color = ClodyTheme.colors.gray04,
-                                style = ClodyTheme.typography.body3SemiBold
+                                style = ClodyTheme.typography.body3SemiBold,
                             )
                         }
 
@@ -131,14 +130,14 @@ fun ClodyDialog(
                                 .weight(1f)
                                 .background(
                                     color = confirmButtonColor,
-                                    shape = RoundedCornerShape(size = 8.dp)
+                                    shape = RoundedCornerShape(size = 8.dp),
                                 ),
-                            colors = ButtonDefaults.buttonColors(confirmButtonColor)
+                            colors = ButtonDefaults.buttonColors(confirmButtonColor),
                         ) {
                             Text(
                                 text = confirmOption,
                                 color = confirmButtonTextColor,
-                                style = ClodyTheme.typography.body3SemiBold
+                                style = ClodyTheme.typography.body3SemiBold,
                             )
                         }
                     }
@@ -147,4 +146,3 @@ fun ClodyDialog(
         }
     }
 }
-

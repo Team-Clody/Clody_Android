@@ -15,14 +15,14 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun CloverCount(cloverCount:Int) {
+fun CloverCount(cloverCount: Int) {
     val text = "클로버 ${cloverCount}개"
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 10.dp, bottom = 5.dp, end = 20.dp),
-        contentAlignment = Alignment.TopEnd
+        contentAlignment = Alignment.TopEnd,
     ) {
         Text(
             text = text,
@@ -32,9 +32,7 @@ fun CloverCount(cloverCount:Int) {
                 .border(9.dp, ClodyTheme.colors.lightGreenBack, shape = RoundedCornerShape(9.dp))
                 .background(ClodyTheme.colors.lightGreenBack, shape = RoundedCornerShape(9.dp))
                 .padding(horizontal = 12.dp, vertical = 8.dp),
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
         )
     }
 }
-
-

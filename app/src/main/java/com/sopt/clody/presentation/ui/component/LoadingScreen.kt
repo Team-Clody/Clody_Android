@@ -14,17 +14,17 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun LoadingScreen(
-    backgroundColor: Color = ClodyTheme.colors.white
+    backgroundColor: Color = ClodyTheme.colors.white,
 ) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         CircularProgressIndicator(
             modifier = Modifier.wrapContentSize(Alignment.Center),
-            color = ClodyTheme.colors.mainYellow
+            color = ClodyTheme.colors.mainYellow,
         )
     }
 }
@@ -34,4 +34,3 @@ fun LoadingScreen(
 fun LoadingScreenPreview() {
     LoadingScreen()
 }
-

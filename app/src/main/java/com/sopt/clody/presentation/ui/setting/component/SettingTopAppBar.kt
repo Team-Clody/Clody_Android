@@ -16,7 +16,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun SettingTopAppBar(
     title: String,
-    onClickBack: () -> Unit
+    onClickBack: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
 
@@ -28,7 +28,7 @@ fun SettingTopAppBar(
             IconButton(onClick = onClickBack) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_setting_back),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },

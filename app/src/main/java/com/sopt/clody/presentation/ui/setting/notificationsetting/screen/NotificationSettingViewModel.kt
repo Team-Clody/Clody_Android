@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
+import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationSettingViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _notificationInfoState = MutableStateFlow<NotificationInfoState>(NotificationInfoState.Idle)
@@ -28,7 +28,9 @@ class NotificationSettingViewModel @Inject constructor(
     private val _diaryAlarmChangeState = MutableStateFlow<DiaryAlarmChangeState>(DiaryAlarmChangeState.Idle)
     val diaryAlarmChangeState: StateFlow<DiaryAlarmChangeState> = _diaryAlarmChangeState
 
-    private val _notificationTimeChangeState = MutableStateFlow<NotificationTimeChangeState>(NotificationTimeChangeState.Idle)
+    private val _notificationTimeChangeState = MutableStateFlow<NotificationTimeChangeState>(
+        NotificationTimeChangeState.Idle,
+    )
     val notificationTimeChangeState: StateFlow<NotificationTimeChangeState> = _notificationTimeChangeState
 
     private val _replyAlarmChangeState = MutableStateFlow<ReplyAlarmChangeState>(ReplyAlarmChangeState.Idle)
@@ -68,7 +70,7 @@ class NotificationSettingViewModel @Inject constructor(
                             NotificationInfoState.Failure(UNKNOWN_ERROR)
                         }
                     }
-                }
+                },
             )
         }
     }
@@ -90,7 +92,7 @@ class NotificationSettingViewModel @Inject constructor(
                 isDiaryAlarm = diaryAlarm,
                 isReplyAlarm = notificationInfo.isReplyAlarm,
                 time = notificationInfo.time,
-                fcmToken = fcmToken
+                fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
                 onSuccess = { _diaryAlarmChangeState.value = DiaryAlarmChangeState.Success(it) },
@@ -102,7 +104,7 @@ class NotificationSettingViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     DiaryAlarmChangeState.Failure(_failureDialogMessage.value)
-                }
+                },
             )
         }
     }
@@ -124,7 +126,7 @@ class NotificationSettingViewModel @Inject constructor(
                 isDiaryAlarm = notificationInfo.isDiaryAlarm,
                 isReplyAlarm = notificationInfo.isReplyAlarm,
                 time = time,
-                fcmToken = fcmToken
+                fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
                 onSuccess = { _notificationTimeChangeState.value = NotificationTimeChangeState.Success(it) },
@@ -136,7 +138,7 @@ class NotificationSettingViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     NotificationInfoState.Failure(_failureDialogMessage.value)
-                }
+                },
             )
         }
     }
@@ -158,7 +160,7 @@ class NotificationSettingViewModel @Inject constructor(
                 isDiaryAlarm = notificationInfo.isDiaryAlarm,
                 isReplyAlarm = replyAlarm,
                 time = notificationInfo.time,
-                fcmToken = fcmToken
+                fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
                 onSuccess = { _replyAlarmChangeState.value = ReplyAlarmChangeState.Success(it) },
@@ -170,7 +172,7 @@ class NotificationSettingViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     ReplyAlarmChangeState.Failure(_failureDialogMessage.value)
-                }
+                },
             )
         }
     }

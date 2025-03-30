@@ -15,12 +15,12 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun HorizontalDivider(
     color: Color = ClodyTheme.colors.gray08,
     thickness: Dp = 6.dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .height(thickness)
-            .background(color)
+            .background(color),
     )
 }

@@ -13,8 +13,8 @@ import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 import javax.inject.Inject
 
 class DiaryRemoteDataSourceImpl @Inject constructor(
-    private val diaryService: DiaryService
-): DiaryRemoteDataSource {
+    private val diaryService: DiaryService,
+) : DiaryRemoteDataSource {
     override suspend fun writeDiary(date: String, content: List<String>): ApiResponse<WriteDiaryResponseDto> =
         diaryService.writeDiary(WriteDiaryRequestDto(date, content))
 

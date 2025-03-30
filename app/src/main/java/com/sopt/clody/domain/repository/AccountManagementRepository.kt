@@ -8,9 +8,8 @@ interface AccountManagementRepository {
     suspend fun getUserInfo(): Result<UserInfoResponseDto>
 
     suspend fun modifyNickname(
-        modifyNicknameRequestDto: ModifyNicknameRequestDto
+        modifyNicknameRequestDto: ModifyNicknameRequestDto,
     ): Result<ModifyNicknameResponseDto>
 
     suspend fun revokeAccount(): Result<Unit>
-
 }

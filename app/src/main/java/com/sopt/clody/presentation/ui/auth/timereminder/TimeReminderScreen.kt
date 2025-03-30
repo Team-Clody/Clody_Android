@@ -50,7 +50,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun TimeReminderRoute(
     navigator: AuthNavigator,
-    viewModel: TimeReminderViewModel = hiltViewModel()
+    viewModel: TimeReminderViewModel = hiltViewModel(),
 ) {
     val timeReminderState by viewModel.timeReminderState.collectAsState()
     val context = LocalContext.current
@@ -60,7 +60,7 @@ fun TimeReminderRoute(
     val isNotificationPermissionGranted = remember { mutableStateOf(false) }
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
+        contract = ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
         isNotificationPermissionGranted.value = isGranted
     }
@@ -100,7 +100,7 @@ fun TimeReminderRoute(
             onDismiss = {
                 showDialog = false
                 viewModel.resetTimeReminderState()
-            }
+            },
         )
     }
 
@@ -116,7 +116,7 @@ fun TimeReminderRoute(
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.ONBOARDING_ALARM)
             viewModel.sendNotification(context, isNotificationPermissionGranted.value)
         },
-        isLoading = timeReminderState is TimeReminderState.Loading
+        isLoading = timeReminderState is TimeReminderState.Loading,
     )
 }
 
@@ -125,7 +125,7 @@ fun TimeReminderScreen(
     onStartClick: () -> Unit,
     onTimeSelected: (String, String, String) -> Unit,
     onCompleteClick: () -> Unit,
-    isLoading: Boolean
+    isLoading: Boolean,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     var selectedAmPm by remember { mutableStateOf("오후") }
@@ -147,13 +147,13 @@ fun TimeReminderScreen(
                     .navigationBarsPadding()
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 14.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 ClodyButton(
                     onClick = onCompleteClick,
                     text = stringResource(id = R.string.time_reminder_complete_button),
                     enabled = true,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.015f))
                 Text(
@@ -162,11 +162,11 @@ fun TimeReminderScreen(
                         .clickable(
                             onClick = onStartClick,
                             indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
+                            interactionSource = remember { MutableInteractionSource() },
                         ),
                     style = ClodyTheme.typography.detail1Medium,
                     color = ClodyTheme.colors.gray05,
-                    textDecoration = TextDecoration.Underline
+                    textDecoration = TextDecoration.Underline,
                 )
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.017f))
             }
@@ -177,20 +177,20 @@ fun TimeReminderScreen(
                     .fillMaxSize()
                     .background(color = ClodyTheme.colors.white)
                     .padding(innerPadding)
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 24.dp),
             ) {
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.14f))
                 Text(
                     text = stringResource(id = R.string.time_reminder_title),
                     style = ClodyTheme.typography.head1,
                     color = ClodyTheme.colors.gray01,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.05f))
                 PickerBox(
                     time = "$selectedAmPm ${selectedHour}시 ${selectedMinute}분",
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { showBottomSheet = true }
+                    onClick = { showBottomSheet = true },
                 )
                 HorizontalDivider(color = ClodyTheme.colors.gray07, thickness = 1.dp)
             }
@@ -199,18 +199,17 @@ fun TimeReminderScreen(
                 ClodyPopupBottomSheet(onDismissRequest = { showBottomSheet = false }) {
                     BottomSheetTimePicker(
                         onDismissRequest = { showBottomSheet = false },
-                        onRemindTimeSelected = onRemindTimeSelected
+                        onRemindTimeSelected = onRemindTimeSelected,
                     )
                 }
             }
-        }
+        },
     )
 
     if (isLoading) {
         LoadingScreen()
     }
 }
-
 
 @Preview(showBackground = true)
 @Composable
@@ -219,6 +218,6 @@ fun PreviewTimeReminderScreen() {
         onStartClick = {},
         onTimeSelected = { _, _, _ -> },
         onCompleteClick = {},
-        isLoading = false
+        isLoading = false,
     )
 }

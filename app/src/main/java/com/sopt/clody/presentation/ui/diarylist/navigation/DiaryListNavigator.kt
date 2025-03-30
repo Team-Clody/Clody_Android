@@ -3,7 +3,7 @@ package com.sopt.clody.presentation.ui.diarylist.navigation
 import androidx.navigation.NavController
 
 class DiaryListNavigator(
-    val navController: NavController
+    val navController: NavController,
 ) {
     fun navigateHome(selectedYear: Int, selectedMonth: Int) {
         navController.navigate("home/$selectedYear/$selectedMonth")

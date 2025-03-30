@@ -11,7 +11,7 @@ import java.time.LocalDate
 
 fun NavGraphBuilder.replyLoadingNavGraph(
     replyLoadingNavigator: ReplyLoadingNavigator,
-    replyDiaryNavigator: ReplyDiaryNavigator
+    replyDiaryNavigator: ReplyDiaryNavigator,
 ) {
     val currentDate = LocalDate.now()
     composable(
@@ -21,8 +21,8 @@ fun NavGraphBuilder.replyLoadingNavGraph(
             navArgument("month") { type = NavType.IntType },
             navArgument("day") { type = NavType.IntType },
             navArgument("from") { defaultValue = "home" },
-            navArgument("replyStatus") { defaultValue = "UNREADY" }
-        )
+            navArgument("replyStatus") { defaultValue = "UNREADY" },
+        ),
     ) { backStackEntry ->
         val year = backStackEntry.arguments?.getInt("year") ?: currentDate.year
         val month = backStackEntry.arguments?.getInt("month") ?: currentDate.monthValue
@@ -37,8 +37,8 @@ fun NavGraphBuilder.replyLoadingNavGraph(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
             navArgument("day") { type = NavType.IntType },
-            navArgument("replyStatus") { defaultValue = "UNREADY" }
-        )
+            navArgument("replyStatus") { defaultValue = "UNREADY" },
+        ),
     ) { backStackEntry ->
         val year = backStackEntry.arguments?.getInt("year") ?: currentDate.year
         val month = backStackEntry.arguments?.getInt("month") ?: currentDate.monthValue

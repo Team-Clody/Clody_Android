@@ -21,16 +21,16 @@ fun CustomCheckbox(
     onCheckedChange: (Boolean) -> Unit,
     size: Dp,
     checkedImageRes: Int,
-    uncheckedImageRes: Int
+    uncheckedImageRes: Int,
 ) {
     Box(
         modifier = Modifier
             .size(size)
             .clip(CircleShape)
             .clickable(
-                onClick = { onCheckedChange(!checked) }
+                onClick = { onCheckedChange(!checked) },
             ),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         if (checked) {
             Image(
@@ -49,5 +49,11 @@ fun CustomCheckbox(
 @Preview(showBackground = true)
 @Composable
 fun CustomCheckboxPreview() {
-    CustomCheckbox(checked = true, onCheckedChange = {}, size = 23.dp, checkedImageRes = R.drawable.ic_terms_check_on_23, uncheckedImageRes = R.drawable.ic_terms_check_off_23)
+    CustomCheckbox(
+        checked = true,
+        onCheckedChange = {},
+        size = 23.dp,
+        checkedImageRes = R.drawable.ic_terms_check_on_23,
+        uncheckedImageRes = R.drawable.ic_terms_check_off_23,
+    )
 }

@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class WriteDiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _writeDiaryState = MutableStateFlow<WriteDiaryState>(WriteDiaryState.Idle)
@@ -80,7 +80,7 @@ class WriteDiaryViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     WriteDiaryState.Failure(_failureMessage.value)
-                }
+                },
             )
         }
     }

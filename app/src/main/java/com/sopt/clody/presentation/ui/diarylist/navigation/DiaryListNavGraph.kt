@@ -12,10 +12,10 @@ fun NavGraphBuilder.diaryListNavGraph(
 ) {
     composable(
         route = "diary_list/{selectedYearFromHome}/{selectedMonthFromHome}",
-        arguments = listOf (
+        arguments = listOf(
             navArgument("selectedYearFromHome") { type = NavType.IntType },
-            navArgument("selectedMonthFromHome") { type = NavType.IntType }
-        )
+            navArgument("selectedMonthFromHome") { type = NavType.IntType },
+        ),
     ) { backStackEntry ->
         val currentDate = LocalDate.now()
         val selectedYearFromHome = backStackEntry.arguments?.getInt("selectedYearFromHome") ?: currentDate.year
@@ -23,7 +23,7 @@ fun NavGraphBuilder.diaryListNavGraph(
         DiaryListRoute(
             navigator = diaryListNavigator,
             selectedYearFromHome = selectedYearFromHome,
-            selectedMonthFromHome = selectedMonthFromHome
+            selectedMonthFromHome = selectedMonthFromHome,
         )
     }
 }

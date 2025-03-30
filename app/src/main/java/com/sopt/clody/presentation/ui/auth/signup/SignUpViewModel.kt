@@ -32,7 +32,7 @@ import kotlin.coroutines.resumeWithException
 class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val tokenRepository: TokenRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _signInState = MutableStateFlow(SignInState())
@@ -130,7 +130,7 @@ class SignUpViewModel @Inject constructor(
                         UiState.Failure(message)
                     }
                     _signInState.value = SignInState(uiState)
-                }
+                },
             )
         }
     }
@@ -151,7 +151,7 @@ class SignUpViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.signUp(
                 authorization,
-                SignUpRequestDto(platform = KAKAO_PLATFORM, name = nickname.value, fcmToken = fcmToken)
+                SignUpRequestDto(platform = KAKAO_PLATFORM, name = nickname.value, fcmToken = fcmToken),
             ).fold(
                 onSuccess = { response ->
                     _signUpState.value = SignUpState(UiState.Success(SIGN_UP_SUCCESS))
@@ -164,7 +164,7 @@ class SignUpViewModel @Inject constructor(
                         error.localizedMessage ?: UNKNOWN_ERROR
                     }
                     _signUpState.value = SignUpState(UiState.Failure(errorMessage))
-                }
+                },
             )
         }
     }

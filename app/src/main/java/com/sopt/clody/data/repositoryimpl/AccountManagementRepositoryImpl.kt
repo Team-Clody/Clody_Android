@@ -9,7 +9,7 @@ import com.sopt.clody.domain.repository.AccountManagementRepository
 import javax.inject.Inject
 
 class AccountManagementRepositoryImpl @Inject constructor(
-    private val accountManagementDataSource: AccountManagementDataSource
+    private val accountManagementDataSource: AccountManagementDataSource,
 ) : AccountManagementRepository {
     override suspend fun getUserInfo(): Result<UserInfoResponseDto> =
         runCatching {

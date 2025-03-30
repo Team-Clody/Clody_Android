@@ -5,7 +5,7 @@ import com.sopt.clody.domain.repository.AdRepository
 import javax.inject.Inject
 
 class AdRepositoryImpl @Inject constructor(
-    private val adRemoteDataSource: AdRemoteDataSource
+    private val adRemoteDataSource: AdRemoteDataSource,
 ) : AdRepository {
     override suspend fun startAd(year: Int, month: Int, day: Int): Result<Unit> {
         return adRemoteDataSource.startAd(year, month, day)

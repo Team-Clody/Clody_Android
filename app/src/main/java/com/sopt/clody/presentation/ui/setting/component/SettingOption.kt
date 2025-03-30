@@ -21,7 +21,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun SettingOption(
     option: String,
-    onClickOption: () -> Unit
+    onClickOption: () -> Unit,
 ) {
     Row(
         modifier = Modifier
@@ -30,22 +30,22 @@ fun SettingOption(
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null,
-                onClick = onClickOption),
-        verticalAlignment = Alignment.CenterVertically
+                onClick = onClickOption,
+            ),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Spacer(modifier = Modifier.width(24.dp))
         Text(
             text = option,
             color = ClodyTheme.colors.gray03,
-            style = ClodyTheme.typography.body1Medium
+            style = ClodyTheme.typography.body1Medium,
         )
         Spacer(modifier = Modifier.weight(1f))
         Image(
             painter = painterResource(id = R.drawable.ic_setting_next),
             modifier = Modifier
                 .padding(8.dp),
-            contentDescription = null
+            contentDescription = null,
         )
-
     }
 }

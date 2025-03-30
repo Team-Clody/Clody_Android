@@ -15,8 +15,8 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class DiaryRepositoryImpl @Inject constructor(
-    private val diaryRemoteDataSource: DiaryRemoteDataSource
-): DiaryRepository {
+    private val diaryRemoteDataSource: DiaryRemoteDataSource,
+) : DiaryRepository {
     override suspend fun writeDiary(date: String, content: List<String>): Result<WriteDiaryResponseDto> =
         runCatching {
             diaryRemoteDataSource.writeDiary(date, content).handleApiResponse().getOrThrow()

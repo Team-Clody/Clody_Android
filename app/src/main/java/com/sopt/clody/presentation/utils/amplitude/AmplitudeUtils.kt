@@ -13,8 +13,8 @@ object AmplitudeUtils {
         amplitude = Amplitude(
             Configuration(
                 apiKey = BuildConfig.AMPLITUDE_API_KEY,
-                context = context
-            )
+                context = context,
+            ),
         )
     }
 
@@ -25,7 +25,7 @@ object AmplitudeUtils {
     fun <T> trackEventWithProperty(eventName: String, propertyName: String, propertyValue: T) {
         amplitude.track(
             eventType = eventName,
-            eventProperties = mapOf(propertyName to propertyValue)
+            eventProperties = mapOf(propertyName to propertyValue),
         )
     }
 

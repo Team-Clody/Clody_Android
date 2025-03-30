@@ -10,7 +10,7 @@ import com.sopt.clody.presentation.ui.setting.screen.SettingRoute
 import com.sopt.clody.presentation.ui.setting.screen.WebViewRoute
 
 fun NavGraphBuilder.settingNavGraph(
-    navigator: SettingNavigator
+    navigator: SettingNavigator,
 ) {
     composable("setting") {
         SettingRoute(navigator)
@@ -18,7 +18,7 @@ fun NavGraphBuilder.settingNavGraph(
 }
 
 fun NavGraphBuilder.accountManagementNavGraph(
-    navigator: SettingNavigator
+    navigator: SettingNavigator,
 ) {
     composable("account_management") {
         AccountManagementRoute(navigator)
@@ -26,7 +26,7 @@ fun NavGraphBuilder.accountManagementNavGraph(
 }
 
 fun NavGraphBuilder.notificationSettingNavGraph(
-    navigator: SettingNavigator
+    navigator: SettingNavigator,
 ) {
     composable("notification_setting") {
         NotificationSettingRoute(navigator)
@@ -34,11 +34,11 @@ fun NavGraphBuilder.notificationSettingNavGraph(
 }
 
 fun NavGraphBuilder.webViewNavGraph(
-    navigator: SettingNavigator
+    navigator: SettingNavigator,
 ) {
     composable(
         route = "web_view/{encodedUrl}",
-        arguments = listOf(navArgument("encodedUrl") { type = NavType.StringType })
+        arguments = listOf(navArgument("encodedUrl") { type = NavType.StringType }),
     ) { backStackEntry ->
         val encodedUrl = backStackEntry.arguments?.getString("encodedUrl")
         encodedUrl?.let {

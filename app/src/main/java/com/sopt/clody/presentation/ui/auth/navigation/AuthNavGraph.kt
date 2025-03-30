@@ -6,12 +6,11 @@ import androidx.navigation.navigation
 import com.sopt.clody.presentation.ui.auth.screen.GuideRoute
 import com.sopt.clody.presentation.ui.auth.screen.NicknameRoute
 import com.sopt.clody.presentation.ui.auth.screen.TermsOfServiceRoute
-import com.sopt.clody.presentation.ui.auth.timereminder.TimeReminderRoute
 import com.sopt.clody.presentation.ui.auth.signup.SignUpRoute
-
+import com.sopt.clody.presentation.ui.auth.timereminder.TimeReminderRoute
 
 fun NavGraphBuilder.registerNavGraph(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     navigation(startDestination = "register", route = "register_graph") {
         composable("register") {
@@ -21,7 +20,7 @@ fun NavGraphBuilder.registerNavGraph(
 }
 
 fun NavGraphBuilder.termsOfServiceNavGraph(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     composable("terms_of_service") {
         TermsOfServiceRoute(navigator)
@@ -29,7 +28,7 @@ fun NavGraphBuilder.termsOfServiceNavGraph(
 }
 
 fun NavGraphBuilder.nicknameNavGraph(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     composable("nickname") {
         NicknameRoute(navigator)
@@ -37,7 +36,7 @@ fun NavGraphBuilder.nicknameNavGraph(
 }
 
 fun NavGraphBuilder.guidNavGraph(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     composable("guide") {
         GuideRoute(navigator)
@@ -45,7 +44,7 @@ fun NavGraphBuilder.guidNavGraph(
 }
 
 fun NavGraphBuilder.timeReminderNavGraph(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     composable("time_reminder") {
         TimeReminderRoute(navigator)

@@ -33,7 +33,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun SignUpRoute(
-    authNavigator: AuthNavigator
+    authNavigator: AuthNavigator,
 ) {
     val viewModel: SignUpViewModel = hiltViewModel()
     val signInState by viewModel.signInState.collectAsState()
@@ -62,7 +62,7 @@ fun SignUpRoute(
 @Composable
 fun SignUpScreen(
     isLoading: Boolean,
-    onSignInClick: () -> Unit
+    onSignInClick: () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     val backgroundColor = ClodyTheme.colors.white
@@ -70,7 +70,7 @@ fun SignUpScreen(
     LaunchedEffect(Unit) {
         systemUiController.setStatusBarColor(
             color = backgroundColor,
-            darkIcons = true
+            darkIcons = true,
         )
     }
 
@@ -82,7 +82,7 @@ fun SignUpScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .navigationBarsPadding()
-                    .padding(bottom = 40.dp)
+                    .padding(bottom = 40.dp),
             )
         },
         content = { innerPadding ->
@@ -97,21 +97,21 @@ fun SignUpScreen(
                 Image(
                     painter = painterResource(id = R.drawable.ic_signup_logo),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                 Image(
                     painter = painterResource(id = R.drawable.ic__signup_title),
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.01f))
                 Image(
                     painter = painterResource(id = R.drawable.ic_signup_logotitle),
                     contentDescription = null,
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
                 )
             }
-        }
+        },
     )
 
     if (isLoading) {
@@ -124,6 +124,6 @@ fun SignUpScreen(
 fun RegisterScreenPreview() {
     SignUpScreen(
         isLoading = false,
-        onSignInClick = {}
+        onSignInClick = {},
     )
 }

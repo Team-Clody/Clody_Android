@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryListViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _diaryListState = MutableStateFlow<DiaryListState>(DiaryListState.Idle)
@@ -64,7 +64,7 @@ class DiaryListViewModel @Inject constructor(
                         }
                         DiaryListState.Failure(errorMessage)
                     }
-                }
+                },
             )
         }
     }
@@ -100,7 +100,7 @@ class DiaryListViewModel @Inject constructor(
                     }
                     _showDiaryDeleteFailureDialog.value = true
                     DiaryDeleteState.Failure(_failureDialogMessage.value)
-                }
+                },
             )
         }
     }
@@ -114,6 +114,6 @@ class DiaryListViewModel @Inject constructor(
         val year: Int = 0,
         val month: Int = 0,
         val day: Int = 0,
-        val dayOfWeek: String = ""
+        val dayOfWeek: String = "",
     )
 }
