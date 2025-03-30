@@ -7,7 +7,7 @@ sealed class ReplyDiaryState {
         val content: String,
         val nickname: String,
         val month: Int,
-        val date: Int
+        val date: Int,
     ) : ReplyDiaryState()
     data class Failure(val error: String) : ReplyDiaryState()
 }

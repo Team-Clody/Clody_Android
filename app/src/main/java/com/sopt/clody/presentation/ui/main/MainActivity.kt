@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                     writeDiaryNavigator = writeDiaryNavigator,
                     settingNavigator = settingNavigator,
                     replyLoadingNavigator = replyLoadingNavigator,
-                    replyDiaryNavigator = replyDiaryNavigator
+                    replyDiaryNavigator = replyDiaryNavigator,
                 )
             }
         }

@@ -13,7 +13,7 @@ import com.sopt.clody.R
 val pretendardFontFamily = FontFamily(
     Font(R.font.pretendard_medium, FontWeight.Medium, FontStyle.Normal),
     Font(R.font.pretendard_regular, FontWeight.Normal, FontStyle.Normal),
-    Font(R.font.pretendard_semibold, FontWeight.SemiBold, FontStyle.Normal)
+    Font(R.font.pretendard_semibold, FontWeight.SemiBold, FontStyle.Normal),
 )
 
 private val pretendardTextStyle = TextStyle(
@@ -85,12 +85,12 @@ val defaultClodyTypography = ClodyTypography(
     body4Medium = pretendardTextStyle.copy(
         fontSize = 13.sp,
         fontWeight = FontWeight.Medium,
-        lineHeight = 19.5.sp
+        lineHeight = 19.5.sp,
     ),
     body4SemiBold = pretendardTextStyle.copy(
         fontSize = 13.sp,
         fontWeight = FontWeight.SemiBold,
-        lineHeight = 19.5.sp
+        lineHeight = 19.5.sp,
     ),
     detail1SemiBold = pretendardTextStyle.copy(
         fontSize = 12.sp,
@@ -105,7 +105,7 @@ val defaultClodyTypography = ClodyTypography(
     detail1Regular = pretendardTextStyle.copy(
         fontSize = 12.sp,
         fontWeight = FontWeight.Normal,
-        lineHeight = 18.sp
+        lineHeight = 18.sp,
     ),
     detail2SemiBold = pretendardTextStyle.copy(
         fontSize = 10.sp,
@@ -120,7 +120,7 @@ val defaultClodyTypography = ClodyTypography(
     letterMedium = pretendardTextStyle.copy(
         fontSize = 14.sp,
         fontWeight = FontWeight.Medium,
-        lineHeight = 26.6.sp
+        lineHeight = 26.6.sp,
     ),
 )
 

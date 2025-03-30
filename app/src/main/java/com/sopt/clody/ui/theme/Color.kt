@@ -58,7 +58,7 @@ val defaultClodyColors = ClodyColors(
     gray07 = Gray07,
     gray08 = Gray08,
     gray09 = Gray09,
-    white = WHITE
+    white = WHITE,
 )
 
 @Immutable
@@ -84,7 +84,7 @@ data class ClodyColors(
     val gray07: Color,
     val gray08: Color,
     val gray09: Color,
-    val white: Color
+    val white: Color,
 )
 
 val LocalClodyColors = staticCompositionLocalOf { defaultClodyColors }

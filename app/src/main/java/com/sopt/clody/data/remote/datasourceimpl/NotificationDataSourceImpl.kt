@@ -9,7 +9,7 @@ import com.sopt.clody.data.remote.dto.response.SendNotificationResponseDto
 import javax.inject.Inject
 
 class NotificationDataSourceImpl @Inject constructor(
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
 ) : NotificationDataSource {
     override suspend fun getNotificationInfo(): ApiResponse<NotificationInfoResponseDto> =
         notificationService.getNotificationInfo()

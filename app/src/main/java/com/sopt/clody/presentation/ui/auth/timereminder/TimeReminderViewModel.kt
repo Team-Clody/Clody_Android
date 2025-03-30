@@ -7,11 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
+import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class TimeReminderViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _timeReminderState = MutableStateFlow<TimeReminderState>(TimeReminderState.Idle)
@@ -47,7 +47,7 @@ class TimeReminderViewModel @Inject constructor(
                 isDiaryAlarm = isPermissionGranted,
                 isReplyAlarm = isPermissionGranted,
                 time = selectedTime,
-                fcmToken = fcmToken
+                fcmToken = fcmToken,
             )
 
             _timeReminderState.value = TimeReminderState.Loading
@@ -62,7 +62,7 @@ class TimeReminderViewModel @Inject constructor(
                         error.localizedMessage ?: UNKNOWN_ERROR
                     }
                     _timeReminderState.value = TimeReminderState.Failure(errorMessage)
-                }
+                },
             )
         }
     }

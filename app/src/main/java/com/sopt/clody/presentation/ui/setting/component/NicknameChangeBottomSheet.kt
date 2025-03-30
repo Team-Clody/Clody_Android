@@ -39,7 +39,7 @@ fun NicknameChangeBottomSheet(
     userName: String,
     isValidNickname: Boolean,
     nicknameMessage: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     ClodyBottomSheet(
         content = {
@@ -48,7 +48,7 @@ fun NicknameChangeBottomSheet(
                 userName = userName,
                 isValidNickname = isValidNickname,
                 nicknameMessage = nicknameMessage,
-                onDismiss = onDismiss
+                onDismiss = onDismiss,
             )
         },
         onDismissRequest = onDismiss,
@@ -61,7 +61,7 @@ fun NicknameChangeBottomSheetItem(
     userName: String,
     isValidNickname: Boolean,
     nicknameMessage: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
     var nicknameChangeState by remember { mutableStateOf(false) }
@@ -75,7 +75,7 @@ fun NicknameChangeBottomSheetItem(
                 .fillMaxWidth()
                 .background(ClodyTheme.colors.white),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
                 modifier = Modifier
@@ -87,18 +87,18 @@ fun NicknameChangeBottomSheetItem(
                     text = stringResource(R.string.account_management_nickname_change_title),
                     modifier = Modifier.align(Alignment.Center),
                     color = ClodyTheme.colors.gray01,
-                    style = ClodyTheme.typography.body2SemiBold
+                    style = ClodyTheme.typography.body2SemiBold,
                 )
 
                 IconButton(
                     onClick = onDismiss,
-                    modifier = Modifier.align(Alignment.CenterEnd)
+                    modifier = Modifier.align(Alignment.CenterEnd),
                 ) {
                     Image(
                         painter = painterResource(
-                            id = R.drawable.ic_nickname_change_dismiss
+                            id = R.drawable.ic_nickname_change_dismiss,
                         ),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             }
@@ -123,14 +123,14 @@ fun NicknameChangeBottomSheetItem(
                 },
                 modifier = Modifier
                     .padding(horizontal = 24.dp),
-                hint = userName
+                hint = userName,
             )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 6.dp)
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 24.dp),
             ) {
                 Text(
                     text = nicknameMessage,
@@ -139,7 +139,7 @@ fun NicknameChangeBottomSheetItem(
                         isValidNickname -> ClodyTheme.colors.gray04
                         else -> ClodyTheme.colors.red
                     },
-                    style = ClodyTheme.typography.detail1Regular
+                    style = ClodyTheme.typography.detail1Regular,
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -147,12 +147,12 @@ fun NicknameChangeBottomSheetItem(
                 Text(
                     text = "${nickname.text.length}",
                     color = ClodyTheme.colors.gray04,
-                    style = ClodyTheme.typography.detail1Medium
+                    style = ClodyTheme.typography.detail1Medium,
                 )
                 Text(
                     text = " / $nicknameMaxLength",
                     color = ClodyTheme.colors.gray06,
-                    style = ClodyTheme.typography.detail1Medium
+                    style = ClodyTheme.typography.detail1Medium,
                 )
             }
 
@@ -167,7 +167,7 @@ fun NicknameChangeBottomSheetItem(
                 enabled = nicknameChangeState && isValidNickname,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 18.dp)
+                    .padding(horizontal = 18.dp),
             )
             Spacer(modifier = Modifier.navigationBarsPadding())
             Spacer(modifier = Modifier.height(60.dp))

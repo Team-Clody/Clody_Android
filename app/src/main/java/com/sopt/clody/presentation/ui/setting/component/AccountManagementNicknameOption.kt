@@ -20,26 +20,26 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun AccountManagementNicknameOption(
     userName: String,
-    updateNicknameChangeBottomSheet: (Boolean) -> Unit
+    updateNicknameChangeBottomSheet: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
-            .padding(horizontal = 24.dp, vertical = 24.dp)
+            .padding(horizontal = 24.dp, vertical = 24.dp),
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_account_management_clover),
-            contentDescription = null
+            contentDescription = null,
         )
         Spacer(modifier = Modifier.width(10.dp))
         Text(
             text = userName,
             color = ClodyTheme.colors.gray03,
-            style = ClodyTheme.typography.body1SemiBold
+            style = ClodyTheme.typography.body1SemiBold,
         )
         Text(
             text = stringResource(R.string.account_management_nickname),
             color = ClodyTheme.colors.gray03,
-            style = ClodyTheme.typography.body1Medium
+            style = ClodyTheme.typography.body1Medium,
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
@@ -47,10 +47,10 @@ fun AccountManagementNicknameOption(
             modifier = Modifier.clickable(
                 onClick = { updateNicknameChangeBottomSheet(true) },
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() }
+                interactionSource = remember { MutableInteractionSource() },
             ),
             color = ClodyTheme.colors.gray05,
-            style = ClodyTheme.typography.body4Medium
+            style = ClodyTheme.typography.body4Medium,
         )
     }
 }

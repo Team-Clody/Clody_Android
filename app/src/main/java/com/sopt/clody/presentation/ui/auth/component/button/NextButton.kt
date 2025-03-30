@@ -16,21 +16,21 @@ import androidx.compose.ui.unit.dp
 fun NextButton(
     onClick: () -> Unit,
     imageResource: Int,
-    contentDescription: String? = null
+    contentDescription: String? = null,
 ) {
     Box(
         modifier = Modifier.run {
             size(23.dp)
                 .clip(CircleShape)
                 .clickable(
-                    onClick = onClick
+                    onClick = onClick,
                 )
         },
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Image(
             painter = painterResource(id = imageResource),
-            contentDescription = contentDescription
+            contentDescription = contentDescription,
         )
     }
 }

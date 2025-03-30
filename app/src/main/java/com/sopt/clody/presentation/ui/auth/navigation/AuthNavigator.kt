@@ -3,9 +3,8 @@ package com.sopt.clody.presentation.ui.auth.navigation
 import androidx.navigation.NavHostController
 import java.time.LocalDate
 
-
 class AuthNavigator(
-    val navController: NavHostController
+    val navController: NavHostController,
 ) {
     val startDestination = "register_graph"
     fun navigateTermsOfService() {

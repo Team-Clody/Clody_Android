@@ -68,21 +68,28 @@ fun HomeRoute(
                 val selectedDate = homeViewModel.selectedDate.value
                 homeViewModel.refreshCalendarDataCalendarData(selectedYear, selectedMonth)
                 homeViewModel.loadDailyDiariesData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
-            }
+            },
         )
     } else {
         HomeScreen(
             homeViewModel = homeViewModel,
-            onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome -> navigator.navigateDiaryList(selectedYearFromHome, selectedMonthFromHome) },
+            onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome ->
+                navigator.navigateDiaryList(
+                    selectedYearFromHome,
+                    selectedMonthFromHome,
+                )
+            },
             onClickSetting = { navigator.navigateSetting() },
             onClickWriteDiary = { year, month, day ->
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                navigator.navigateWriteDiary(year, month, day) },
+                navigator.navigateWriteDiary(year, month, day)
+            },
             onClickReplyDiary = { year, month, day, replyStatus ->
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_REPLY)
-                navigator.navigateReplyLoading(year, month, day, replyStatus) },
+                navigator.navigateReplyLoading(year, month, day, replyStatus)
+            },
             selectedYear = selectedYear,
-            selectedMonth = selectedMonth
+            selectedMonth = selectedMonth,
         )
     }
 }
@@ -95,7 +102,7 @@ fun HomeScreen(
     onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: (Int, Int, Int, String) -> Unit,
     selectedYear: Int,
-    selectedMonth: Int
+    selectedMonth: Int,
 ) {
     val (isError, errorMessage) = homeViewModel.errorState.collectAsStateWithLifecycle().value
 
@@ -106,7 +113,7 @@ fun HomeScreen(
                 homeViewModel.refreshCalendarDataCalendarData(selectedYear, selectedMonth)
                 val selectedDate = homeViewModel.selectedDate.value
                 homeViewModel.loadDailyDiariesData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
-            }
+            },
         )
     } else {
         val selectedDiaryDate by homeViewModel.selectedDiaryDate.collectAsStateWithLifecycle()
@@ -139,7 +146,8 @@ fun HomeScreen(
                 HomeTopAppBar(
                     onClickDiaryList = {
                         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_LIST_DIARY)
-                        onClickDiaryList(selectedDiaryDate.year, selectedDiaryDate.month) },
+                        onClickDiaryList(selectedDiaryDate.year, selectedDiaryDate.month)
+                    },
                     onClickSetting = onClickSetting,
                     onShowYearMonthPickerStateChange = { newState -> homeViewModel.setShowYearMonthPickerState(newState) },
                     selectedYear = selectedDiaryDate.year,
@@ -149,7 +157,7 @@ fun HomeScreen(
             containerColor = ClodyTheme.colors.white,
             content = { innerPadding ->
                 when (val state = calendarState) {
-                    is CalendarState.Idle -> {  }
+                    is CalendarState.Idle -> { }
 
                     is CalendarState.Loading -> {
                         LoadingScreen()
@@ -167,7 +175,7 @@ fun HomeScreen(
                             onDiaryDataUpdated = { diaryCount, replyStatus ->
                                 homeViewModel.updateDiaryState(state.data.diaries)
                             },
-                            modifier = Modifier.padding(innerPadding)
+                            modifier = Modifier.padding(innerPadding),
                         )
                     }
 
@@ -184,7 +192,6 @@ fun HomeScreen(
                     }
 
                     is DeleteDiaryState.Success -> {
-
                     }
 
                     is DeleteDiaryState.Failure -> {
@@ -193,9 +200,10 @@ fun HomeScreen(
                 }
             },
             bottomBar = {
-                Column(modifier = Modifier
-                    .navigationBarsPadding()
-                    .background(ClodyTheme.colors.white)
+                Column(
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .background(ClodyTheme.colors.white),
                 ) {
                     Spacer(modifier = Modifier.height(14.dp))
                     DiaryStateButton(
@@ -205,11 +213,18 @@ fun HomeScreen(
                         month = selectedDate.monthValue,
                         day = selectedDate.dayOfMonth,
                         onClickWriteDiary = onClickWriteDiary,
-                        onClickReplyDiary = { onClickReplyDiary(selectedDate.year, selectedDate.monthValue, selectedDate.dayOfMonth, replyStatus) }
+                        onClickReplyDiary = {
+                            onClickReplyDiary(
+                                selectedDate.year,
+                                selectedDate.monthValue,
+                                selectedDate.dayOfMonth,
+                                replyStatus,
+                            )
+                        },
                     )
                     Spacer(modifier = Modifier.height(14.dp))
                 }
-            }
+            },
         )
 
         if (showYearMonthPickerState) {
@@ -221,7 +236,7 @@ fun HomeScreen(
                     onYearMonthSelected = { year, month ->
                         homeViewModel.updateSelectedDiaryDate(DiaryDateData(year, month))
                         homeViewModel.loadCalendarData(year, month)
-                    }
+                    },
                 )
             }
         }
@@ -231,7 +246,8 @@ fun HomeScreen(
                 onDismiss = { homeViewModel.setShowDiaryDeleteState(false) },
                 showDiaryDeleteDialog = {
                     AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_DELETE_DIARY)
-                    homeViewModel.setShowDiaryDeleteDialog(true) }
+                    homeViewModel.setShowDiaryDeleteDialog(true)
+                },
             )
         }
 
@@ -242,14 +258,19 @@ fun HomeScreen(
                 confirmOption = "삭제할래요",
                 dismissOption = "아니요",
                 confirmAction = {
-                    homeViewModel.deleteDailyDiary(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate.dayOfMonth)
+                    homeViewModel.deleteDailyDiary(
+                        selectedDiaryDate.year,
+                        selectedDiaryDate.month,
+                        selectedDate.dayOfMonth,
+                    )
                     homeViewModel.setShowDiaryDeleteDialog(false)
                 },
                 onDismiss = {
                     AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_NO_DELETE_DIARY)
-                    homeViewModel.setShowDiaryDeleteDialog(false) },
+                    homeViewModel.setShowDiaryDeleteDialog(false)
+                },
                 confirmButtonColor = ClodyTheme.colors.red,
-                confirmButtonTextColor = ClodyTheme.colors.white
+                confirmButtonTextColor = ClodyTheme.colors.white,
             )
         }
     }

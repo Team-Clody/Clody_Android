@@ -38,7 +38,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun AccountManagementRoute(
     navigator: SettingNavigator,
-    accountManagementViewModel: AccountManagementViewModel = hiltViewModel()
+    accountManagementViewModel: AccountManagementViewModel = hiltViewModel(),
 ) {
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
     val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
@@ -92,7 +92,7 @@ fun AccountManagementRoute(
         updateRevokeDialog = { state -> showRevokeDialog = state },
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
-        onBackClick = { navigator.navigateBack() }
+        onBackClick = { navigator.navigateBack() },
     )
 }
 
@@ -111,7 +111,7 @@ fun AccountManagementScreen(
     updateRevokeDialog: (Boolean) -> Unit,
     showFailureDialog: Boolean,
     failureDialogMessage: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     Scaffold(
         topBar = { SettingTopAppBar(stringResource(R.string.account_management_title), onBackClick) },
@@ -129,24 +129,24 @@ fun AccountManagementScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(innerPadding)
+                        .padding(innerPadding),
                 ) {
                     AccountManagementNicknameOption(
                         userName = userInfo.name,
-                        updateNicknameChangeBottomSheet = updateNicknameChangeBottomSheet
+                        updateNicknameChangeBottomSheet = updateNicknameChangeBottomSheet,
                     )
 
                     if (userInfo.platform == "kakao") {
                         AccountManagementLogoutOption(
                             userEmail = userInfo.email,
-                            updateLogoutDialog = updateLogoutDialog
+                            updateLogoutDialog = updateLogoutDialog,
                         )
                     }
 
                     SettingSeparateLine()
 
                     AccountManagementRevokeOption(
-                        updateRevokeDialog = updateRevokeDialog
+                        updateRevokeDialog = updateRevokeDialog,
                     )
                 }
             }
@@ -154,7 +154,7 @@ fun AccountManagementScreen(
             is UserInfoState.Failure -> {
                 FailureScreen(
                     message = userInfoState.errorMessage,
-                    confirmAction = { accountManagementViewModel.fetchUserInfo() }
+                    confirmAction = { accountManagementViewModel.fetchUserInfo() },
                 )
             }
         }
@@ -166,7 +166,7 @@ fun AccountManagementScreen(
             userName = (userInfoState as UserInfoState.Success).data.name,
             isValidNickname = isValidNickname,
             nicknameMessage = nicknameMessage,
-            onDismiss = { updateNicknameChangeBottomSheet(false) }
+            onDismiss = { updateNicknameChangeBottomSheet(false) },
         )
     }
 
@@ -175,7 +175,7 @@ fun AccountManagementScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp),
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.BottomCenter,
         ) {
             ClodyToastMessage(
                 message = stringResource(R.string.account_management_nickname_change_toast),
@@ -198,7 +198,7 @@ fun AccountManagementScreen(
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
                 accountManagementViewModel.logOutAccount()
             },
-            onDismiss = { updateLogoutDialog(false) }
+            onDismiss = { updateLogoutDialog(false) },
         )
     }
 
@@ -214,14 +214,14 @@ fun AccountManagementScreen(
             },
             confirmButtonColor = ClodyTheme.colors.red,
             confirmButtonTextColor = ClodyTheme.colors.white,
-            onDismiss = { updateRevokeDialog(false) }
+            onDismiss = { updateRevokeDialog(false) },
         )
     }
 
     if (showFailureDialog) {
         FailureDialog(
             message = failureDialogMessage,
-            onDismiss = { accountManagementViewModel.dismissFailureDialog() }
+            onDismiss = { accountManagementViewModel.dismissFailureDialog() },
         )
     }
 }

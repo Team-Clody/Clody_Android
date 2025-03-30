@@ -8,5 +8,5 @@ data class TokenReissueResponseDto(
     @SerialName("accessToken")
     val accessToken: String,
     @SerialName("refreshToken")
-    val refreshToken: String
+    val refreshToken: String,
 )

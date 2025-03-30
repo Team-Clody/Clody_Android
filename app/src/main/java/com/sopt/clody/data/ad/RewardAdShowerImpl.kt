@@ -8,7 +8,7 @@ import com.sopt.clody.data.remote.datasource.AdRemoteDataSource
 import javax.inject.Inject
 
 class RewardAdShowerImpl @Inject constructor(
-    private val adRemoteDataSource: AdRemoteDataSource
+    private val adRemoteDataSource: AdRemoteDataSource,
 ) : RewardAdShower {
     override fun showAd(activity: Activity, onAdRewarded: () -> Unit, onAdDismissed: () -> Unit) {
         val rewardedAd = adRemoteDataSource.getRewardedAd()

@@ -41,7 +41,7 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun TermsOfServiceRoute(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     var backPressCount by remember { mutableStateOf(0) }
 
@@ -61,14 +61,14 @@ fun TermsOfServiceRoute(
     }
     TermsOfServiceScreen(
         onAgreeClick = { navigator.navigateNickname() },
-        onBackClick = { navigator.navigateToSignupScreen() }
+        onBackClick = { navigator.navigateToSignupScreen() },
     )
 }
 
 @Composable
 fun TermsOfServiceScreen(
     onAgreeClick: () -> Unit,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
 ) {
     var allChecked by remember { mutableStateOf(false) }
     var serviceChecked by remember { mutableStateOf(false) }
@@ -83,11 +83,11 @@ fun TermsOfServiceScreen(
                 onClick = { onBackClick() },
                 modifier = Modifier
                     .statusBarsPadding()
-                    .padding(start = 8.dp)
+                    .padding(start = 8.dp),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
@@ -109,7 +109,7 @@ fun TermsOfServiceScreen(
                     .fillMaxSize()
                     .background(color = ClodyTheme.colors.white)
                     .padding(paddingValues)
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 24.dp),
             ) {
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.056f))
                 Text(
@@ -120,13 +120,13 @@ fun TermsOfServiceScreen(
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.06f))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         text = stringResource(id = R.string.terms_agree_all),
                         style = ClodyTheme.typography.head3,
                         color = ClodyTheme.colors.gray01,
-                        modifier = Modifier.weight(1f)
+                        modifier = Modifier.weight(1f),
                     )
                     CustomCheckbox(
                         checked = allChecked,
@@ -137,7 +137,7 @@ fun TermsOfServiceScreen(
                         },
                         size = 25.dp,
                         checkedImageRes = R.drawable.ic_terms_check_on_25,
-                        uncheckedImageRes = R.drawable.ic_terms_check_off_25
+                        uncheckedImageRes = R.drawable.ic_terms_check_off_25,
                     )
                 }
 
@@ -148,17 +148,17 @@ fun TermsOfServiceScreen(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 ) {
                     Text(
                         stringResource(id = R.string.terms_service_use),
                         style = ClodyTheme.typography.body1Medium,
-                        color = ClodyTheme.colors.gray01
+                        color = ClodyTheme.colors.gray01,
                     )
                     NextButton(
                         onClick = { onClickSettingOption(context, SettingOptionUrls.TERMS_OF_SERVICE_URL) },
                         imageResource = R.drawable.ic_terms_next,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     CustomCheckbox(
@@ -170,24 +170,24 @@ fun TermsOfServiceScreen(
                         },
                         size = 23.dp,
                         checkedImageRes = R.drawable.ic_terms_check_on_23,
-                        uncheckedImageRes = R.drawable.ic_terms_check_off_23
+                        uncheckedImageRes = R.drawable.ic_terms_check_off_23,
                     )
                 }
 
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         stringResource(id = R.string.terms_service_privacy),
                         style = ClodyTheme.typography.body1Medium,
-                        color = ClodyTheme.colors.gray01
+                        color = ClodyTheme.colors.gray01,
                     )
                     NextButton(
                         onClick = { onClickSettingOption(context, SettingOptionUrls.PRIVACY_POLICY_URL) },
                         imageResource = R.drawable.ic_terms_next,
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     CustomCheckbox(
@@ -199,11 +199,11 @@ fun TermsOfServiceScreen(
                         },
                         size = 23.dp,
                         checkedImageRes = R.drawable.ic_terms_check_on_23,
-                        uncheckedImageRes = R.drawable.ic_terms_check_off_23
+                        uncheckedImageRes = R.drawable.ic_terms_check_off_23,
                     )
                 }
             }
-        }
+        },
     )
 }
 
@@ -212,6 +212,6 @@ fun TermsOfServiceScreen(
 fun TermsOfServiceScreenPreview() {
     TermsOfServiceScreen(
         onAgreeClick = { },
-        onBackClick = { }
+        onBackClick = { },
     )
 }

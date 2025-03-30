@@ -43,7 +43,6 @@ import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 
-
 @Composable
 fun ReplyDiaryRoute(
     navigator: ReplyDiaryNavigator,
@@ -82,14 +81,14 @@ fun ReplyDiaryRoute(
             ReplyDiaryScreen(
                 onClickBack = { navigator.navigateHome(year, month) },
                 replyStatus = replyStatus,
-                replyDiaryState = successState
+                replyDiaryState = successState,
             )
         }
 
         is ReplyDiaryState.Failure -> {
             FailureScreen(
                 message = (replyDiaryState as ReplyDiaryState.Failure).error,
-                confirmAction = { viewModel.retryLastRequest() }
+                confirmAction = { viewModel.retryLastRequest() },
             )
         }
 
@@ -102,7 +101,7 @@ fun ReplyDiaryRoute(
 fun ReplyDiaryScreen(
     onClickBack: () -> Unit,
     replyStatus: String,
-    replyDiaryState: ReplyDiaryState.Success
+    replyDiaryState: ReplyDiaryState.Success,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -129,7 +128,7 @@ fun ReplyDiaryScreen(
                     IconButton(onClick = onClickBack) {
                         Image(
                             painterResource(id = R.drawable.ic_nickname_back),
-                            contentDescription = "back"
+                            contentDescription = "back",
                         )
                     }
                 },
@@ -141,7 +140,7 @@ fun ReplyDiaryScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(ClodyTheme.colors.white)
-                    .padding(innerPadding)
+                    .padding(innerPadding),
             ) {
                 Column(
                     modifier = Modifier
@@ -150,7 +149,7 @@ fun ReplyDiaryScreen(
                         .padding(bottom = 28.dp)
                         .clip(RoundedCornerShape(16.dp))
                         .background(ClodyTheme.colors.gray08),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     val content = replyDiaryState.content
                     val nickname = replyDiaryState.nickname
@@ -159,7 +158,7 @@ fun ReplyDiaryScreen(
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                     Image(
                         painter = painterResource(id = R.drawable.img_reply_logo),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.03f))
                     Text(
@@ -172,7 +171,7 @@ fun ReplyDiaryScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp)
-                            .verticalScroll(rememberScrollState())
+                            .verticalScroll(rememberScrollState()),
                     ) {
                         Text(
                             text = content,
@@ -183,7 +182,7 @@ fun ReplyDiaryScreen(
                     }
                 }
             }
-        }
+        },
     )
 
     if (showDialog) {
@@ -193,7 +192,7 @@ fun ReplyDiaryScreen(
             descriptionMassage = stringResource(R.string.clover_dialog_description),
             confirmOption = stringResource(R.string.clover_dialog_confirm_option),
             confirmAction = { showDialog = false },
-            confirmButtonColor = ClodyTheme.colors.mainYellow
+            confirmButtonColor = ClodyTheme.colors.mainYellow,
         )
     }
 }

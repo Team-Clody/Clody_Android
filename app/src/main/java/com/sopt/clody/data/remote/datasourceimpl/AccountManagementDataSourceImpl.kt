@@ -2,10 +2,10 @@ package com.sopt.clody.data.remote.datasourceimpl
 
 import com.sopt.clody.data.remote.api.AccountManagementService
 import com.sopt.clody.data.remote.datasource.AccountManagementDataSource
+import com.sopt.clody.data.remote.dto.base.ApiResponse
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
 import com.sopt.clody.data.remote.dto.response.ModifyNicknameResponseDto
 import com.sopt.clody.data.remote.dto.response.UserInfoResponseDto
-import com.sopt.clody.data.remote.dto.base.ApiResponse
 import javax.inject.Inject
 
 class AccountManagementDataSourceImpl @Inject constructor(

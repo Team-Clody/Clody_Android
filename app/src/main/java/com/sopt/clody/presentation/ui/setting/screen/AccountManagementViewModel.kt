@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
+import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AccountManagementRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +22,7 @@ class AccountManagementViewModel @Inject constructor(
     private val accountManagementRepository: AccountManagementRepository,
     private val tokenDataStore: TokenDataStore,
     private val networkUtil: NetworkUtil,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) : ViewModel() {
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
@@ -67,7 +67,7 @@ class AccountManagementViewModel @Inject constructor(
                 },
                 onFailure = {
                     retryCount++
-                    if(retryCount >= maxRetryCount) {
+                    if (retryCount >= maxRetryCount) {
                         UserInfoState.Failure(FAILURE_TEMPORARY_MESSAGE)
                     } else {
                         val errorMessage = if (it.message?.contains("200") == false) {
@@ -77,7 +77,7 @@ class AccountManagementViewModel @Inject constructor(
                         }
                         UserInfoState.Failure(errorMessage)
                     }
-                }
+                },
             )
         }
     }
@@ -100,7 +100,7 @@ class AccountManagementViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     UserNicknameState.Failure(_failureDialogMessage.value)
-                }
+                },
             )
         }
     }
@@ -153,7 +153,7 @@ class AccountManagementViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     RevokeAccountState.Failure(_failureDialogMessage.value)
-                }
+                },
             )
         }
     }

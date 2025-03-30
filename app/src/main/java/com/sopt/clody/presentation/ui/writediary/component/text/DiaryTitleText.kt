@@ -11,7 +11,7 @@ fun DiaryTitleText(date: String, separator: String, day: String, modifier: Modif
     Text(
         text = "$date$separator$day",
         style = ClodyTheme.typography.head2,
-        color = ClodyTheme.colors.gray01
+        color = ClodyTheme.colors.gray01,
     )
 }
 
@@ -20,5 +20,3 @@ fun DiaryTitleText(date: String, separator: String, day: String, modifier: Modif
 fun PreviewDiaryTitleText() {
     DiaryTitleText(date = "6월 26일", separator = " / ", day = "목요일")
 }
-
-

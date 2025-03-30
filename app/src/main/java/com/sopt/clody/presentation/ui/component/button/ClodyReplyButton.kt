@@ -16,7 +16,7 @@ fun ClodyReplyButton(
     onClick: () -> Unit,
     text: String,
     enabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = if (enabled) ClodyTheme.colors.gray02 else ClodyTheme.colors.gray02
     val contentColor = if (enabled) ClodyTheme.colors.white else ClodyTheme.colors.white
@@ -27,17 +27,17 @@ fun ClodyReplyButton(
             containerColor = backgroundColor,
             contentColor = contentColor,
             disabledContainerColor = ClodyTheme.colors.gray07,
-            disabledContentColor = ClodyTheme.colors.gray04
+            disabledContentColor = ClodyTheme.colors.gray04,
         ),
         shape = RoundedCornerShape(10.dp),
         enabled = enabled,
         modifier = modifier
-            .height(50.dp)
+            .height(50.dp),
     ) {
         Text(
             text = text,
             color = contentColor,
-            style = ClodyTheme.typography.body2SemiBold
+            style = ClodyTheme.typography.body2SemiBold,
         )
     }
 }
@@ -48,6 +48,6 @@ fun ClodyReplyButtonPreview() {
     ClodyReplyButton(
         onClick = {},
         text = "클로디 버튼",
-        enabled = true
+        enabled = true,
     )
 }

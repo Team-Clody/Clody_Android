@@ -33,14 +33,14 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun BottomSheetTimePicker(
     onDismissRequest: () -> Unit,
-    onRemindTimeSelected: (String, String, String) -> Unit
+    onRemindTimeSelected: (String, String, String) -> Unit,
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        color = ClodyTheme.colors.white
+        color = ClodyTheme.colors.white,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -48,26 +48,26 @@ fun BottomSheetTimePicker(
             modifier = Modifier
                 .wrapContentSize()
                 .background(color = ClodyTheme.colors.white)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
 
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 30.dp)
+                    .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
                     stringResource(id = R.string.time_picker_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
 
                 IconButton(
                     onClick = onDismissRequest,
                     modifier = Modifier
                         .size(24.dp)
-                        .align(Alignment.CenterEnd)
+                        .align(Alignment.CenterEnd),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_picker_dismiss),
@@ -86,19 +86,19 @@ fun BottomSheetTimePicker(
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Center)
                         .height(35.dp)
-                        .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp))
+                        .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp)),
                 )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     ClodyPicker(
                         state = amPmPickerState,
@@ -137,14 +137,15 @@ fun BottomSheetTimePicker(
                     onRemindTimeSelected(
                         amPmPickerState.selectedItem,
                         hourPickerState.selectedItem,
-                        minutePickerState.selectedItem
+                        minutePickerState.selectedItem,
                     )
-                    onDismissRequest() },
+                    onDismissRequest()
+                },
                 text = "완료",
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, bottom = 28.dp)
+                    .padding(top = 30.dp, bottom = 28.dp),
             )
         }
     }
@@ -153,5 +154,4 @@ fun BottomSheetTimePicker(
 @Preview(showBackground = true)
 @Composable
 fun BottomSheetPickerPreview() {
-
 }

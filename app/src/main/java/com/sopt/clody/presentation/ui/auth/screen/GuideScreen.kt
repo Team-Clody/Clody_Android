@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GuideRoute(
-    navigator: AuthNavigator
+    navigator: AuthNavigator,
 ) {
     GuideScreen(onNextButtonClick = { navigator.navigateHome() })
 }
@@ -55,33 +55,33 @@ fun GuideRoute(
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GuideScreen(
-    onNextButtonClick: () -> Unit
+    onNextButtonClick: () -> Unit,
 ) {
     val pages = listOf(
         BoardingPage(
             title = stringResource(R.string.guide_page1_title),
             subtitle = stringResource(R.string.guide_page1_subtitle),
             description = stringResource(R.string.guide_page1_description),
-            imageRes = R.drawable.img_guide_first
+            imageRes = R.drawable.img_guide_first,
         ),
         BoardingPage(
             title = stringResource(R.string.guide_page2_title),
             subtitle = stringResource(R.string.guide_page2_subtitle),
             description = stringResource(R.string.guide_page2_description),
-            imageRes = R.drawable.img_guide_second
+            imageRes = R.drawable.img_guide_second,
         ),
         BoardingPage(
             title = stringResource(R.string.guide_page3_title),
             subtitle = stringResource(R.string.guide_page3_subtitle),
             description = stringResource(R.string.guide_page3_description),
-            imageRes = R.drawable.img_guide_third
+            imageRes = R.drawable.img_guide_third,
         ),
         BoardingPage(
             title = stringResource(R.string.guide_page4_title),
             subtitle = stringResource(R.string.guide_page4_subtitle),
             description = stringResource(R.string.guide_page4_description),
-            imageRes = R.drawable.img_guide_fourth
-        )
+            imageRes = R.drawable.img_guide_fourth,
+        ),
     )
 
     val pagerState = rememberPagerState(pageCount = { pages.size })
@@ -120,12 +120,12 @@ fun GuideScreen(
                 exit = fadeOut(animationSpec = tween(1000)), // 1초 페이드 아웃
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding)
+                    .padding(innerPadding),
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.21f))
                     HorizontalPager(
@@ -133,26 +133,26 @@ fun GuideScreen(
                     ) { page ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
                         ) {
                             Text(
                                 text = pages[page].title,
                                 style = ClodyTheme.typography.head1,
                                 color = ClodyTheme.colors.gray01,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                             Text(
                                 text = pages[page].subtitle,
                                 style = ClodyTheme.typography.head1,
                                 color = ClodyTheme.colors.gray01,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                             Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                             Text(
                                 text = pages[page].description,
                                 style = ClodyTheme.typography.body1Medium,
                                 color = ClodyTheme.colors.gray05,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
                             )
                             Spacer(modifier = Modifier.heightForScreenPercentage(0.04f))
                             Image(
@@ -160,14 +160,14 @@ fun GuideScreen(
                                 contentDescription = null,
                                 modifier = Modifier
                                     .fillMaxWidth(),
-                                contentScale = ContentScale.Fit
+                                contentScale = ContentScale.Fit,
                             )
                         }
                     }
 
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.2f))
                     Row(
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.Center,
                     ) {
                         repeat(pagerState.pageCount) { iteration ->
                             val color = if (pagerState.currentPage == iteration) ClodyTheme.colors.gray03 else ClodyTheme.colors.gray07
@@ -176,7 +176,7 @@ fun GuideScreen(
                                     .padding(4.dp)
                                     .clip(CircleShape)
                                     .background(color)
-                                    .size(6.dp)
+                                    .size(6.dp),
                             )
                         }
                     }
@@ -189,7 +189,7 @@ fun GuideScreen(
                     onNextButtonClick()
                 }
             }
-        }
+        },
     )
 }
 
@@ -197,13 +197,13 @@ data class BoardingPage(
     val title: String,
     val subtitle: String,
     val description: String,
-    val imageRes: Int
+    val imageRes: Int,
 )
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewBoardingScreen() {
     GuideScreen(
-        onNextButtonClick = { }
+        onNextButtonClick = { },
     )
 }

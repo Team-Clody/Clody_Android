@@ -24,46 +24,47 @@ fun HomeTopAppBar(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
-
     CenterAlignedTopAppBar(
         title = {
             Box(
                 modifier = Modifier
                     .padding(start = 16.dp),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 YearAndMonthTitle(
-                    onShowYearMonthPickerStateChange, selectedYear, selectedMonth
+                    onShowYearMonthPickerStateChange,
+                    selectedYear,
+                    selectedMonth,
                 )
             }
         },
         navigationIcon = {
-                IconButton(
-                    onClick = { onClickDiaryList() },
-                    modifier = Modifier.padding(start = 8.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_home_list),
-                        contentDescription = "go to list"
-                    )
-                }
+            IconButton(
+                onClick = { onClickDiaryList() },
+                modifier = Modifier.padding(start = 8.dp),
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_home_list),
+                    contentDescription = "go to list",
+                )
+            }
         },
         actions = {
-                IconButton(
-                    onClick = { onClickSetting() },
-                    modifier = Modifier.padding(end = 8.dp)
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_home_setting),
-                        contentDescription = "go to setting"
-                    )
-                }
+            IconButton(
+                onClick = { onClickSetting() },
+                modifier = Modifier.padding(end = 8.dp),
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_home_setting),
+                    contentDescription = "go to setting",
+                )
+            }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = ClodyTheme.colors.white,
             titleContentColor = ClodyTheme.colors.gray01,
             navigationIconContentColor = ClodyTheme.colors.gray01,
-            actionIconContentColor = ClodyTheme.colors.gray01
-        )
+            actionIconContentColor = ClodyTheme.colors.gray01,
+        ),
     )
 }

@@ -23,7 +23,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
@@ -37,7 +36,7 @@ fun ClodyPicker(
     startIndex: Int = 0,
     visibleItemsCount: Int,
     textModifier: Modifier = Modifier,
-    infiniteScroll: Boolean = true
+    infiniteScroll: Boolean = true,
 ) {
     val visibleItemsMiddle = visibleItemsCount / 2
     val listScrollCount = if (infiniteScroll) Integer.MAX_VALUE else items.size + visibleItemsMiddle * 2
@@ -94,7 +93,7 @@ fun ClodyPicker(
                 .drawWithContent {
                     drawContent()
                     drawRect(fadingEdgeGradient, size = size)
-                }
+                },
         ) {
             items(listScrollCount) { index ->
                 if (!infiniteScroll && (index < visibleItemsMiddle || index >= items.size + visibleItemsMiddle)) {
@@ -103,7 +102,7 @@ fun ClodyPicker(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
-                        modifier = Modifier.height(itemHeightDp)
+                        modifier = Modifier.height(itemHeightDp),
                     )
                 } else {
                     Text(
@@ -113,7 +112,7 @@ fun ClodyPicker(
                         style = ClodyTheme.typography.head3Medium.copy(color = ClodyTheme.colors.gray01),
                         modifier = Modifier
                             .onSizeChanged { size -> itemHeightPixels.intValue = size.height }
-                            .then(textModifier)
+                            .then(textModifier),
                     )
                 }
             }

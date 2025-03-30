@@ -7,9 +7,8 @@ import com.sopt.clody.data.remote.dto.response.TokenReissueResponseDto
 import javax.inject.Inject
 
 class TokenReissueDataSourceImpl @Inject constructor(
-    private val tokenReissueService: TokenReissueService
+    private val tokenReissueService: TokenReissueService,
 ) : TokenReissueDataSource {
     override suspend fun getReissueToken(authorization: String): ApiResponse<TokenReissueResponseDto> =
         tokenReissueService.reissue(authorization)
 }
-

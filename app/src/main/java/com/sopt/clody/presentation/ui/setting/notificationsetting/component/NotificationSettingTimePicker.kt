@@ -35,7 +35,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NotificationSettingTimePicker(
     notificationSettingViewModel: NotificationSettingViewModel,
     onTimeSelected: (String) -> Unit,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     val amPmItems = remember { listOf("오전", "오후") }
     val hourItems = remember { (1..12).map { it.toString() } }
@@ -50,7 +50,7 @@ fun NotificationSettingTimePicker(
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        color = ClodyTheme.colors.white
+        color = ClodyTheme.colors.white,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,26 +58,26 @@ fun NotificationSettingTimePicker(
             modifier = Modifier
                 .wrapContentSize()
                 .background(color = ClodyTheme.colors.white)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
 
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 30.dp)
+                    .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
                     stringResource(id = R.string.time_picker_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
 
                 IconButton(
                     onClick = onDismissRequest,
                     modifier = Modifier
                         .size(24.dp)
-                        .align(Alignment.CenterEnd)
+                        .align(Alignment.CenterEnd),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_picker_dismiss),
@@ -88,19 +88,19 @@ fun NotificationSettingTimePicker(
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Center)
                         .height(35.dp)
-                        .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp))
+                        .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp)),
                 )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Spacer(Modifier.weight(1f))
                     ClodyPicker(
@@ -141,7 +141,7 @@ fun NotificationSettingTimePicker(
                     val selectedTime = notificationSettingViewModel.convertTo24HourFormat(
                         amPmPickerState.selectedItem,
                         hourPickerState.selectedItem,
-                        minutePickerState.selectedItem
+                        minutePickerState.selectedItem,
                     )
                     onTimeSelected(selectedTime)
                 },
@@ -149,7 +149,7 @@ fun NotificationSettingTimePicker(
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, bottom = 28.dp)
+                    .padding(top = 30.dp, bottom = 28.dp),
             )
         }
     }

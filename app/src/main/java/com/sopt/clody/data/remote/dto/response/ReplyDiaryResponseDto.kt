@@ -7,6 +7,5 @@ data class ReplyDiaryResponseDto(
     val content: String?,
     val nickname: String,
     val month: Int,
-    val date: Int
+    val date: Int,
 )
-

@@ -24,7 +24,7 @@ fun MonthlyDiaryList(
         modifier = Modifier
             .fillMaxSize()
             .padding(paddingValues)
-            .padding(top = 18.dp)
+            .padding(top = 18.dp),
     ) {
         itemsIndexed(items = diaries) { index, dailyDiary ->
             val date = dailyDiary.date.split("-")
@@ -41,7 +41,7 @@ fun MonthlyDiaryList(
                 day = day,
                 dayOfWeek = dayOfWeek,
                 showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
-                onClickReplyDiary = onClickReplyDiary
+                onClickReplyDiary = onClickReplyDiary,
             )
         }
     }

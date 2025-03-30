@@ -3,7 +3,7 @@ package com.sopt.clody.presentation.ui.replyloading.navigation
 import androidx.navigation.NavHostController
 
 class ReplyLoadingNavigator(
-    private val navController: NavHostController
+    private val navController: NavHostController,
 ) {
     fun navigateHome(selectedYear: Int, selectedMonth: Int) {
         navController.navigate("home/$selectedYear/$selectedMonth") {
@@ -26,7 +26,6 @@ class ReplyLoadingNavigator(
     }
 
     fun navigateBack(selectedYear: Int, selectedMonth: Int, from: String) {
-
         when (from) {
             "diary_list" -> {
                 navigateWithPopUp("diary_list/$selectedYear/$selectedMonth")

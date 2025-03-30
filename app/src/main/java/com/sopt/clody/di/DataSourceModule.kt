@@ -22,30 +22,30 @@ abstract class DataSourceModule {
     @Binds
     @Singleton
     abstract fun bindAuthDataSource(
-        authDataSourceImpl: AuthDataSourceImpl
+        authDataSourceImpl: AuthDataSourceImpl,
     ): AuthDataSource
 
     @Binds
     @Singleton
     abstract fun bindTokenReissueDataSource(
-        tokenReissueDataSourceImpl: TokenReissueDataSourceImpl
+        tokenReissueDataSourceImpl: TokenReissueDataSourceImpl,
     ): TokenReissueDataSource
 
     @Binds
     @Singleton
     abstract fun bindDiaryRemoteDataSource(
-        diaryRemoteDataSourceImpl: DiaryRemoteDataSourceImpl
+        diaryRemoteDataSourceImpl: DiaryRemoteDataSourceImpl,
     ): DiaryRemoteDataSource
 
     @Binds
     @Singleton
     abstract fun bindAccountManagementDataSource(
-        accountManagementDataSourceImpl: AccountManagementDataSourceImpl
+        accountManagementDataSourceImpl: AccountManagementDataSourceImpl,
     ): AccountManagementDataSource
 
     @Binds
     @Singleton
     abstract fun bindNotificationDataSource(
-        notificationDataSourceImpl: NotificationDataSourceImpl
+        notificationDataSourceImpl: NotificationDataSourceImpl,
     ): NotificationDataSource
 }

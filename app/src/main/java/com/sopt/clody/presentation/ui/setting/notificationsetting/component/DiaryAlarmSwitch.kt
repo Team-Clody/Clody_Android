@@ -27,18 +27,18 @@ fun DiaryAlarmSwitch(
     context: Context,
     title: String,
     notificationInfo: NotificationInfoResponseDto,
-    checkedState: MutableState<Boolean>
+    checkedState: MutableState<Boolean>,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             style = ClodyTheme.typography.body1Medium,
-            color = ClodyTheme.colors.gray03
+            color = ClodyTheme.colors.gray03,
         )
         Spacer(modifier = Modifier.weight(1f))
         Switch(
@@ -51,7 +51,7 @@ fun DiaryAlarmSwitch(
             thumbContent = {
                 Image(
                     painter = painterResource(id = R.drawable.ic_notification_setting_switch_thumb),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             },
             colors = SwitchDefaults.colors(
@@ -59,7 +59,7 @@ fun DiaryAlarmSwitch(
                 checkedTrackColor = ClodyTheme.colors.mainYellow,
                 uncheckedThumbColor = ClodyTheme.colors.white,
                 uncheckedTrackColor = ClodyTheme.colors.gray06,
-                uncheckedBorderColor = ClodyTheme.colors.gray06
+                uncheckedBorderColor = ClodyTheme.colors.gray06,
             ),
         )
     }

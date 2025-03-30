@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ModifyNicknameRequestDto(
-    @SerialName("name") val name: String
+    @SerialName("name") val name: String,
 )

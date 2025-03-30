@@ -38,7 +38,7 @@ fun MainNavHost(
     writeDiaryNavigator: WriteDiaryNavigator,
     settingNavigator: SettingNavigator,
     replyLoadingNavigator: ReplyLoadingNavigator,
-    replyDiaryNavigator: ReplyDiaryNavigator
+    replyDiaryNavigator: ReplyDiaryNavigator,
 ) {
     Box(
         modifier = modifier,

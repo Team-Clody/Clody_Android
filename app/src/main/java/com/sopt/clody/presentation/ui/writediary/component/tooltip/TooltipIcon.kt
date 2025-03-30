@@ -37,7 +37,7 @@ fun TooltipIcon(
 private fun Tooltip(
     modifier: Modifier,
     tooltip: String,
-    iconSize: Dp = 28.dp
+    iconSize: Dp = 28.dp,
 ) {
     var isShowTooltip by remember { mutableStateOf(false) }
 
@@ -48,7 +48,7 @@ private fun Tooltip(
                     .size(iconSize)
                     .clickable(
                         indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
+                        interactionSource = remember { MutableInteractionSource() },
                     ) { isShowTooltip = true },
                 painter = painterResource(id = R.drawable.ic_writediary_help),
                 contentDescription = "TooltipPopup",
@@ -61,7 +61,7 @@ private fun Tooltip(
             Box(
                 modifier = Modifier
                     .padding(start = 8.dp)
-                    .padding(vertical = 2.dp)
+                    .padding(vertical = 2.dp),
             ) {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -79,11 +79,11 @@ private fun Tooltip(
                         modifier = Modifier
                             .clickable(
                                 indication = null,
-                                interactionSource = remember { MutableInteractionSource() }
-                            ) { isShowTooltip = false }
+                                interactionSource = remember { MutableInteractionSource() },
+                            ) { isShowTooltip = false },
                     )
                 }
             }
-        }
+        },
     )
 }

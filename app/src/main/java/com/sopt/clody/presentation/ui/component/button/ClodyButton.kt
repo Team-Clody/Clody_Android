@@ -16,7 +16,7 @@ fun ClodyButton(
     onClick: () -> Unit,
     text: String,
     enabled: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val backgroundColor = if (enabled) ClodyTheme.colors.mainYellow else ClodyTheme.colors.lightYellow
     val contentColor = if (enabled) ClodyTheme.colors.gray01 else ClodyTheme.colors.gray06
@@ -27,17 +27,17 @@ fun ClodyButton(
             containerColor = backgroundColor,
             contentColor = contentColor,
             disabledContainerColor = ClodyTheme.colors.lightYellow,
-            disabledContentColor = ClodyTheme.colors.gray06
+            disabledContentColor = ClodyTheme.colors.gray06,
         ),
         shape = RoundedCornerShape(10.dp),
         enabled = enabled,
         modifier = modifier
-            .height(50.dp)
+            .height(50.dp),
     ) {
         Text(
             text = text,
             color = contentColor,
-            style = ClodyTheme.typography.body2SemiBold
+            style = ClodyTheme.typography.body2SemiBold,
         )
     }
 }
@@ -48,6 +48,6 @@ fun ClodyButtonPreview() {
     ClodyButton(
         onClick = {},
         text = "클로디 버튼",
-        enabled = true
+        enabled = true,
     )
 }

@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WriteDiaryResponseDto(
     val createdAt: String,
-    val replyType: String
+    val replyType: String,
 )

@@ -59,40 +59,40 @@ fun DailyDiaryCard(
             .padding(horizontal = 24.dp)
             .padding(bottom = 14.dp)
             .wrapContentSize(align = Alignment.TopStart),
-        colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white)
+        colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp)
+                .padding(top = 20.dp),
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .padding(start = 20.dp, end = 12.dp, bottom = 18.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(id = iconRes),
                     contentDescription = "clover",
                     modifier = Modifier
-                        .padding(end = 6.dp)
+                        .padding(end = 6.dp),
                 )
                 Row(
-                    verticalAlignment = Alignment.Bottom
+                    verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
                         text = stringResource(R.string.diarylist_daily_diary_day, day),
                         modifier = Modifier
                             .padding(end = 2.dp),
                         color = ClodyTheme.colors.gray01,
-                        style = ClodyTheme.typography.body2SemiBold
+                        style = ClodyTheme.typography.body2SemiBold,
                     )
                     Text(
                         text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
                         color = ClodyTheme.colors.gray04,
-                        style = ClodyTheme.typography.body4Medium
+                        style = ClodyTheme.typography.body4Medium,
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -106,7 +106,7 @@ fun DailyDiaryCard(
                 DiaryDeleteButton(
                     diaryListViewModel = diaryListViewModel,
                     dailyDiary = dailyDiary,
-                    showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet
+                    showDiaryDeleteBottomSheet = showDiaryDeleteBottomSheet,
                 )
             }
             DailyDiaryCardContent(dailyDiary.diary.map { it.content })
@@ -123,7 +123,7 @@ fun ReplyDiaryButton(
     onClickReplyDiary: (Int, Int, Int, String) -> Unit,
 ) {
     Box(
-        contentAlignment = Alignment.TopEnd
+        contentAlignment = Alignment.TopEnd,
     ) {
         Button(
             onClick = { onClickReplyDiary(year, month, day, dailyDiary.replyStatus) },
@@ -135,7 +135,7 @@ fun ReplyDiaryButton(
                 containerColor = ClodyTheme.colors.lightBlue,
                 contentColor = ClodyTheme.colors.blue,
                 disabledContainerColor = ClodyTheme.colors.gray08,
-                disabledContentColor = ClodyTheme.colors.gray06
+                disabledContentColor = ClodyTheme.colors.gray06,
             ),
             shape = RoundedCornerShape(size = 9.dp),
             contentPadding = PaddingValues(0.dp),
@@ -162,7 +162,7 @@ fun ReplyDiaryButton(
 fun DiaryDeleteButton(
     diaryListViewModel: DiaryListViewModel,
     dailyDiary: MonthlyDiaryResponseDto.DailyDiary,
-    showDiaryDeleteBottomSheet: () -> Unit
+    showDiaryDeleteBottomSheet: () -> Unit,
 ) {
     Image(
         painter = painterResource(id = R.drawable.ic_listview_kebab_menu),
@@ -174,6 +174,6 @@ fun DiaryDeleteButton(
                     diaryListViewModel.setSelectedDiaryDate(dailyDiary.date)
                     showDiaryDeleteBottomSheet()
                 },
-            )
+            ),
     )
 }

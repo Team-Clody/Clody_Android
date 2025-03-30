@@ -22,7 +22,7 @@ fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         val weekLabelArray = listOf(
             DayOfWeek.SUNDAY,
@@ -31,7 +31,7 @@ fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
             DayOfWeek.WEDNESDAY,
             DayOfWeek.THURSDAY,
             DayOfWeek.FRIDAY,
-            DayOfWeek.SATURDAY
+            DayOfWeek.SATURDAY,
         )
 
         val koreanWeekLabels = weekLabelArray.map { it.toKoreanShortLabel() }
@@ -39,7 +39,7 @@ fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
         koreanWeekLabels.forEach { week ->
             Box(
                 modifier = Modifier.width(itemWidth),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Text(
                     text = week,

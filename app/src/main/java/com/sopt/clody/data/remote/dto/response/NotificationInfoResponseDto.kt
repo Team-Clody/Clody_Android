@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class NotificationInfoResponseDto(
     @SerialName("isDiaryAlarm") val isDiaryAlarm: Boolean,
     @SerialName("isReplyAlarm") val isReplyAlarm: Boolean,
-    @SerialName("time") val time: String
+    @SerialName("time") val time: String,
 )

@@ -33,14 +33,14 @@ fun YearMonthPicker(
     onDismissRequest: () -> Unit,
     selectedYear: Int,
     selectedMonth: Int,
-    onYearMonthSelected: (Int, Int) -> Unit
+    onYearMonthSelected: (Int, Int) -> Unit,
 ) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-        color = ClodyTheme.colors.white
+        color = ClodyTheme.colors.white,
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -48,26 +48,26 @@ fun YearMonthPicker(
             modifier = Modifier
                 .wrapContentSize()
                 .background(color = ClodyTheme.colors.white)
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
 
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 16.dp, bottom = 30.dp)
+                    .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
                     text = "다른 날짜 보기",
                     style = ClodyTheme.typography.body2SemiBold,
                     color = ClodyTheme.colors.gray01,
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
 
                 IconButton(
                     onClick = onDismissRequest,
                     modifier = Modifier
                         .size(24.dp)
-                        .align(Alignment.CenterEnd)
+                        .align(Alignment.CenterEnd),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_picker_dismiss),
@@ -87,19 +87,19 @@ fun YearMonthPicker(
 
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
                         .align(Alignment.Center)
                         .height(35.dp)
-                        .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp))
+                        .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp)),
                 )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     YearMonthPickerItem(
@@ -137,7 +137,7 @@ fun YearMonthPicker(
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, bottom = 28.dp)
+                    .padding(top = 30.dp, bottom = 28.dp),
             )
         }
     }

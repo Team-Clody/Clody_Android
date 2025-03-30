@@ -2,15 +2,15 @@ package com.sopt.clody.data.remote.datasourceimpl
 
 import com.sopt.clody.data.remote.api.AuthService
 import com.sopt.clody.data.remote.datasource.AuthDataSource
-import com.sopt.clody.data.remote.dto.request.LoginRequestDto
-import com.sopt.clody.data.remote.dto.response.LoginResponseDto
-import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
-import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
 import com.sopt.clody.data.remote.dto.base.ApiResponse
+import com.sopt.clody.data.remote.dto.request.LoginRequestDto
+import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
+import com.sopt.clody.data.remote.dto.response.LoginResponseDto
+import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
 import javax.inject.Inject
 
 class AuthDataSourceImpl @Inject constructor(
-    private val authService: AuthService
+    private val authService: AuthService,
 ) : AuthDataSource {
     override suspend fun signIn(authorization: String, requestSignInDto: LoginRequestDto): ApiResponse<LoginResponseDto> =
         authService.postLogin(authorization, requestSignInDto)

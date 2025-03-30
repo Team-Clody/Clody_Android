@@ -1,12 +1,11 @@
 package com.sopt.clody.data.repositoryimpl
 
-import android.util.Log
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.domain.repository.TokenRepository
 import javax.inject.Inject
 
 class TokenRepositoryImpl @Inject constructor(
-    private val tokenDataStore: TokenDataStore
+    private val tokenDataStore: TokenDataStore,
 ) : TokenRepository {
     override fun getAccessToken(): String = tokenDataStore.accessToken
     override fun getRefreshToken(): String = tokenDataStore.refreshToken

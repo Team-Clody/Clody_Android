@@ -20,7 +20,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun PickerBox(
     time: String, // 추가: 선택된 시간을 받는 매개변수
     modifier: Modifier = Modifier,
-    onClick: () -> Unit // onClick 파라미터 추가
+    onClick: () -> Unit, // onClick 파라미터 추가
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -29,19 +29,19 @@ fun PickerBox(
             .clickable(
                 onClick = onClick,
                 indication = null, // 클릭 효과 제거
-                interactionSource = interactionSource
-            )
+                interactionSource = interactionSource,
+            ),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Text(
                 text = time, // 수정: 선택된 시간을 표시
                 style = ClodyTheme.typography.body1SemiBold,
                 color = ClodyTheme.colors.gray03,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_timereminder_down),
@@ -55,6 +55,5 @@ fun PickerBox(
 @Composable
 fun PreviewPickerBox() {
     PickerBox(time = "오후 6:00") {
-
     }
 }

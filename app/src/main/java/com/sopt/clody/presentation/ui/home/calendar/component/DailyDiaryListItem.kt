@@ -31,31 +31,31 @@ fun DailyDiaryListItem(
     date: LocalDate,
     dayOfWeek: DayOfWeek,
     dailyDiaries: List<DailyDiariesResponseDto.Diary>,
-    onShowDiaryDeleteStateChange: (Boolean) -> Unit
+    onShowDiaryDeleteStateChange: (Boolean) -> Unit,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(8.dp),
         ) {
             Text(
                 text = "${date.month.value}.${date.dayOfMonth}",
                 style = ClodyTheme.typography.body3Medium,
                 color = ClodyTheme.colors.gray04,
-                modifier = Modifier.padding(vertical = 3.dp)
+                modifier = Modifier.padding(vertical = 3.dp),
             )
             Text(
                 text = "${dayOfWeek.toKoreanShortLabel()}요일",
                 style = ClodyTheme.typography.body2Medium,
                 color = ClodyTheme.colors.gray02,
-                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
@@ -63,7 +63,7 @@ fun DailyDiaryListItem(
                 contentDescription = "go to delete",
                 modifier = Modifier
                     .clip(RoundedCornerShape(12.dp))
-                    .clickable(onClick = { onShowDiaryDeleteStateChange(true) })
+                    .clickable(onClick = { onShowDiaryDeleteStateChange(true) }),
             )
         }
         if (dailyDiaries.isEmpty()) {
@@ -71,7 +71,7 @@ fun DailyDiaryListItem(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(vertical = 44.dp)
+                    .padding(vertical = 44.dp),
             ) {
                 Text(
                     text = "아직 감사 일기가 없어요!",
@@ -84,7 +84,7 @@ fun DailyDiaryListItem(
             dailyDiaries.forEachIndexed { index, diary ->
                 DiaryItem(
                     index = index + 1,
-                    text = diary.content
+                    text = diary.content,
                 )
             }
         }
@@ -94,18 +94,18 @@ fun DailyDiaryListItem(
 @Composable
 fun DiaryItem(
     index: Int,
-    text: String
+    text: String,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp))
-            .padding(18.dp)
+            .padding(18.dp),
     ) {
         Text(
             text = "$index. $text",
             style = ClodyTheme.typography.body2Medium,
-            color = ClodyTheme.colors.gray01
+            color = ClodyTheme.colors.gray01,
         )
     }
 }

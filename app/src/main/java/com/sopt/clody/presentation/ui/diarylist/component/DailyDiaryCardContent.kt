@@ -14,28 +14,28 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DailyDiaryCardContent(
-    diary: List<String>
+    diary: List<String>,
 ) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp)
-            .padding(bottom = 2.dp)
+            .padding(bottom = 2.dp),
     ) {
         diary.forEachIndexed { index, content ->
             Row(
-                modifier = Modifier.padding(bottom = 24.dp)
+                modifier = Modifier.padding(bottom = 24.dp),
             ) {
                 Text(
                     text = "${index + 1}.",
                     color = ClodyTheme.colors.gray01,
-                    style = ClodyTheme.typography.body3SemiBold
+                    style = ClodyTheme.typography.body3SemiBold,
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
                     text = content,
                     color = ClodyTheme.colors.gray03,
-                    style = ClodyTheme.typography.body3Medium
+                    style = ClodyTheme.typography.body3Medium,
                 )
             }
         }

@@ -8,7 +8,7 @@ import androidx.compose.ui.unit.IntOffset
 fun calculateTooltipPopupPosition(
     view: View,
     coordinates: LayoutCoordinates?,
-    isTop: Boolean = false
+    isTop: Boolean = false,
 ): TooltipPopupPosition {
     coordinates ?: return TooltipPopupPosition()
 
@@ -24,7 +24,7 @@ fun calculateTooltipPopupPosition(
     return if (isTop) {
         val offset = IntOffset(
             y = -coordinates.size.height,
-            x = offsetX.toInt()
+            x = offsetX.toInt(),
         )
         TooltipPopupPosition(
             offset = offset,
@@ -34,7 +34,7 @@ fun calculateTooltipPopupPosition(
     } else {
         val offset = IntOffset(
             y = coordinates.size.height,
-            x = offsetX.toInt()
+            x = offsetX.toInt(),
         )
         TooltipPopupPosition(
             offset = offset,

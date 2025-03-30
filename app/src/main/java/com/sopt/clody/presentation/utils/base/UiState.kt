@@ -10,7 +10,7 @@ sealed interface UiState<out T> {
         isEmpty = this is Empty,
         isLoading = this is Loading,
         isSuccess = this is Success<*>,
-        isFailure = this is Failure
+        isFailure = this is Failure,
     )
 }
 
@@ -18,5 +18,5 @@ data class UiStateModel(
     val isEmpty: Boolean = false,
     val isLoading: Boolean = false,
     val isSuccess: Boolean = false,
-    val isFailure: Boolean = false
+    val isFailure: Boolean = false,
 )

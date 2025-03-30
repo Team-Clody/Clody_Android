@@ -20,20 +20,20 @@ internal class TooltipPositionProvider(
         anchorBounds: IntRect,
         windowSize: IntSize,
         layoutDirection: LayoutDirection,
-        popupContentSize: IntSize
+        popupContentSize: IntSize,
     ): IntOffset {
         var popupPosition = IntOffset(0, 0)
 
         val parentAlignmentPoint = alignment.align(
             IntSize.Zero,
             IntSize(anchorBounds.width, anchorBounds.height),
-            layoutDirection
+            layoutDirection,
         )
 
         val relativePopupPos = alignment.align(
             IntSize.Zero,
             IntSize(popupContentSize.width, popupContentSize.height),
-            layoutDirection
+            layoutDirection,
         )
 
         popupPosition += IntOffset(anchorBounds.left, anchorBounds.top)
@@ -42,7 +42,7 @@ internal class TooltipPositionProvider(
 
         val resolvedOffset = IntOffset(
             offset.x * (if (layoutDirection == LayoutDirection.Ltr) 1 else -1),
-            offset.y
+            offset.y,
         )
 
         popupPosition += resolvedOffset

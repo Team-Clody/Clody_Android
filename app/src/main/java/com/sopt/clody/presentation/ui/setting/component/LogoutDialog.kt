@@ -35,27 +35,27 @@ fun LogoutDialog(
 ) {
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnClickOutside = false)
+        properties = DialogProperties(dismissOnClickOutside = false),
     ) {
         Box(
             modifier = Modifier
                 .background(color = ClodyTheme.colors.white, shape = RoundedCornerShape(size = 12.dp))
                 .height(176.dp)
-                .fillMaxWidth()
+                .fillMaxWidth(),
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     text = titleMassage,
                     color = ClodyTheme.colors.gray01,
-                    style = ClodyTheme.typography.body1SemiBold
+                    style = ClodyTheme.typography.body1SemiBold,
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -64,14 +64,14 @@ fun LogoutDialog(
                     text = descriptionMassage,
                     color = ClodyTheme.colors.gray04,
                     textAlign = TextAlign.Center,
-                    style = ClodyTheme.typography.body3Regular
+                    style = ClodyTheme.typography.body3Regular,
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 ) {
                     Button(
                         onClick = onDismiss,
@@ -80,13 +80,15 @@ fun LogoutDialog(
                             .height(40.dp)
                             .background(
                                 color = ClodyTheme.colors.gray07,
-                                shape = RoundedCornerShape(size = 8.dp)
+                                shape = RoundedCornerShape(size = 8.dp),
                             ),
-                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07)
+                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07),
                     ) {
-                        Text(text = dismissOption,
+                        Text(
+                            text = dismissOption,
                             color = ClodyTheme.colors.gray04,
-                            style = ClodyTheme.typography.body3SemiBold)
+                            style = ClodyTheme.typography.body3SemiBold,
+                        )
                     }
 
                     Spacer(modifier = Modifier.width(8.dp))
@@ -98,13 +100,15 @@ fun LogoutDialog(
                             .height(40.dp)
                             .background(
                                 color = ClodyTheme.colors.darkYellow,
-                                shape = RoundedCornerShape(size = 8.dp)
+                                shape = RoundedCornerShape(size = 8.dp),
                             ),
-                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.darkYellow)
+                        colors = ButtonDefaults.buttonColors(ClodyTheme.colors.darkYellow),
                     ) {
-                        Text(text = confirmOption,
+                        Text(
+                            text = confirmOption,
                             color = ClodyTheme.colors.gray01,
-                            style = ClodyTheme.typography.body3SemiBold)
+                            style = ClodyTheme.typography.body3SemiBold,
+                        )
                     }
                 }
             }

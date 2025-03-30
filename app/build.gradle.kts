@@ -51,7 +51,7 @@ android {
             buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }

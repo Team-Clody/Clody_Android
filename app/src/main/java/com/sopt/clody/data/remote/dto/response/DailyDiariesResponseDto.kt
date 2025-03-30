@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DailyDiariesResponseDto(
-    @SerialName("diaries") val diaries: List<Diary>
+    @SerialName("diaries") val diaries: List<Diary>,
 ) {
     @Serializable
     data class Diary(
-        @SerialName("content")val content: String
+        @SerialName("content")val content: String,
     )
 }

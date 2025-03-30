@@ -59,7 +59,7 @@ fun ReplyLoadingRoute(
     day: Int,
     from: String,
     replyStatus: String,
-    viewModel: ReplyLoadingViewModel = hiltViewModel()
+    viewModel: ReplyLoadingViewModel = hiltViewModel(),
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
     val isAdLoadingState by viewModel.isAdLoading.collectAsState()
@@ -105,7 +105,7 @@ fun ReplyLoadingRoute(
                 isAdCompleted = isAdCompleted,
                 isFirstDiary = isFirstDiary,
                 adErrorMessage = adErrorMessage,
-                onDismissToast = { viewModel.clearAdErrorMessage() }
+                onDismissToast = { viewModel.clearAdErrorMessage() },
             )
         }
 
@@ -113,7 +113,7 @@ fun ReplyLoadingRoute(
             val failureState = replyLoadingState as ReplyLoadingState.Failure
             FailureScreen(
                 message = failureState.error,
-                confirmAction = { viewModel.retryLastRequest() }
+                confirmAction = { viewModel.retryLastRequest() },
             )
         }
 
@@ -132,7 +132,7 @@ fun ReplyLoadingScreen(
     isAdCompleted: Boolean,
     isFirstDiary: Boolean,
     adErrorMessage: String?,
-    onDismissToast: () -> Unit
+    onDismissToast: () -> Unit,
 ) {
     var remainingTime by remember { mutableStateOf(0L) }
     var isComplete by remember { mutableStateOf(false) }
@@ -185,11 +185,11 @@ fun ReplyLoadingScreen(
                 modifier = Modifier
                     .statusBarsPadding()
                     .padding(top = 26.dp)
-                    .padding(start = 12.dp)
+                    .padding(start = 12.dp),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
@@ -214,20 +214,20 @@ fun ReplyLoadingScreen(
                     .fillMaxSize()
                     .background(ClodyTheme.colors.white)
                     .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.15f))
 
                 Crossfade(
                     targetState = animationResId,
-                    animationSpec = tween(durationMillis = 300)
+                    animationSpec = tween(durationMillis = 300),
                 ) { targetResId ->
                     LottieAnimation(
                         modifier = Modifier
                             .fillMaxWidth()
                             .aspectRatio(16f / 9f),
                         resId = targetResId,
-                        iterations = LottieConstants.IterateForever
+                        iterations = LottieConstants.IterateForever,
                     )
                 }
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.015f))
@@ -236,7 +236,7 @@ fun ReplyLoadingScreen(
                     Text(
                         text = String.format("%02d:%02d:%02d", hours, minutes, seconds),
                         style = ClodyTheme.typography.head2,
-                        color = ClodyTheme.colors.gray01
+                        color = ClodyTheme.colors.gray01,
                     )
                 }
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.005f))
@@ -244,22 +244,22 @@ fun ReplyLoadingScreen(
                     text = textToShow,
                     style = ClodyTheme.typography.body2Medium,
                     color = ClodyTheme.colors.gray04,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
                 )
 
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.036f))
                 if (!isWaitingForPatchResponse && !isAdCompleted && !isFirstDiary) {
                     QuickReplyAdButton(
-                        onClick = onShowAdClick
+                        onClick = onShowAdClick,
                     )
                 }
             }
-        }
+        },
     )
 
     if (isAdLoading) {
         LoadingScreen(
-            backgroundColor = Color.Transparent
+            backgroundColor = Color.Transparent,
         )
     }
 
@@ -268,7 +268,7 @@ fun ReplyLoadingScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(6.dp),
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.BottomCenter,
         ) {
             ClodyToastMessage(
                 message = adErrorMessage,
@@ -276,7 +276,7 @@ fun ReplyLoadingScreen(
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,
                 durationMillis = 3000,
-                onDismiss = onDismissToast
+                onDismiss = onDismissToast,
             )
         }
     }
@@ -289,7 +289,7 @@ fun ReplyLoadingScreenPreview() {
         onCompleteClick = {},
         onBackClick = {},
         replyLoadingState = ReplyLoadingState.Success(
-            targetDateTime = LocalDateTime.now().plusSeconds(10)
+            targetDateTime = LocalDateTime.now().plusSeconds(10),
         ),
         onShowAdClick = {},
         isAdLoading = false,

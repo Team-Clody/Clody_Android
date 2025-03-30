@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(
-    private val tokenRepository: TokenRepository
+    private val tokenRepository: TokenRepository,
 ) : ViewModel() {
 
     private val _isUserLoggedIn = MutableStateFlow<Boolean?>(null)
