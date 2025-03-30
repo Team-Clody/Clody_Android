@@ -22,7 +22,7 @@ jobs:
     steps:
       # Gradle 캐싱 (속도 향상)
       - name: Cache Gradle packages
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches
@@ -33,7 +33,7 @@ jobs:
 
       # Android SDK 캐싱
       - name: Cache Android SDK
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.android
           key: ${{ runner.os }}-android
