@@ -14,8 +14,8 @@ fun NavGraphBuilder.homeNavGraph(
         route = "home/{selectedYear}/{selectedMonth}",
         arguments = listOf(
             navArgument("selectedYear") { type = NavType.IntType },
-            navArgument("selectedMonth") { type = NavType.IntType }
-        )
+            navArgument("selectedMonth") { type = NavType.IntType },
+        ),
     ) { backStackEntry ->
         val currentDate = LocalDate.now()
         val selectedYear = backStackEntry.arguments?.getInt("selectedYear") ?: currentDate.year
@@ -23,7 +23,7 @@ fun NavGraphBuilder.homeNavGraph(
         HomeRoute(
             navigator = navigator,
             selectedYear = selectedYear,
-            selectedMonth = selectedMonth
+            selectedMonth = selectedMonth,
         )
     }
 }

@@ -22,28 +22,28 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun NotificationSettingTime(
     selectedTime: String,
-    updateNotificationTimePicker: (Boolean) -> Unit
+    updateNotificationTimePicker: (Boolean) -> Unit,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight()
             .padding(horizontal = 24.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = stringResource(R.string.notification_setting_notification_time),
             style = ClodyTheme.typography.body1Medium,
-            color = ClodyTheme.colors.gray03
+            color = ClodyTheme.colors.gray03,
         )
         Spacer(modifier = Modifier.weight(1f))
         Row(
             modifier = Modifier.clickable(
                 onClick = { updateNotificationTimePicker(true) },
                 indication = null,
-                interactionSource = remember {MutableInteractionSource()}
-                ),
-            verticalAlignment = Alignment.CenterVertically
+                interactionSource = remember { MutableInteractionSource() },
+            ),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = selectedTime,

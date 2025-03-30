@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class UserInfoResponseDto(
     @SerialName("email") val email: String,
     @SerialName("name") val name: String,
-    @SerialName("platform") val platform: String
+    @SerialName("platform") val platform: String,
 )

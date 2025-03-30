@@ -27,7 +27,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun KaKaoButton(
     text: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
@@ -36,23 +36,23 @@ fun KaKaoButton(
         modifier = modifier
             .fillMaxWidth()
             .height(48.dp)
-            .padding(horizontal = 24.dp)
+            .padding(horizontal = 24.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize(),
         ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_signup_kakao),
                 contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                modifier = Modifier.size(24.dp),
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = text,
                 style = ClodyTheme.typography.body1SemiBold,
-                color = ClodyTheme.colors.gray01
+                color = ClodyTheme.colors.gray01,
             )
         }
     }
@@ -63,6 +63,6 @@ fun KaKaoButton(
 fun KaKaoButtonPreview() {
     KaKaoButton(
         text = "카카오 로그인",
-        onClick = { /*TODO*/ }
+        onClick = { /*TODO*/ },
     )
 }

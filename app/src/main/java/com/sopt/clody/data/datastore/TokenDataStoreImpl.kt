@@ -4,7 +4,7 @@ import android.content.SharedPreferences
 import javax.inject.Inject
 
 class TokenDataStoreImpl @Inject constructor(
-    private val sharedPreferences: SharedPreferences
+    private val sharedPreferences: SharedPreferences,
 ) : TokenDataStore {
     override var accessToken: String
         get() = sharedPreferences.getString(ACCESS_TOKEN, "") ?: ""

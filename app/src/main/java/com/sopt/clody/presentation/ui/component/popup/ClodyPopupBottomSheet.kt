@@ -28,7 +28,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun ClodyPopupBottomSheet(
     onDismissRequest: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(true) }
 
@@ -37,38 +37,38 @@ fun ClodyPopupBottomSheet(
             Modifier
                 .fillMaxSize()
                 .background(Color(0x70000000))
-                .clickable(onClick = { isVisible = false; onDismissRequest() })
+                .clickable(onClick = { isVisible = false; onDismissRequest() }),
         ) {
-            Popup(  // 팝업 컴포넌트
+            Popup( // 팝업 컴포넌트
                 alignment = Alignment.BottomCenter,
                 onDismissRequest = { isVisible = false; onDismissRequest() },
                 properties = PopupProperties(
                     focusable = true,
                     dismissOnBackPress = true,
                     dismissOnClickOutside = true,
-                    excludeFromSystemGesture = false
-                )
+                    excludeFromSystemGesture = false,
+                ),
             ) {
                 AnimatedVisibility(
                     visible = isVisible,
                     enter = slideInVertically(
                         initialOffsetY = { it },
-                        animationSpec = tween(durationMillis = 300)
+                        animationSpec = tween(durationMillis = 300),
                     ),
                     exit = slideOutVertically(
                         targetOffsetY = { it },
-                        animationSpec = tween(durationMillis = 300)
-                    )
+                        animationSpec = tween(durationMillis = 300),
+                    ),
                 ) {
-                    Surface(  // 팝업의 내용을 담을 서피스
+                    Surface( // 팝업의 내용을 담을 서피스
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight()
                             .align(Alignment.BottomCenter),
                         shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-                        color = ClodyTheme.colors.white
+                        color = ClodyTheme.colors.white,
                     ) {
-                        content()  // 팝업 내부에 제공된 컴포저블 콘텐츠를 렌더링
+                        content() // 팝업 내부에 제공된 컴포저블 콘텐츠를 렌더링
                     }
                 }
             }

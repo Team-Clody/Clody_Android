@@ -26,7 +26,7 @@ fun MonthlyItem(
     dateList: List<CalendarDate>,
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit,
-    getDiaryDataForDate: (LocalDate) -> MonthlyCalendarResponseDto.Diary?
+    getDiaryDataForDate: (LocalDate) -> MonthlyCalendarResponseDto.Diary?,
 ) {
     val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
 
@@ -44,7 +44,7 @@ fun MonthlyItem(
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 val firstDate = dateList.firstOrNull()?.let { LocalDate.of(it.year, it.month, it.date) }
                 val firstDayOfWeek = firstDate?.dayOfWeek ?: DayOfWeek.SUNDAY
@@ -55,7 +55,7 @@ fun MonthlyItem(
                 paddedDateList.chunked(7).forEach { weekDates ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         weekDates.forEach { date ->
                             Box(
@@ -77,7 +77,7 @@ fun MonthlyItem(
                                             },
                                             isSelected = localDate == selectedDate,
                                             diaryData = diaryData,
-                                            modifier = Modifier.fillMaxWidth()
+                                            modifier = Modifier.fillMaxWidth(),
                                         )
                                     }
                                 }
@@ -88,7 +88,7 @@ fun MonthlyItem(
                                 Box(
                                     modifier = Modifier
                                         .width(itemWidth)
-                                        .padding(vertical = 2.dp)
+                                        .padding(vertical = 2.dp),
                                 )
                             }
                         }

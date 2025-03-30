@@ -32,7 +32,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -58,7 +57,7 @@ fun WriteDiaryRoute(
     year: Int,
     month: Int,
     day: Int,
-    viewModel: WriteDiaryViewModel = hiltViewModel()
+    viewModel: WriteDiaryViewModel = hiltViewModel(),
 ) {
     val entries = viewModel.entries
     val showWarnings = viewModel.showWarnings
@@ -97,17 +96,18 @@ fun WriteDiaryRoute(
         showDialog = showDialog,
         onClickBack = {
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_BACK)
-            navigator.navigateHome(year, month) },
+            navigator.navigateHome(year, month)
+        },
         onCompleteClick = { viewModel.writeDiary(year, month, day, entries) },
         year = year,
         month = month,
-        day = day
+        day = day,
     )
 
     if (showFailureDialog) {
         FailureDialog(
             message = failureMessage,
-            onDismiss = { viewModel.resetFailureDialog() }
+            onDismiss = { viewModel.resetFailureDialog() },
         )
     }
 }
@@ -128,7 +128,7 @@ fun WriteDiaryScreen(
     onCompleteClick: () -> Unit,
     year: Int,
     month: Int,
-    day: Int
+    day: Int,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -139,11 +139,11 @@ fun WriteDiaryScreen(
                 modifier = Modifier
                     .statusBarsPadding()
                     .padding(top = 26.dp)
-                    .padding(start = 12.dp)
+                    .padding(start = 12.dp),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
@@ -153,17 +153,17 @@ fun WriteDiaryScreen(
                     .fillMaxWidth()
                     .navigationBarsPadding()
                     .background(Color.Transparent),
-                contentAlignment = Alignment.Center
+                contentAlignment = Alignment.Center,
             ) {
                 Column(
-                    modifier = Modifier.align(Alignment.BottomCenter)
+                    modifier = Modifier.align(Alignment.BottomCenter),
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(end = 24.dp)
                             .padding(bottom = 28.dp),
-                        contentAlignment = Alignment.CenterEnd
+                        contentAlignment = Alignment.CenterEnd,
                     ) {
                         IconButton(
                             onClick = {
@@ -176,9 +176,9 @@ fun WriteDiaryScreen(
                             modifier = Modifier
                                 .background(
                                     color = if (entries.size < 5) ClodyTheme.colors.gray02 else ClodyTheme.colors.gray06,
-                                    shape = RoundedCornerShape(10.dp)
+                                    shape = RoundedCornerShape(10.dp),
                                 )
-                                .size(41.dp)
+                                .size(41.dp),
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_writediary_add),
@@ -204,7 +204,7 @@ fun WriteDiaryScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 24.dp)
-                            .padding(bottom = 28.dp)
+                            .padding(bottom = 28.dp),
                     )
                 }
 
@@ -213,7 +213,7 @@ fun WriteDiaryScreen(
                     showEmptyFieldsMessage = showEmptyFieldsMessage,
                     onShowLimitMessageChange = { viewModel.updateShowLimitMessage(it) },
                     onShowEmptyFieldsMessageChange = { viewModel.updateShowEmptyFieldsMessage(it) },
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             }
         },
@@ -226,20 +226,20 @@ fun WriteDiaryScreen(
                     .padding(horizontal = 24.dp)
                     .clickable(
                         indication = null,
-                        interactionSource = remember { MutableInteractionSource() }
+                        interactionSource = remember { MutableInteractionSource() },
                     ) { focusManager.clearFocus() },
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.017f))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     DiaryTitleText(
                         date = stringResource(R.string.write_diary_month_and_date, month, day),
                         separator = " ",
-                        day = getDayOfWeek(year, month, day)
+                        day = getDayOfWeek(year, month, day),
                     )
                     Spacer(modifier = Modifier.weight(1f))
                     TooltipIcon(
@@ -249,11 +249,11 @@ fun WriteDiaryScreen(
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     itemsIndexed(
                         items = entries,
-                        key = { index, _ -> index }
+                        key = { index, _ -> index },
                     ) { index, text ->
                         WriteDiaryTextField(
                             entryNumber = index + 1,
@@ -268,7 +268,7 @@ fun WriteDiaryScreen(
                             },
                             isRemovable = entries.size > 1,
                             maxLength = 50,
-                            showWarning = showWarnings[index]
+                            showWarning = showWarnings[index],
                         )
                     }
                 }
@@ -281,7 +281,7 @@ fun WriteDiaryScreen(
                             if (entryToDelete != -1) {
                                 viewModel.removeEntry(entryToDelete)
                             }
-                        }
+                        },
                     )
                 }
 
@@ -289,18 +289,19 @@ fun WriteDiaryScreen(
                     ClodyDialog(
                         onDismiss = {
                             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_NO_COMPLETE)
-                            viewModel.updateShowDialog(false) },
+                            viewModel.updateShowDialog(false)
+                        },
                         titleMassage = stringResource(R.string.write_diary_dialog_title),
                         descriptionMassage = stringResource(R.string.write_diary_dialog_description),
                         confirmOption = stringResource(R.string.write_diary_dialog_confirm_option),
                         dismissOption = stringResource(R.string.write_diary_dialog_dismiss_option),
                         confirmAction = { onCompleteClick() },
                         confirmButtonColor = ClodyTheme.colors.mainYellow,
-                        confirmButtonTextColor = ClodyTheme.colors.gray01
+                        confirmButtonTextColor = ClodyTheme.colors.gray01,
                     )
                 }
             }
-        }
+        },
     )
     if (isLoading) {
         LoadingScreen()
@@ -313,7 +314,7 @@ private fun ShowToastMessages(
     showEmptyFieldsMessage: Boolean,
     onShowLimitMessageChange: (Boolean) -> Unit,
     onShowEmptyFieldsMessageChange: (Boolean) -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
 ) {
     if (showLimitMessage) {
         ClodyToastMessage(
@@ -322,7 +323,7 @@ private fun ShowToastMessages(
             backgroundColor = ClodyTheme.colors.gray04,
             contentColor = ClodyTheme.colors.white,
             durationMillis = 3000,
-            onDismiss = { onShowLimitMessageChange(false) }
+            onDismiss = { onShowLimitMessageChange(false) },
         )
     }
 
@@ -333,7 +334,7 @@ private fun ShowToastMessages(
             backgroundColor = ClodyTheme.colors.gray04,
             contentColor = ClodyTheme.colors.white,
             durationMillis = 3000,
-            onDismiss = { onShowEmptyFieldsMessageChange(false) }
+            onDismiss = { onShowEmptyFieldsMessageChange(false) },
         )
     }
 }

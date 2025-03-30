@@ -6,12 +6,12 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class MonthlyCalendarResponseDto(
     @SerialName("totalCloverCount") val totalCloverCount: Int,
-    @SerialName("diaries") val diaries: List<Diary>
+    @SerialName("diaries") val diaries: List<Diary>,
 ) {
     @Serializable
     data class Diary(
         @SerialName("diaryCount") val diaryCount: Int,
         @SerialName("replyStatus") val replyStatus: String,
-        @SerialName("isDeleted") val isDeleted: Boolean
+        @SerialName("isDeleted") val isDeleted: Boolean,
     )
 }

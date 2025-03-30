@@ -22,28 +22,28 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun QuickReplyAdButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(20.dp))
             .background(ClodyTheme.colors.lightBlue)
             .clickable { onClick() }
-            .padding(vertical = 6.dp, horizontal = 12.dp)
+            .padding(vertical = 6.dp, horizontal = 12.dp),
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_replyloading_player),
                 contentDescription = null,
-                tint = Color.Unspecified
+                tint = Color.Unspecified,
             )
             Text(
                 text = "광고 보고 바로 답장 받기",
                 style = ClodyTheme.typography.body4Medium,
                 color = ClodyTheme.colors.blue,
-                modifier = Modifier.padding(start = 5.dp)
+                modifier = Modifier.padding(start = 5.dp),
             )
         }
     }

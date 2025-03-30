@@ -22,7 +22,7 @@ fun DiaryStateButton(
     val today = LocalDate.now()
     val isAvailableDay = year == today.year && month == today.monthValue && (day == today.dayOfMonth || day == today.dayOfMonth - 1)
 
-    val writeDiaryEnabled = diaryCount == 0  && isAvailableDay
+    val writeDiaryEnabled = diaryCount == 0 && isAvailableDay
     val writeDiaryDisabled = diaryCount == 0 && !isAvailableDay
     val checkReplyEnabled = diaryCount != 0 && !isDeleted
     val checkReplyDisabled = diaryCount != 0 && isDeleted
@@ -35,7 +35,7 @@ fun DiaryStateButton(
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
             )
         }
 
@@ -46,7 +46,7 @@ fun DiaryStateButton(
                 enabled = false,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
             )
         }
 
@@ -57,7 +57,7 @@ fun DiaryStateButton(
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
             )
         }
 
@@ -68,7 +68,7 @@ fun DiaryStateButton(
                 enabled = false,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                    .padding(horizontal = 16.dp),
             )
         }
     }

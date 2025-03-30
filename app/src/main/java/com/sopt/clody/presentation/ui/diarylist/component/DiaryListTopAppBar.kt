@@ -45,28 +45,29 @@ fun DiaryListTopAppBar(
                         .clickable(
                             onClick = showYearMonthPicker,
                             indication = null,
-                            interactionSource = remember { MutableInteractionSource() }),
-                    verticalAlignment = Alignment.CenterVertically
+                            interactionSource = remember { MutableInteractionSource() },
+                        ),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
                         text = stringResource(R.string.diarylist_selected_year_month, selectedYear, selectedMonth),
                         color = ClodyTheme.colors.gray01,
-                        style = ClodyTheme.typography.head4
+                        style = ClodyTheme.typography.head4,
                     )
                     Image(
                         painter = painterResource(id = R.drawable.ic_listview_arrow_down),
-                        contentDescription = null
+                        contentDescription = null,
                     )
                 }
             },
             navigationIcon = {
                 IconButton(
                     onClick = onClickCalendar,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_listview_calendar),
-                        contentDescription = "go to calenderView"
+                        contentDescription = "go to calenderView",
                     )
                 }
             },
@@ -77,7 +78,7 @@ fun DiaryListTopAppBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(1.dp)
-                .background(ClodyTheme.colors.gray07)
+                .background(ClodyTheme.colors.gray07),
         )
     }
 }

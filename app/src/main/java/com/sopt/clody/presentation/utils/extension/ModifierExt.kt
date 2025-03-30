@@ -67,7 +67,7 @@ fun Modifier.clickableWithoutRipple(
     this.clickable(
         indication = null,
         interactionSource = remember { MutableInteractionSource() },
-        enabled = enabled
+        enabled = enabled,
     ) {
         onClick()
     }
@@ -84,6 +84,6 @@ fun Modifier.roundedBackgroundWithBorder(
         .border(
             width = borderWidth,
             color = borderColor,
-            shape = RoundedCornerShape(cornerRadius)
+            shape = RoundedCornerShape(cornerRadius),
         )
 }

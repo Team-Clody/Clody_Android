@@ -15,7 +15,7 @@ fun TooltipPopup(
     requesterView: @Composable (Modifier) -> Unit,
     tooltipContent: @Composable () -> Unit,
     isShowTooltip: Boolean,
-    onDismissRequest: () -> Unit
+    onDismissRequest: () -> Unit,
 ) {
     val view = LocalView.current.rootView
     var position by remember { mutableStateOf(TooltipPopupPosition()) }
@@ -24,7 +24,7 @@ fun TooltipPopup(
         DisplayTooltipPopup(
             position = position,
             onDismissRequest = onDismissRequest,
-            content = tooltipContent
+            content = tooltipContent,
         )
     }
 
@@ -35,6 +35,6 @@ fun TooltipPopup(
             }
             .onGloballyPositioned { coordinates ->
                 position = calculateTooltipPopupPosition(view, coordinates, isTop = true)
-            }
+            },
     )
 }

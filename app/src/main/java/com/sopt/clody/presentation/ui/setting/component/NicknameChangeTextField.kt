@@ -56,24 +56,24 @@ fun NickNameChangeTextField(
                 },
             singleLine = true,
             textStyle = TextStyle(color = ClodyTheme.colors.gray01),
-            cursorBrush = if(isValid) SolidColor(ClodyTheme.colors.gray01) else SolidColor(ClodyTheme.colors.red),
+            cursorBrush = if (isValid) SolidColor(ClodyTheme.colors.gray01) else SolidColor(ClodyTheme.colors.red),
             decorationBox = { innerTextField ->
                 Column(
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 0.dp, vertical = 0.dp),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Box(modifier = Modifier.weight(1f)) {
                             if (value.text.isEmpty()) {
                                 Text(
                                     text = hint,
                                     style = ClodyTheme.typography.body1Medium,
-                                    color = ClodyTheme.colors.gray05
+                                    color = ClodyTheme.colors.gray05,
                                 )
                             }
                             innerTextField()
@@ -83,13 +83,13 @@ fun NickNameChangeTextField(
                                 .clickable(
                                     onClick = onRemove,
                                     indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }
+                                    interactionSource = remember { MutableInteractionSource() },
                                 ),
-                            contentAlignment = Alignment.Center
+                            contentAlignment = Alignment.Center,
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_nickname_change_clean),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     }
@@ -103,11 +103,11 @@ fun NickNameChangeTextField(
                                     isValid.not() -> ClodyTheme.colors.red
                                     isFocused -> ClodyTheme.colors.mainYellow
                                     else -> ClodyTheme.colors.gray08
-                                }
-                            )
+                                },
+                            ),
                     )
                 }
-            }
+            },
         )
     }
 }

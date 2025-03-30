@@ -24,7 +24,7 @@ import java.time.LocalDate
 @Composable
 fun SplashRoute(
     navigator: AuthNavigator,
-    viewModel: SplashViewModel = hiltViewModel()
+    viewModel: SplashViewModel = hiltViewModel(),
 ) {
     val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
 
@@ -36,7 +36,7 @@ fun SplashRoute(
                     "home/${LocalDate.now().year}/${LocalDate.now().monthValue}"
                 } else {
                     "register_graph"
-                }
+                },
             ) {
                 popUpTo("splash") { inclusive = true }
             }
@@ -53,12 +53,12 @@ fun SplashScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor),
-        contentAlignment = Alignment.Center
+        contentAlignment = Alignment.Center,
     ) {
         Image(
             painter = painterResource(id = R.drawable.img_splash_logo),
             contentDescription = "App Logo",
-            modifier = Modifier.size(160.dp)
+            modifier = Modifier.size(160.dp),
         )
     }
 }

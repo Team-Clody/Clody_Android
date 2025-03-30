@@ -15,6 +15,6 @@ fun SettingSeparateLine() {
         modifier = Modifier
             .fillMaxWidth()
             .height(8.dp)
-            .background(ClodyTheme.colors.gray08)
+            .background(ClodyTheme.colors.gray08),
     )
 }

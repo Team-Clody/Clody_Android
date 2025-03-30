@@ -7,7 +7,6 @@ import androidx.navigation.navArgument
 import com.sopt.clody.presentation.ui.writediary.screen.WriteDiaryRoute
 import java.time.LocalDate
 
-
 fun NavGraphBuilder.writeDiaryNavGraph(
     writeDiaryNavigator: WriteDiaryNavigator,
 ) {
@@ -16,8 +15,8 @@ fun NavGraphBuilder.writeDiaryNavGraph(
         arguments = listOf(
             navArgument("year") { type = NavType.IntType },
             navArgument("month") { type = NavType.IntType },
-            navArgument("day") { type = NavType.IntType }
-        )
+            navArgument("day") { type = NavType.IntType },
+        ),
     ) { backStackEntry ->
         val currentDate = LocalDate.now()
         val year = backStackEntry.arguments?.getInt("year") ?: currentDate.year

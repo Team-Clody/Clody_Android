@@ -41,58 +41,57 @@ fun CloverDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false
-        )
+            usePlatformDefaultWidth = false,
+        ),
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.2f))
                 .wrapContentSize(Alignment.Center)
-                .padding(horizontal = 50.dp)
+                .padding(horizontal = 50.dp),
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
                 colors = CardDefaults.cardColors(containerColor = ClodyTheme.colors.white),
                 modifier = Modifier
                     .wrapContentWidth()
-                    .wrapContentHeight()
+                    .wrapContentHeight(),
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_dialog_clover),
                         contentDescription = null,
                         modifier = Modifier
-                            .padding(bottom = 20.dp)
+                            .padding(bottom = 20.dp),
                     )
 
                     Text(
                         text = titleMassage,
                         style = ClodyTheme.typography.detail1Medium,
                         color = ClodyTheme.colors.gray05,
-                        modifier = Modifier.padding(bottom = 8.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
                     )
 
                     Text(
                         text = descriptionMassage,
                         style = ClodyTheme.typography.head3,
                         color = ClodyTheme.colors.gray01,
-                        modifier = Modifier.padding(bottom = 30.dp)
+                        modifier = Modifier.padding(bottom = 30.dp),
                     )
 
                     Text(
                         text = confirmOption,
                         style = ClodyTheme.typography.body2SemiBold,
                         color = ClodyTheme.colors.mainYellow,
-                        modifier = Modifier.clickable(onClick = confirmAction)
+                        modifier = Modifier.clickable(onClick = confirmAction),
                     )
-
                 }
             }
         }
@@ -108,6 +107,6 @@ fun PreviewCloverDialog() {
         descriptionMassage = "",
         confirmOption = "확인",
         confirmAction = { },
-        confirmButtonColor = ClodyTheme.colors.mainYellow
+        confirmButtonColor = ClodyTheme.colors.mainYellow,
     )
 }

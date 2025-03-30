@@ -21,11 +21,11 @@ import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 @Composable
 fun WebViewRoute(
     navigator: SettingNavigator,
-    encodedUrl: String
+    encodedUrl: String,
 ) {
     WebViewScreen(
         encodedUrl = encodedUrl,
-        onClickBack = { navigator.navigateBack() }
+        onClickBack = { navigator.navigateBack() },
     )
 }
 
@@ -33,7 +33,7 @@ fun WebViewRoute(
 @Composable
 fun WebViewScreen(
     encodedUrl: String,
-    onClickBack: () -> Unit
+    onClickBack: () -> Unit,
 ) {
     var webView: WebView? by remember { mutableStateOf(null) }
     val canGoBack by remember { derivedStateOf { webView?.canGoBack() ?: false } }
@@ -63,7 +63,7 @@ fun WebViewScreen(
                     .fillMaxSize()
                     .padding(innerPadding),
             )
-        }
+        },
     )
 
     BackHandler(enabled = canGoBack) {
@@ -74,4 +74,3 @@ fun WebViewScreen(
         }
     }
 }
-

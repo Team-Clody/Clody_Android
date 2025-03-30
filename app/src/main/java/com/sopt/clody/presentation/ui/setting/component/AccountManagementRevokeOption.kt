@@ -16,15 +16,15 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun AccountManagementRevokeOption(
-    updateRevokeDialog: (Boolean) -> Unit
+    updateRevokeDialog: (Boolean) -> Unit,
 ) {
     Row(
-        modifier = Modifier.padding(24.dp)
+        modifier = Modifier.padding(24.dp),
     ) {
         Text(
             text = stringResource(R.string.account_management_revoke),
             color = ClodyTheme.colors.gray05,
-            style = ClodyTheme.typography.body4Medium
+            style = ClodyTheme.typography.body4Medium,
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
@@ -32,10 +32,10 @@ fun AccountManagementRevokeOption(
             modifier = Modifier.clickable(
                 onClick = { updateRevokeDialog(true) },
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() }
+                interactionSource = remember { MutableInteractionSource() },
             ),
             color = ClodyTheme.colors.gray05,
-            style = ClodyTheme.typography.body4Medium
+            style = ClodyTheme.typography.body4Medium,
         )
     }
 }

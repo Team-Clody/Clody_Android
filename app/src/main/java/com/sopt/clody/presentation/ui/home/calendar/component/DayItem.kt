@@ -45,16 +45,16 @@ fun DayItem(
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable { onDayClick(date) }
+            .clickable { onDayClick(date) },
     ) {
         Box(
             modifier = Modifier
                 .size(48.dp),
-            contentAlignment = Alignment.Center
+            contentAlignment = Alignment.Center,
         ) {
             Image(
                 painter = painterResource(id = iconRes),
-                contentDescription = "Diary clover icon"
+                contentDescription = "Diary clover icon",
             )
             if (diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0) {
                 Image(
@@ -63,7 +63,7 @@ fun DayItem(
                     modifier = Modifier
                         .align(Alignment.BottomEnd)
                         .padding(end = 0.dp, bottom = 8.dp)
-                        .size(12.dp)
+                        .size(12.dp),
                 )
             }
         }
@@ -72,24 +72,21 @@ fun DayItem(
             modifier = Modifier
                 .background(
                     if (isSelected) Color.Black else Color.Transparent,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
                 )
-                .padding(horizontal = 6.dp)
+                .padding(horizontal = 6.dp),
         ) {
             Text(
                 text = date.dayOfMonth.toString(),
-                style = ClodyTheme.typography.detail1SemiBold.copy
-                    (
+                style = ClodyTheme.typography.detail1SemiBold.copy(
                     color = when {
                         isSelected -> ClodyTheme.colors.white
                         isToday -> ClodyTheme.colors.gray02
                         else -> ClodyTheme.colors.gray05
-                    }
+                    },
                 ),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
             )
         }
     }
 }
-
-

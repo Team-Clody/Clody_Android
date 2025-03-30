@@ -39,7 +39,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun NotificationSettingRoute(
     navigator: SettingNavigator,
-    notificationSettingViewModel: NotificationSettingViewModel = hiltViewModel()
+    notificationSettingViewModel: NotificationSettingViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
     val notificationInfoState by notificationSettingViewModel.notificationInfoState.collectAsState()
@@ -57,8 +57,8 @@ fun NotificationSettingRoute(
 
     LaunchedEffect(diaryAlarmChangeState, notificationTimeChangeState, replyAlarmChangeState) {
         val isSuccess = diaryAlarmChangeState is DiaryAlarmChangeState.Success ||
-                notificationTimeChangeState is NotificationTimeChangeState.Success ||
-                replyAlarmChangeState is ReplyAlarmChangeState.Success
+            notificationTimeChangeState is NotificationTimeChangeState.Success ||
+            replyAlarmChangeState is ReplyAlarmChangeState.Success
 
         if (isSuccess) {
             notificationSettingViewModel.getNotificationInfo()
@@ -76,7 +76,7 @@ fun NotificationSettingRoute(
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
         onClickBack = { navigator.navigateBack() },
-        onNotificationInfoAvailable = { notificationInfo = it }
+        onNotificationInfoAvailable = { notificationInfo = it },
     )
 }
 
@@ -92,13 +92,13 @@ fun NotificationSettingScreen(
     showFailureDialog: Boolean,
     failureDialogMessage: String,
     onClickBack: () -> Unit,
-    onNotificationInfoAvailable: (NotificationInfoResponseDto) -> Unit
+    onNotificationInfoAvailable: (NotificationInfoResponseDto) -> Unit,
 ) {
     Scaffold(
         topBar = {
             SettingTopAppBar(
                 title = stringResource(R.string.notification_setting_title),
-                onClickBack = onClickBack
+                onClickBack = onClickBack,
             )
         },
         containerColor = ClodyTheme.colors.white,
@@ -116,7 +116,7 @@ fun NotificationSettingScreen(
                 val notificationTime = notificationSettingViewModel.convertTo12HourFormat(notificationInfo.time)
                 Column(
                     modifier = Modifier
-                        .padding(innerPadding)
+                        .padding(innerPadding),
                 ) {
                     Spacer(modifier = Modifier.height(20.dp))
                     DiaryAlarmSwitch(
@@ -124,12 +124,12 @@ fun NotificationSettingScreen(
                         context = context,
                         title = stringResource(R.string.notification_setting_write_diary),
                         notificationInfo = notificationInfo,
-                        checkedState = remember { mutableStateOf(notificationInfo.isDiaryAlarm) }
+                        checkedState = remember { mutableStateOf(notificationInfo.isDiaryAlarm) },
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     NotificationSettingTime(
                         selectedTime = notificationTime,
-                        updateNotificationTimePicker = updateNotificationTimePicker
+                        updateNotificationTimePicker = updateNotificationTimePicker,
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     ReplyAlarmSwitch(
@@ -137,7 +137,7 @@ fun NotificationSettingScreen(
                         context = context,
                         title = stringResource(R.string.notification_setting_reply_diary),
                         notificationInfo = notificationInfo,
-                        checkedState = remember { mutableStateOf(notificationInfo.isReplyAlarm) }
+                        checkedState = remember { mutableStateOf(notificationInfo.isReplyAlarm) },
                     )
                 }
             }
@@ -145,7 +145,7 @@ fun NotificationSettingScreen(
             is NotificationInfoState.Failure -> {
                 FailureScreen(
                     message = notificationInfoState.errorMessage,
-                    confirmAction = { notificationSettingViewModel.getNotificationInfo() }
+                    confirmAction = { notificationSettingViewModel.getNotificationInfo() },
                 )
             }
         }
@@ -161,7 +161,7 @@ fun NotificationSettingScreen(
                     }
                     updateNotificationTimePicker(false)
                 },
-                onDismissRequest = { updateNotificationTimePicker(false) }
+                onDismissRequest = { updateNotificationTimePicker(false) },
             )
         }
     }
@@ -171,7 +171,7 @@ fun NotificationSettingScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(20.dp),
-            contentAlignment = Alignment.BottomCenter
+            contentAlignment = Alignment.BottomCenter,
         ) {
             ClodyToastMessage(
                 message = stringResource(R.string.notification_setting_change_success_toast),
@@ -179,7 +179,7 @@ fun NotificationSettingScreen(
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,
                 durationMillis = 3000,
-                onDismiss = { notificationSettingViewModel.resetNotificationChangeState() }
+                onDismiss = { notificationSettingViewModel.resetNotificationChangeState() },
             )
         }
     }
@@ -187,8 +187,7 @@ fun NotificationSettingScreen(
     if (showFailureDialog) {
         FailureDialog(
             message = failureDialogMessage,
-            onDismiss = { notificationSettingViewModel.dismissFailureDialog() }
+            onDismiss = { notificationSettingViewModel.dismissFailureDialog() },
         )
     }
 }
-

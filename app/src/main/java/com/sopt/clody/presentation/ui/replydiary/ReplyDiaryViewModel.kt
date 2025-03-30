@@ -22,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReplyDiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
-    private val networkUtil: NetworkUtil
+    private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
     private val _replyDiaryState = MutableStateFlow<ReplyDiaryState>(ReplyDiaryState.Idle)
@@ -32,7 +32,7 @@ class ReplyDiaryViewModel @Inject constructor(
     private var lastMonth: Int = 0
     private var lastDate: Int = 0
 
-    private val _retryFlow = MutableSharedFlow<Unit>() //연속 클릭을 제어하기 위해 선언.
+    private val _retryFlow = MutableSharedFlow<Unit>() // 연속 클릭을 제어하기 위해 선언.
 
     init {
         setupRetryFlow()
@@ -44,9 +44,8 @@ class ReplyDiaryViewModel @Inject constructor(
             .onEach { // Flow에서 발생한 이벤트를 받아서 getReplyDiaryInternal 호출.
                 getReplyDiaryInternal(lastYear, lastMonth, lastDate)
             }
-            .launchIn(viewModelScope) //Flow를 viewModelScope에서 실행하고 구독을 유지, 즉 viewmodel이 살아있는 동안 flow가 실행됨
+            .launchIn(viewModelScope) // Flow를 viewModelScope에서 실행하고 구독을 유지, 즉 viewmodel이 살아있는 동안 flow가 실행됨
     }
-
 
     fun getReplyDiary(year: Int, month: Int, date: Int) {
         lastYear = year
@@ -77,15 +76,15 @@ class ReplyDiaryViewModel @Inject constructor(
                         content = data.content ?: "",
                         nickname = data.nickname,
                         month = data.month,
-                        date = data.date
-                    )
+                        date = data.date,
+                    ),
                 )
             },
             onFailure = { throwable ->
                 updateState(ReplyDiaryState.Failure(ErrorMessages.FAILURE_TEMPORARY_MESSAGE))
                 val errorMessage = throwable.localizedMessage ?: UNKNOWN_ERROR
                 Timber.tag("ReplyDiaryViewModel").e("API 요청 실패: %s", errorMessage)
-            }
+            },
         )
     }
 

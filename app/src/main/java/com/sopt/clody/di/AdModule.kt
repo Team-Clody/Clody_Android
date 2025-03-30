@@ -12,6 +12,6 @@ import dagger.hilt.components.SingletonComponent
 abstract class AdModule {
     @Binds
     abstract fun bindRewardAdShower(
-        impl: RewardAdShowerImpl
+        impl: RewardAdShowerImpl,
     ): RewardAdShower
 }

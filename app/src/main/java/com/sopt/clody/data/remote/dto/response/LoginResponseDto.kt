@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class LoginResponseDto(
     @SerialName("accessToken") val accessToken: String,
     @SerialName("refreshToken") val refreshToken: String,
-    @SerialName("isBeginner") val isBeginner: Boolean = false
+    @SerialName("isBeginner") val isBeginner: Boolean = false,
 )

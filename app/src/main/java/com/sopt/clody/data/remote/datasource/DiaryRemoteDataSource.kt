@@ -11,7 +11,7 @@ import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 interface DiaryRemoteDataSource {
     suspend fun writeDiary(date: String, content: List<String>): ApiResponse<WriteDiaryResponseDto>
     suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): ApiResponse<DailyDiariesResponseDto>
-    suspend fun getDailyDiariesData(year: Int, month: Int, date:Int): ApiResponse<DailyDiariesResponseDto>
+    suspend fun getDailyDiariesData(year: Int, month: Int, date: Int): ApiResponse<DailyDiariesResponseDto>
     suspend fun getDiaryTime(year: Int, month: Int, date: Int): ApiResponse<DiaryTimeResponseDto>
     suspend fun getMonthlyCalendarData(year: Int, month: Int): ApiResponse<MonthlyCalendarResponseDto>
     suspend fun getMonthlyDiary(year: Int, month: Int): ApiResponse<MonthlyDiaryResponseDto>

@@ -4,7 +4,7 @@ import androidx.navigation.NavHostController
 import java.net.URLEncoder
 
 class SettingNavigator(
-    val navController: NavHostController
+    val navController: NavHostController,
 ) {
     fun navigateAccountManagement() {
         navController.navigate("account_management")

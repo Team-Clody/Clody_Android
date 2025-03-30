@@ -16,27 +16,27 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun SettingVersionInfo(
-    versionInfo: String
+    versionInfo: String,
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 20.dp)
             .padding(horizontal = 20.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = stringResource(R.string.setting_option_app_version),
             modifier = Modifier.padding(start = 4.dp),
-            style = ClodyTheme.typography.body1Medium
+            style = ClodyTheme.typography.body1Medium,
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = versionInfo,
             color = ClodyTheme.colors.gray05,
             style = ClodyTheme.typography.body4Medium.copy(
-                letterSpacing = 2.sp
-            )
+                letterSpacing = 2.sp,
+            ),
         )
     }
 }

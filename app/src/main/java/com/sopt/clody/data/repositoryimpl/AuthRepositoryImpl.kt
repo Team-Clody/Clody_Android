@@ -22,4 +22,3 @@ class AuthRepositoryImpl @Inject constructor(
             authDataSource.signUp(authorization, requestSignUpDto).handleApiResponse().getOrThrow()
         }
 }
-

@@ -17,34 +17,34 @@ import retrofit2.http.Query
 interface DiaryService {
     @POST("api/v1/diary")
     suspend fun writeDiary(
-        @Body writeDiaryRequestDto: WriteDiaryRequestDto
+        @Body writeDiaryRequestDto: WriteDiaryRequestDto,
     ): ApiResponse<WriteDiaryResponseDto>
 
     @DELETE("api/v1/diary")
     suspend fun deleteDailyDiary(
         @Query("year") year: Int,
         @Query("month") month: Int,
-        @Query("date") date: Int
+        @Query("date") date: Int,
     ): ApiResponse<DailyDiariesResponseDto>
 
     @GET("api/v1/diary")
     suspend fun getDailyDiariesData(
         @Query("year") year: Int,
         @Query("month") month: Int,
-        @Query("date") date: Int
+        @Query("date") date: Int,
     ): ApiResponse<DailyDiariesResponseDto>
 
     @GET("api/v1/diary/time")
     suspend fun getDiaryTime(
         @Query("year") year: Int,
         @Query("month") month: Int,
-        @Query("date") date: Int
+        @Query("date") date: Int,
     ): ApiResponse<DiaryTimeResponseDto>
 
     @GET("api/v1/calendar")
     suspend fun getMonthlyCalendarData(
         @Query("year") year: Int,
-        @Query("month") month: Int
+        @Query("month") month: Int,
     ): ApiResponse<MonthlyCalendarResponseDto>
 
     @GET("api/v1/calendar/list")
@@ -57,6 +57,6 @@ interface DiaryService {
     suspend fun getReplyDiary(
         @Query("year") year: Int,
         @Query("month") month: Int,
-        @Query("date") date: Int
+        @Query("date") date: Int,
     ): ApiResponse<ReplyDiaryResponseDto>
 }

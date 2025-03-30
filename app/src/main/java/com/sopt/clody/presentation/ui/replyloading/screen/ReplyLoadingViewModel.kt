@@ -28,7 +28,7 @@ class ReplyLoadingViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val adRepository: AdRepository,
     private val networkUtil: NetworkUtil,
-    private val rewardAdShower: RewardAdShower
+    private val rewardAdShower: RewardAdShower,
 ) : ViewModel() {
 
     private val _replyLoadingState = MutableStateFlow<ReplyLoadingState>(ReplyLoadingState.Idle)
@@ -97,8 +97,12 @@ class ReplyLoadingViewModel @Inject constructor(
             onSuccess = { data ->
                 val diaryWrittenDay = data.date.split("-")
                 var targetDateTime = LocalDateTime.of(
-                    diaryWrittenDay[0].toInt(), diaryWrittenDay[1].toInt(), diaryWrittenDay[2].toInt(),
-                    data.HH, data.mm, data.ss
+                    diaryWrittenDay[0].toInt(),
+                    diaryWrittenDay[1].toInt(),
+                    diaryWrittenDay[2].toInt(),
+                    data.HH,
+                    data.mm,
+                    data.ss,
                 ).plusMinutes(if (data.isFirst) INITIAL_REMINDER_MINUTES else REGULAR_REMINDER_HOURS * 60)
 
                 if (_isAdCompleted.value || data.isFromAd) {
@@ -113,7 +117,7 @@ class ReplyLoadingViewModel @Inject constructor(
                 _replyLoadingState.value = ReplyLoadingState.Failure(FAILURE_TEMPORARY_MESSAGE)
                 val errorMessage = throwable.localizedMessage ?: UNKNOWN_ERROR
                 Timber.tag("ReplyLoadingViewModel").e("API 요청 실패: %s", errorMessage)
-            }
+            },
         )
     }
 
@@ -172,7 +176,7 @@ class ReplyLoadingViewModel @Inject constructor(
             onAdDismissed = {
                 _isAdPreloaded = false
                 preloadAd()
-            }
+            },
         )
     }
 
@@ -185,7 +189,6 @@ class ReplyLoadingViewModel @Inject constructor(
     fun clearAdErrorMessage() {
         _adErrorMessage.value = null
     }
-
 
     companion object {
         private const val INITIAL_REMINDER_MINUTES = 1L

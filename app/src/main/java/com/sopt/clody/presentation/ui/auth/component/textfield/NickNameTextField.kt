@@ -62,35 +62,34 @@ fun NickNameTextField(
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 0.dp, vertical = 0.dp),
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Box(modifier = Modifier.weight(1f)) {
                             if (value.text.isEmpty() && !isFocused) {
                                 Text(
                                     text = hint,
                                     style = ClodyTheme.typography.body1Medium,
-                                    color = ClodyTheme.colors.gray05
+                                    color = ClodyTheme.colors.gray05,
                                 )
                             }
-                            innerTextField()  // 실제 입력 필드
+                            innerTextField() // 실제 입력 필드
                         }
                         Box(
                             modifier = Modifier
                                 .clickable(
                                     onClick = onRemove,
                                     indication = null,
-                                    interactionSource = remember { MutableInteractionSource() }
-                                )
-                            ,
-                            contentAlignment = Alignment.Center
+                                    interactionSource = remember { MutableInteractionSource() },
+                                ),
+                            contentAlignment = Alignment.Center,
                         ) {
                             Image(
                                 painter = painterResource(id = R.drawable.ic_nickname_delete),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
                     }
@@ -99,17 +98,20 @@ fun NickNameTextField(
                         modifier = Modifier
                             .height(2.dp)
                             .fillMaxWidth()
-                            .background(when {
-                                isValid.not() -> ClodyTheme.colors.red
-                                isFocused -> ClodyTheme.colors.mainYellow
-                                else -> ClodyTheme.colors.gray08
-                            })
+                            .background(
+                                when {
+                                    isValid.not() -> ClodyTheme.colors.red
+                                    isFocused -> ClodyTheme.colors.mainYellow
+                                    else -> ClodyTheme.colors.gray08
+                                },
+                            ),
                     )
                 }
-            }
+            },
         )
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewNickNameTextField() {

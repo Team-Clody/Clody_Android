@@ -9,11 +9,11 @@ import retrofit2.http.POST
 interface AdService {
     @POST("api/v1/reply/ad/start")
     suspend fun startAd(
-        @Body adRequestDto: AdRequestDto
-    ) : NullableApiResponse<Unit>
+        @Body adRequestDto: AdRequestDto,
+    ): NullableApiResponse<Unit>
 
     @PATCH("api/v1/reply/ad/end")
     suspend fun endAd(
-        @Body adRequestDto: AdRequestDto
-    ) : NullableApiResponse<Unit>
+        @Body adRequestDto: AdRequestDto,
+    ): NullableApiResponse<Unit>
 }

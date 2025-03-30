@@ -20,31 +20,30 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun YearAndMonthTitle(
     onShowYearMonthPickerStateChange: (Boolean) -> Unit,
     selectedYear: Int,
-    selectedMonth: Int
+    selectedMonth: Int,
 ) {
     val text = "${selectedYear}년 ${selectedMonth}월"
 
     Column {
         Row(
             modifier = Modifier.clickable(
-                onClick = { onShowYearMonthPickerStateChange(true)},
+                onClick = { onShowYearMonthPickerStateChange(true) },
                 indication = null,
-                interactionSource = remember { MutableInteractionSource() }
+                interactionSource = remember { MutableInteractionSource() },
             ),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 text = text,
                 style = ClodyTheme.typography.head4,
-                color = ClodyTheme.colors.gray01
+                color = ClodyTheme.colors.gray01,
             )
             Image(
                 painter = painterResource(id = R.drawable.ic_home_under_arrow),
                 contentDescription = "choose month",
                 modifier = Modifier
-                    .padding(horizontal = 6.dp, vertical = 6.dp)
+                    .padding(horizontal = 6.dp, vertical = 6.dp),
             )
         }
     }
 }
-

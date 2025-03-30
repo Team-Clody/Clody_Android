@@ -27,7 +27,7 @@ fun ScrollableCalendar(
     onShowDiaryDeleteStateChange: (Boolean) -> Unit,
     selectedDate: LocalDate,
     onDiaryDataUpdated: (Int, String) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(selectedDate) {
         homeViewModel.updateDiaryState(diaries)
@@ -39,7 +39,7 @@ fun ScrollableCalendar(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(scrollState)
-            .background(ClodyTheme.colors.white)
+            .background(ClodyTheme.colors.white),
     ) {
         CloverCount(cloverCount = cloverCount)
         Spacer(modifier = Modifier.height(20.dp))
@@ -52,7 +52,7 @@ fun ScrollableCalendar(
             },
             diaries = diaries,
             homeViewModel = homeViewModel,
-            onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange
+            onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange,
         )
     }
 }

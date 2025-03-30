@@ -53,7 +53,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun NicknameRoute(
     navigator: AuthNavigator,
-    viewModel: SignUpViewModel = hiltViewModel()
+    viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val nickname by viewModel.nickname.collectAsState()
     val isValidNickname by viewModel.isValidNickname.collectAsState()
@@ -70,7 +70,7 @@ fun NicknameRoute(
         onBackClick = { navigator.navigateBack() },
         isLoading = signUpState.uiState is UiState.Loading,
         isValidNickname = isValidNickname,
-        nicknameMessage = nicknameMessage
+        nicknameMessage = nicknameMessage,
     )
 
     LaunchedEffect(signUpState) {
@@ -94,7 +94,7 @@ fun NicknameRoute(
             onDismiss = {
                 showDialog = false
                 viewModel.resetSignUpState()
-            }
+            },
         )
     }
 }
@@ -107,7 +107,7 @@ fun NicknameScreen(
     onBackClick: () -> Unit,
     isLoading: Boolean,
     isValidNickname: Boolean,
-    nicknameMessage: String
+    nicknameMessage: String,
 ) {
     var nicknameTextField by remember { mutableStateOf(TextFieldValue(nickname)) }
     val focusRequester = remember { FocusRequester() }
@@ -132,11 +132,11 @@ fun NicknameScreen(
                 onClick = { onBackClick() },
                 modifier = Modifier
                     .statusBarsPadding()
-                    .padding(start = 8.dp)
+                    .padding(start = 8.dp),
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         },
@@ -163,13 +163,13 @@ fun NicknameScreen(
                     .background(color = ClodyTheme.colors.white)
                     .padding(paddingValues)
                     .padding(horizontal = 24.dp),
-                horizontalAlignment = Alignment.Start
+                horizontalAlignment = Alignment.Start,
             ) {
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.056f))
                 Text(
                     text = stringResource(id = R.string.nickname_title),
                     style = ClodyTheme.typography.head1,
-                    color = ClodyTheme.colors.gray01
+                    color = ClodyTheme.colors.gray01,
                 )
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.06f))
                 NickNameTextField(
@@ -186,12 +186,12 @@ fun NicknameScreen(
                     modifier = Modifier
                         .focusRequester(focusRequester)
                         .clickable { focusRequester.requestFocus() }
-                        .fillMaxWidth()
+                        .fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.005f))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
                         text = nicknameMessage,
@@ -200,7 +200,7 @@ fun NicknameScreen(
                             nicknameTextField.text.isEmpty() -> ClodyTheme.colors.gray04
                             isValidNickname -> ClodyTheme.colors.gray04
                             else -> ClodyTheme.colors.red
-                        }
+                        },
                     )
                     Text(
                         text = annotatedString,
@@ -210,7 +210,7 @@ fun NicknameScreen(
                     )
                 }
             }
-        }
+        },
     )
 
     if (isLoading) {
@@ -228,6 +228,6 @@ fun NicknameScreenPreview() {
         onBackClick = {},
         isLoading = false,
         isValidNickname = true,
-        nicknameMessage = "특수문자, 띄어쓰기 없이 작성해주세요"
+        nicknameMessage = "특수문자, 띄어쓰기 없이 작성해주세요",
     )
 }

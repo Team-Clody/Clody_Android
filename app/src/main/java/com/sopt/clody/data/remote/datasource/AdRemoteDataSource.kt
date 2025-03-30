@@ -17,7 +17,7 @@ import kotlin.coroutines.suspendCoroutine
 @Singleton
 class AdRemoteDataSource @Inject constructor(
     private val adService: AdService,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
     private var rewardedAd: RewardedAd? = null
     private val adUnitId = BuildConfig.GOOGLE_ADMOB_UNIT_ID
@@ -50,7 +50,7 @@ class AdRemoteDataSource @Inject constructor(
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         continuation.resume(Result.failure(Exception(error.message)))
                     }
-                }
+                },
             )
         }
     }
