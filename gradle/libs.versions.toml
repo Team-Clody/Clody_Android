@@ -37,6 +37,7 @@ firebase-messaging = "24.0.0"
 firebase-analytics = "22.2.0"
 firebase-crashlytics = "19.0.3"
 firebase-crashlytics-plugin = "3.0.2"
+firebase-app-distribution = "5.1.0"
 
 amplitude = "1.+"
 
@@ -121,6 +122,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics-plugin = { id = "com.google.firebase.crashlytics", version.ref = "firebase-crashlytics-plugin" }
+firebase-app-distribution = { id = "com.google.firebase.appdistribution", version.ref = "firebase-app-distribution" }
 
 [bundles]
 androidx = [
