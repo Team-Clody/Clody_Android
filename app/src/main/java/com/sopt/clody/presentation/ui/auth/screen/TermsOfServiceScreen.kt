@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -80,7 +82,7 @@ fun TermsOfServiceScreen(
             IconButton(
                 onClick = { onBackClick() },
                 modifier = Modifier
-                    .padding(top = 20.dp)
+                    .statusBarsPadding()
                     .padding(start = 8.dp)
             ) {
                 Image(
@@ -91,13 +93,14 @@ fun TermsOfServiceScreen(
         },
         bottomBar = {
             ClodyButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 28.dp),
                 onClick = onAgreeClick,
                 text = stringResource(id = R.string.terms_next),
                 enabled = isAgreeButtonEnabled,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 28.dp)
             )
         },
         content = { paddingValues ->

@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.CLODY" parent="android:Theme.Material.Light.NoActionBar">
-        <item name="android:backgroundDimEnabled">true</item>
+    <style name="Base.Theme.CLODY" parent="android:Theme.Material.Light.NoActionBar">
+    </style>
+
+    <style name="Theme.CLODY" parent="Base.Theme.CLODY">
         <item name="android:windowIsTranslucent">true</item>
     </style>
 </resources>

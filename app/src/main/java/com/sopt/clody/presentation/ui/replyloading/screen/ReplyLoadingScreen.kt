@@ -12,7 +12,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -181,8 +183,9 @@ fun ReplyLoadingScreen(
             IconButton(
                 onClick = onBackClick,
                 modifier = Modifier
-                    .padding(top = 6.dp)
-                    .padding(start = 8.dp)
+                    .statusBarsPadding()
+                    .padding(top = 26.dp)
+                    .padding(start = 12.dp)
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
@@ -192,16 +195,17 @@ fun ReplyLoadingScreen(
         },
         bottomBar = {
             ClodyButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 28.dp),
                 onClick = {
                     if (isComplete) AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY_REPLY)
                     onCompleteClick()
                 },
                 text = stringResource(R.string.loading_button_open),
                 enabled = isComplete,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 28.dp)
             )
         },
         content = { innerPadding ->

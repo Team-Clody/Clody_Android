@@ -8,13 +8,13 @@ import com.kakao.sdk.user.UserApiClient
 import com.sopt.clody.ClodyFirebaseMessagingService
 import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
+import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.utils.base.UiState
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import com.sopt.clody.data.remote.util.NetworkUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,20 +53,7 @@ class SignUpViewModel @Inject constructor(
     val nicknameMessage: StateFlow<String> = _nicknameMessage
 
     init {
-        attemptAutoLogin()
         debounceNicknameValidation()
-    }
-
-    // 자동 로그인
-    private fun attemptAutoLogin() {
-        val accessToken = tokenRepository.getAccessToken()
-        val refreshToken = tokenRepository.getRefreshToken()
-
-        if (accessToken.isNotBlank() && refreshToken.isNotBlank()) {
-            _signInState.value = SignInState(UiState.Success(AUTO_LOGIN_SUCCESS))
-        } else {
-            _signInState.value = SignInState(UiState.Empty)
-        }
     }
 
     fun signInWithKakao(context: Context) {
@@ -208,7 +195,6 @@ class SignUpViewModel @Inject constructor(
     }
 
     companion object {
-        private const val AUTO_LOGIN_SUCCESS = "자동 로그인"
         private const val USER_EXISTS = "유저가 이미 존재합니다"
         private const val SIGN_UP_SUCCESS = "회원가입 성공"
         private const val USER_NOT_FOUND_ERROR = "유저를 찾을 수 없습니다"

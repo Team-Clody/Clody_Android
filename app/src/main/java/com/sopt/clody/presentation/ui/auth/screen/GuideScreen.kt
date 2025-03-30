@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
@@ -88,8 +89,14 @@ fun GuideScreen(
     var isExiting by remember { mutableStateOf(false) }
 
     Scaffold(
+        containerColor = ClodyTheme.colors.white,
         bottomBar = {
             ClodyButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 28.dp),
                 onClick = {
                     coroutineScope.launch {
                         if (pagerState.currentPage < pages.size - 1) {
@@ -105,10 +112,6 @@ fun GuideScreen(
                     stringResource(id = R.string.guide_start)
                 },
                 enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 28.dp)
             )
         },
         content = { innerPadding ->
@@ -121,8 +124,7 @@ fun GuideScreen(
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = ClodyTheme.colors.white),
+                        .fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.21f))
