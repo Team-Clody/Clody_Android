@@ -73,10 +73,10 @@ jobs:
           GOOGLE_ADMOB_UNIT_ID: ${{ secrets.GOOGLE_ADMOB_UNIT_ID }}
         run: |
           echo "baseUrl=$BASE_URL" >> local.properties
-          echo "kakaoApiKey=$KAKAO_API_KEY" >> local.properties
-          echo "amplitudeApiKey=$AMPLITUDE_API_KEY" >> local.properties
-          echo "googleAdmobAppId=$GOOGLE_ADMOB_APP_ID" >> local.properties
-          echo "googleAdmobUnitId=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
+          echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
+          echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
+          echo "googleAdmob.app.id=$GOOGLE_ADMOB_APP_ID" >> local.properties
+          echo "googleAdmob.unit.id=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
 
       # ------- Build & Lint -------
 
