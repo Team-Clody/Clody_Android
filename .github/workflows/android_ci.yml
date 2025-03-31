@@ -1,0 +1,84 @@
+name: Clody CI
+
+# 언제 동작할지 설정
+on:
+    pull_request:
+        branches: [ develop ]
+        paths:
+            - 'app/**'          # app 모듈 내부 변경
+            - 'build.gradle'    # 최상위 build.gradle
+            - '**/*.kt'         # 모든 Kotlin 파일 변경
+
+# 공통 작업 디렉토리 설정
+defaults:
+    run:
+        working-directory: ./
+
+# Job 정의
+jobs:
+    build:
+        runs-on: ubuntu-latest  # Ubuntu 최신 이미지에서 실행
+
+        steps:
+            # Gradle 캐싱 (속도 향상)
+            - name: Cache Gradle packages
+              uses: actions/cache@v4
+              with:
+                  path: |
+                      ~/.gradle/caches
+                      ~/.gradle/wrapper
+                  key: ${{ runner.os }}-gradle-${{ hashFiles('gradle.properties', '**/*.gradle*', '**/gradle-wrapper.properties') }}
+                  restore-keys: |
+                      ${{ runner.os }}-gradle-
+
+            # Android SDK 캐싱
+            - name: Cache Android SDK
+              uses: actions/cache@v4
+              with:
+                  path: ~/.android
+                  key: ${{ runner.os }}-android
+
+            # GitHub Repo 코드 Checkout
+            - name: Checkout the code
+              uses: actions/checkout@v4
+
+            # JDK 17 설치 (Android 공식 권장 버전)
+            - name: Setup JDK
+              uses: actions/setup-java@v4
+              with:
+                  distribution: 'corretto'
+                  java-version: '17'
+
+            # Android SDK 설치
+            - name: Setup Android SDK
+              uses: android-actions/setup-android@v3
+
+            # gradlew 실행 권한 부여
+            - name: Grant execute permission for gradlew
+              run: chmod +x gradlew
+
+            # Firebase google-services.json 복호화 및 설정
+            - name: Decode google-services.json
+              env:
+                  FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}   # base64로 암호화된 json 사용
+              run: echo $FIREBASE_SECRET | base64 --decode > app/google-services.json
+
+            # local.properties 생성
+            - name: Generate local.properties
+              env:
+                  BASE_URL: ${{ secrets.BASE_URL }}
+                  KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
+                  AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
+                  GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
+                  GOOGLE_ADMOB_UNIT_ID: ${{ secrets.GOOGLE_ADMOB_UNIT_ID }}
+              run: |
+                  echo "baseUrl=$BASE_URL" >> local.properties
+                  echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
+                  echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
+                  echo "googleAdmob.app.id=$GOOGLE_ADMOB_APP_ID" >> local.properties
+                  echo "googleAdmob.unit.id=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
+
+
+            # ------- Build & Lint -------
+            - name: Run Lint and Build
+              run: ./gradlew --no-daemon --configuration-cache ktlintCheck assembleDebug
