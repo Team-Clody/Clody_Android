@@ -66,25 +66,23 @@ jobs:
             - name: Build Release APK
               run: ./gradlew assembleRelease --stacktrace
 
-            # Setup Firebase Authentication
-            - name: Authenticate to Google Cloud
-              uses: google-github-actions/auth@v1
-              with:
-                  credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
-
-            # Install Firebase CLI
+            # Firebase CLI 설치
             - name: Install Firebase CLI
-              run: npm install -g firebase-tools
+              run: curl -sL https://firebase.tools | bash
 
-            # Firebase Authentication 체크
-            -   name: Check Firebase Authentication
-                run: |
-                    firebase projects:list || (echo "❌ Firebase 인증 실패!" && exit 1)
+            # Firebase 인증
+            - name: Set up Firebase Service Account Credentials
+              env:
+                  GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
+              run: |
+                  echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 --decode > $HOME/firebase-credentials.json
+                  export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
 
             # Firebase App Distribution
             - name: Upload APK to Firebase App Distribution
               env:
                   FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+                  GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-credentials.json
               run: |
                   firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
                   --app "$FIREBASE_APP_ID" \
@@ -98,5 +96,5 @@ jobs:
               run: |
                   curl -H "Content-Type: application/json" \
                   -X POST \
-                  -d '{"content": "🍀 새로운 테스트 버전이 업로드되었습니다!"}' \
+                  -d '{"content": "🍀 새로운 테스트 버전이 Firebase App Distribution에 업로드되었습니다!"}' \
                   $DISCORD_WEBHOOK_URL
