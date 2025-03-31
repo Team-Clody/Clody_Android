@@ -74,6 +74,10 @@ jobs:
                   echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 --decode > $HOME/firebase-credentials.json
                   export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
 
+            # Install Firebase CLI
+            - name: Install Firebase CLI
+              run: curl -sL https://firebase.tools | bash
+
             # Firebase App Distribution
             - name: Upload AAB to Firebase App Distribution
               env:
