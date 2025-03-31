@@ -76,7 +76,12 @@ jobs:
 
             # Install Firebase CLI
             - name: Install Firebase CLI
-              run: curl -sL https://firebase.tools | bash
+              run: npm install -g firebase-tools
+
+            # Firebase Authentication 체크
+            -   name: Check Firebase Authentication
+                run: |
+                    firebase projects:list || (echo "❌ Firebase 인증 실패!" && exit 1)
 
             # Firebase App Distribution
             - name: Upload AAB to Firebase App Distribution
