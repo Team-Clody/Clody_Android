@@ -66,27 +66,50 @@ jobs:
             - name: Build Release APK
               run: ./gradlew assembleRelease --stacktrace
 
-            # Firebase CLI 설치
-            - name: Install Firebase CLI
-              run: curl -sL https://firebase.tools | bash
-
-            # Firebase 인증
+            # Set up Firebase Service Account Credentials
             - name: Set up Firebase Service Account Credentials
               env:
                   GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
               run: |
                   echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 --decode > $HOME/firebase-credentials.json
+                  echo "🔥 Firebase Credentials JSON 생성 완료!"
+                  ls -l $HOME/firebase-credentials.json
+                  export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
+                  echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
+
+            # Firebase CLI 인증 확인
+            - name: Check Firebase CLI Authentication
+              run: |
                   export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
 
-            # Firebase App Distribution
+                  echo "📌 GOOGLE_APPLICATION_CREDENTIALS 설정 값:"
+                  echo $GOOGLE_APPLICATION_CREDENTIALS
+                  ls -l $GOOGLE_APPLICATION_CREDENTIALS
+
+                  echo "📌 현재 Firebase 프로젝트 목록 확인:"
+                  firebase projects:list || (echo "❌ Firebase 인증 실패!"; exit 1)
+
+            # Firebase App Distribution Upload
             - name: Upload APK to Firebase App Distribution
               env:
-                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
                   GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-credentials.json
+                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
               run: |
+                  echo "🔥 FIREBASE_APP_ID 확인: $FIREBASE_APP_ID"
+
+                  # 만약 FIREBASE_APP_ID가 없으면 에러 출력 후 종료
+                  if [ -z "$FIREBASE_APP_ID" ]; then
+                    echo "❌ ERROR: FIREBASE_APP_ID가 설정되지 않았습니다. GitHub Secrets에서 확인하세요."
+                    exit 1
+                  fi
+
+                  # GOOGLE_APPLICATION_CREDENTIALS 재 설정
+                  export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
+                  echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
+
                   firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
                   --app "$FIREBASE_APP_ID" \
-                  --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다!" \
+                  --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다~" \
                   --groups "clody-tester-group"
 
             # Discord Notification
@@ -96,5 +119,5 @@ jobs:
               run: |
                   curl -H "Content-Type: application/json" \
                   -X POST \
-                  -d '{"content": "🍀 새로운 테스트 버전이 Firebase App Distribution에 업로드되었습니다!"}' \
+                  -d '{"content": "🍀 새로운 테스트 버전이 업로드되었습니다~"}' \
                   $DISCORD_WEBHOOK_URL
