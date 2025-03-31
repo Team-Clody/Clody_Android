@@ -123,5 +123,5 @@ jobs:
               run: |
                   curl -H "Content-Type: application/json" \
                   -X POST \
-                  -d '{"content": "🍀 새로운 테스트 버전이 업로드되었습니다~"}' \
+                  -d '{"content": "🍀 새로운 테스트 버전이 업로드되었습니다~\nAPK 다운로드: https://appdistribution.firebase.google.com"}' \
                   $DISCORD_WEBHOOK_URL
