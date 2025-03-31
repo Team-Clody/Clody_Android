@@ -66,13 +66,11 @@ jobs:
             - name: Build Release AAB
               run: ./gradlew bundleRelease --stacktrace
 
-            # Firebase 인증
-            - name: Set up Firebase Service Account Credentials
-              env:
-                  GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
-              run: |
-                  echo "$GOOGLE_APPLICATION_CREDENTIALS_JSON" | base64 --decode > $HOME/firebase-credentials.json
-                  export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
+            # Setup Firebase Authentication
+            - name: Authenticate to Google Cloud
+              uses: google-github-actions/auth@v1
+              with:
+                  credentials_json: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_JSON }}
 
             # Install Firebase CLI
             - name: Install Firebase CLI
