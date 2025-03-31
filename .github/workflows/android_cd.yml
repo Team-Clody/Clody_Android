@@ -41,6 +41,10 @@ jobs:
             - name: Change gradlew permissions
               run: chmod +x gradlew
 
+            # Install Firebase CLI
+            - name: Install Firebase CLI
+              run: curl -sL https://firebase.tools | bash
+
             # google-services.json
             - name: Decode google-services.json
               env:
