@@ -62,9 +62,9 @@ jobs:
                   echo "googleAdmob.app.id=$GOOGLE_ADMOB_APP_ID" >> local.properties
                   echo "googleAdmob.unit.id=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
 
-            # Release AAB 빌드
-            - name: Build Release AAB
-              run: ./gradlew bundleRelease --stacktrace
+            # Release APK 빌드
+            - name: Build Release APK
+              run: ./gradlew assembleRelease --stacktrace
 
             # Setup Firebase Authentication
             - name: Authenticate to Google Cloud
@@ -82,11 +82,11 @@ jobs:
                     firebase projects:list || (echo "❌ Firebase 인증 실패!" && exit 1)
 
             # Firebase App Distribution
-            - name: Upload AAB to Firebase App Distribution
+            - name: Upload APK to Firebase App Distribution
               env:
                   FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
               run: |
-                  firebase appdistribution:distribute app/build/outputs/bundle/release/app-release.aab \
+                  firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
                   --app "$FIREBASE_APP_ID" \
                   --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다!" \
                   --groups "clody-tester-group"
