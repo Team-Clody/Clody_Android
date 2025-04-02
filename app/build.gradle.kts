@@ -26,7 +26,7 @@ android {
         minSdk = 28
         targetSdk = 35
         versionCode = 18
-        versionName = "1.0.6"
+        versionName = "1.0.7"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
@@ -71,7 +71,6 @@ android {
 }
 
 dependencies {
-
     // Test
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.compose.bom))
@@ -100,6 +99,7 @@ dependencies {
     // FireBase
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
+    implementation(libs.firebase.config.ktx)
 
     // Amplitude
     implementation(libs.amplitude)
