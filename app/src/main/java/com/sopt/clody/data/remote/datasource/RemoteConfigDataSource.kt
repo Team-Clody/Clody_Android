@@ -22,6 +22,6 @@ class RemoteConfigDataSource @Inject constructor(
 
     companion object {
         private const val KEY_LATEST_VERSION = "latest_version"
-        private const val KEY_MINIMUM_VERSION = "minimum_version"
+        private const val KEY_MINIMUM_VERSION = "min_required_version"
     }
 }
