@@ -54,10 +54,10 @@ jobs:
             # keystore 복호화
             - name: Decode keystore file
               env:
-                  STORE_FILE_BASE: ${{ secrets.STORE_FILE }}
+                  STORE_FILE: ${{ secrets.STORE_FILE }}
               run: |
-                  mkdir -p keystore
-                  echo "$STORE_FILE" | base64 --decode > keystore/clody_release.jks
+                  mkdir -p app/keystore
+                  echo "$STORE_FILE" | base64 --decode > app/keystore/clody_release.jks
 
             # local.properties
             - name: Generate local.properties
