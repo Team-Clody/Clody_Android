@@ -25,8 +25,8 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = 28
         targetSdk = 35
-        versionCode = 18
-        versionName = "1.0.7"
+        versionCode = 23
+        versionName = "1.1.0"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
@@ -38,6 +38,15 @@ android {
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
         manifestPlaceholders["GOOGLE_ADMOB_APP_ID"] = googleAdmobAppId
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file(properties.getProperty("storeFile") ?: "")
+            storePassword = properties.getProperty("storePassword") ?: ""
+            keyAlias = properties.getProperty("keyAlias") ?: ""
+            keyPassword = properties.getProperty("keyPassword") ?: ""
+        }
     }
 
     buildTypes {
@@ -54,7 +63,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
