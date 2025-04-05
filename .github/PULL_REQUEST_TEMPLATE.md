@@ -1,5 +1,6 @@
 ## 📌 ISSUE
 <!--이슈 번호 및 제목을 적어주세요!-->
+closed #<issue_number>
 
 ## 📄 Work Description
 <!--어떤 작업을 했는지 작성해주세요!-->

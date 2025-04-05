@@ -46,6 +46,8 @@ kotlinx-datetime = "0.4.0"
 accompanist = "0.25.1"
 accompanist-insets = "0.28.0"
 
+firebase-config-ktx = "22.1.0"
+
 [libraries]
 # AndroidX Core
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -97,6 +99,7 @@ firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "fir
 firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging-ktx", version.ref = "firebase-messaging" }
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx", version.ref = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics", version.ref = "firebase-crashlytics" }
+firebase-config-ktx = { group = "com.google.firebase", name = "firebase-config-ktx", version.ref = "firebase-config-ktx" }
 
 # Amplitude
 amplitude = { group = "com.amplitude", name = "analytics-android", version.ref = "amplitude" }
