@@ -51,6 +51,14 @@ jobs:
                   FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
               run: echo $FIREBASE_SECRET | base64 --decode > app/google-services.json
 
+            # keystore 복호화
+            - name: Decode keystore file
+              env:
+                  STORE_FILE_BASE: ${{ secrets.STORE_FILE }}
+              run: |
+                  mkdir -p keystore
+                  echo "$STORE_FILE" | base64 --decode > keystore/clody_release.jks
+
             # local.properties
             - name: Generate local.properties
               env:
@@ -59,12 +67,19 @@ jobs:
                   AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
                   GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
                   GOOGLE_ADMOB_UNIT_ID: ${{ secrets.GOOGLE_ADMOB_UNIT_ID }}
+                  STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+                  KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+                  KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
               run: |
                   echo "baseUrl=$BASE_URL" >> local.properties
                   echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
                   echo "googleAdmob.app.id=$GOOGLE_ADMOB_APP_ID" >> local.properties
                   echo "googleAdmob.unit.id=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
+                  echo "storeFile=keystore/clody_release.jks" >> local.properties
+                  echo "storePassword=$STORE_PASSWORD" >> local.properties
+                  echo "keyAlias=$KEY_ALIAS" >> local.properties
+                  echo "keyPassword=$KEY_PASSWORD" >> local.properties
 
             # Release APK 빌드
             - name: Build Release APK
