@@ -29,9 +29,11 @@ fun ScrollableCalendar(
     onDiaryDataUpdated: (Int, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LaunchedEffect(selectedDate) {
-        homeViewModel.updateDiaryState(diaries)
-        onDiaryDataUpdated(homeViewModel.diaryCount.value, homeViewModel.replyStatus.value)
+    LaunchedEffect(selectedDate, diaries) {
+        if (selectedDate.year == selectedYear && selectedDate.monthValue == selectedMonth) {
+            homeViewModel.updateDiaryState(diaries)
+            onDiaryDataUpdated(homeViewModel.diaryCount.value, homeViewModel.replyStatus.value)
+        }
     }
     val scrollState = rememberScrollState()
 
