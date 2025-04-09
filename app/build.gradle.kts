@@ -25,8 +25,8 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = 28
         targetSdk = 35
-        versionCode = 23
-        versionName = "1.1.0"
+        versionCode = 25
+        versionName = "1.1.1"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
@@ -56,8 +56,8 @@ android {
         }
 
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            isMinifyEnabled = false
+            isShrinkResources = false
             buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

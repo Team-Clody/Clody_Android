@@ -248,10 +248,9 @@ fun ReplyLoadingScreen(
                 )
 
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.036f))
-                if (!isWaitingForPatchResponse && !isAdCompleted && !isFirstDiary) {
-                    QuickReplyAdButton(
-                        onClick = onShowAdClick,
-                    )
+                val shouldShowAdButton = !isComplete && !isAdCompleted && !isWaitingForPatchResponse && !isFirstDiary
+                if (shouldShowAdButton) {
+                    QuickReplyAdButton(onClick = onShowAdClick)
                 }
             }
         },
