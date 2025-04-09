@@ -20,6 +20,8 @@ class SettingNavigator(
     }
 
     fun navigateBack() {
-        navController.navigateUp()
+        if (navController.currentBackStackEntry?.lifecycle?.currentState == androidx.lifecycle.Lifecycle.State.RESUMED) {
+            navController.popBackStack()
+        }
     }
 }
