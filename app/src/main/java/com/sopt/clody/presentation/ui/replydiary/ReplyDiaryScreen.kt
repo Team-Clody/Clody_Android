@@ -37,19 +37,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
-import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.presentation.utils.navigation.ReplyStatus
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun ReplyDiaryRoute(
-    navigator: ReplyDiaryNavigator,
     year: Int,
     month: Int,
     date: Int,
-    replyStatus: String,
+    replyStatus: ReplyStatus,
+    navigateToHome: (year: Int, month: Int, date: Int) -> Unit,
     viewModel: ReplyDiaryViewModel = hiltViewModel(),
 ) {
     val replyDiaryState by viewModel.replyDiaryState.collectAsState()
@@ -65,7 +65,7 @@ fun ReplyDiaryRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome(year, month)
+            navigateToHome(year, month, date)
         } else {
             backPressedTime = currentTime
         }
@@ -79,7 +79,7 @@ fun ReplyDiaryRoute(
         is ReplyDiaryState.Success -> {
             val successState = replyDiaryState as ReplyDiaryState.Success
             ReplyDiaryScreen(
-                onClickBack = { navigator.navigateHome(year, month) },
+                navigateToHome = { navigateToHome(year, month, date) },
                 replyStatus = replyStatus,
                 replyDiaryState = successState,
             )
@@ -99,18 +99,17 @@ fun ReplyDiaryRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReplyDiaryScreen(
-    onClickBack: () -> Unit,
-    replyStatus: String,
+    navigateToHome: () -> Unit,
+    replyStatus: ReplyStatus,
     replyDiaryState: ReplyDiaryState.Success,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyDiaryState) {
-        if (replyStatus == "READY_NOT_READ") {
+        if (replyStatus == ReplyStatus.READY_NOT_READ) {
             showDialog = true
         }
     }
-
     Scaffold(
         topBar = {
             val month = replyDiaryState.month
@@ -125,7 +124,7 @@ fun ReplyDiaryScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onClickBack) {
+                    IconButton(onClick = navigateToHome) {
                         Image(
                             painterResource(id = R.drawable.ic_nickname_back),
                             contentDescription = "back",
