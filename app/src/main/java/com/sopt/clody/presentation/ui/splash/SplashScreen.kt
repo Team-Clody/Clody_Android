@@ -1,6 +1,7 @@
 package com.sopt.clody.presentation.ui.splash
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,15 +24,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.R
 import com.sopt.clody.domain.model.AppUpdateState
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.appupdate.AppUpdateUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
-import java.time.LocalDate
 
 @Composable
 fun SplashRoute(
-    navigator: AuthNavigator,
+    startIntent: Intent,
+    onLoginRequired: () -> Unit,
+    onAlreadyLoggedIn: () -> Unit,
     viewModel: SplashViewModel = hiltViewModel(),
 ) {
     val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
@@ -39,17 +42,20 @@ fun SplashRoute(
     val context = LocalContext.current
     val activity = context as Activity
 
+    // Push 클릭 추적
+    LaunchedEffect(startIntent) {
+        if (startIntent.hasExtra("google.message_id")) {
+            AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
+        }
+    }
+
     LaunchedEffect(isUserLoggedIn, updateState) {
         if (isUserLoggedIn != null && updateState == AppUpdateState.Latest) {
             delay(1000)
-            navigator.navController.navigate(
-                if (isUserLoggedIn == true) {
-                    "home/${LocalDate.now().year}/${LocalDate.now().monthValue}"
-                } else {
-                    "register_graph"
-                },
-            ) {
-                popUpTo("splash") { inclusive = true }
+            if (isUserLoggedIn == true) {
+                onAlreadyLoggedIn()
+            } else {
+                onLoginRequired()
             }
         }
     }
