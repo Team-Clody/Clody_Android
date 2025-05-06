@@ -29,20 +29,33 @@ import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
 import com.sopt.clody.presentation.ui.home.model.DiaryDateData
-import com.sopt.clody.presentation.ui.home.navigation.HomeNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.time.LocalDate
 
 @Composable
 fun HomeRoute(
-    navigator: HomeNavigator,
-    homeViewModel: HomeViewModel = hiltViewModel(),
     selectedYear: Int,
     selectedMonth: Int,
+    selectedDay: Int?,
+    navigateToDiaryList: (year: Int, month: Int) -> Unit,
+    navigateToSetting: () -> Unit,
+    navigateToWriteDiary: (year: Int, month: Int, date: Int) -> Unit,
+    navigateToReplyLoading: (
+        year: Int,
+        month: Int,
+        date: Int,
+        from: Route.ReplyLoading.ReplyLoadingFrom,
+        replyStatus: ReplyStatus,
+    ) -> Unit,
+    homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
     val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
     val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
+    val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
 
     val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
     val errorMessage = when {
@@ -55,10 +68,17 @@ fun HomeRoute(
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
     }
 
-    LaunchedEffect(selectedYear, selectedMonth) {
+    LaunchedEffect(selectedYear, selectedMonth, selectedDay) {
         homeViewModel.refreshCalendarDataCalendarData(selectedYear, selectedMonth)
-        val selectedDate = homeViewModel.selectedDate.value
-        homeViewModel.loadDailyDiariesData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
+
+        if (selectedDay != null) {
+            homeViewModel.updateSelectedDate(LocalDate.of(selectedYear, selectedMonth, selectedDay))
+            homeViewModel.loadDailyDiariesData(selectedYear, selectedMonth, selectedDay)
+        } else {
+            val today = LocalDate.now()
+            homeViewModel.updateSelectedDate(today)
+            homeViewModel.loadDailyDiariesData(today.year, today.monthValue, today.dayOfMonth)
+        }
     }
 
     if (isError) {
@@ -73,20 +93,21 @@ fun HomeRoute(
     } else {
         HomeScreen(
             homeViewModel = homeViewModel,
-            onClickDiaryList = { selectedYearFromHome, selectedMonthFromHome ->
-                navigator.navigateDiaryList(
-                    selectedYearFromHome,
-                    selectedMonthFromHome,
-                )
-            },
-            onClickSetting = { navigator.navigateSetting() },
+            onClickDiaryList = navigateToDiaryList,
+            onClickSetting = navigateToSetting,
             onClickWriteDiary = { year, month, day ->
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                navigator.navigateWriteDiary(year, month, day)
+                navigateToWriteDiary(year, month, day)
             },
-            onClickReplyDiary = { year, month, day, replyStatus ->
+            onClickReplyDiary = { year, month, day, _ ->
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_REPLY)
-                navigator.navigateReplyLoading(year, month, day, replyStatus)
+                navigateToReplyLoading(
+                    year,
+                    month,
+                    day,
+                    Route.ReplyLoading.ReplyLoadingFrom.HOME,
+                    ReplyStatus.valueOf(replyStatus),
+                )
             },
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
@@ -100,7 +121,12 @@ fun HomeScreen(
     onClickDiaryList: (Int, Int) -> Unit,
     onClickSetting: () -> Unit,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
-    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
+    onClickReplyDiary: (
+        year: Int,
+        month: Int,
+        date: Int,
+        replyStatus: Route.ReplyLoading.ReplyLoadingFrom,
+    ) -> Unit,
     selectedYear: Int,
     selectedMonth: Int,
 ) {
@@ -218,7 +244,7 @@ fun HomeScreen(
                                 selectedDate.year,
                                 selectedDate.monthValue,
                                 selectedDate.dayOfMonth,
-                                replyStatus,
+                                Route.ReplyLoading.ReplyLoadingFrom.HOME,
                             )
                         },
                     )
