@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.container.PickerBox
 import com.sopt.clody.presentation.ui.auth.component.timepicker.BottomSheetTimePicker
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
@@ -49,7 +48,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun TimeReminderRoute(
-    navigator: AuthNavigator,
+    navigateToGuide: () -> Unit,
     viewModel: TimeReminderViewModel = hiltViewModel(),
 ) {
     val timeReminderState by viewModel.timeReminderState.collectAsState()
@@ -81,15 +80,11 @@ fun TimeReminderRoute(
     // 알림 권한 요청 결과에 따른 처리
     LaunchedEffect(timeReminderState) {
         when (val result = timeReminderState) {
-            is TimeReminderState.Success -> {
-                navigator.navigateGuide()
-            }
-
+            is TimeReminderState.Success -> navigateToGuide()
             is TimeReminderState.Failure -> {
                 showDialog = true
                 dialogMessage = result.error
             }
-
             else -> {}
         }
     }
