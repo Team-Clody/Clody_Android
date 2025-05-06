@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.auth.screen
+package com.sopt.clody.presentation.ui.auth.guide
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -38,7 +38,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -47,9 +46,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GuideRoute(
-    navigator: AuthNavigator,
+    navigateToHome: () -> Unit,
 ) {
-    GuideScreen(onNextButtonClick = { navigator.navigateHome() })
+    GuideScreen(onNextButtonClick = navigateToHome)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
