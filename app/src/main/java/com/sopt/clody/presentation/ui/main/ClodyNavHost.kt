@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.sopt.clody.presentation.ui.auth.guide.guideScreen
-import com.sopt.clody.presentation.ui.auth.guide.navigateToGuide
+import com.sopt.clody.presentation.ui.auth.guide.navigation.guideScreen
+import com.sopt.clody.presentation.ui.auth.guide.navigation.navigateToGuide
 import com.sopt.clody.presentation.ui.auth.login.navigation.loginScreen
 import com.sopt.clody.presentation.ui.auth.login.navigation.navigateToLogin
 import com.sopt.clody.presentation.ui.auth.signup.navigation.navigateToNickname
