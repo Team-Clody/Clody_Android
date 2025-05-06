@@ -22,17 +22,18 @@ import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
-import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DiaryListRoute(
-    navigator: DiaryListNavigator,
-    diaryListViewModel: DiaryListViewModel = hiltViewModel(),
     selectedYearFromHome: Int,
     selectedMonthFromHome: Int,
+    navigateToHome: (Int, Int) -> Unit,
+    navigateToReplyLoading: (year: Int, month: Int, date: Int, replyStatus: Route.ReplyLoading.ReplyLoadingFrom) -> Unit,
+    diaryListViewModel: DiaryListViewModel = hiltViewModel(),
 ) {
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
@@ -81,10 +82,11 @@ fun DiaryListRoute(
         },
         dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
         onClickDiaryDelete = { year, month, day -> diaryListViewModel.deleteDailyDiary(year, month, day) },
-        onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
-        onClickReplyDiary = { year, month, day, replyStatus ->
-            navigator.navigateReplyLoading(year, month, day, replyStatus)
-            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_REPLY)
+        onClickCalendar = {
+            navigateToHome(selectedYearInDiaryList, selectedMonthInDiaryList)
+        },
+        onClickReplyDiary = { year, month, day, _ ->
+            navigateToReplyLoading(year, month, day, Route.ReplyLoading.ReplyLoadingFrom.DIARY_LIST)
         },
     )
 }
