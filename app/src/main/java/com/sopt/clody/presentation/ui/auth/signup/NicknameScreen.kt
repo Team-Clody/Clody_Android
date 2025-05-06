@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.auth.screen
+package com.sopt.clody.presentation.ui.auth.signup
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,8 +41,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.textfield.NickNameTextField
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
-import com.sopt.clody.presentation.ui.auth.signup.SignUpViewModel
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
@@ -52,7 +50,8 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NicknameRoute(
-    navigator: AuthNavigator,
+    navigateToReminder: () -> Unit,
+    navigateToPrevious: () -> Unit,
     viewModel: SignUpViewModel = hiltViewModel(),
 ) {
     val nickname by viewModel.nickname.collectAsState()
@@ -67,7 +66,7 @@ fun NicknameRoute(
         nickname = nickname,
         onNicknameChange = viewModel::setNickname,
         onCompleteClick = { viewModel.proceedWithSignUp(context) },
-        onBackClick = { navigator.navigateBack() },
+        onBackClick = navigateToPrevious,
         isLoading = signUpState.uiState is UiState.Loading,
         isValidNickname = isValidNickname,
         nicknameMessage = nicknameMessage,
@@ -76,7 +75,7 @@ fun NicknameRoute(
     LaunchedEffect(signUpState) {
         when (val result = signUpState.uiState) {
             is UiState.Success -> {
-                navigator.navigateTimeReminder()
+                navigateToReminder()
             }
 
             is UiState.Failure -> {
