@@ -30,14 +30,14 @@ import com.sopt.clody.presentation.ui.setting.component.LogoutDialog
 import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
-import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun AccountManagementRoute(
-    navigator: SettingNavigator,
+    navigateToPrevious: () -> Unit,
+    navigateToLogin: () -> Unit,
     accountManagementViewModel: AccountManagementViewModel = hiltViewModel(),
 ) {
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
@@ -64,17 +64,13 @@ fun AccountManagementRoute(
 
     LaunchedEffect(revokeAccountState) {
         if (revokeAccountState is RevokeAccountState.Success) {
-            navigator.navController.navigate("register_graph") {
-                popUpTo("home") { inclusive = true }
-            }
+            navigateToLogin()
         }
     }
 
     LaunchedEffect(logOutState) {
         if (logOutState is LogOutState.Success) {
-            navigator.navController.navigate("register_graph") {
-                popUpTo("home") { inclusive = true }
-            }
+            navigateToLogin()
         }
     }
 
@@ -92,7 +88,7 @@ fun AccountManagementRoute(
         updateRevokeDialog = { state -> showRevokeDialog = state },
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
-        onBackClick = { navigator.navigateBack() },
+        onBackClick = navigateToPrevious,
     )
 }
 
