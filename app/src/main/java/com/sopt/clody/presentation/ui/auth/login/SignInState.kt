@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.auth.signup
+package com.sopt.clody.presentation.ui.auth.login
 
 import com.sopt.clody.presentation.utils.base.UiState
 
