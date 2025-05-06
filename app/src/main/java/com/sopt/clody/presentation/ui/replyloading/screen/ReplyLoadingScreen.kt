@@ -43,22 +43,25 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.replyloading.component.LottieAnimation
 import com.sopt.clody.presentation.ui.replyloading.component.QuickReplyAdButton
-import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 
 @Composable
 fun ReplyLoadingRoute(
-    navigator: ReplyLoadingNavigator,
     year: Int,
     month: Int,
-    day: Int,
-    from: String,
-    replyStatus: String,
+    date: Int,
+    from: Route.ReplyLoading.ReplyLoadingFrom,
+    replyStatus: ReplyStatus,
+    navigateToReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
+    navigateToHome: (Int, Int, Int) -> Unit,
+    navigateToDiaryList: (Int, Int) -> Unit,
     viewModel: ReplyLoadingViewModel = hiltViewModel(),
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
@@ -71,16 +74,24 @@ fun ReplyLoadingRoute(
 
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY)
-        viewModel.getDiaryTime(year, month, day)
+        viewModel.getDiaryTime(year, month, date)
     }
 
     var backPressedTime by remember { mutableStateOf(0L) }
     val backPressThreshold = 2000
 
+    val handleBackNavigation = {
+        when (from) {
+            Route.ReplyLoading.ReplyLoadingFrom.HOME -> navigateToHome(year, month, date)
+
+            Route.ReplyLoading.ReplyLoadingFrom.DIARY_LIST -> navigateToDiaryList(year, month)
+        }
+    }
+
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome(year, month)
+            handleBackNavigation()
         } else {
             backPressedTime = currentTime
         }
@@ -94,8 +105,10 @@ fun ReplyLoadingRoute(
         is ReplyLoadingState.Success -> {
             val successState = replyLoadingState as ReplyLoadingState.Success
             ReplyLoadingScreen(
-                onCompleteClick = { navigator.navigateReplyDiary(year, month, day, replyStatus) },
-                onBackClick = { navigator.navigateBack(year, month, from) },
+                onCompleteClick = {
+                    navigateToReplyDiary(year, month, date, replyStatus)
+                },
+                onBackClick = { handleBackNavigation() },
                 replyLoadingState = successState,
                 onShowAdClick = {
                     viewModel.loadAndShowRewardedAd(activity)
