@@ -106,7 +106,7 @@ fun ReplyDiaryScreen(
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyDiaryState) {
-        if (replyStatus == ReplyStatus.READY_NOT_READ) {
+        if (replyStatus == ReplyStatus.READY_NOT_READ || replyStatus == ReplyStatus.UNREADY) {
             showDialog = true
         }
     }
