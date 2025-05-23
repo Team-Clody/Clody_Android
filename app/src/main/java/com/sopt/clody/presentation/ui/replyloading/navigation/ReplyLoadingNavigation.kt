@@ -10,9 +10,9 @@ import com.sopt.clody.presentation.utils.navigation.ReplyStatus
 import com.sopt.clody.presentation.utils.navigation.Route
 
 fun NavGraphBuilder.replyLoadingScreen(
-    navigateToReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
+    navigateToReplyDiary: (year: Int, month: Int, day: Int, status: ReplyStatus) -> Unit,
     navigateToHome: (year: Int, month: Int, day: Int) -> Unit,
-    navigateToDiaryList: (Int, Int) -> Unit,
+    navigateToDiaryList: (year: Int, month: Int) -> Unit,
 ) {
     composable<Route.ReplyLoading> { backStackEntry ->
         backStackEntry.toRoute<Route.ReplyLoading>().apply {

@@ -31,7 +31,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun DiaryListRoute(
     selectedYearFromHome: Int,
     selectedMonthFromHome: Int,
-    navigateToHome: (Int, Int) -> Unit,
+    navigateToHome: (year: Int, month: Int) -> Unit,
     navigateToReplyLoading: (year: Int, month: Int, date: Int, replyStatus: Route.ReplyLoading.ReplyLoadingFrom) -> Unit,
     diaryListViewModel: DiaryListViewModel = hiltViewModel(),
 ) {

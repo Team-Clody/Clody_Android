@@ -59,9 +59,9 @@ fun ReplyLoadingRoute(
     date: Int,
     from: Route.ReplyLoading.ReplyLoadingFrom,
     replyStatus: ReplyStatus,
-    navigateToReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
-    navigateToHome: (Int, Int, Int) -> Unit,
-    navigateToDiaryList: (Int, Int) -> Unit,
+    navigateToReplyDiary: (year: Int, month: Int, day: Int, status: ReplyStatus) -> Unit,
+    navigateToHome: (year: Int, month: Int, day: Int) -> Unit,
+    navigateToDiaryList: (year: Int, month: Int) -> Unit,
     viewModel: ReplyLoadingViewModel = hiltViewModel(),
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
