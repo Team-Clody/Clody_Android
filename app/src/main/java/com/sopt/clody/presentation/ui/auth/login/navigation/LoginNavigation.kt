@@ -8,12 +8,12 @@ import com.sopt.clody.presentation.ui.auth.login.LoginRoute
 import com.sopt.clody.presentation.utils.navigation.Route
 
 fun NavGraphBuilder.loginScreen(
-    navigateToTerms: () -> Unit,
+    navigateToTermsOfService: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
     composable<Route.Login> {
         LoginRoute(
-            navigateToTerms = navigateToTerms,
+            navigateToTermsOfService = navigateToTermsOfService,
             navigateToHome = navigateToHome,
         )
     }

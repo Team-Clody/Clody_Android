@@ -69,7 +69,7 @@ fun ClodyNavHost(
             )
 
             loginScreen(
-                navigateToTerms = navController::navigateToTermsOfService,
+                navigateToTermsOfService = navController::navigateToTermsOfService,
                 navigateToHome = navController::navigateToHome,
             )
             termsOfServiceScreen(

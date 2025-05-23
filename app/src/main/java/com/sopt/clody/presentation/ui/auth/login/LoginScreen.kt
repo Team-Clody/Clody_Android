@@ -33,7 +33,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun LoginRoute(
-    navigateToTerms: () -> Unit,
+    navigateToTermsOfService: () -> Unit,
     navigateToHome: () -> Unit,
 ) {
     val viewModel: SignUpViewModel = hiltViewModel()
@@ -43,7 +43,7 @@ fun LoginRoute(
     LaunchedEffect(signInState.uiState) {
         when (signInState.uiState) {
             is UiState.Success -> navigateToHome()
-            is UiState.Failure -> navigateToTerms()
+            is UiState.Failure -> navigateToTermsOfService()
             else -> Unit
         }
     }
