@@ -1,5 +1,6 @@
 package com.sopt.clody.data.remote.dto.response
 
+import com.sopt.clody.presentation.utils.navigation.ReplyStatus
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,7 +12,7 @@ data class MonthlyDiaryResponseDto(
     @Serializable
     data class DailyDiary(
         @SerialName("diaryCount") val diaryCount: Int,
-        @SerialName("replyStatus") val replyStatus: String,
+        @SerialName("replyStatus") val replyStatus: ReplyStatus,
         @SerialName("date") val date: String,
         @SerialName("diary") val diary: List<DailyDiaryContent>,
         @SerialName("isDeleted") val isDeleted: Boolean,
