@@ -24,6 +24,7 @@ import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.navigation.ReplyStatus
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -32,7 +33,13 @@ fun DiaryListRoute(
     selectedYearFromHome: Int,
     selectedMonthFromHome: Int,
     navigateToHome: (year: Int, month: Int) -> Unit,
-    navigateToReplyLoading: (year: Int, month: Int, date: Int, replyStatus: Route.ReplyLoading.ReplyLoadingFrom) -> Unit,
+    navigateToReplyLoading: (
+        year: Int,
+        month: Int,
+        date: Int,
+        from: Route.ReplyLoading.ReplyLoadingFrom,
+        replyStatus: ReplyStatus,
+    ) -> Unit,
     diaryListViewModel: DiaryListViewModel = hiltViewModel(),
 ) {
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
@@ -85,8 +92,14 @@ fun DiaryListRoute(
         onClickCalendar = {
             navigateToHome(selectedYearInDiaryList, selectedMonthInDiaryList)
         },
-        onClickReplyDiary = { year, month, day, _ ->
-            navigateToReplyLoading(year, month, day, Route.ReplyLoading.ReplyLoadingFrom.DIARY_LIST)
+        onClickReplyDiary = { year, month, day, replyStatus ->
+            navigateToReplyLoading(
+                year,
+                month,
+                day,
+                Route.ReplyLoading.ReplyLoadingFrom.DIARY_LIST,
+                replyStatus,
+            )
         },
     )
 }
@@ -112,7 +125,7 @@ fun DiaryListScreen(
     dismissDiaryDeleteDialog: () -> Unit,
     onClickDiaryDelete: (Int, Int, Int) -> Unit,
     onClickCalendar: () -> Unit,
-    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
 ) {
     Scaffold(
         topBar = {

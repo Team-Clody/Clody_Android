@@ -11,6 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
+import com.sopt.clody.presentation.utils.navigation.ReplyStatus
 
 @Composable
 fun MonthlyDiaryList(
@@ -18,7 +19,7 @@ fun MonthlyDiaryList(
     diaryListViewModel: DiaryListViewModel,
     diaries: List<MonthlyDiaryResponseDto.DailyDiary>,
     showDiaryDeleteBottomSheet: () -> Unit,
-    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
 ) {
     LazyColumn(
         modifier = Modifier
