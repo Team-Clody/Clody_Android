@@ -4,42 +4,23 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import com.sopt.clody.presentation.ui.auth.signup.NicknameRoute
-import com.sopt.clody.presentation.ui.auth.signup.TermsOfServiceRoute
+import com.sopt.clody.presentation.ui.auth.signup.SignUpRoute
 import com.sopt.clody.presentation.utils.navigation.Route
 
-fun NavGraphBuilder.termsOfServiceScreen(
-    navigateToNickname: () -> Unit,
-    navigateToLogin: () -> Unit,
-) {
-    composable<Route.TermsOfService> {
-        TermsOfServiceRoute(
-            navigateToNickname = navigateToNickname,
-            navigateToLogin = navigateToLogin,
-        )
-    }
-}
-
-fun NavGraphBuilder.nicknameScreen(
-    navigateToReminder: () -> Unit,
+fun NavGraphBuilder.signUpScreen(
+    navigateToHome: () -> Unit,
     navigateToPrevious: () -> Unit,
 ) {
-    composable<Route.Nickname> {
-        NicknameRoute(
-            navigateToReminder = navigateToReminder,
+    composable<Route.SignUp> {
+        SignUpRoute(
+            navigateToHome = navigateToHome,
             navigateToPrevious = navigateToPrevious,
         )
     }
 }
 
-fun NavController.navigateToNickname(
+fun NavController.navigateToSignUp(
     navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
-    navigate(Route.Nickname, navOptions)
-}
-
-fun NavController.navigateToTermsOfService(
-    navOptions: NavOptionsBuilder.() -> Unit = {},
-) {
-    navigate(Route.TermsOfService, navOptions)
+    navigate(Route.SignUp, navOptions)
 }
