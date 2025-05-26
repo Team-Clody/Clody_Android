@@ -48,6 +48,8 @@ accompanist-insets = "0.28.0"
 
 firebase-config-ktx = "22.1.0"
 
+mavericks = "3.0.9"
+
 [libraries]
 # AndroidX Core
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -115,6 +117,11 @@ admob = { group = "com.google.android.gms", name = "play-services-ads", version.
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist-insets" }
 
+# Mavericks
+mavericks = { module = "com.airbnb.android:mavericks", version.ref = "mavericks" }
+mavericks-compose = { module = "com.airbnb.android:mavericks-compose", version.ref = "mavericks" }
+mavericks-hilt = { module = "com.airbnb.android:mavericks-hilt", version.ref = "mavericks" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -179,4 +186,10 @@ firebase = [
     "firebase-messaging",
     "firebase-analytics",
     "firebase-crashlytics"
+]
+
+mavericks = [
+    "mavericks",
+    "mavericks-compose",
+    "mavericks-hilt"
 ]
