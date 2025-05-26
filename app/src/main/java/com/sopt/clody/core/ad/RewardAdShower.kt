@@ -1,4 +1,4 @@
-package com.sopt.clody.core
+package com.sopt.clody.core.ad
 
 import android.app.Activity
 

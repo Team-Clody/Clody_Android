@@ -7,7 +7,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import com.sopt.clody.ui.theme.CLODYTheme
+import com.sopt.clody.ui.theme.ClodyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
         )
 
         setContent {
-            CLODYTheme {
+            ClodyTheme {
                 val appState = rememberClodyAppState()
                 ClodyApp(appState = appState, startIntent = intent)
             }

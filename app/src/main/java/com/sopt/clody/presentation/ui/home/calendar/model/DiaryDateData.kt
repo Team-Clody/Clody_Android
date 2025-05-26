@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home.model
+package com.sopt.clody.presentation.ui.home.calendar.model
 
 import java.time.LocalDate
 
