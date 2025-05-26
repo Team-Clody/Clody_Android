@@ -17,10 +17,7 @@ sealed interface Route {
     data object Login : Route
 
     @Serializable
-    data object TermsOfService : Route
-
-    @Serializable
-    data object Nickname : Route
+    data object SignUp : Route
 
     @Serializable
     data object TimeReminder : Route

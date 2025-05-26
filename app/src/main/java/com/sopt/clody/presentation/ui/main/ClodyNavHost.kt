@@ -9,18 +9,16 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.sopt.clody.presentation.ui.auth.guide.navigation.guideScreen
 import com.sopt.clody.presentation.ui.auth.guide.navigation.navigateToGuide
-import com.sopt.clody.presentation.ui.auth.login.navigation.loginScreen
-import com.sopt.clody.presentation.ui.auth.login.navigation.navigateToLogin
-import com.sopt.clody.presentation.ui.auth.signup.navigation.navigateToNickname
-import com.sopt.clody.presentation.ui.auth.signup.navigation.navigateToTermsOfService
-import com.sopt.clody.presentation.ui.auth.signup.navigation.nicknameScreen
-import com.sopt.clody.presentation.ui.auth.signup.navigation.termsOfServiceScreen
+import com.sopt.clody.presentation.ui.auth.signup.navigation.navigateToSignUp
+import com.sopt.clody.presentation.ui.auth.signup.navigation.signUpScreen
 import com.sopt.clody.presentation.ui.auth.timereminder.navigateToTimeReminder
 import com.sopt.clody.presentation.ui.auth.timereminder.timeReminderScreen
 import com.sopt.clody.presentation.ui.diarylist.navigation.diaryListScreen
 import com.sopt.clody.presentation.ui.diarylist.navigation.navigateToDiaryList
 import com.sopt.clody.presentation.ui.home.navigation.homeScreen
 import com.sopt.clody.presentation.ui.home.navigation.navigateToHome
+import com.sopt.clody.presentation.ui.login.navigation.loginScreen
+import com.sopt.clody.presentation.ui.login.navigation.navigateToLogin
 import com.sopt.clody.presentation.ui.replydiary.navigation.navigateToReplyDiary
 import com.sopt.clody.presentation.ui.replydiary.navigation.replyDiaryScreen
 import com.sopt.clody.presentation.ui.replyloading.navigation.navigateToReplyLoading
@@ -69,15 +67,11 @@ fun ClodyNavHost(
             )
 
             loginScreen(
-                navigateToTermsOfService = navController::navigateToTermsOfService,
+                navigateToSignUp = navController::navigateToSignUp,
                 navigateToHome = navController::navigateToHome,
             )
-            termsOfServiceScreen(
-                navigateToNickname = navController::navigateToNickname,
-                navigateToLogin = navController::navigateToLogin,
-            )
-            nicknameScreen(
-                navigateToReminder = navController::navigateToTimeReminder,
+            signUpScreen(
+                navigateToHome = navController::navigateToTimeReminder,
                 navigateToPrevious = navController::safePopBackStack,
             )
             timeReminderScreen(
