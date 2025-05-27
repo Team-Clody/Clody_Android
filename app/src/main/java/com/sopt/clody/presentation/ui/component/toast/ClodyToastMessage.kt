@@ -2,13 +2,14 @@ package com.sopt.clody.presentation.ui.component.toast
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.ui.theme.CLODYTheme
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 
@@ -39,11 +41,15 @@ fun ClodyToastMessage(
 
     Box(
         modifier = modifier
-            .wrapContentHeight()
-            .background(color = backgroundColor, shape = RoundedCornerShape(28.dp))
-            .padding(horizontal = 22.dp, vertical = 16.dp),
+            .height(42.dp)
+            .background(color = backgroundColor, shape = RoundedCornerShape(28.dp)),
+        contentAlignment = Alignment.Center,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(horizontal = 18.dp),
+        ) {
             Image(
                 painter = painterResource(id = iconResId),
                 contentDescription = null,
@@ -61,14 +67,15 @@ fun ClodyToastMessage(
 
 @Preview
 @Composable
-fun PreviewCustomToastMessage() {
-    ClodyToastMessage(
-        message = "토스트 메시지",
-        iconResId = 0,
-        backgroundColor = Color(0xFF000000),
-        contentColor = Color(0xFFFFFFFF),
-        durationMillis = 3000,
-        onDismiss = {},
-        modifier = Modifier,
-    )
+fun ClodyToastMessagePreview() {
+    CLODYTheme {
+        ClodyToastMessage(
+            message = "이메일 인증이 완료되었어요!",
+            iconResId = com.sopt.clody.R.drawable.ic_toast_error,
+            backgroundColor = ClodyTheme.colors.gray01,
+            contentColor = ClodyTheme.colors.white,
+            durationMillis = 3000L,
+            onDismiss = {},
+        )
+    }
 }
