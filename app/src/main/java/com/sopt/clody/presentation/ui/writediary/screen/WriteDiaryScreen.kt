@@ -1,24 +1,17 @@
 package com.sopt.clody.presentation.ui.writediary.screen
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,15 +21,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.LoadingScreen
-import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
@@ -44,10 +35,9 @@ import com.sopt.clody.presentation.ui.writediary.component.bottomsheet.DeleteWri
 import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.textfield.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
-import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
-import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.ui.theme.CLODYTheme
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -55,11 +45,14 @@ fun WriteDiaryRoute(
     year: Int,
     month: Int,
     date: Int,
-    navigateToReplyLoading: (year: Int, month: Int, date: Int) -> Unit,
-    navigateToHome: (year: Int, month: Int) -> Unit,
+    navigateToReplyLoading: (Int, Int, Int) -> Unit,
+    navigateToHome: (Int, Int) -> Unit,
     navigateToPrevious: () -> Unit,
     viewModel: WriteDiaryViewModel = hiltViewModel(),
 ) {
+    val writeDiaryState by viewModel.writeDiaryState.collectAsState()
+    val showFailureDialog by viewModel.showFailureDialog.collectAsState()
+    val failureMessage by viewModel.failureMessage.collectAsState()
     val entries = viewModel.entries
     val showWarnings = viewModel.showWarnings
     val showLimitMessage by viewModel::showLimitMessage
@@ -67,11 +60,8 @@ fun WriteDiaryRoute(
     val showDeleteBottomSheet by viewModel::showDeleteBottomSheet
     val entryToDelete by viewModel::entryToDelete
     val showDialog by viewModel::showDialog
-    val writeDiaryState by viewModel.writeDiaryState.collectAsState()
-    val showFailureDialog by viewModel.showFailureDialog.collectAsState()
-    val failureMessage by viewModel.failureMessage.collectAsState()
 
-    val allFieldsEmpty by remember {
+    val allFieldsEmpty by remember(entries) {
         derivedStateOf { entries.all { it.isEmpty() } }
     }
 
@@ -85,7 +75,6 @@ fun WriteDiaryRoute(
     }
 
     WriteDiaryScreen(
-        viewModel = viewModel,
         isLoading = writeDiaryState is WriteDiaryState.Loading,
         entries = entries,
         showWarnings = showWarnings,
@@ -93,13 +82,36 @@ fun WriteDiaryRoute(
         showEmptyFieldsMessage = showEmptyFieldsMessage,
         showDeleteBottomSheet = showDeleteBottomSheet,
         entryToDelete = entryToDelete,
-        allFieldsEmpty = allFieldsEmpty,
         showDialog = showDialog,
-        onClickBack = {
-            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_BACK)
-            navigateToPrevious()
+        allFieldsEmpty = allFieldsEmpty,
+        onClickBack = navigateToPrevious,
+        onClickAdd = viewModel::addEntry,
+        onClickRemove = { index ->
+            viewModel.setEntryToDeleteIndex(index)
+            viewModel.updateShowDeleteBottomSheet(true)
         },
-        onCompleteClick = { viewModel.writeDiary(year, month, date, entries) },
+        onConfirmDelete = {
+            if (entryToDelete != -1) viewModel.removeEntry(entryToDelete)
+        },
+        onDismissDelete = { viewModel.updateShowDeleteBottomSheet(false) },
+        onTextChange = { index, text ->
+            viewModel.updateEntry(index, text)
+            viewModel.validateEntry(index, text)
+        },
+        onClickComplete = {
+            viewModel.validateEntries()
+            if (showWarnings.all { !it }) {
+                if (entries.size > 1 && entries.any { it.isEmpty() }) {
+                    viewModel.updateShowEmptyFieldsMessage(true)
+                } else {
+                    viewModel.updateShowDialog(true)
+                }
+            }
+        },
+        onConfirmDialog = { viewModel.writeDiary(year, month, date, entries) },
+        onDismissDialog = { viewModel.updateShowDialog(false) },
+        onDismissLimitMessage = { viewModel.updateShowLimitMessage(false) },
+        onDismissEmptyFieldsMessage = { viewModel.updateShowEmptyFieldsMessage(false) },
         year = year,
         month = month,
         day = date,
@@ -108,14 +120,13 @@ fun WriteDiaryRoute(
     if (showFailureDialog) {
         FailureDialog(
             message = failureMessage,
-            onDismiss = { viewModel.resetFailureDialog() },
+            onDismiss = viewModel::resetFailureDialog,
         )
     }
 }
 
 @Composable
 fun WriteDiaryScreen(
-    viewModel: WriteDiaryViewModel,
     isLoading: Boolean,
     entries: List<String>,
     showWarnings: List<Boolean>,
@@ -123,10 +134,19 @@ fun WriteDiaryScreen(
     showEmptyFieldsMessage: Boolean,
     showDeleteBottomSheet: Boolean,
     entryToDelete: Int,
-    allFieldsEmpty: Boolean,
     showDialog: Boolean,
+    allFieldsEmpty: Boolean,
     onClickBack: () -> Unit,
-    onCompleteClick: () -> Unit,
+    onClickAdd: () -> Unit,
+    onClickRemove: (Int) -> Unit,
+    onConfirmDelete: () -> Unit,
+    onDismissDelete: () -> Unit,
+    onTextChange: (Int, String) -> Unit,
+    onClickComplete: () -> Unit,
+    onConfirmDialog: () -> Unit,
+    onDismissDialog: () -> Unit,
+    onDismissLimitMessage: (Boolean) -> Unit,
+    onDismissEmptyFieldsMessage: (Boolean) -> Unit,
     year: Int,
     month: Int,
     day: Int,
@@ -135,88 +155,7 @@ fun WriteDiaryScreen(
 
     Scaffold(
         topBar = {
-            IconButton(
-                onClick = onClickBack,
-                modifier = Modifier
-                    .statusBarsPadding()
-                    .padding(top = 26.dp)
-                    .padding(start = 12.dp),
-            ) {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_nickname_back),
-                    contentDescription = null,
-                )
-            }
-        },
-        bottomBar = {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .background(Color.Transparent),
-                contentAlignment = Alignment.Center,
-            ) {
-                Column(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(end = 24.dp)
-                            .padding(bottom = 28.dp),
-                        contentAlignment = Alignment.CenterEnd,
-                    ) {
-                        IconButton(
-                            onClick = {
-                                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_ADD_LIST)
-                                if (entries.size < 5) {
-                                    viewModel.addEntry()
-                                }
-                            },
-                            enabled = entries.size < 5,
-                            modifier = Modifier
-                                .background(
-                                    color = if (entries.size < 5) ClodyTheme.colors.gray02 else ClodyTheme.colors.gray06,
-                                    shape = RoundedCornerShape(10.dp),
-                                )
-                                .size(41.dp),
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.ic_writediary_add),
-                                contentDescription = "Add",
-                            )
-                        }
-                    }
 
-                    ClodyButton(
-                        onClick = {
-                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_COMPLETE)
-                            viewModel.validateEntries()
-                            if (showWarnings.all { !it }) {
-                                if (entries.size > 1 && entries.any { it.isEmpty() }) {
-                                    viewModel.updateShowEmptyFieldsMessage(true)
-                                } else {
-                                    viewModel.updateShowDialog(true)
-                                }
-                            }
-                        },
-                        text = stringResource(R.string.write_diary_confirm_button),
-                        enabled = !allFieldsEmpty,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
-                            .padding(bottom = 28.dp),
-                    )
-                }
-
-                ShowToastMessages(
-                    showLimitMessage = showLimitMessage,
-                    showEmptyFieldsMessage = showEmptyFieldsMessage,
-                    onShowLimitMessageChange = { viewModel.updateShowLimitMessage(it) },
-                    onShowEmptyFieldsMessageChange = { viewModel.updateShowEmptyFieldsMessage(it) },
-                    modifier = Modifier.align(Alignment.Center),
-                )
-            }
         },
         content = { innerPadding ->
             Column(
@@ -252,21 +191,12 @@ fun WriteDiaryScreen(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    itemsIndexed(
-                        items = entries,
-                        key = { index, _ -> index },
-                    ) { index, text ->
+                    itemsIndexed(entries, key = { index, _ -> index }) { index, text ->
                         WriteDiaryTextField(
                             entryNumber = index + 1,
                             text = text,
-                            onTextChange = { newText ->
-                                viewModel.updateEntry(index, newText)
-                                viewModel.validateEntry(index, newText)
-                            },
-                            onRemove = {
-                                viewModel.setEntryToDeleteIndex(index)
-                                viewModel.updateShowDeleteBottomSheet(true)
-                            },
+                            onTextChange = { newText -> onTextChange(index, newText) },
+                            onRemove = { onClickRemove(index) },
                             isRemovable = entries.size > 1,
                             maxLength = 50,
                             showWarning = showWarnings[index],
@@ -276,27 +206,19 @@ fun WriteDiaryScreen(
 
                 if (showDeleteBottomSheet) {
                     DeleteWriteDiaryBottomSheet(
-                        onDismissRequest = { viewModel.updateShowDeleteBottomSheet(false) },
-                        onDeleteConfirm = {
-                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_DELETE_LIST)
-                            if (entryToDelete != -1) {
-                                viewModel.removeEntry(entryToDelete)
-                            }
-                        },
+                        onDismissRequest = onDismissDelete,
+                        onDeleteConfirm = onConfirmDelete,
                     )
                 }
 
                 if (showDialog) {
                     ClodyDialog(
-                        onDismiss = {
-                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_NO_COMPLETE)
-                            viewModel.updateShowDialog(false)
-                        },
+                        onDismiss = onDismissDialog,
                         titleMassage = stringResource(R.string.write_diary_dialog_title),
                         descriptionMassage = stringResource(R.string.write_diary_dialog_description),
                         confirmOption = stringResource(R.string.write_diary_dialog_confirm_option),
                         dismissOption = stringResource(R.string.write_diary_dialog_dismiss_option),
-                        confirmAction = { onCompleteClick() },
+                        confirmAction = onConfirmDialog,
                         confirmButtonColor = ClodyTheme.colors.mainYellow,
                         confirmButtonTextColor = ClodyTheme.colors.gray01,
                     )
@@ -339,3 +261,36 @@ private fun ShowToastMessages(
         )
     }
 }
+
+@Composable
+@Preview
+private fun WriteDiaryScreenPreview() {
+    CLODYTheme {
+        WriteDiaryScreen(
+            isLoading = false,
+            entries = listOf("Entry 1", "Entry 2", "Entry 3"),
+            showWarnings = listOf(false, true, false),
+            showLimitMessage = false,
+            showEmptyFieldsMessage = false,
+            showDeleteBottomSheet = false,
+            entryToDelete = -1,
+            showDialog = false,
+            allFieldsEmpty = false,
+            onClickBack = {},
+            onClickAdd = {},
+            onClickRemove = {},
+            onConfirmDelete = {},
+            onDismissDelete = {},
+            onTextChange = { _, _ -> },
+            onClickComplete = {},
+            onConfirmDialog = {},
+            onDismissDialog = {},
+            onDismissLimitMessage = {},
+            onDismissEmptyFieldsMessage = {},
+            year = 2023,
+            month = 10,
+            day = 5,
+        )
+    }
+}
+
