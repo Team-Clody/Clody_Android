@@ -40,7 +40,7 @@ import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
-import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable

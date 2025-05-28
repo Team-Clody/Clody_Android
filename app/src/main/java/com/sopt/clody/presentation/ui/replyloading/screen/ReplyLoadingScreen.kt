@@ -46,7 +46,7 @@ import com.sopt.clody.presentation.ui.replyloading.component.QuickReplyAdButton
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
-import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay

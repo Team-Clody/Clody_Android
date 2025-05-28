@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.utils.navigation
+package com.sopt.clody.domain.model
 
 import kotlinx.serialization.Serializable
 

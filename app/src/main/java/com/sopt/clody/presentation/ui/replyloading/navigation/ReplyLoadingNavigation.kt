@@ -6,7 +6,7 @@ import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.sopt.clody.presentation.ui.replyloading.screen.ReplyLoadingRoute
-import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.utils.navigation.Route
 
 fun NavGraphBuilder.replyLoadingScreen(

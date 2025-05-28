@@ -24,7 +24,7 @@ import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
-import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 

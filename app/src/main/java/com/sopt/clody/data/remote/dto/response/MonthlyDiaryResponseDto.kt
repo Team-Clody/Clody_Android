@@ -1,6 +1,6 @@
 package com.sopt.clody.data.remote.dto.response
 
-import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.domain.model.ReplyStatus
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

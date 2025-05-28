@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
-import com.sopt.clody.presentation.utils.navigation.ReplyStatus
+import com.sopt.clody.domain.model.ReplyStatus
 
 @Composable
 fun MonthlyDiaryList(
