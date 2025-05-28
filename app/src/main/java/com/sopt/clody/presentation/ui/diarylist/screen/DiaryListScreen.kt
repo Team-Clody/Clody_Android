@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
@@ -24,7 +25,6 @@ import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
-import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 
