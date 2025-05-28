@@ -21,14 +21,16 @@ import com.sopt.clody.presentation.ui.setting.component.SettingOption
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
-import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun SettingRoute(
-    navigator: SettingNavigator,
+    navigateToAccountManagement: () -> Unit,
+    navigateToNotification: () -> Unit,
+    navigateToPrevious: () -> Unit,
+    navigateToWebView: (String) -> Unit,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
     val versionInfo by settingViewModel::versionInfo
@@ -40,10 +42,10 @@ fun SettingRoute(
 
     SettingScreen(
         versionInfo = versionInfo ?: stringResource(R.string.setting_version_info_failure),
-        onClickBack = { navigator.navigateBack() },
-        onClickAccountManagement = { navigator.navigateAccountManagement() },
-        onClickNotificationSetting = { navigator.navigateNotificationSetting() },
-        onClickInquiriesSuggestions = { navigator.navigateWebView(SettingOptionUrls.INQUIRIES_SUGGESTIONS_URL) },
+        onClickBack = navigateToPrevious,
+        onClickAccountManagement = navigateToAccountManagement,
+        onClickNotificationSetting = navigateToNotification,
+        onClickInquiriesSuggestions = { navigateToWebView(SettingOptionUrls.INQUIRIES_SUGGESTIONS_URL) },
     )
 }
 

@@ -16,16 +16,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
-import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 
 @Composable
 fun WebViewRoute(
-    navigator: SettingNavigator,
+    navigateToPrevious: () -> Unit,
     encodedUrl: String,
 ) {
     WebViewScreen(
         encodedUrl = encodedUrl,
-        onClickBack = { navigator.navigateBack() },
+        onClickBack = navigateToPrevious,
     )
 }
 

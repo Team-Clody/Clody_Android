@@ -29,7 +29,6 @@ import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
-import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.DiaryAlarmSwitch
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTime
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTimePicker
@@ -38,7 +37,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NotificationSettingRoute(
-    navigator: SettingNavigator,
+    navigateToPrevious: () -> Unit,
     notificationSettingViewModel: NotificationSettingViewModel = hiltViewModel(),
 ) {
     val context = LocalContext.current
@@ -75,7 +74,7 @@ fun NotificationSettingRoute(
         updateNotificationTimePicker = { state -> showNotificationTimePicker = state },
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
-        onClickBack = { navigator.navigateBack() },
+        onClickBack = navigateToPrevious,
         onNotificationInfoAvailable = { notificationInfo = it },
     )
 }

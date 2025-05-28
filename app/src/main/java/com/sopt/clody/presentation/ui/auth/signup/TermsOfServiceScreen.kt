@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.auth.screen
+package com.sopt.clody.presentation.ui.auth.signup
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.button.NextButton
 import com.sopt.clody.presentation.ui.auth.component.checkbox.CustomCheckbox
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
@@ -41,27 +40,28 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun TermsOfServiceRoute(
-    navigator: AuthNavigator,
+    navigateToNickname: () -> Unit,
+    navigateToLogin: () -> Unit,
 ) {
     var backPressCount by remember { mutableStateOf(0) }
 
     LaunchedEffect(backPressCount) {
         if (backPressCount > 0) {
-            delay(2000) // 2 seconds delay
+            delay(2000)
             backPressCount = 0
         }
     }
 
     BackHandler {
         if (backPressCount == 1) {
-            navigator.navigateToSignupScreen()
+            navigateToLogin()
         } else {
             backPressCount++
         }
     }
     TermsOfServiceScreen(
-        onAgreeClick = { navigator.navigateNickname() },
-        onBackClick = { navigator.navigateToSignupScreen() },
+        onAgreeClick = navigateToNickname,
+        onBackClick = navigateToLogin,
     )
 }
 

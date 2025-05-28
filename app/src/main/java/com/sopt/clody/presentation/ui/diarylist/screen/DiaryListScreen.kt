@@ -12,6 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
@@ -22,17 +23,24 @@ import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.diarylist.component.DiaryListTopAppBar
 import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
-import com.sopt.clody.presentation.ui.diarylist.navigation.DiaryListNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DiaryListRoute(
-    navigator: DiaryListNavigator,
-    diaryListViewModel: DiaryListViewModel = hiltViewModel(),
     selectedYearFromHome: Int,
     selectedMonthFromHome: Int,
+    navigateToHome: (year: Int, month: Int) -> Unit,
+    navigateToReplyLoading: (
+        year: Int,
+        month: Int,
+        date: Int,
+        from: Route.ReplyLoading.ReplyLoadingFrom,
+        replyStatus: ReplyStatus,
+    ) -> Unit,
+    diaryListViewModel: DiaryListViewModel = hiltViewModel(),
 ) {
     var selectedYearInDiaryList by remember { mutableIntStateOf(selectedYearFromHome) }
     var selectedMonthInDiaryList by remember { mutableIntStateOf(selectedMonthFromHome) }
@@ -81,10 +89,17 @@ fun DiaryListRoute(
         },
         dismissDiaryDeleteDialog = { diaryDeleteDialogState = false },
         onClickDiaryDelete = { year, month, day -> diaryListViewModel.deleteDailyDiary(year, month, day) },
-        onClickCalendar = { navigator.navigateHome(selectedYearInDiaryList, selectedMonthInDiaryList) },
+        onClickCalendar = {
+            navigateToHome(selectedYearInDiaryList, selectedMonthInDiaryList)
+        },
         onClickReplyDiary = { year, month, day, replyStatus ->
-            navigator.navigateReplyLoading(year, month, day, replyStatus)
-            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LIST_REPLY)
+            navigateToReplyLoading(
+                year,
+                month,
+                day,
+                Route.ReplyLoading.ReplyLoadingFrom.DIARY_LIST,
+                replyStatus,
+            )
         },
     )
 }
@@ -110,7 +125,7 @@ fun DiaryListScreen(
     dismissDiaryDeleteDialog: () -> Unit,
     onClickDiaryDelete: (Int, Int, Int) -> Unit,
     onClickCalendar: () -> Unit,
-    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
 ) {
     Scaffold(
         topBar = {

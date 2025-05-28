@@ -44,7 +44,6 @@ import com.sopt.clody.presentation.ui.writediary.component.bottomsheet.DeleteWri
 import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.textfield.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
-import com.sopt.clody.presentation.ui.writediary.navigation.WriteDiaryNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
@@ -53,10 +52,12 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun WriteDiaryRoute(
-    navigator: WriteDiaryNavigator,
     year: Int,
     month: Int,
-    day: Int,
+    date: Int,
+    navigateToReplyLoading: (year: Int, month: Int, date: Int) -> Unit,
+    navigateToHome: (year: Int, month: Int) -> Unit,
+    navigateToPrevious: () -> Unit,
     viewModel: WriteDiaryViewModel = hiltViewModel(),
 ) {
     val entries = viewModel.entries
@@ -76,8 +77,8 @@ fun WriteDiaryRoute(
 
     LaunchedEffect(writeDiaryState) {
         when (writeDiaryState) {
-            is WriteDiaryState.Success -> navigator.navigateReplyLoading(year, month, day)
-            is WriteDiaryState.NoReply -> navigator.navigateHome(year, month)
+            is WriteDiaryState.Success -> navigateToReplyLoading(year, month, date)
+            is WriteDiaryState.NoReply -> navigateToHome(year, month)
             is WriteDiaryState.Failure -> viewModel.updateShowDialog(false)
             else -> {}
         }
@@ -96,12 +97,12 @@ fun WriteDiaryRoute(
         showDialog = showDialog,
         onClickBack = {
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_BACK)
-            navigator.navigateHome(year, month)
+            navigateToPrevious()
         },
-        onCompleteClick = { viewModel.writeDiary(year, month, day, entries) },
+        onCompleteClick = { viewModel.writeDiary(year, month, date, entries) },
         year = year,
         month = month,
-        day = day,
+        day = date,
     )
 
     if (showFailureDialog) {
