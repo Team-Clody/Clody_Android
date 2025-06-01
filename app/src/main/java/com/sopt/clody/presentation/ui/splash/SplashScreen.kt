@@ -50,6 +50,17 @@ fun SplashRoute(
                 when (effect) {
                     is SplashContract.SplashSideEffect.NavigateToLogin -> onLoginRequired()
                     is SplashContract.SplashSideEffect.NavigateToHome -> onAlreadyLoggedIn()
+                    is SplashContract.SplashSideEffect.NavigateToMarketAndFinish -> {
+                        AppUpdateUtils.navigateToMarketAndFinish(activity)
+                    }
+
+                    is SplashContract.SplashSideEffect.FinishApp -> {
+                        activity.finishAffinity()
+                    }
+
+                    is SplashContract.SplashSideEffect.NavigateToMarket -> {
+                        AppUpdateUtils.navigateToMarket(context)
+                    }
                 }
             }
         }
@@ -60,15 +71,21 @@ fun SplashRoute(
             SoftUpdateDialog(
                 latestVersion = updateState.latestVersion,
                 onDismiss = { viewModel.postIntent(SplashContract.SplashIntent.ClearUpdateState) },
-                onConfirm = { AppUpdateUtils.navigateToMarket(context) },
+                onConfirm = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleSoftUpdateConfirm)
+                },
             )
         }
 
         is AppUpdateState.HardUpdate -> {
             HardUpdateDialog(
                 latestVersion = updateState.latestVersion,
-                onConfirm = { AppUpdateUtils.navigateToMarketAndFinish(activity) },
-                onExit = { activity.finishAffinity() },
+                onConfirm = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleHardUpdate(isConfirm = true))
+                },
+                onExit = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleHardUpdate(isConfirm = false))
+                },
             )
         }
 

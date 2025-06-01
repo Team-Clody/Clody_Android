@@ -13,11 +13,16 @@ class SplashContract {
 
     sealed class SplashIntent {
         data class InitSplash(val startIntent: Intent) : SplashIntent()
+        data class HandleHardUpdate(val isConfirm: Boolean) : SplashIntent()
+        data object HandleSoftUpdateConfirm : SplashIntent()
         data object ClearUpdateState : SplashIntent()
     }
 
     sealed interface SplashSideEffect {
         data object NavigateToLogin : SplashSideEffect
         data object NavigateToHome : SplashSideEffect
+        data object NavigateToMarket : SplashSideEffect
+        data object NavigateToMarketAndFinish : SplashSideEffect
+        data object FinishApp : SplashSideEffect
     }
 }

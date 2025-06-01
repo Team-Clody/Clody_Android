@@ -45,18 +45,19 @@ class SplashViewModel @AssistedInject constructor(
 
     private suspend fun handleIntent(intent: SplashContract.SplashIntent) {
         when (intent) {
-            is SplashContract.SplashIntent.InitSplash -> {
-                if (intent.startIntent.hasExtra("google.message_id")) {
-                    AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
-                }
-                attemptAutoLogin()
-                checkVersionAndNavigate()
-            }
-
-            SplashContract.SplashIntent.ClearUpdateState -> {
-                setState { copy(updateState = AppUpdateState.Latest) }
-            }
+            is SplashContract.SplashIntent.InitSplash -> handleInitSplash(intent)
+            is SplashContract.SplashIntent.HandleHardUpdate -> handleHardUpdate(intent)
+            is SplashContract.SplashIntent.HandleSoftUpdateConfirm -> handleSoftUpdateConfirm()
+            is SplashContract.SplashIntent.ClearUpdateState -> clearUpdateState()
         }
+    }
+
+    private fun handleInitSplash(intent: SplashContract.SplashIntent.InitSplash) {
+        if (intent.startIntent.hasExtra("google.message_id")) {
+            AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
+        }
+        attemptAutoLogin()
+        checkVersionAndNavigate()
     }
 
     private fun attemptAutoLogin() {
@@ -72,10 +73,7 @@ class SplashViewModel @AssistedInject constructor(
 
             if (updateState == AppUpdateState.Latest) {
                 delay(1000)
-
-                val isLoggedIn = withState(this@SplashViewModel) {
-                    it.isUserLoggedIn
-                }
+                val isLoggedIn = withState(this@SplashViewModel) { it.isUserLoggedIn }
 
                 if (isLoggedIn == true) {
                     _sideEffects.send(SplashContract.SplashSideEffect.NavigateToHome)
@@ -84,6 +82,22 @@ class SplashViewModel @AssistedInject constructor(
                 }
             }
         }
+    }
+
+    private suspend fun handleHardUpdate(intent: SplashContract.SplashIntent.HandleHardUpdate) {
+        if (intent.isConfirm) {
+            _sideEffects.send(SplashContract.SplashSideEffect.NavigateToMarketAndFinish)
+        } else {
+            _sideEffects.send(SplashContract.SplashSideEffect.FinishApp)
+        }
+    }
+
+    private suspend fun handleSoftUpdateConfirm() {
+        _sideEffects.send(SplashContract.SplashSideEffect.NavigateToMarket)
+    }
+
+    private fun clearUpdateState() {
+        setState { copy(updateState = AppUpdateState.Latest) }
     }
 
     @AssistedFactory
