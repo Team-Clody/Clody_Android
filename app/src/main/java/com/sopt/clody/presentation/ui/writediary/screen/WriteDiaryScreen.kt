@@ -42,6 +42,8 @@ import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.textfield.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
 import com.sopt.clody.presentation.ui.writediary.component.topbar.WriteDiaryTopBar
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
+import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.CLODYTheme
@@ -52,8 +54,8 @@ fun WriteDiaryRoute(
     year: Int,
     month: Int,
     date: Int,
-    navigateToReplyLoading: (Int, Int, Int) -> Unit,
-    navigateToHome: (Int, Int) -> Unit,
+    navigateToReplyLoading: (year: Int, month: Int, date: Int) -> Unit,
+    navigateToHome: (year: Int, month: Int) -> Unit,
     navigateToPrevious: () -> Unit,
     viewModel: WriteDiaryViewModel = hiltViewModel(),
 ) {
@@ -91,13 +93,18 @@ fun WriteDiaryRoute(
         showExitDialog = showExitDialog,
         onClickBack = {
             if (entries.any { it.isNotBlank() }) {
+                AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
                 viewModel.updateShowExitDialog(true)
             } else {
                 navigateToPrevious()
             }
         },
-        onClickAdd = viewModel::addEntry,
+        onClickAdd = {
+            AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_ADD_LIST)
+            viewModel.addEntry()
+        },
         onClickRemove = { index ->
+            AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_DELETE_LIST)
             viewModel.setEntryToDeleteIndex(index)
             viewModel.updateShowDeleteBottomSheet(true)
         },
@@ -115,12 +122,16 @@ fun WriteDiaryRoute(
                 if (entries.size > 1 && entries.any { it.isEmpty() }) {
                     viewModel.updateShowEmptyFieldsMessage(true)
                 } else {
+                    AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_COMPLETE)
                     viewModel.updateShowDialog(true)
                 }
             }
         },
         onConfirmDialog = { viewModel.writeDiary(year, month, date, entries) },
-        onDismissDialog = { viewModel.updateShowDialog(false) },
+        onDismissDialog = {
+            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WRITING_DIARY_NO_COMPLETE)
+            viewModel.updateShowDialog(false)
+        },
         onDismissLimitMessage = { viewModel.updateShowLimitMessage(false) },
         onDismissEmptyFieldsMessage = { viewModel.updateShowEmptyFieldsMessage(false) },
         onDismissFailureDialog = { viewModel.resetFailureDialog() },
