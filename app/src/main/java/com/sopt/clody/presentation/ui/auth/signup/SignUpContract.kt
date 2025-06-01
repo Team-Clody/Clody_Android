@@ -14,8 +14,10 @@ class SignUpContract {
         val errorMessage: String? = null,
         val serviceChecked: Boolean = false,
         val privacyChecked: Boolean = false,
-        val allChecked: Boolean = false,
     ) : MavericksState {
+        val allChecked: Boolean
+            get() = serviceChecked && privacyChecked
+
         enum class Step {
             TERMS, NICKNAME
         }
