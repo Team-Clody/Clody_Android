@@ -49,79 +49,72 @@ class SignUpViewModel @AssistedInject constructor(
 
     private suspend fun handleIntent(intent: SignUpContract.SignUpIntent) {
         when (intent) {
-            is SignUpContract.SignUpIntent.SetNickname -> {
-                val isValid = validateNickname(intent.value)
-                setState {
-                    copy(
-                        nickname = intent.value,
-                        isValidNickname = isValid,
-                        nicknameMessage = if (intent.value.isEmpty()) {
-                            DEFAULT_NICKNAME_MESSAGE
-                        } else if (isValid) {
-                            DEFAULT_NICKNAME_MESSAGE
-                        } else {
-                            "사용할 수 없는 닉네임이에요"
-                        },
-                    )
-                }
-            }
-
-            is SignUpContract.SignUpIntent.SetNicknameFocus -> {
-                setState { copy(isNicknameFocused = intent.isFocused) }
-            }
-
-            SignUpContract.SignUpIntent.ProceedTerms -> {
-                setState { copy(currentStep = SignUpContract.SignUpState.Step.NICKNAME) }
-            }
-
-            is SignUpContract.SignUpIntent.CompleteSignUp -> {
-                signUp(intent.context)
-            }
-
-            SignUpContract.SignUpIntent.ProceedTerms -> {
-                setState { copy(currentStep = SignUpContract.SignUpState.Step.NICKNAME) }
-            }
-
-            SignUpContract.SignUpIntent.ClearError -> {
-                setState { copy(errorMessage = null) }
-            }
-
-            is SignUpContract.SignUpIntent.ToggleAllChecked -> {
-                setState {
-                    copy(
-                        serviceChecked = intent.checked,
-                        privacyChecked = intent.checked,
-                    )
-                }
-            }
-
-            is SignUpContract.SignUpIntent.ToggleServiceChecked -> {
-                setState {
-                    copy(serviceChecked = intent.checked)
-                }
-            }
-
-            is SignUpContract.SignUpIntent.TogglePrivacyChecked -> {
-                setState {
-                    copy(privacyChecked = intent.checked)
-                }
-            }
-
-            SignUpContract.SignUpIntent.BackToTerms -> {
-                setState {
-                    copy(
-                        currentStep = SignUpContract.SignUpState.Step.TERMS,
-                        nickname = "",
-                        isNicknameFocused = false,
-                        isValidNickname = true,
-                        nicknameMessage = SignUpContract.DEFAULT_NICKNAME_MESSAGE,
-                    )
-                }
-            }
+            is SignUpContract.SignUpIntent.SetNickname -> handleSetNickname(intent)
+            is SignUpContract.SignUpIntent.SetNicknameFocus -> handleSetNicknameFocus(intent)
+            is SignUpContract.SignUpIntent.ProceedTerms -> handleProceedTerms()
+            is SignUpContract.SignUpIntent.CompleteSignUp -> signUp(intent.context)
+            is SignUpContract.SignUpIntent.ClearError -> clearError()
+            is SignUpContract.SignUpIntent.ToggleAllChecked -> handleToggleAllChecked(intent)
+            is SignUpContract.SignUpIntent.ToggleServiceChecked -> handleToggleServiceChecked(intent)
+            is SignUpContract.SignUpIntent.TogglePrivacyChecked -> handleTogglePrivacyChecked(intent)
+            SignUpContract.SignUpIntent.BackToTerms -> handleBackToTerms()
         }
     }
 
-    fun signUp(context: Context) {
+    private fun handleSetNickname(intent: SignUpContract.SignUpIntent.SetNickname) {
+        val isValid = validateNickname(intent.value)
+        setState {
+            copy(
+                nickname = intent.value,
+                isValidNickname = isValid,
+                nicknameMessage = if (intent.value.isEmpty() || isValid) {
+                    DEFAULT_NICKNAME_MESSAGE
+                } else {
+                    "사용할 수 없는 닉네임이에요"
+                },
+            )
+        }
+    }
+
+    private fun handleSetNicknameFocus(intent: SignUpContract.SignUpIntent.SetNicknameFocus) {
+        setState { copy(isNicknameFocused = intent.isFocused) }
+    }
+
+    private fun handleProceedTerms() {
+        setState { copy(currentStep = SignUpContract.SignUpState.Step.NICKNAME) }
+    }
+
+    private fun clearError() {
+        setState { copy(errorMessage = null) }
+    }
+
+    private fun handleToggleAllChecked(intent: SignUpContract.SignUpIntent.ToggleAllChecked) {
+        setState {
+            copy(serviceChecked = intent.checked, privacyChecked = intent.checked)
+        }
+    }
+
+    private fun handleToggleServiceChecked(intent: SignUpContract.SignUpIntent.ToggleServiceChecked) {
+        setState { copy(serviceChecked = intent.checked) }
+    }
+
+    private fun handleTogglePrivacyChecked(intent: SignUpContract.SignUpIntent.TogglePrivacyChecked) {
+        setState { copy(privacyChecked = intent.checked) }
+    }
+
+    private fun handleBackToTerms() {
+        setState {
+            copy(
+                currentStep = SignUpContract.SignUpState.Step.TERMS,
+                nickname = "",
+                isNicknameFocused = false,
+                isValidNickname = true,
+                nicknameMessage = SignUpContract.DEFAULT_NICKNAME_MESSAGE,
+            )
+        }
+    }
+
+    private fun signUp(context: Context) {
         viewModelScope.launch {
             val state = withState(this@SignUpViewModel) { it }
             if (!networkUtil.isNetworkAvailable()) {
