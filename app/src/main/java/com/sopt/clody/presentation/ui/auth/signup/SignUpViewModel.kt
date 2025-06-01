@@ -89,7 +89,6 @@ class SignUpViewModel @AssistedInject constructor(
             is SignUpContract.SignUpIntent.ToggleAllChecked -> {
                 setState {
                     copy(
-                        allChecked = intent.checked,
                         serviceChecked = intent.checked,
                         privacyChecked = intent.checked,
                     )
@@ -98,21 +97,13 @@ class SignUpViewModel @AssistedInject constructor(
 
             is SignUpContract.SignUpIntent.ToggleServiceChecked -> {
                 setState {
-                    val all = intent.checked && this.privacyChecked
-                    copy(
-                        serviceChecked = intent.checked,
-                        allChecked = all,
-                    )
+                    copy(serviceChecked = intent.checked)
                 }
             }
 
             is SignUpContract.SignUpIntent.TogglePrivacyChecked -> {
                 setState {
-                    val all = this.serviceChecked && intent.checked
-                    copy(
-                        privacyChecked = intent.checked,
-                        allChecked = all,
-                    )
+                    copy(privacyChecked = intent.checked)
                 }
             }
 
