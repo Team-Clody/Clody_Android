@@ -46,7 +46,7 @@ class LoginViewModel @AssistedInject constructor(
     private suspend fun handleIntent(intent: LoginContract.LoginIntent) {
         when (intent) {
             is LoginContract.LoginIntent.LoginWithKakao -> loginWithKakao(intent.context)
-            LoginContract.LoginIntent.ClearError -> setState { copy(errorMessage = null) }
+            is LoginContract.LoginIntent.ClearError -> setState { copy(errorMessage = null) }
         }
     }
 
