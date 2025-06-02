@@ -17,7 +17,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -31,6 +30,7 @@ import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTimePicker
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSwitch
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationTimeSelector
+import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.convertTo12HourFormat
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -176,7 +176,7 @@ fun NotificationSettingScreen(
     )
 }
 
-@Preview(showBackground = true)
+@ClodyPreview
 @Composable
 private fun PreviewNotificationSettingScreen() {
     ClodyTheme {
