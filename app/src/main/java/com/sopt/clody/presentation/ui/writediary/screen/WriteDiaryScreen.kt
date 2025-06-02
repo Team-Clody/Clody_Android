@@ -13,7 +13,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.union
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
@@ -222,7 +225,11 @@ fun WriteDiaryScreen(
                     }
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                     LazyColumn(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .windowInsetsPadding(
+                                WindowInsets.navigationBars.union(WindowInsets.ime),
+                            ),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         itemsIndexed(entries, key = { index, _ -> index }) { index, text ->
