@@ -111,10 +111,10 @@ fun NotificationSettingScreen(
     replyAlarm: Boolean,
     notificationTime: String,
     onClickBack: () -> Unit,
-    onClickDiarySwitch: () -> Unit,
-    onClickDraftSwitch: () -> Unit,
+    onClickDiarySwitch: (Boolean) -> Unit,
+    onClickDraftSwitch: (Boolean) -> Unit,
     onClickNotificationTime: () -> Unit,
-    onClickReplySwitch: () -> Unit,
+    onClickReplySwitch: (Boolean) -> Unit,
     onClickRetry: () -> Unit,
 ) {
     Scaffold(

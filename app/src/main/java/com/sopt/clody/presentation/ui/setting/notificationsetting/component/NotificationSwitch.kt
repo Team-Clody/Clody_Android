@@ -21,7 +21,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NotificationSwitch(
     @StringRes title: Int,
     checkedState: Boolean,
-    onClick: () -> Unit,
+    onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Row(
@@ -36,7 +36,7 @@ fun NotificationSwitch(
         Spacer(modifier = Modifier.weight(1f))
         Switch(
             checked = checkedState,
-            onCheckedChange = { onClick() },
+            onCheckedChange = onCheckedChanged,
             modifier = Modifier.scale(0.7f),
             thumbContent = {
                 Image(
