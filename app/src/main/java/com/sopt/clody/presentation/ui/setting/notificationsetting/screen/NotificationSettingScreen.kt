@@ -70,9 +70,7 @@ fun NotificationSettingRoute(
             NotificationSettingTimePicker(
                 onDismissRequest = { showNotificationTimePicker = false },
                 onConfirm = { newNotificationTime ->
-                    notificationInfo?.let {
-                        notificationSettingViewModel.changeNotificationTime(context, newNotificationTime)
-                    }
+                    notificationSettingViewModel.changeNotificationTime(context, newNotificationTime)
                     showNotificationTimePicker = false
                 },
             )
