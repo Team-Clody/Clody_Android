@@ -1,6 +1,7 @@
 package com.sopt.clody
 
 import android.app.Application
+import com.airbnb.mvrx.Mavericks
 import com.google.firebase.FirebaseApp
 import com.kakao.sdk.common.KakaoSdk
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils.initAmplitude
@@ -14,6 +15,7 @@ class ClodyApplication : Application() {
         Timber.plant(Timber.DebugTree())
         initKakaoSdk()
         FirebaseApp.initializeApp(this)
+        Mavericks.initialize(this)
         initAmplitude(applicationContext)
     }
 

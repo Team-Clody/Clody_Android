@@ -18,62 +18,74 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.airbnb.mvrx.compose.collectAsState
+import com.airbnb.mvrx.compose.mavericksViewModel
 import com.sopt.clody.R
 import com.sopt.clody.domain.model.AppUpdateState
-import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
-import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.appupdate.AppUpdateUtils
+import com.sopt.clody.presentation.utils.base.BasePreview
+import com.sopt.clody.presentation.utils.base.ClodyPreview
+import com.sopt.clody.presentation.utils.extension.repeatOnStarted
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.delay
 
 @Composable
 fun SplashRoute(
+    viewModel: SplashViewModel = mavericksViewModel(),
     startIntent: Intent,
     onLoginRequired: () -> Unit,
     onAlreadyLoggedIn: () -> Unit,
-    viewModel: SplashViewModel = hiltViewModel(),
 ) {
-    val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
-    val updateState by viewModel.updateState.collectAsStateWithLifecycle()
+    val state by viewModel.collectAsState()
     val context = LocalContext.current
     val activity = context as Activity
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    // Push 클릭 추적
-    LaunchedEffect(startIntent) {
-        if (startIntent.hasExtra("google.message_id")) {
-            AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
-        }
-    }
+    LaunchedEffect(viewModel) {
+        viewModel.postIntent(SplashContract.SplashIntent.InitSplash(startIntent))
 
-    LaunchedEffect(isUserLoggedIn, updateState) {
-        if (isUserLoggedIn != null && updateState == AppUpdateState.Latest) {
-            delay(1000)
-            if (isUserLoggedIn == true) {
-                onAlreadyLoggedIn()
-            } else {
-                onLoginRequired()
+        lifecycleOwner.repeatOnStarted {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    is SplashContract.SplashSideEffect.NavigateToLogin -> onLoginRequired()
+                    is SplashContract.SplashSideEffect.NavigateToHome -> onAlreadyLoggedIn()
+                    is SplashContract.SplashSideEffect.NavigateToMarketAndFinish -> {
+                        AppUpdateUtils.navigateToMarketAndFinish(activity)
+                    }
+
+                    is SplashContract.SplashSideEffect.FinishApp -> {
+                        activity.finishAffinity()
+                    }
+
+                    is SplashContract.SplashSideEffect.NavigateToMarket -> {
+                        AppUpdateUtils.navigateToMarket(context)
+                    }
+                }
             }
         }
     }
 
-    when (val state = updateState) {
+    when (val updateState = state.updateState) {
         is AppUpdateState.SoftUpdate -> {
             SoftUpdateDialog(
-                latestVersion = state.latestVersion,
-                onDismiss = { viewModel.clearUpdateState() },
-                onConfirm = { AppUpdateUtils.navigateToMarket(context) },
+                latestVersion = updateState.latestVersion,
+                onDismiss = { viewModel.postIntent(SplashContract.SplashIntent.ClearUpdateState) },
+                onConfirm = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleSoftUpdateConfirm)
+                },
             )
         }
 
         is AppUpdateState.HardUpdate -> {
             HardUpdateDialog(
-                latestVersion = state.latestVersion,
-                onConfirm = { AppUpdateUtils.navigateToMarketAndFinish(activity) },
-                onExit = { activity.finishAffinity() },
+                latestVersion = updateState.latestVersion,
+                onConfirm = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleHardUpdate(isConfirm = true))
+                },
+                onExit = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleHardUpdate(isConfirm = false))
+                },
             )
         }
 
@@ -135,8 +147,10 @@ fun HardUpdateDialog(
     )
 }
 
-@Preview(showBackground = true)
+@ClodyPreview
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen()
+    BasePreview {
+        SplashScreen()
+    }
 }

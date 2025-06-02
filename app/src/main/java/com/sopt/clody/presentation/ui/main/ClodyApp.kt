@@ -1,9 +1,8 @@
 package com.sopt.clody.presentation.ui.main
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -26,14 +25,10 @@ fun ClodyApp(
         }
     }
 
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        content = { innerPadding ->
-            ClodyNavHost(
-                appState = appState,
-                modifier = Modifier.padding(innerPadding),
-                startIntent = startIntent,
-            )
-        },
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+        ClodyNavHost(
+            appState = appState,
+            startIntent = startIntent,
+        )
+    }
 }

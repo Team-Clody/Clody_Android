@@ -17,7 +17,7 @@ import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.calendar.component.DailyDiaryListItem
 import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.ui.home.calendar.component.MonthlyItem
-import com.sopt.clody.presentation.ui.home.model.generateCalendarDates
+import com.sopt.clody.presentation.ui.home.calendar.model.generateCalendarDates
 import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
 import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
 import java.time.LocalDate

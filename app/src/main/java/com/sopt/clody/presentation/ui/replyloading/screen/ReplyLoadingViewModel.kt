@@ -3,7 +3,7 @@ package com.sopt.clody.presentation.ui.replyloading.screen
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.core.RewardAdShower
+import com.sopt.clody.core.ad.RewardAdShower
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AdRepository

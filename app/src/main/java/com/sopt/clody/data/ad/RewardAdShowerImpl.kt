@@ -3,7 +3,7 @@ package com.sopt.clody.data.ad
 import android.app.Activity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
-import com.sopt.clody.core.RewardAdShower
+import com.sopt.clody.core.ad.RewardAdShower
 import com.sopt.clody.data.remote.datasource.AdRemoteDataSource
 import javax.inject.Inject
 

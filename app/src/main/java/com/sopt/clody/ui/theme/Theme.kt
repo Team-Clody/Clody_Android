@@ -5,7 +5,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 
 @Composable
-fun CLODYTheme(
+fun ClodyTheme(
     content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(content = content)

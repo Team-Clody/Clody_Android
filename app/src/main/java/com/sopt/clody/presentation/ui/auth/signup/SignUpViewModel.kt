@@ -1,209 +1,162 @@
 package com.sopt.clody.presentation.ui.auth.signup
 
 import android.content.Context
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.user.UserApiClient
-import com.sopt.clody.ClodyFirebaseMessagingService
-import com.sopt.clody.data.remote.dto.request.LoginRequestDto
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
+import com.airbnb.mvrx.hilt.AssistedViewModelFactory
+import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
+import com.airbnb.mvrx.withState
+import com.sopt.clody.core.fcm.FcmTokenProvider
+import com.sopt.clody.core.login.LoginSdk
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
-import com.sopt.clody.presentation.ui.auth.login.SignInState
-import com.sopt.clody.presentation.utils.base.UiState
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
-import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
+import com.sopt.clody.presentation.ui.auth.signup.SignUpContract.Companion.DEFAULT_NICKNAME_MESSAGE
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
-import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
-@OptIn(FlowPreview::class)
-@HiltViewModel
-class SignUpViewModel @Inject constructor(
+class SignUpViewModel @AssistedInject constructor(
+    @Assisted initialState: SignUpContract.SignUpState,
+    private val loginSdk: LoginSdk,
     private val authRepository: AuthRepository,
     private val tokenRepository: TokenRepository,
+    private val fcmTokenProvider: FcmTokenProvider,
     private val networkUtil: NetworkUtil,
-) : ViewModel() {
+) : MavericksViewModel<SignUpContract.SignUpState>(initialState) {
 
-    private val _signInState = MutableStateFlow(SignInState())
-    val signInState: StateFlow<SignInState> = _signInState
-
-    private val _signUpState = MutableStateFlow(SignUpState())
-    val signUpState: StateFlow<SignUpState> = _signUpState
-
-    private var accessToken: String? = null
-
-    private val _nickname = MutableStateFlow("")
-    val nickname: StateFlow<String> = _nickname
-
-    private val _isValidNickname = MutableStateFlow(true)
-    val isValidNickname: StateFlow<Boolean> = _isValidNickname
-
-    private val _nicknameMessage = MutableStateFlow(DEFAULT_NICKNAME_MESSAGE)
-    val nicknameMessage: StateFlow<String> = _nicknameMessage
+    private val _intents = Channel<SignUpContract.SignUpIntent>(BUFFERED)
+    private val _sideEffects = Channel<SignUpContract.SignUpSideEffect>(BUFFERED)
+    val sideEffects = _sideEffects.receiveAsFlow()
 
     init {
-        debounceNicknameValidation()
+        _intents
+            .receiveAsFlow()
+            .onEach(::handleIntent)
+            .launchIn(viewModelScope)
     }
 
-    fun signInWithKakao(context: Context) {
-        viewModelScope.launch {
-            _signInState.value = SignInState(UiState.Loading)
-            val tokenResult = runCatching { loginWithKakao(context) }
-            tokenResult.onSuccess { token ->
-                accessToken = token.accessToken
-                fetchKakaoUserInfo(context)
-            }.onFailure {
-                _signInState.value = SignInState(UiState.Failure(it.localizedMessage ?: UNKNOWN_ERROR))
-            }
+    fun postIntent(intent: SignUpContract.SignUpIntent) {
+        viewModelScope.launch { _intents.send(intent) }
+    }
+
+    private suspend fun handleIntent(intent: SignUpContract.SignUpIntent) {
+        when (intent) {
+            is SignUpContract.SignUpIntent.SetNickname -> handleSetNickname(intent)
+            is SignUpContract.SignUpIntent.SetNicknameFocus -> handleSetNicknameFocus(intent)
+            is SignUpContract.SignUpIntent.ProceedTerms -> handleProceedTerms()
+            is SignUpContract.SignUpIntent.CompleteSignUp -> signUp(intent.context)
+            is SignUpContract.SignUpIntent.ClearError -> clearError()
+            is SignUpContract.SignUpIntent.ToggleAllChecked -> handleToggleAllChecked(intent)
+            is SignUpContract.SignUpIntent.ToggleServiceChecked -> handleToggleServiceChecked(intent)
+            is SignUpContract.SignUpIntent.TogglePrivacyChecked -> handleTogglePrivacyChecked(intent)
+            SignUpContract.SignUpIntent.BackToTerms -> handleBackToTerms()
         }
     }
 
-    fun proceedWithSignUp(context: Context) {
+    private fun handleSetNickname(intent: SignUpContract.SignUpIntent.SetNickname) {
+        val isValid = validateNickname(intent.value)
+        setState {
+            copy(
+                nickname = intent.value,
+                isValidNickname = isValid,
+                nicknameMessage = if (intent.value.isEmpty() || isValid) {
+                    DEFAULT_NICKNAME_MESSAGE
+                } else {
+                    "사용할 수 없는 닉네임이에요"
+                },
+            )
+        }
+    }
+
+    private fun handleSetNicknameFocus(intent: SignUpContract.SignUpIntent.SetNicknameFocus) {
+        setState { copy(isNicknameFocused = intent.isFocused) }
+    }
+
+    private fun handleProceedTerms() {
+        setState { copy(currentStep = SignUpContract.SignUpState.Step.NICKNAME) }
+    }
+
+    private fun clearError() {
+        setState { copy(errorMessage = null) }
+    }
+
+    private fun handleToggleAllChecked(intent: SignUpContract.SignUpIntent.ToggleAllChecked) {
+        setState {
+            copy(serviceChecked = intent.checked, privacyChecked = intent.checked)
+        }
+    }
+
+    private fun handleToggleServiceChecked(intent: SignUpContract.SignUpIntent.ToggleServiceChecked) {
+        setState { copy(serviceChecked = intent.checked) }
+    }
+
+    private fun handleTogglePrivacyChecked(intent: SignUpContract.SignUpIntent.TogglePrivacyChecked) {
+        setState { copy(privacyChecked = intent.checked) }
+    }
+
+    private fun handleBackToTerms() {
+        setState {
+            copy(
+                currentStep = SignUpContract.SignUpState.Step.TERMS,
+                nickname = "",
+                isNicknameFocused = false,
+                isValidNickname = true,
+                nicknameMessage = SignUpContract.DEFAULT_NICKNAME_MESSAGE,
+            )
+        }
+    }
+
+    private fun signUp(context: Context) {
         viewModelScope.launch {
+            val state = withState(this@SignUpViewModel) { it }
             if (!networkUtil.isNetworkAvailable()) {
-                _signUpState.value = SignUpState(UiState.Failure(FAILURE_NETWORK_MESSAGE))
+                setState { copy(errorMessage = "네트워크 연결을 확인해주세요.") }
                 return@launch
             }
-            _signUpState.value = SignUpState(UiState.Loading)
-            val tokenResult = runCatching { loginWithKakao(context) }
-            tokenResult.onSuccess { token ->
-                accessToken = token.accessToken
-                performSignUp(context)
-            }.onFailure {
-                _signUpState.value = SignUpState(UiState.Failure(it.localizedMessage ?: UNKNOWN_ERROR))
-            }
-        }
-    }
+            setState { copy(isLoading = true) }
+            loginSdk.login(context).fold(
+                onSuccess = { accessToken ->
+                    launch {
+                        val fcm = fcmTokenProvider.getToken().orEmpty()
+                        val req = SignUpRequestDto("kakao", state.nickname, fcm)
+                        authRepository.signUp("Bearer ${accessToken.value}", req).fold(
+                            onSuccess = {
+                                tokenRepository.setTokens(it.accessToken, it.refreshToken)
+                                _sideEffects.send(SignUpContract.SignUpSideEffect.NavigateToTimeReminder)
+                            },
+                            onFailure = {
+                                setState { copy(errorMessage = it.message ?: "알 수 없는 오류") }
+                            },
+                        )
 
-    private suspend fun loginWithKakao(context: Context): OAuthToken {
-        return suspendCancellableCoroutine { continuation ->
-            val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
-                if (error != null) {
-                    continuation.resumeWithException(error)
-                } else if (token != null) {
-                    continuation.resume(token)
-                }
-            }
-            if (UserApiClient.instance.isKakaoTalkLoginAvailable(context)) {
-                UserApiClient.instance.loginWithKakaoTalk(context, callback = callback)
-            } else {
-                UserApiClient.instance.loginWithKakaoAccount(context, callback = callback)
-            }
-        }
-    }
-
-    private fun fetchKakaoUserInfo(context: Context) {
-        UserApiClient.instance.me { user, error ->
-            if (error != null) {
-                _signInState.value = SignInState(UiState.Failure(error.localizedMessage))
-            } else if (user != null) {
-                val fcmToken = ClodyFirebaseMessagingService.getTokenFromPreferences(context) ?: ""
-                val requestSignInDto = LoginRequestDto(platform = KAKAO_PLATFORM, fcmToken = fcmToken)
-                validateUser("Bearer ${accessToken.orEmpty()}", requestSignInDto)
-            }
-        }
-    }
-
-    private fun validateUser(authorization: String, requestSignInDto: LoginRequestDto) {
-        viewModelScope.launch {
-            authRepository.signIn(authorization, requestSignInDto).fold(
-                onSuccess = { response ->
-                    storeTokens(response.accessToken, response.refreshToken)
-                    _signInState.value = SignInState(UiState.Success(USER_EXISTS))
+                        setState { copy(isLoading = false) }
+                    }
                 },
                 onFailure = {
-                    val message = it.localizedMessage ?: UNKNOWN_ERROR
-                    val uiState = if (message.contains("404")) {
-                        UiState.Failure(USER_NOT_FOUND_ERROR)
-                    } else {
-                        UiState.Failure(message)
-                    }
-                    _signInState.value = SignInState(uiState)
+                    setState { copy(errorMessage = it.message ?: "로그인 실패", isLoading = false) }
                 },
             )
         }
     }
 
-    private fun storeTokens(accessToken: String, refreshToken: String) {
-        viewModelScope.launch {
-            tokenRepository.setTokens(accessToken, refreshToken)
-        }
+    private fun validateNickname(nickname: String): Boolean {
+        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$".toRegex()
+        return nickname.matches(regex)
     }
 
-    fun setNickname(nickname: String) {
-        _nickname.value = nickname
+    @AssistedFactory
+    interface Factory : AssistedViewModelFactory<SignUpViewModel, SignUpContract.SignUpState> {
+        override fun create(state: SignUpContract.SignUpState): SignUpViewModel
     }
 
-    private fun performSignUp(context: Context) {
-        val authorization = "Bearer ${accessToken.orEmpty()}"
-        val fcmToken = ClodyFirebaseMessagingService.getTokenFromPreferences(context) ?: ""
-        viewModelScope.launch {
-            authRepository.signUp(
-                authorization,
-                SignUpRequestDto(platform = KAKAO_PLATFORM, name = nickname.value, fcmToken = fcmToken),
-            ).fold(
-                onSuccess = { response ->
-                    _signUpState.value = SignUpState(UiState.Success(SIGN_UP_SUCCESS))
-                    storeTokens(response.accessToken, response.refreshToken)
-                },
-                onFailure = { error ->
-                    val errorMessage = if (error.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
-                    } else {
-                        error.localizedMessage ?: UNKNOWN_ERROR
-                    }
-                    _signUpState.value = SignUpState(UiState.Failure(errorMessage))
-                },
-            )
-        }
-    }
-
-    private fun debounceNicknameValidation() {
-        viewModelScope.launch {
-            _nickname
-                .debounce(NICKNAME_VALIDATION_DELAY)
-                .collectLatest { nickname ->
-                    validateNickname(nickname)
-                }
-        }
-    }
-
-    private fun validateNickname(nickname: String) {
-        if (nickname.isNotEmpty()) {
-            val isValid = nickname.matches(Regex(NICKNAME_PATTERN))
-            _isValidNickname.value = isValid
-            _nicknameMessage.value = if (isValid) DEFAULT_NICKNAME_MESSAGE else FAILURE_NICKNAME_MESSAGE
-        } else {
-            _isValidNickname.value = true
-            _nicknameMessage.value = DEFAULT_NICKNAME_MESSAGE
-        }
-    }
-
-    fun resetSignUpState() {
-        _signUpState.value = SignUpState()
-    }
-
-    companion object {
-        private const val USER_EXISTS = "유저가 이미 존재합니다"
-        private const val SIGN_UP_SUCCESS = "회원가입 성공"
-        private const val USER_NOT_FOUND_ERROR = "유저를 찾을 수 없습니다"
-        private const val KAKAO_PLATFORM = "kakao"
-
-        private const val NICKNAME_VALIDATION_DELAY = 300L
-        private const val NICKNAME_PATTERN = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$"
-        private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
-        private const val FAILURE_NICKNAME_MESSAGE = "사용할 수 없는 닉네임이에요"
-    }
+    companion object :
+        MavericksViewModelFactory<SignUpViewModel, SignUpContract.SignUpState> by hiltMavericksViewModelFactory()
 }

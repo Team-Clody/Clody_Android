@@ -120,6 +120,9 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.insets)
 
+    // Mavericks
+    implementation(libs.bundles.mavericks)
+
     // ETC
     implementation(libs.timber)
     implementation(libs.lottie.compose)
