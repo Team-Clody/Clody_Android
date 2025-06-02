@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.Notification
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
@@ -89,7 +90,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeDiaryAlarm(context: Context) {
+    fun changeAlarm(context: Context, notificationType: Notification) {
         _notificationChangeState.value = NotificationChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -97,56 +98,30 @@ class NotificationSettingViewModel @Inject constructor(
                 _showFailureDialog.value = true
                 return@launch
             }
-            val fcmToken = getTokenFromPreferences(context)
-            if (fcmToken.isNullOrBlank()) {
-                _notificationChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
-                return@launch
-            }
-            val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = !_diaryAlarm.value,
-                isDraftAlarm = _draftAlarm.value,
-                isReplyAlarm = _replyAlarm.value,
-                time = _notificationTime.value,
-                fcmToken = fcmToken,
-            )
-            notificationRepository.sendNotification(requestDto).fold(
-                onSuccess = {
-                    _notificationChangeState.value = NotificationChangeState.Success(it)
-                    getNotificationInfo()
-                },
-                onFailure = {
-                    _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
-                    } else {
-                        UNKNOWN_ERROR
-                    }
-                    _showFailureDialog.value = true
-                    _notificationChangeState.value = NotificationChangeState.Failure(_failureDialogMessage.value)
-                },
-            )
-        }
-    }
 
-    fun changeDraftAlarm(context: Context) {
-        _notificationChangeState.value = NotificationChangeState.Loading
-        viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
-                _showFailureDialog.value = true
-                return@launch
-            }
             val fcmToken = getTokenFromPreferences(context)
             if (fcmToken.isNullOrBlank()) {
                 _notificationChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
+
             val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = _diaryAlarm.value,
-                isDraftAlarm = !_draftAlarm.value,
-                isReplyAlarm = _replyAlarm.value,
+                isDiaryAlarm = when (notificationType) {
+                    Notification.DIARY -> !_diaryAlarm.value
+                    else -> _diaryAlarm.value
+                },
+                isDraftAlarm = when (notificationType) {
+                    Notification.DRAFT -> !_draftAlarm.value
+                    else -> _draftAlarm.value
+                },
+                isReplyAlarm = when (notificationType) {
+                    Notification.REPLY -> !_replyAlarm.value
+                    else -> _replyAlarm.value
+                },
                 time = _notificationTime.value,
                 fcmToken = fcmToken,
             )
+
             notificationRepository.sendNotification(requestDto).fold(
                 onSuccess = {
                     _notificationChangeState.value = NotificationChangeState.Success(it)
@@ -198,44 +173,6 @@ class NotificationSettingViewModel @Inject constructor(
                     }
                     _showFailureDialog.value = true
                     _notificationTimeChangeState.value = NotificationTimeChangeState.Failure(_failureDialogMessage.value)
-                },
-            )
-        }
-    }
-
-    fun changeReplyAlarm(context: Context) {
-        _notificationChangeState.value = NotificationChangeState.Loading
-        viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
-                _showFailureDialog.value = true
-                return@launch
-            }
-            val fcmToken = getTokenFromPreferences(context)
-            if (fcmToken.isNullOrBlank()) {
-                _notificationChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
-                return@launch
-            }
-            val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = _diaryAlarm.value,
-                isDraftAlarm = _draftAlarm.value,
-                isReplyAlarm = !_replyAlarm.value,
-                time = _notificationTime.value,
-                fcmToken = fcmToken,
-            )
-            notificationRepository.sendNotification(requestDto).fold(
-                onSuccess = {
-                    _notificationChangeState.value = NotificationChangeState.Success(it)
-                    getNotificationInfo()
-                },
-                onFailure = {
-                    _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
-                    } else {
-                        UNKNOWN_ERROR
-                    }
-                    _showFailureDialog.value = true
-                    _notificationChangeState.value = NotificationChangeState.Failure(_failureDialogMessage.value)
                 },
             )
         }

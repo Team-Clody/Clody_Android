@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
+import com.sopt.clody.domain.Notification
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
@@ -49,7 +50,6 @@ fun NotificationSettingRoute(
     val showFailureDialog by notificationSettingViewModel.showFailureDialog.collectAsState()
     val failureDialogMessage by notificationSettingViewModel.failureDialogMessage.collectAsState()
     var showNotificationTimePicker by remember { mutableStateOf(false) }
-    var notificationInfo by remember { mutableStateOf<NotificationInfoResponseDto?>(null) }
 
     NotificationSettingScreen(
         notificationInfoState = notificationInfoState,
@@ -58,10 +58,10 @@ fun NotificationSettingRoute(
         replyAlarm = replyAlarm,
         notificationTime = notificationTime,
         onClickBack = navigateToPrevious,
-        onClickDiarySwitch = { notificationSettingViewModel.changeDiaryAlarm(context) },
-        onClickDraftSwitch = { notificationSettingViewModel.changeDraftAlarm(context) },
+        onClickDiarySwitch = { notificationSettingViewModel.changeAlarm(context, Notification.DIARY) },
+        onClickDraftSwitch = { notificationSettingViewModel.changeAlarm(context, Notification.DRAFT) },
         onClickNotificationTime = { showNotificationTimePicker = true },
-        onClickReplySwitch = { notificationSettingViewModel.changeReplyAlarm(context) },
+        onClickReplySwitch = { notificationSettingViewModel.changeAlarm(context, Notification.REPLY) },
         onClickRetry = { notificationSettingViewModel.getNotificationInfo() },
     )
 
@@ -143,13 +143,13 @@ fun NotificationSettingScreen(
                         NotificationSwitch(
                             title = R.string.notification_setting_write_diary,
                             checkedState = diaryAlarm,
-                            onClick = onClickDiarySwitch,
+                            onCheckedChanged = onClickDiarySwitch,
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         NotificationSwitch(
                             title = R.string.notification_setting_draft_diary,
                             checkedState = draftAlarm,
-                            onClick = onClickDraftSwitch,
+                            onCheckedChanged = onClickDraftSwitch,
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         NotificationTimeSelector(
@@ -160,7 +160,7 @@ fun NotificationSettingScreen(
                         NotificationSwitch(
                             title = R.string.notification_setting_reply_diary,
                             checkedState = replyAlarm,
-                            onClick = onClickReplySwitch,
+                            onCheckedChanged = onClickReplySwitch,
                         )
                     }
                 }
