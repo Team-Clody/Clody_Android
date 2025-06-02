@@ -1,6 +1,5 @@
 package com.sopt.clody.presentation.ui.setting.notificationsetting.screen
 
-import android.content.Context
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -29,149 +28,53 @@ import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
-import com.sopt.clody.presentation.ui.setting.notificationsetting.component.DiaryAlarmSwitch
-import com.sopt.clody.presentation.ui.setting.notificationsetting.component.DraftAlarmSwitch
-import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTime
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTimePicker
-import com.sopt.clody.presentation.ui.setting.notificationsetting.component.ReplyAlarmSwitch
+import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSwitch
+import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationTimeSelector
+import com.sopt.clody.presentation.utils.extension.convertTo12HourFormat
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NotificationSettingRoute(
-    navigateToPrevious: () -> Unit,
     notificationSettingViewModel: NotificationSettingViewModel = hiltViewModel(),
+    navigateToPrevious: () -> Unit,
 ) {
     val context = LocalContext.current
     val notificationInfoState by notificationSettingViewModel.notificationInfoState.collectAsState()
-    val diaryAlarmChangeState by notificationSettingViewModel.diaryAlarmChangeState.collectAsState()
-    val draftAlarmChangeState by notificationSettingViewModel.draftAlarmChangeState.collectAsState()
+    val diaryAlarm by notificationSettingViewModel.diaryAlarm.collectAsState()
+    val draftAlarm by notificationSettingViewModel.draftAlarm.collectAsState()
+    val replyAlarm by notificationSettingViewModel.replyAlarm.collectAsState()
+    val notificationTime by notificationSettingViewModel.notificationTime.collectAsState()
     val notificationTimeChangeState by notificationSettingViewModel.notificationTimeChangeState.collectAsState()
-    val replyAlarmChangeState by notificationSettingViewModel.replyAlarmChangeState.collectAsState()
     val showFailureDialog by notificationSettingViewModel.showFailureDialog.collectAsState()
     val failureDialogMessage by notificationSettingViewModel.failureDialogMessage.collectAsState()
     var showNotificationTimePicker by remember { mutableStateOf(false) }
     var notificationInfo by remember { mutableStateOf<NotificationInfoResponseDto?>(null) }
 
-    LaunchedEffect(Unit) {
-        notificationSettingViewModel.getNotificationInfo()
-    }
-
-    LaunchedEffect(diaryAlarmChangeState, draftAlarmChangeState, notificationTimeChangeState, replyAlarmChangeState) {
-        val isSuccess = diaryAlarmChangeState is DiaryAlarmChangeState.Success ||
-            draftAlarmChangeState is DraftAlarmChangeState.Success ||
-            notificationTimeChangeState is NotificationTimeChangeState.Success ||
-            replyAlarmChangeState is ReplyAlarmChangeState.Success
-
-        if (isSuccess) {
-            notificationSettingViewModel.getNotificationInfo()
-        }
-    }
-
     NotificationSettingScreen(
-        notificationSettingViewModel = notificationSettingViewModel,
-        context = context,
         notificationInfoState = notificationInfoState,
-        notificationInfo = notificationInfo,
-        notificationTimeChangeState = notificationTimeChangeState,
-        showNotificationTimePicker = showNotificationTimePicker,
-        updateNotificationTimePicker = { state -> showNotificationTimePicker = state },
-        showFailureDialog = showFailureDialog,
-        failureDialogMessage = failureDialogMessage,
+        diaryAlarm = diaryAlarm,
+        draftAlarm = draftAlarm,
+        replyAlarm = replyAlarm,
+        notificationTime = notificationTime,
         onClickBack = navigateToPrevious,
-        onNotificationInfoAvailable = { notificationInfo = it },
+        onClickDiarySwitch = { notificationSettingViewModel.changeDiaryAlarm(context) },
+        onClickDraftSwitch = { notificationSettingViewModel.changeDraftAlarm(context) },
+        onClickNotificationTime = { showNotificationTimePicker = true },
+        onClickReplySwitch = { notificationSettingViewModel.changeReplyAlarm(context) },
+        onClickRetry = { notificationSettingViewModel.getNotificationInfo() },
     )
-}
-
-@Composable
-fun NotificationSettingScreen(
-    notificationSettingViewModel: NotificationSettingViewModel,
-    context: Context,
-    notificationInfoState: NotificationInfoState,
-    notificationInfo: NotificationInfoResponseDto?,
-    notificationTimeChangeState: NotificationTimeChangeState,
-    showNotificationTimePicker: Boolean,
-    updateNotificationTimePicker: (Boolean) -> Unit,
-    showFailureDialog: Boolean,
-    failureDialogMessage: String,
-    onClickBack: () -> Unit,
-    onNotificationInfoAvailable: (NotificationInfoResponseDto) -> Unit,
-) {
-    Scaffold(
-        topBar = {
-            SettingTopAppBar(
-                title = stringResource(R.string.notification_setting_title),
-                onClickBack = onClickBack,
-            )
-        },
-        containerColor = ClodyTheme.colors.white,
-    ) { innerPadding ->
-        when (notificationInfoState) {
-            is NotificationInfoState.Idle -> {}
-
-            is NotificationInfoState.Loading -> {
-                LoadingScreen()
-            }
-
-            is NotificationInfoState.Success -> {
-                val notificationInfo = notificationInfoState.data
-                onNotificationInfoAvailable(notificationInfo)
-                val notificationTime = notificationSettingViewModel.convertTo12HourFormat(notificationInfo.time)
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding),
-                ) {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    DiaryAlarmSwitch(
-                        notificationSettingViewModel = notificationSettingViewModel,
-                        context = context,
-                        title = stringResource(R.string.notification_setting_write_diary),
-                        notificationInfo = notificationInfo,
-                        checkedState = remember { mutableStateOf(notificationInfo.isDiaryAlarm) },
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    DraftAlarmSwitch(
-                        notificationSettingViewModel = notificationSettingViewModel,
-                        context = context,
-                        title = stringResource(R.string.notification_setting_draft_diary),
-                        notificationInfo = notificationInfo,
-                        checkedState = remember { mutableStateOf(notificationInfo.isDraftAlarm) },
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    NotificationSettingTime(
-                        selectedTime = notificationTime,
-                        updateNotificationTimePicker = updateNotificationTimePicker,
-                    )
-                    Spacer(modifier = Modifier.height(32.dp))
-                    ReplyAlarmSwitch(
-                        notificationSettingViewModel = notificationSettingViewModel,
-                        context = context,
-                        title = stringResource(R.string.notification_setting_reply_diary),
-                        notificationInfo = notificationInfo,
-                        checkedState = remember { mutableStateOf(notificationInfo.isReplyAlarm) },
-                    )
-                }
-            }
-
-            is NotificationInfoState.Failure -> {
-                FailureScreen(
-                    message = notificationInfoState.errorMessage,
-                    confirmAction = { notificationSettingViewModel.getNotificationInfo() },
-                )
-            }
-        }
-    }
 
     if (showNotificationTimePicker) {
-        ClodyPopupBottomSheet(onDismissRequest = { updateNotificationTimePicker(false) }) {
+        ClodyPopupBottomSheet(onDismissRequest = { showNotificationTimePicker = false }) {
             NotificationSettingTimePicker(
-                notificationSettingViewModel = notificationSettingViewModel,
-                onTimeSelected = { newNotificationTime ->
+                onDismissRequest = { showNotificationTimePicker = false },
+                onConfirm = { newNotificationTime ->
                     notificationInfo?.let {
-                        notificationSettingViewModel.changeNotificationTime(context, it, newNotificationTime)
+                        notificationSettingViewModel.changeNotificationTime(context, newNotificationTime)
                     }
-                    updateNotificationTimePicker(false)
+                    showNotificationTimePicker = false
                 },
-                onDismissRequest = { updateNotificationTimePicker(false) },
             )
         }
     }
@@ -189,7 +92,7 @@ fun NotificationSettingScreen(
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,
                 durationMillis = 3000,
-                onDismiss = { notificationSettingViewModel.resetNotificationChangeState() },
+                onDismiss = { notificationSettingViewModel.resetNotificationTimeChangeState() },
             )
         }
     }
@@ -198,6 +101,106 @@ fun NotificationSettingScreen(
         FailureDialog(
             message = failureDialogMessage,
             onDismiss = { notificationSettingViewModel.dismissFailureDialog() },
+        )
+    }
+}
+
+@Composable
+fun NotificationSettingScreen(
+    notificationInfoState: NotificationInfoState,
+    diaryAlarm: Boolean,
+    draftAlarm: Boolean,
+    replyAlarm: Boolean,
+    notificationTime: String,
+    onClickBack: () -> Unit,
+    onClickDiarySwitch: () -> Unit,
+    onClickDraftSwitch: () -> Unit,
+    onClickNotificationTime: () -> Unit,
+    onClickReplySwitch: () -> Unit,
+    onClickRetry: () -> Unit,
+) {
+    Scaffold(
+        topBar = {
+            SettingTopAppBar(
+                title = stringResource(R.string.notification_setting_title),
+                onClickBack = onClickBack,
+            )
+        },
+        containerColor = ClodyTheme.colors.white,
+        content = { innerPadding ->
+            when (notificationInfoState) {
+                is NotificationInfoState.Idle -> {}
+
+                is NotificationInfoState.Loading -> {
+                    LoadingScreen()
+                }
+
+                is NotificationInfoState.Success -> {
+                    Column(
+                        modifier = Modifier
+                            .padding(innerPadding)
+                            .padding(horizontal = 24.dp),
+                    ) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        NotificationSwitch(
+                            title = R.string.notification_setting_write_diary,
+                            checkedState = diaryAlarm,
+                            onClick = onClickDiarySwitch,
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        NotificationSwitch(
+                            title = R.string.notification_setting_draft_diary,
+                            checkedState = draftAlarm,
+                            onClick = onClickDraftSwitch,
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        NotificationTimeSelector(
+                            time = notificationTime.convertTo12HourFormat(),
+                            onClick = onClickNotificationTime,
+                        )
+                        Spacer(modifier = Modifier.height(24.dp))
+                        NotificationSwitch(
+                            title = R.string.notification_setting_reply_diary,
+                            checkedState = replyAlarm,
+                            onClick = onClickReplySwitch,
+                        )
+                    }
+                }
+
+                is NotificationInfoState.Failure -> {
+                    FailureScreen(
+                        message = notificationInfoState.errorMessage,
+                        confirmAction = onClickRetry,
+                    )
+                }
+            }
+        },
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewNotificationSettingScreen() {
+    ClodyTheme {
+        NotificationSettingScreen(
+            notificationInfoState = NotificationInfoState.Success(
+                NotificationInfoResponseDto(
+                    isDiaryAlarm = true,
+                    isDraftAlarm = false,
+                    isReplyAlarm = true,
+                    time = "21:30",
+                ),
+            ),
+            diaryAlarm = true,
+            draftAlarm = false,
+            replyAlarm = true,
+            notificationTime = "21:30",
+            onClickBack = {},
+            onClickDiarySwitch = {},
+            onClickDraftSwitch = {},
+            onClickNotificationTime = {},
+            onClickReplySwitch = {},
+            onClickRetry = {},
         )
     }
 }

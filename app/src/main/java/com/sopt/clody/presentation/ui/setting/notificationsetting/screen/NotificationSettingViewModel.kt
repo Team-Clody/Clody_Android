@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
@@ -22,20 +21,26 @@ class NotificationSettingViewModel @Inject constructor(
     private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
+    private val _diaryAlarm = MutableStateFlow(false)
+    val diaryAlarm: StateFlow<Boolean> = _diaryAlarm
+
+    private val _draftAlarm = MutableStateFlow(false)
+    val draftAlarm: StateFlow<Boolean> = _draftAlarm
+
+    private val _replyAlarm = MutableStateFlow(false)
+    val replyAlarm: StateFlow<Boolean> = _replyAlarm
+
+    private val _notificationTime = MutableStateFlow("")
+    val notificationTime: StateFlow<String> = _notificationTime
+
     private val _notificationInfoState = MutableStateFlow<NotificationInfoState>(NotificationInfoState.Idle)
     val notificationInfoState: StateFlow<NotificationInfoState> = _notificationInfoState
 
-    private val _diaryAlarmChangeState = MutableStateFlow<DiaryAlarmChangeState>(DiaryAlarmChangeState.Idle)
-    val diaryAlarmChangeState: StateFlow<DiaryAlarmChangeState> = _diaryAlarmChangeState
-
-    private val _draftAlarmChangeState = MutableStateFlow<DraftAlarmChangeState>(DraftAlarmChangeState.Idle)
-    val draftAlarmChangeState: StateFlow<DraftAlarmChangeState> = _draftAlarmChangeState
+    private val _notificationChangeState = MutableStateFlow<NotificationChangeState>(NotificationChangeState.Idle)
+    val notificationChangeState: StateFlow<NotificationChangeState> = _notificationChangeState
 
     private val _notificationTimeChangeState = MutableStateFlow<NotificationTimeChangeState>(NotificationTimeChangeState.Idle)
     val notificationTimeChangeState: StateFlow<NotificationTimeChangeState> = _notificationTimeChangeState
-
-    private val _replyAlarmChangeState = MutableStateFlow<ReplyAlarmChangeState>(ReplyAlarmChangeState.Idle)
-    val replyAlarmChangeState: StateFlow<ReplyAlarmChangeState> = _replyAlarmChangeState
 
     private val _showFailureDialog = MutableStateFlow(false)
     val showFailureDialog: StateFlow<Boolean> = _showFailureDialog
@@ -45,6 +50,10 @@ class NotificationSettingViewModel @Inject constructor(
 
     private val maxRetryCount = 3
     private var retryCount = 0
+
+    init {
+        getNotificationInfo()
+    }
 
     fun getNotificationInfo() {
         if (retryCount >= maxRetryCount) return
@@ -58,6 +67,10 @@ class NotificationSettingViewModel @Inject constructor(
             _notificationInfoState.value = result.fold(
                 onSuccess = {
                     retryCount = 0
+                    _diaryAlarm.value = it.isDiaryAlarm
+                    _draftAlarm.value = it.isDraftAlarm
+                    _replyAlarm.value = it.isReplyAlarm
+                    _notificationTime.value = it.time
                     NotificationInfoState.Success(it)
                 },
                 onFailure = {
@@ -76,8 +89,8 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeDiaryAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, diaryAlarm: Boolean) {
-        _diaryAlarmChangeState.value = DiaryAlarmChangeState.Loading
+    fun changeDiaryAlarm(context: Context) {
+        _notificationChangeState.value = NotificationChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
                 _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
@@ -86,18 +99,21 @@ class NotificationSettingViewModel @Inject constructor(
             }
             val fcmToken = getTokenFromPreferences(context)
             if (fcmToken.isNullOrBlank()) {
-                _diaryAlarmChangeState.value = DiaryAlarmChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
+                _notificationChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
             val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = diaryAlarm,
-                isDraftAlarm = notificationInfo.isDraftAlarm,
-                isReplyAlarm = notificationInfo.isReplyAlarm,
-                time = notificationInfo.time,
+                isDiaryAlarm = !_diaryAlarm.value,
+                isDraftAlarm = _draftAlarm.value,
+                isReplyAlarm = _replyAlarm.value,
+                time = _notificationTime.value,
                 fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
-                onSuccess = { _diaryAlarmChangeState.value = DiaryAlarmChangeState.Success(it) },
+                onSuccess = {
+                    _notificationChangeState.value = NotificationChangeState.Success(it)
+                    getNotificationInfo()
+                },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
                         FAILURE_TEMPORARY_MESSAGE
@@ -105,14 +121,14 @@ class NotificationSettingViewModel @Inject constructor(
                         UNKNOWN_ERROR
                     }
                     _showFailureDialog.value = true
-                    DiaryAlarmChangeState.Failure(_failureDialogMessage.value)
+                    _notificationChangeState.value = NotificationChangeState.Failure(_failureDialogMessage.value)
                 },
             )
         }
     }
 
-    fun changeDraftAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, draftAlarm: Boolean) {
-        _notificationTimeChangeState.value = NotificationTimeChangeState.Loading
+    fun changeDraftAlarm(context: Context) {
+        _notificationChangeState.value = NotificationChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
                 _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
@@ -121,18 +137,21 @@ class NotificationSettingViewModel @Inject constructor(
             }
             val fcmToken = getTokenFromPreferences(context)
             if (fcmToken.isNullOrBlank()) {
-                _diaryAlarmChangeState.value = DiaryAlarmChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
+                _notificationChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
             val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = notificationInfo.isDiaryAlarm,
-                isDraftAlarm = draftAlarm,
-                isReplyAlarm = notificationInfo.isReplyAlarm,
-                time = notificationInfo.time,
+                isDiaryAlarm = _diaryAlarm.value,
+                isDraftAlarm = !_draftAlarm.value,
+                isReplyAlarm = _replyAlarm.value,
+                time = _notificationTime.value,
                 fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
-                onSuccess = { _diaryAlarmChangeState.value = DiaryAlarmChangeState.Success(it) },
+                onSuccess = {
+                    _notificationChangeState.value = NotificationChangeState.Success(it)
+                    getNotificationInfo()
+                },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
                         FAILURE_TEMPORARY_MESSAGE
@@ -140,13 +159,13 @@ class NotificationSettingViewModel @Inject constructor(
                         UNKNOWN_ERROR
                     }
                     _showFailureDialog.value = true
-                    DiaryAlarmChangeState.Failure(_failureDialogMessage.value)
+                    _notificationChangeState.value = NotificationChangeState.Failure(_failureDialogMessage.value)
                 },
             )
         }
     }
 
-    fun changeNotificationTime(context: Context, notificationInfo: NotificationInfoResponseDto, time: String) {
+    fun changeNotificationTime(context: Context, time: String) {
         _notificationTimeChangeState.value = NotificationTimeChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -160,14 +179,17 @@ class NotificationSettingViewModel @Inject constructor(
                 return@launch
             }
             val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = notificationInfo.isDiaryAlarm,
-                isDraftAlarm = notificationInfo.isDraftAlarm,
-                isReplyAlarm = notificationInfo.isReplyAlarm,
+                isDiaryAlarm = _diaryAlarm.value,
+                isDraftAlarm = _draftAlarm.value,
+                isReplyAlarm = _replyAlarm.value,
                 time = time,
                 fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
-                onSuccess = { _notificationTimeChangeState.value = NotificationTimeChangeState.Success(it) },
+                onSuccess = {
+                    _notificationTimeChangeState.value = NotificationTimeChangeState.Success(it)
+                    getNotificationInfo()
+                },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
                         FAILURE_TEMPORARY_MESSAGE
@@ -175,14 +197,14 @@ class NotificationSettingViewModel @Inject constructor(
                         UNKNOWN_ERROR
                     }
                     _showFailureDialog.value = true
-                    NotificationInfoState.Failure(_failureDialogMessage.value)
+                    _notificationTimeChangeState.value = NotificationTimeChangeState.Failure(_failureDialogMessage.value)
                 },
             )
         }
     }
 
-    fun changeReplyAlarm(context: Context, notificationInfo: NotificationInfoResponseDto, replyAlarm: Boolean) {
-        _replyAlarmChangeState.value = ReplyAlarmChangeState.Loading
+    fun changeReplyAlarm(context: Context) {
+        _notificationChangeState.value = NotificationChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
                 _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
@@ -191,18 +213,21 @@ class NotificationSettingViewModel @Inject constructor(
             }
             val fcmToken = getTokenFromPreferences(context)
             if (fcmToken.isNullOrBlank()) {
-                _replyAlarmChangeState.value = ReplyAlarmChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
+                _notificationChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
                 return@launch
             }
             val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = notificationInfo.isDiaryAlarm,
-                isDraftAlarm = notificationInfo.isDraftAlarm,
-                isReplyAlarm = replyAlarm,
-                time = notificationInfo.time,
+                isDiaryAlarm = _diaryAlarm.value,
+                isDraftAlarm = _draftAlarm.value,
+                isReplyAlarm = !_replyAlarm.value,
+                time = _notificationTime.value,
                 fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(
-                onSuccess = { _replyAlarmChangeState.value = ReplyAlarmChangeState.Success(it) },
+                onSuccess = {
+                    _notificationChangeState.value = NotificationChangeState.Success(it)
+                    getNotificationInfo()
+                },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
                         FAILURE_TEMPORARY_MESSAGE
@@ -210,13 +235,13 @@ class NotificationSettingViewModel @Inject constructor(
                         UNKNOWN_ERROR
                     }
                     _showFailureDialog.value = true
-                    ReplyAlarmChangeState.Failure(_failureDialogMessage.value)
+                    _notificationChangeState.value = NotificationChangeState.Failure(_failureDialogMessage.value)
                 },
             )
         }
     }
 
-    fun resetNotificationChangeState() {
+    fun resetNotificationTimeChangeState() {
         _notificationTimeChangeState.value = NotificationTimeChangeState.Idle
     }
 
@@ -228,32 +253,5 @@ class NotificationSettingViewModel @Inject constructor(
     private fun getTokenFromPreferences(context: Context): String? {
         val sharedPreferences = context.getSharedPreferences("fcm_prefs", Context.MODE_PRIVATE)
         return sharedPreferences.getString("fcm_token", null)
-    }
-
-    fun convertTo12HourFormat(time: String): String {
-        val (hourBefore, minuteBefore) = time.split(":").map { it.toInt() }
-
-        val amPm = if (hourBefore < 12) "오전" else "오후"
-
-        val hourAfter = when {
-            hourBefore == 0 -> 12
-            hourBefore > 12 -> hourBefore - 12
-            else -> hourBefore
-        }
-
-        val minuteAfter = if (minuteBefore == 0) "00" else minuteBefore
-
-        return String.format("$amPm ${hourAfter}시 ${minuteAfter}분")
-    }
-
-    fun convertTo24HourFormat(amPm: String, hour: String, minute: String): String {
-        val hourInt = if (amPm == "오후" && hour.toInt() != 12) {
-            hour.toInt() + 12
-        } else if (amPm == "오전" && hour.toInt() == 12) {
-            0
-        } else {
-            hour.toInt()
-        }
-        return String.format("%02d:%02d", hourInt, minute.toInt())
     }
 }

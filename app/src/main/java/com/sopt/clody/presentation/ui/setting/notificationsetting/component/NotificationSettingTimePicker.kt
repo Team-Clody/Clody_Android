@@ -28,14 +28,13 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
 import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
-import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingViewModel
+import com.sopt.clody.presentation.utils.extension.to24HourFormat
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NotificationSettingTimePicker(
-    notificationSettingViewModel: NotificationSettingViewModel,
-    onTimeSelected: (String) -> Unit,
     onDismissRequest: () -> Unit,
+    onConfirm: (String) -> Unit,
 ) {
     val amPmItems = remember { listOf("오전", "오후") }
     val hourItems = remember { (1..12).map { it.toString() } }
@@ -138,12 +137,12 @@ fun NotificationSettingTimePicker(
             }
             ClodyButton(
                 onClick = {
-                    val selectedTime = notificationSettingViewModel.convertTo24HourFormat(
+                    val selectedTime = Triple(
                         amPmPickerState.selectedItem,
                         hourPickerState.selectedItem,
                         minutePickerState.selectedItem,
-                    )
-                    onTimeSelected(selectedTime)
+                    ).to24HourFormat()
+                    onConfirm(selectedTime)
                 },
                 text = stringResource(R.string.notification_setting_timepicker_confirm),
                 enabled = true,
