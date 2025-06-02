@@ -54,6 +54,9 @@ class WriteDiaryViewModel @Inject constructor(
     var showDialog by mutableStateOf(false)
         private set
 
+    var showExitDialog by mutableStateOf(false)
+        private set
+
     fun writeDiary(year: Int, month: Int, day: Int, contents: List<String>) {
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -160,6 +163,10 @@ class WriteDiaryViewModel @Inject constructor(
 
     fun setEntryToDeleteIndex(index: Int) {
         entryToDelete = index
+    }
+
+    fun updateShowExitDialog(show: Boolean) {
+        showExitDialog = show
     }
 
     companion object {

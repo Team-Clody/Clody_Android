@@ -142,14 +142,18 @@ fun WriteDiaryTextField(
                             .onFocusChanged { isFocused = it.isFocused },
                     )
 
-                    IconButton(
-                        onClick = onRemove,
-                        modifier = Modifier.size(28.dp),
-                    ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.ic_writediary_kebab),
-                            contentDescription = "Remove",
-                        )
+                    if (isRemovable) {
+                        IconButton(
+                            onClick = onRemove,
+                            modifier = Modifier.size(28.dp),
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.ic_writediary_kebab),
+                                contentDescription = "Remove",
+                            )
+                        }
+                    } else {
+                        Spacer(modifier = Modifier.size(28.dp))
                     }
                 }
             }
