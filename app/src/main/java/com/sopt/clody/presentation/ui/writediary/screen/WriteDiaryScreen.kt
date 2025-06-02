@@ -30,7 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -47,9 +46,10 @@ import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
 import com.sopt.clody.presentation.ui.writediary.component.topbar.WriteDiaryTopBar
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.base.BasePreview
+import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
-import com.sopt.clody.ui.theme.CLODYTheme
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -351,10 +351,10 @@ private fun ShowToastMessages(
     }
 }
 
+@ClodyPreview
 @Composable
-@Preview
 private fun WriteDiaryScreenPreview() {
-    CLODYTheme {
+    BasePreview {
         WriteDiaryScreen(
             isLoading = false,
             entries = listOf("Entry 1", "Entry 2", "Entry 3"),
