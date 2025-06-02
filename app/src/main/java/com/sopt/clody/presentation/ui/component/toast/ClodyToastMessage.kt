@@ -18,9 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sopt.clody.ui.theme.CLODYTheme
+import com.sopt.clody.presentation.utils.base.BasePreview
+import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 
@@ -65,10 +65,10 @@ fun ClodyToastMessage(
     }
 }
 
-@Preview
+@ClodyPreview
 @Composable
-fun ClodyToastMessagePreview() {
-    CLODYTheme {
+private fun ClodyToastMessagePreview() {
+    BasePreview {
         ClodyToastMessage(
             message = "이메일 인증이 완료되었어요!",
             iconResId = com.sopt.clody.R.drawable.ic_toast_error,
