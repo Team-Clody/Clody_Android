@@ -30,6 +30,7 @@ import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.DiaryAlarmSwitch
+import com.sopt.clody.presentation.ui.setting.notificationsetting.component.DraftAlarmSwitch
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTime
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSettingTimePicker
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.ReplyAlarmSwitch
@@ -43,6 +44,7 @@ fun NotificationSettingRoute(
     val context = LocalContext.current
     val notificationInfoState by notificationSettingViewModel.notificationInfoState.collectAsState()
     val diaryAlarmChangeState by notificationSettingViewModel.diaryAlarmChangeState.collectAsState()
+    val draftAlarmChangeState by notificationSettingViewModel.draftAlarmChangeState.collectAsState()
     val notificationTimeChangeState by notificationSettingViewModel.notificationTimeChangeState.collectAsState()
     val replyAlarmChangeState by notificationSettingViewModel.replyAlarmChangeState.collectAsState()
     val showFailureDialog by notificationSettingViewModel.showFailureDialog.collectAsState()
@@ -54,8 +56,9 @@ fun NotificationSettingRoute(
         notificationSettingViewModel.getNotificationInfo()
     }
 
-    LaunchedEffect(diaryAlarmChangeState, notificationTimeChangeState, replyAlarmChangeState) {
+    LaunchedEffect(diaryAlarmChangeState, draftAlarmChangeState, notificationTimeChangeState, replyAlarmChangeState) {
         val isSuccess = diaryAlarmChangeState is DiaryAlarmChangeState.Success ||
+            draftAlarmChangeState is DraftAlarmChangeState.Success ||
             notificationTimeChangeState is NotificationTimeChangeState.Success ||
             replyAlarmChangeState is ReplyAlarmChangeState.Success
 
@@ -124,6 +127,14 @@ fun NotificationSettingScreen(
                         title = stringResource(R.string.notification_setting_write_diary),
                         notificationInfo = notificationInfo,
                         checkedState = remember { mutableStateOf(notificationInfo.isDiaryAlarm) },
+                    )
+                    Spacer(modifier = Modifier.height(32.dp))
+                    DraftAlarmSwitch(
+                        notificationSettingViewModel = notificationSettingViewModel,
+                        context = context,
+                        title = stringResource(R.string.notification_setting_draft_diary),
+                        notificationInfo = notificationInfo,
+                        checkedState = remember { mutableStateOf(notificationInfo.isDraftAlarm) },
                     )
                     Spacer(modifier = Modifier.height(32.dp))
                     NotificationSettingTime(

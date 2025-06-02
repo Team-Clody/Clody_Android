@@ -127,6 +127,7 @@
     <!-- 알림 설정 -->
     <string name="notification_setting_title">알림 설정</string>
     <string name="notification_setting_write_diary">일기 작성 알림 받기</string>
+    <string name="notification_setting_draft_diary">이어쓰기 알림 받기</string>
     <string name="notification_setting_notification_time">알림 시간</string>
     <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
     <string name="notification_setting_timepicker_confirm">완료</string>
