@@ -45,6 +45,7 @@ class TimeReminderViewModel @Inject constructor(
 
             val requestDto = SendNotificationRequestDto(
                 isDiaryAlarm = isPermissionGranted,
+                isDraftAlarm = isPermissionGranted,
                 isReplyAlarm = isPermissionGranted,
                 time = selectedTime,
                 fcmToken = fcmToken,

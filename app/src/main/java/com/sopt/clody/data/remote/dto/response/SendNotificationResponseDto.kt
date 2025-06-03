@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class SendNotificationResponseDto(
     @SerialName("isDiaryAlarm") val isDiaryAlarm: Boolean,
+    @SerialName("isDraftAlarm") val isDraftAlarm: Boolean,
     @SerialName("isReplyAlarm") val isReplyAlarm: Boolean,
     @SerialName("time") val time: String,
     @SerialName("fcmToken") val fcmToken: String,
