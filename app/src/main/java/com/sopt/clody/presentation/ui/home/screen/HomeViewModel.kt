@@ -205,6 +205,11 @@ class HomeViewModel @Inject constructor(
 
     fun enableDraftAlarm(context: Context) {
         viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+                return@launch
+            }
+
             val fcmToken = getFcmToken(context) ?: return@launch
             val notificationInfo = getNotificationInfo() ?: return@launch
             val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
@@ -235,7 +240,7 @@ class HomeViewModel @Inject constructor(
         isDiaryAlarm = info.isDiaryAlarm,
         isDraftAlarm = true,
         isReplyAlarm = info.isReplyAlarm,
-        time = if (info.time != "21:30") info.time else "21:30",
+        time = info.time.ifEmpty { "21:30" },
         fcmToken = fcmToken,
     )
 
