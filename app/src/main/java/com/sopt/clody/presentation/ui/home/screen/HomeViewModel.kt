@@ -206,7 +206,7 @@ class HomeViewModel @Inject constructor(
     fun enableDraftAlarm(context: Context) {
         viewModelScope.launch {
             val fcmToken = getFcmToken(context) ?: return@launch
-            val notificationInfo = getNotificationInfo(fcmToken) ?: return@launch
+            val notificationInfo = getNotificationInfo() ?: return@launch
             val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
             sendDraftAlarmRequest(request)
         }
@@ -221,7 +221,7 @@ class HomeViewModel @Inject constructor(
         return token
     }
 
-    private suspend fun getNotificationInfo(fcmToken: String): NotificationInfoResponseDto? {
+    private suspend fun getNotificationInfo(): NotificationInfoResponseDto? {
         return notificationRepository.getNotificationInfo().getOrElse {
             _draftAlarmChangeState.value = NotificationChangeState.Failure("알림 정보를 가져오는데 실패했습니다.")
             null
