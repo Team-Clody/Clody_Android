@@ -2,6 +2,7 @@ package com.sopt.clody.presentation.ui.home.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.data.local.datasource.FirstDraftLocalDataSource
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil,
+    private val firstDraftLocalDataSource: FirstDraftLocalDataSource,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -61,6 +63,9 @@ class HomeViewModel @Inject constructor(
 
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
+
+    private val _showFirstDraftPopup = MutableStateFlow(firstDraftLocalDataSource.isFirstUse)
+    val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
 
     private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
     val errorState: StateFlow<Pair<Boolean, String>> = _errorState
@@ -178,5 +183,10 @@ class HomeViewModel @Inject constructor(
 
     fun setShowDiaryDeleteDialog(state: Boolean) {
         _showDiaryDeleteDialog.value = state
+    }
+
+    fun updateFirstDraftUse(newState: Boolean) {
+        firstDraftLocalDataSource.isFirstUse = newState
+        _showFirstDraftPopup.value = newState
     }
 }
