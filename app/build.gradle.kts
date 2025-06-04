@@ -77,6 +77,11 @@ android {
         buildConfig = true
         compose = true
     }
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
+    }
 }
 
 dependencies {
@@ -122,6 +127,11 @@ dependencies {
 
     // Mavericks
     implementation(libs.bundles.mavericks)
+
+    // Kotest
+    testImplementation(libs.bundles.kotest)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
 
     // ETC
     implementation(libs.timber)
