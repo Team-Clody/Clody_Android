@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sopt.clody.R
 import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
@@ -33,6 +34,7 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
+import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
@@ -63,6 +65,8 @@ fun HomeRoute(
     val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
     val showFirstDraftPopup by homeViewModel.showFirstDraftPopup.collectAsStateWithLifecycle()
+    val draftAlarmEnableToast by homeViewModel.draftAlarmEnableToast.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
     val errorMessage = when {
@@ -154,7 +158,10 @@ fun HomeRoute(
                         Spacer(modifier = Modifier.height(28.dp))
                         ClodyButton(
                             text = "알림 받기",
-                            onClick = {},
+                            onClick = {
+                                homeViewModel.enableDraftAlarm(context)
+                                homeViewModel.updateFirstDraftUse(false)
+                            },
                             enabled = true,
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -169,6 +176,17 @@ fun HomeRoute(
                         Spacer(modifier = Modifier.height(4.dp))
                     }
                 },
+            )
+        }
+
+        if (draftAlarmEnableToast) {
+            ClodyToastMessage(
+                message = "이어쓰기 알림 설정을 완료했어요.",
+                iconResId = R.drawable.ic_toast_check_on_18,
+                backgroundColor = ClodyTheme.colors.gray04,
+                contentColor = ClodyTheme.colors.white,
+                durationMillis = 3000,
+                onDismiss = { homeViewModel.resetDraftAlarmEnableToast() },
             )
         }
     }
@@ -242,7 +260,7 @@ fun HomeScreen(
             containerColor = ClodyTheme.colors.white,
             content = { innerPadding ->
                 when (val state = calendarState) {
-                    is CalendarState.Idle -> { }
+                    is CalendarState.Idle -> {}
 
                     is CalendarState.Loading -> {
                         LoadingScreen()
@@ -270,7 +288,7 @@ fun HomeScreen(
                 }
 
                 when (deleteDiaryState) {
-                    is DeleteDiaryState.Idle -> { }
+                    is DeleteDiaryState.Idle -> {}
 
                     is DeleteDiaryState.Loading -> {
                         LoadingScreen()

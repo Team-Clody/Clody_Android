@@ -141,6 +141,7 @@ fun WriteDiaryRoute(
         onDismissExitDialog = {
             viewModel.updateDraftUsage()
             viewModel.updateShowExitDialog(false)
+            navigateToPrevious()
         },
         onConfirmExitDialog = {
             viewModel.updateShowExitDialog(false)

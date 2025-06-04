@@ -1,13 +1,19 @@
 package com.sopt.clody.presentation.ui.home.screen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.ClodyFirebaseMessagingService.Companion.getTokenFromPreferences
 import com.sopt.clody.data.local.datasource.FirstDraftLocalDataSource
+import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
+import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
+    private val notificationRepository: NotificationRepository,
     private val networkUtil: NetworkUtil,
     private val firstDraftLocalDataSource: FirstDraftLocalDataSource,
 ) : ViewModel() {
@@ -66,6 +73,12 @@ class HomeViewModel @Inject constructor(
 
     private val _showFirstDraftPopup = MutableStateFlow(firstDraftLocalDataSource.isFirstUse)
     val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
+
+    private val _draftAlarmChangeState = MutableStateFlow<NotificationChangeState>(NotificationChangeState.Idle)
+    val draftAlarmChangeState: StateFlow<NotificationChangeState> = _draftAlarmChangeState
+
+    private val _draftAlarmEnableToast = MutableStateFlow(false)
+    val draftAlarmEnableToast: StateFlow<Boolean> = _draftAlarmEnableToast
 
     private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
     val errorState: StateFlow<Pair<Boolean, String>> = _errorState
@@ -188,5 +201,57 @@ class HomeViewModel @Inject constructor(
     fun updateFirstDraftUse(newState: Boolean) {
         firstDraftLocalDataSource.isFirstUse = newState
         _showFirstDraftPopup.value = newState
+    }
+
+    fun enableDraftAlarm(context: Context) {
+        viewModelScope.launch {
+            val fcmToken = getFcmToken(context) ?: return@launch
+            val notificationInfo = getNotificationInfo(fcmToken) ?: return@launch
+            val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
+            sendDraftAlarmRequest(request)
+        }
+    }
+
+    private suspend fun getFcmToken(context: Context): String? {
+        val token = getTokenFromPreferences(context)
+        if (token.isNullOrBlank()) {
+            _draftAlarmChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
+            return null
+        }
+        return token
+    }
+
+    private suspend fun getNotificationInfo(fcmToken: String): NotificationInfoResponseDto? {
+        return notificationRepository.getNotificationInfo().getOrElse {
+            _draftAlarmChangeState.value = NotificationChangeState.Failure("알림 정보를 가져오는데 실패했습니다.")
+            null
+        }
+    }
+
+    private fun buildDraftAlarmRequest(
+        info: NotificationInfoResponseDto,
+        fcmToken: String,
+    ): SendNotificationRequestDto = SendNotificationRequestDto(
+        isDiaryAlarm = info.isDiaryAlarm,
+        isDraftAlarm = true,
+        isReplyAlarm = info.isReplyAlarm,
+        time = if (info.time != "21:30") info.time else "21:30",
+        fcmToken = fcmToken,
+    )
+
+    private suspend fun sendDraftAlarmRequest(request: SendNotificationRequestDto) {
+        notificationRepository.sendNotification(request).fold(
+            onSuccess = {
+                _draftAlarmEnableToast.value = true
+                _draftAlarmChangeState.value = NotificationChangeState.Success(it)
+            },
+            onFailure = {
+                _draftAlarmChangeState.value = NotificationChangeState.Failure("이어쓰기 알림 설정에 실패했습니다.")
+            },
+        )
+    }
+
+    fun resetDraftAlarmEnableToast() {
+        _draftAlarmEnableToast.value = false
     }
 }
