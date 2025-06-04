@@ -3,6 +3,7 @@ package com.sopt.clody.di
 import android.content.SharedPreferences
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.datastore.TokenDataStoreImpl
+import com.sopt.clody.di.qualifier.TokenPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 object TokenDataStoreModule {
     @Provides
     @Singleton
-    fun provideTokenDataStore(sharedPreferences: SharedPreferences): TokenDataStore {
+    fun provideTokenDataStore(@TokenPrefs sharedPreferences: SharedPreferences): TokenDataStore {
         return TokenDataStoreImpl(sharedPreferences)
     }
 }
