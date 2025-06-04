@@ -1,9 +1,12 @@
 package com.sopt.clody.data.remote.api
 
 import com.sopt.clody.data.remote.dto.base.ApiResponse
+import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.request.WriteDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
+import com.sopt.clody.data.remote.dto.response.DraftDiariesResponseDto
+import com.sopt.clody.data.remote.dto.response.DraftDiaryCreatedResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
@@ -59,4 +62,16 @@ interface DiaryService {
         @Query("month") month: Int,
         @Query("date") date: Int,
     ): ApiResponse<ReplyDiaryResponseDto>
+
+    @GET("api/v1/draft")
+    suspend fun fetchDraftDiary(
+        @Query("year") year: Int,
+        @Query("month") month: Int,
+        @Query("date") date: Int,
+    ): ApiResponse<DraftDiariesResponseDto>
+
+    @POST("api/v1/draft")
+    suspend fun saveDraftDiary(
+        @Body request: SaveDraftDiaryRequestDto,
+    ): ApiResponse<DraftDiaryCreatedResponseDto>
 }
