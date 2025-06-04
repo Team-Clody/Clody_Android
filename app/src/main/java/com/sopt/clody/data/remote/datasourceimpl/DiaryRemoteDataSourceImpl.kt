@@ -3,9 +3,12 @@ package com.sopt.clody.data.remote.datasourceimpl
 import com.sopt.clody.data.remote.api.DiaryService
 import com.sopt.clody.data.remote.datasource.DiaryRemoteDataSource
 import com.sopt.clody.data.remote.dto.base.ApiResponse
+import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.request.WriteDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
+import com.sopt.clody.data.remote.dto.response.DraftDiariesResponseDto
+import com.sopt.clody.data.remote.dto.response.DraftDiaryCreatedResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
@@ -35,4 +38,10 @@ class DiaryRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getReplyDiary(year: Int, month: Int, date: Int): ApiResponse<ReplyDiaryResponseDto> =
         diaryService.getReplyDiary(year = year, month = month, date = date)
+
+    override suspend fun fetchDraftDiary(year: Int, month: Int, date: Int): ApiResponse<DraftDiariesResponseDto> =
+        diaryService.fetchDraftDiary(year = year, month = month, date = date)
+
+    override suspend fun saveDraftDiary(request: SaveDraftDiaryRequestDto): ApiResponse<DraftDiaryCreatedResponseDto> =
+        diaryService.saveDraftDiary(request)
 }
