@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.usecase.FetchDraftDiaryUseCase
+import com.sopt.clody.domain.usecase.SaveDraftDiaryUseCase
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -21,6 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WriteDiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
+    private val fetchDraftDiaryUseCase: FetchDraftDiaryUseCase,
+    private val saveDraftDiaryUseCase: SaveDraftDiaryUseCase,
     private val networkUtil: NetworkUtil,
 ) : ViewModel() {
 
@@ -56,6 +60,8 @@ class WriteDiaryViewModel @Inject constructor(
 
     var showExitDialog by mutableStateOf(false)
         private set
+
+    private var initialEntries: List<String> = emptyList()
 
     fun writeDiary(year: Int, month: Int, day: Int, contents: List<String>) {
         viewModelScope.launch {
@@ -167,6 +173,44 @@ class WriteDiaryViewModel @Inject constructor(
 
     fun updateShowExitDialog(show: Boolean) {
         showExitDialog = show
+    }
+
+    fun hasChangedFromInitial(): Boolean {
+        return entries != initialEntries
+    }
+
+    fun fetchDraftDiary(year: Int, month: Int, day: Int) {
+        viewModelScope.launch {
+            val result = fetchDraftDiaryUseCase(year, month, day)
+            result.onSuccess { response ->
+                _entries.clear()
+                _entries.addAll(response.draftDiaries)
+
+                initialEntries = response.draftDiaries.toList()
+
+                _showWarnings.clear()
+                _showWarnings.addAll(List(_entries.size) { false })
+                checkLimitMessage()
+                checkEmptyFieldsMessage()
+            }.onFailure {
+                _failureMessage.value = it.localizedMessage ?: UNKNOWN_ERROR
+                _showFailureDialog.value = true
+            }
+        }
+    }
+
+    fun saveDraftDiary() {
+        viewModelScope.launch {
+            val result = saveDraftDiaryUseCase(_entries.toList())
+            result.onSuccess {
+                _failureMessage.value = ""
+                _showFailureDialog.value = false
+                println("성공함")
+            }.onFailure { e ->
+                _failureMessage.value = e.localizedMessage ?: UNKNOWN_ERROR
+                _showFailureDialog.value = true
+            }
+        }
     }
 
     companion object {
