@@ -1,6 +1,7 @@
 package com.sopt.clody.data.repositoryimpl
 
 import com.sopt.clody.data.remote.datasource.DiaryRemoteDataSource
+import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
@@ -8,6 +9,8 @@ import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 import com.sopt.clody.data.remote.util.handleApiResponse
+import com.sopt.clody.domain.model.CreatedDraftDiaryInfo
+import com.sopt.clody.domain.model.DraftDiaryContents
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
@@ -79,5 +82,23 @@ class DiaryRepositoryImpl @Inject constructor(
                 throw IllegalStateException(FAILURE_TEMPORARY_MESSAGE)
             }
             response
+        }
+
+    override suspend fun fetchDraftDiary(year: Int, month: Int, date: Int): Result<DraftDiaryContents> =
+        runCatching {
+            diaryRemoteDataSource
+                .fetchDraftDiary(year, month, date)
+                .handleApiResponse()
+                .getOrThrow()
+                .toDomain()
+        }
+
+    override suspend fun saveDraftDiary(contents: List<String>): Result<CreatedDraftDiaryInfo> =
+        runCatching {
+            diaryRemoteDataSource
+                .saveDraftDiary(SaveDraftDiaryRequestDto(draftDiaries = contents))
+                .handleApiResponse()
+                .getOrThrow()
+                .toDomain()
         }
 }

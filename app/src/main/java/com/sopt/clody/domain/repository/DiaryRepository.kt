@@ -6,6 +6,8 @@ import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
+import com.sopt.clody.domain.model.CreatedDraftDiaryInfo
+import com.sopt.clody.domain.model.DraftDiaryContents
 
 interface DiaryRepository {
     suspend fun writeDiary(date: String, content: List<String>): Result<WriteDiaryResponseDto>
@@ -15,4 +17,6 @@ interface DiaryRepository {
     suspend fun getMonthlyCalendarData(year: Int, month: Int): Result<MonthlyCalendarResponseDto>
     suspend fun getMonthlyDiary(year: Int, month: Int): Result<MonthlyDiaryResponseDto>
     suspend fun getReplyDiary(year: Int, month: Int, date: Int): Result<ReplyDiaryResponseDto>
+    suspend fun fetchDraftDiary(year: Int, month: Int, date: Int): Result<DraftDiaryContents>
+    suspend fun saveDraftDiary(contents: List<String>): Result<CreatedDraftDiaryInfo>
 }
