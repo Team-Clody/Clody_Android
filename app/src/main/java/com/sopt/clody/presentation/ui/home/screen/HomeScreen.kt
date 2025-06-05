@@ -60,6 +60,7 @@ fun HomeRoute(
     val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
     val showInAppReviewPopup by homeViewModel.showInAppReviewPopup.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
     val errorMessage = when {
@@ -68,11 +69,8 @@ fun HomeRoute(
         else -> ""
     }
 
-    Timber.tag("showInAppReviewPopup").d(showInAppReviewPopup.toString())
-    Timber.tag("isFromReplyDiary").d(isFromReplyDiary.toString())
-
-    if (showInAppReviewPopup && isFromReplyDiary) {
-        InAppReviewManager.showPopup(LocalContext.current as Activity)
+    LaunchedEffect(showInAppReviewPopup && isFromReplyDiary) {
+        InAppReviewManager.showPopup(context as Activity)
         homeViewModel.updateShowInAppReviewPopup(false)
     }
 
