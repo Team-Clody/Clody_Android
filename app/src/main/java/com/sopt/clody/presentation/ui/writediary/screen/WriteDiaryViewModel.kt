@@ -205,7 +205,6 @@ class WriteDiaryViewModel @Inject constructor(
             result.onSuccess {
                 _failureMessage.value = ""
                 _showFailureDialog.value = false
-                println("성공함")
             }.onFailure { e ->
                 _failureMessage.value = e.localizedMessage ?: UNKNOWN_ERROR
                 _showFailureDialog.value = true
