@@ -49,7 +49,7 @@ fun ReplyDiaryRoute(
     month: Int,
     date: Int,
     replyStatus: ReplyStatus,
-    navigateToHome: (year: Int, month: Int, date: Int) -> Unit,
+    navigateToHome: (year: Int, month: Int, date: Int, isFromReplyDiary: Boolean) -> Unit,
     viewModel: ReplyDiaryViewModel = hiltViewModel(),
 ) {
     val replyDiaryState by viewModel.replyDiaryState.collectAsState()
@@ -65,7 +65,7 @@ fun ReplyDiaryRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigateToHome(year, month, date)
+            navigateToHome(year, month, date, true)
         } else {
             backPressedTime = currentTime
         }
@@ -79,7 +79,7 @@ fun ReplyDiaryRoute(
         is ReplyDiaryState.Success -> {
             val successState = replyDiaryState as ReplyDiaryState.Success
             ReplyDiaryScreen(
-                navigateToHome = { navigateToHome(year, month, date) },
+                navigateToHome = { navigateToHome(year, month, date, true) },
                 replyStatus = replyStatus,
                 replyDiaryState = successState,
             )

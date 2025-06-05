@@ -28,6 +28,7 @@ fun NavGraphBuilder.homeScreen(
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
                 selectedDay = selectedDay,
+                isFromReplyDiary = isFromReplyDiary,
                 navigateToDiaryList = navigateToDiaryList,
                 navigateToSetting = navigateToSetting,
                 navigateToWriteDiary = navigateToWriteDiary,
@@ -41,7 +42,8 @@ fun NavController.navigateToHome(
     selectedYear: Int = LocalDate.now().year,
     selectedMonth: Int = LocalDate.now().monthValue,
     selectedDay: Int? = LocalDate.now().dayOfMonth,
+    isFromReplyDiary: Boolean = false,
     navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
-    navigate(Route.Home(selectedYear, selectedMonth, selectedDay), navOptions)
+    navigate(Route.Home(selectedYear, selectedMonth, selectedDay, isFromReplyDiary), navOptions)
 }

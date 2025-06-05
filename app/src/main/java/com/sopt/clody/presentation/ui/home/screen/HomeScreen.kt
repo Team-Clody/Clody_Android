@@ -43,6 +43,7 @@ fun HomeRoute(
     selectedYear: Int,
     selectedMonth: Int,
     selectedDay: Int?,
+    isFromReplyDiary: Boolean,
     navigateToDiaryList: (year: Int, month: Int) -> Unit,
     navigateToSetting: () -> Unit,
     navigateToWriteDiary: (year: Int, month: Int, date: Int) -> Unit,
@@ -67,10 +68,12 @@ fun HomeRoute(
         else -> ""
     }
 
-    if (showInAppReviewPopup) {
+    Timber.tag("showInAppReviewPopup").d(showInAppReviewPopup.toString())
+    Timber.tag("isFromReplyDiary").d(isFromReplyDiary.toString())
+
+    if (showInAppReviewPopup && isFromReplyDiary) {
         InAppReviewManager.showPopup(LocalContext.current as Activity)
-        Timber.tag("showInAppReviewPopup").d(showInAppReviewPopup.toString())
-        Timber.tag("InAppReview").d("인앱 리뷰 띄워라 !")
+        homeViewModel.updateShowInAppReviewPopup(false)
     }
 
     LaunchedEffect(Unit) {
