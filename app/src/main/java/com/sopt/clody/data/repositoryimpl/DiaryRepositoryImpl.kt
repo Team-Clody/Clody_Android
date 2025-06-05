@@ -91,7 +91,12 @@ class DiaryRepositoryImpl @Inject constructor(
                 .handleApiResponse()
                 .getOrThrow()
                 .toDomain()
-        }
+        }.fold(
+            onSuccess = { Result.success(it) },
+            onFailure = {
+                Result.failure(Exception(ErrorMessages.FETCH_TEMP_DIARY_FAILED))
+            },
+        )
 
     override suspend fun saveDraftDiary(contents: List<String>): Result<CreatedDraftDiaryInfo> =
         runCatching {
