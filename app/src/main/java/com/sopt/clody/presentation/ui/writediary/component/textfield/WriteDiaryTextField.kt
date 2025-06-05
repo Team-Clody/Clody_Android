@@ -163,7 +163,7 @@ fun WriteDiaryTextField(
                     .fillMaxWidth()
                     .padding(start = 8.dp, top = 6.dp),
             ) {
-                if ((showWarning && !isTextValid && text.isNotEmpty()) || isTextTooLong) {
+                if ((showWarning && !isTextValid) || isTextTooLong) {
                     Text(
                         text = "2~50자 까지 입력할 수 있어요.",
                         color = ClodyTheme.colors.red,
