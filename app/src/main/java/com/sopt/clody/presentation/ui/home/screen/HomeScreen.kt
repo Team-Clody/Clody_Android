@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sopt.clody.core.review.InAppReviewManager
 import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
@@ -34,6 +35,7 @@ import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
+import timber.log.Timber
 import java.time.LocalDate
 
 @Composable
@@ -56,12 +58,19 @@ fun HomeRoute(
     val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
     val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
+    val showInAppReviewPopup by homeViewModel.showInAppReviewPopup.collectAsStateWithLifecycle()
 
     val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
     val errorMessage = when {
         calendarState is CalendarState.Error -> (calendarState as CalendarState.Error).message
         dailyDiariesState is DailyDiariesState.Error -> (dailyDiariesState as DailyDiariesState.Error).message
         else -> ""
+    }
+
+    if (showInAppReviewPopup) {
+        InAppReviewManager.showPopup(LocalContext.current as Activity)
+        Timber.tag("showInAppReviewPopup").d(showInAppReviewPopup.toString())
+        Timber.tag("InAppReview").d("인앱 리뷰 띄워라 !")
     }
 
     LaunchedEffect(Unit) {
@@ -183,7 +192,7 @@ fun HomeScreen(
             containerColor = ClodyTheme.colors.white,
             content = { innerPadding ->
                 when (val state = calendarState) {
-                    is CalendarState.Idle -> { }
+                    is CalendarState.Idle -> {}
 
                     is CalendarState.Loading -> {
                         LoadingScreen()
@@ -211,7 +220,7 @@ fun HomeScreen(
                 }
 
                 when (deleteDiaryState) {
-                    is DeleteDiaryState.Idle -> { }
+                    is DeleteDiaryState.Idle -> {}
 
                     is DeleteDiaryState.Loading -> {
                         LoadingScreen()
