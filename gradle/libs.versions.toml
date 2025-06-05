@@ -50,6 +50,8 @@ firebase-config-ktx = "22.1.0"
 
 mavericks = "3.0.9"
 
+play-review = "2.0.2"
+
 [libraries]
 # AndroidX Core
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -122,6 +124,10 @@ mavericks = { module = "com.airbnb.android:mavericks", version.ref = "mavericks"
 mavericks-compose = { module = "com.airbnb.android:mavericks-compose", version.ref = "mavericks" }
 mavericks-hilt = { module = "com.airbnb.android:mavericks-hilt", version.ref = "mavericks" }
 
+# PlayStore In App Review
+play-review = { group = "com.google.android.play", name = "review", version.ref = "play-review"}
+play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review"}
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -192,4 +198,9 @@ mavericks = [
     "mavericks",
     "mavericks-compose",
     "mavericks-hilt"
+]
+
+plays = [
+    "play-review",
+    "play-review-ktx"
 ]

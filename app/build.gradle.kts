@@ -123,6 +123,9 @@ dependencies {
     // Mavericks
     implementation(libs.bundles.mavericks)
 
+    // Play Store
+    implementation(libs.bundles.plays)
+
     // ETC
     implementation(libs.timber)
     implementation(libs.lottie.compose)
