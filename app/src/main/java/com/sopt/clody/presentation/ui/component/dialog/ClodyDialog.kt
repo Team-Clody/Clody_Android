@@ -43,6 +43,7 @@ fun ClodyDialog(
     confirmButtonColor: Color,
     confirmButtonTextColor: Color,
     onDismiss: () -> Unit,
+    onDismissButtonClick: (() -> Unit)? = null,
 ) {
     var isButtonClicked by remember { mutableStateOf(false) }
 
@@ -68,8 +69,7 @@ fun ClodyDialog(
                     .wrapContentHeight(),
             ) {
                 Column(
-                    modifier = Modifier
-                        .padding(28.dp),
+                    modifier = Modifier.padding(28.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
@@ -92,21 +92,21 @@ fun ClodyDialog(
                     Spacer(modifier = Modifier.height(32.dp))
 
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth(),
                     ) {
                         Button(
                             onClick = {
                                 if (!isButtonClicked) {
                                     isButtonClicked = true
-                                    onDismiss()
+                                    // dismiss 버튼 클릭 시: 우선순위는 onDismissButtonClick
+                                    onDismissButtonClick?.invoke() ?: onDismiss()
                                 }
                             },
                             modifier = Modifier
                                 .weight(1f)
                                 .background(
                                     color = ClodyTheme.colors.gray07,
-                                    shape = RoundedCornerShape(size = 8.dp),
+                                    shape = RoundedCornerShape(8.dp),
                                 ),
                             colors = ButtonDefaults.buttonColors(ClodyTheme.colors.gray07),
                         ) {
@@ -130,7 +130,7 @@ fun ClodyDialog(
                                 .weight(1f)
                                 .background(
                                     color = confirmButtonColor,
-                                    shape = RoundedCornerShape(size = 8.dp),
+                                    shape = RoundedCornerShape(8.dp),
                                 ),
                             colors = ButtonDefaults.buttonColors(confirmButtonColor),
                         ) {

@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.writediary.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -88,6 +89,19 @@ fun WriteDiaryRoute(
         }
     }
 
+    BackHandler {
+        if (showExitDialog) {
+            viewModel.updateShowExitDialog(false)
+        } else {
+            if (viewModel.hasChangedFromInitial()) {
+                AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
+                viewModel.updateShowExitDialog(true)
+            } else {
+                navigateToPrevious()
+            }
+        }
+    }
+
     WriteDiaryScreen(
         isLoading = writeDiaryState is WriteDiaryState.Loading,
         entries = entries,
@@ -143,6 +157,7 @@ fun WriteDiaryRoute(
         onDismissLimitMessage = { viewModel.updateShowLimitMessage(false) },
         onDismissEmptyFieldsMessage = { viewModel.updateShowEmptyFieldsMessage(false) },
         onDismissFailureDialog = { viewModel.resetFailureDialog() },
+        onDismiss = { viewModel.updateShowExitDialog(false) },
         onDismissExitDialog = {
             viewModel.updateShowExitDialog(false)
             viewModel.saveDraftDiary()
@@ -182,6 +197,7 @@ fun WriteDiaryScreen(
     failureMessage: String,
     showExitDialog: Boolean,
     onDismissFailureDialog: () -> Unit,
+    onDismiss: () -> Unit,
     onDismissExitDialog: () -> Unit,
     onConfirmExitDialog: () -> Unit,
     year: Int,
@@ -290,7 +306,8 @@ fun WriteDiaryScreen(
                             confirmAction = onConfirmExitDialog,
                             confirmButtonColor = ClodyTheme.colors.red,
                             confirmButtonTextColor = ClodyTheme.colors.white,
-                            onDismiss = onDismissExitDialog,
+                            onDismiss = onDismiss,
+                            onDismissButtonClick = onDismissExitDialog,
                         )
                     }
                 }
@@ -387,6 +404,7 @@ private fun WriteDiaryScreenPreview() {
             failureMessage = "",
             showExitDialog = false,
             onDismissFailureDialog = {},
+            onDismiss = {},
             onDismissExitDialog = {},
             onConfirmExitDialog = {},
             year = 2023,
