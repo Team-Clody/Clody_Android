@@ -9,7 +9,6 @@ import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 import com.sopt.clody.data.remote.util.handleApiResponse
-import com.sopt.clody.domain.model.CreatedDraftDiaryInfo
 import com.sopt.clody.domain.model.DraftDiaryContents
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages
@@ -98,12 +97,11 @@ class DiaryRepositoryImpl @Inject constructor(
             },
         )
 
-    override suspend fun saveDraftDiary(date: String, contents: List<String>): Result<CreatedDraftDiaryInfo> =
+    override suspend fun saveDraftDiary(date: String, contents: List<String>): Result<Unit> =
         runCatching {
             diaryRemoteDataSource
                 .saveDraftDiary(SaveDraftDiaryRequestDto(date = date, draftDiaries = contents))
                 .handleApiResponse()
                 .getOrThrow()
-                .toDomain()
         }
 }

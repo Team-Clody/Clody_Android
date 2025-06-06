@@ -6,7 +6,6 @@ import com.sopt.clody.data.remote.dto.request.WriteDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.remote.dto.response.DraftDiariesResponseDto
-import com.sopt.clody.data.remote.dto.response.DraftDiaryCreatedResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
@@ -73,5 +72,5 @@ interface DiaryService {
     @POST("api/v1/draft")
     suspend fun saveDraftDiary(
         @Body request: SaveDraftDiaryRequestDto,
-    ): ApiResponse<DraftDiaryCreatedResponseDto>
+    ): ApiResponse<Unit>
 }
