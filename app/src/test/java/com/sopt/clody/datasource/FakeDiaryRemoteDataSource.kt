@@ -6,7 +6,6 @@ import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.remote.dto.response.DraftDiariesResponseDto
-import com.sopt.clody.data.remote.dto.response.DraftDiaryCreatedResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
@@ -15,7 +14,7 @@ import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 class FakeDiaryRemoteDataSource : DiaryRemoteDataSource {
 
     var draftDiariesResponse: ApiResponse<DraftDiariesResponseDto>? = null
-    var saveDraftResponse: ApiResponse<DraftDiaryCreatedResponseDto>? = null
+    var saveDraftResponse: ApiResponse<Unit>? = null
 
     override suspend fun writeDiary(date: String, content: List<String>): ApiResponse<WriteDiaryResponseDto> {
         throw NotImplementedError()
@@ -56,7 +55,7 @@ class FakeDiaryRemoteDataSource : DiaryRemoteDataSource {
 
     override suspend fun saveDraftDiary(
         request: SaveDraftDiaryRequestDto,
-    ): ApiResponse<DraftDiaryCreatedResponseDto> {
+    ): ApiResponse<Unit> {
         return saveDraftResponse
             ?: throw IllegalStateException("saveDraftResponse not set")
     }
@@ -73,7 +72,7 @@ class FakeDiaryRemoteDataSource : DiaryRemoteDataSource {
         saveDraftResponse = ApiResponse(
             status = 201,
             message = "성공",
-            data = DraftDiaryCreatedResponseDto(createdAt),
+            data = Unit
         )
     }
 }

@@ -52,7 +52,7 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
+            buildConfigField("String", "CLODY_BASE_URL", properties["clody.test.url"].toString())
         }
 
         release {
