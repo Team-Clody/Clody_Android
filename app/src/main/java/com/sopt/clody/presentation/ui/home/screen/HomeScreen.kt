@@ -3,30 +3,38 @@ package com.sopt.clody.presentation.ui.home.screen
 import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sopt.clody.R
 import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
+import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
+import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
@@ -56,6 +64,9 @@ fun HomeRoute(
     val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
     val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
+    val showFirstDraftPopup by homeViewModel.showFirstDraftPopup.collectAsStateWithLifecycle()
+    val draftAlarmEnableToast by homeViewModel.draftAlarmEnableToast.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
     val errorMessage = when {
@@ -112,6 +123,72 @@ fun HomeRoute(
             selectedYear = selectedYear,
             selectedMonth = selectedMonth,
         )
+
+        if (showFirstDraftPopup) {
+            ClodyPopupBottomSheet(
+                onDismissRequest = { homeViewModel.updateFirstDraftUse(false) },
+                content = {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 20.dp)
+                            .padding(horizontal = 16.dp),
+                    ) {
+                        Text(
+                            text = "기한이 지나면\n로디의 답장을 받을 수 없어요!",
+                            color = ClodyTheme.colors.gray01,
+                            textAlign = TextAlign.Center,
+                            style = ClodyTheme.typography.head3,
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Text(
+                            text = "답장 마감 전에 일기를 이어쓸 수 있도록\n알려드리기 위해서는 알림 설정이 필요해요.",
+                            color = ClodyTheme.colors.gray04,
+                            textAlign = TextAlign.Center,
+                            style = ClodyTheme.typography.body3Regular,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "[설정 > 애플리케이션 > 클로디 > 알림 > 알림표시]",
+                            color = ClodyTheme.colors.gray04,
+                            textAlign = TextAlign.Center,
+                            style = ClodyTheme.typography.body3Regular,
+                        )
+                        Spacer(modifier = Modifier.height(28.dp))
+                        ClodyButton(
+                            text = "알림 받기",
+                            onClick = {
+                                homeViewModel.enableDraftAlarm(context)
+                                homeViewModel.updateFirstDraftUse(false)
+                            },
+                            enabled = true,
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                        Text(
+                            text = "다음에 하기",
+                            modifier = Modifier
+                                .clickable(onClick = { homeViewModel.updateFirstDraftUse(false) })
+                                .padding(12.dp),
+                            color = ClodyTheme.colors.gray05,
+                            style = ClodyTheme.typography.body4Medium,
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                    }
+                },
+            )
+        }
+
+        if (draftAlarmEnableToast) {
+            ClodyToastMessage(
+                message = "이어쓰기 알림 설정을 완료했어요.",
+                iconResId = R.drawable.ic_toast_check_on_18,
+                backgroundColor = ClodyTheme.colors.gray04,
+                contentColor = ClodyTheme.colors.white,
+                durationMillis = 3000,
+                onDismiss = { homeViewModel.resetDraftAlarmEnableToast() },
+            )
+        }
     }
 }
 
@@ -183,7 +260,7 @@ fun HomeScreen(
             containerColor = ClodyTheme.colors.white,
             content = { innerPadding ->
                 when (val state = calendarState) {
-                    is CalendarState.Idle -> { }
+                    is CalendarState.Idle -> {}
 
                     is CalendarState.Loading -> {
                         LoadingScreen()
@@ -211,7 +288,7 @@ fun HomeScreen(
                 }
 
                 when (deleteDiaryState) {
-                    is DeleteDiaryState.Idle -> { }
+                    is DeleteDiaryState.Idle -> {}
 
                     is DeleteDiaryState.Loading -> {
                         LoadingScreen()
