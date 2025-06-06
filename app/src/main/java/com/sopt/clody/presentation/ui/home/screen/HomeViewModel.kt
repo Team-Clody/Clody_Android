@@ -2,11 +2,11 @@ package com.sopt.clody.presentation.ui.home.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.local.datasource.AppReviewLocalDataSource
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.ReviewRepository
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil,
-    private val appReviewLocalDataSource: AppReviewLocalDataSource,
+    private val reviewRepository: ReviewRepository,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -64,7 +64,7 @@ class HomeViewModel @Inject constructor(
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
 
-    private val _showInAppReviewPopup = MutableStateFlow(appReviewLocalDataSource.shouldShowPopup)
+    private val _showInAppReviewPopup = MutableStateFlow(reviewRepository.getShouldShowPopup())
     val showInAppReviewPopup: StateFlow<Boolean> get() = _showInAppReviewPopup
 
     private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
@@ -186,7 +186,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateShowInAppReviewPopup(state: Boolean) {
-        appReviewLocalDataSource.shouldShowPopup = state
+        reviewRepository.setShouldShowPopup(state)
         _showInAppReviewPopup.value = state
     }
 }
