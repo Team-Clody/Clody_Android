@@ -7,9 +7,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.local.datasource.FirstDraftLocalDataSource
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -23,7 +23,7 @@ import javax.inject.Inject
 class WriteDiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val networkUtil: NetworkUtil,
-    private val firstDraftLocalDataSource: FirstDraftLocalDataSource,
+    private val draftRepository: DraftRepository,
 ) : ViewModel() {
 
     private val _writeDiaryState = MutableStateFlow<WriteDiaryState>(WriteDiaryState.Idle)
@@ -172,9 +172,9 @@ class WriteDiaryViewModel @Inject constructor(
     }
 
     fun updateDraftUsage() {
-        if (!firstDraftLocalDataSource.isDraftUsed) {
-            firstDraftLocalDataSource.isDraftUsed = true
-            firstDraftLocalDataSource.isFirstUse = true
+        if (!draftRepository.getIsDraftUsed()) {
+            draftRepository.setIsDraftUsed(true)
+            draftRepository.setIsFirstUse(true)
         }
     }
 

@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.core.fcm.FcmTokenProvider
-import com.sopt.clody.data.local.datasource.FirstDraftLocalDataSource
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val notificationRepository: NotificationRepository,
     private val networkUtil: NetworkUtil,
-    private val firstDraftLocalDataSource: FirstDraftLocalDataSource,
+    private val draftRepository: DraftRepository,
     private val fcmTokenProvider: FcmTokenProvider,
 ) : ViewModel() {
 
@@ -72,7 +72,7 @@ class HomeViewModel @Inject constructor(
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
 
-    private val _showFirstDraftPopup = MutableStateFlow(firstDraftLocalDataSource.isFirstUse)
+    private val _showFirstDraftPopup = MutableStateFlow(draftRepository.getIsFirstUse())
     val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
 
     private val _draftAlarmChangeState = MutableStateFlow<NotificationChangeState>(NotificationChangeState.Idle)
@@ -200,7 +200,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun updateFirstDraftUse(newState: Boolean) {
-        firstDraftLocalDataSource.isFirstUse = newState
+        draftRepository.setIsFirstUse(false)
         _showFirstDraftPopup.value = newState
     }
 

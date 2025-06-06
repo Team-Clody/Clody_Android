@@ -4,6 +4,7 @@ import com.sopt.clody.data.repositoryimpl.AccountManagementRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.AdRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.DraftRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.NotificationRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenReissueRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
@@ -11,6 +12,7 @@ import com.sopt.clody.domain.repository.AccountManagementRepository
 import com.sopt.clody.domain.repository.AdRepository
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.TokenReissueRepository
 import com.sopt.clody.domain.repository.TokenRepository
@@ -64,4 +66,10 @@ abstract class RepositoryModule {
     abstract fun bindAdRepository(
         adRepositoryImpl: AdRepositoryImpl,
     ): AdRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDraftRepository(
+        draftRepositoryImpl: DraftRepositoryImpl,
+    ): DraftRepository
 }
