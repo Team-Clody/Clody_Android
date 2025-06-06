@@ -31,6 +31,7 @@ sealed interface Route {
         val selectedYear: Int,
         val selectedMonth: Int,
         val selectedDay: Int? = null,
+        val isFromReplyDiary: Boolean = false,
     ) : Route
 
     @Serializable

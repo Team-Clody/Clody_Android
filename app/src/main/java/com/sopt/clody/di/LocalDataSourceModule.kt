@@ -3,9 +3,12 @@ package com.sopt.clody.di
 import android.content.SharedPreferences
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.datastore.TokenDataStoreImpl
+import com.sopt.clody.data.local.datasource.AppReviewLocalDataSource
 import com.sopt.clody.data.local.datasource.FirstDraftLocalDataSource
+import com.sopt.clody.data.local.datasourceimpl.AppReviewLocalDataSourceImpl
 import com.sopt.clody.data.local.datasourceimpl.FirstDraftLocalDataSourceImpl
 import com.sopt.clody.di.qualifier.FirstDraftPrefs
+import com.sopt.clody.di.qualifier.ReviewPrefs
 import com.sopt.clody.di.qualifier.TokenPrefs
 import dagger.Module
 import dagger.Provides
@@ -26,4 +29,9 @@ object LocalDataSourceModule {
     @Singleton
     fun provideFirstDraftLocalDataSource(@FirstDraftPrefs sharedPreferences: SharedPreferences): FirstDraftLocalDataSource =
         FirstDraftLocalDataSourceImpl(sharedPreferences)
+
+    @Provides
+    @Singleton
+    fun provideAppReviewLocalDataSource(@ReviewPrefs sharedPreferences: SharedPreferences): AppReviewLocalDataSource =
+        AppReviewLocalDataSourceImpl(sharedPreferences)
 }

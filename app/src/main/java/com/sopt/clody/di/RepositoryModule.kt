@@ -6,6 +6,7 @@ import com.sopt.clody.data.repositoryimpl.AuthRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DiaryRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.DraftRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.NotificationRepositoryImpl
+import com.sopt.clody.data.repositoryimpl.ReviewRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenReissueRepositoryImpl
 import com.sopt.clody.data.repositoryimpl.TokenRepositoryImpl
 import com.sopt.clody.domain.repository.AccountManagementRepository
@@ -14,6 +15,7 @@ import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.domain.repository.ReviewRepository
 import com.sopt.clody.domain.repository.TokenReissueRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import dagger.Binds
@@ -72,4 +74,10 @@ abstract class RepositoryModule {
     abstract fun bindDraftRepository(
         draftRepositoryImpl: DraftRepositoryImpl,
     ): DraftRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReviewRepository(
+        reviewRepositoryImpl: ReviewRepositoryImpl,
+    ): ReviewRepository
 }

@@ -9,3 +9,7 @@ annotation class TokenPrefs
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class FirstDraftPrefs
+
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class ReviewPrefs

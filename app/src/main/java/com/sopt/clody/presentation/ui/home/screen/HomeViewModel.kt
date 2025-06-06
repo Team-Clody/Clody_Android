@@ -12,6 +12,7 @@ import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.domain.repository.ReviewRepository
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
 import com.sopt.clody.presentation.utils.network.ErrorMessages
@@ -29,6 +30,7 @@ class HomeViewModel @Inject constructor(
     private val networkUtil: NetworkUtil,
     private val draftRepository: DraftRepository,
     private val fcmTokenProvider: FcmTokenProvider,
+    private val reviewRepository: ReviewRepository,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -80,6 +82,9 @@ class HomeViewModel @Inject constructor(
 
     private val _draftAlarmEnableToast = MutableStateFlow(false)
     val draftAlarmEnableToast: StateFlow<Boolean> = _draftAlarmEnableToast
+
+    private val _showInAppReviewPopup = MutableStateFlow(reviewRepository.getShouldShowPopup())
+    val showInAppReviewPopup: StateFlow<Boolean> get() = _showInAppReviewPopup
 
     private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
     val errorState: StateFlow<Pair<Boolean, String>> = _errorState
@@ -250,5 +255,10 @@ class HomeViewModel @Inject constructor(
 
     fun resetDraftAlarmEnableToast() {
         _draftAlarmEnableToast.value = false
+    }
+
+    fun updateShowInAppReviewPopup(state: Boolean) {
+        reviewRepository.setShouldShowPopup(state)
+        _showInAppReviewPopup.value = state
     }
 }

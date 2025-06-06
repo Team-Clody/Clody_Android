@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.R
+import com.sopt.clody.core.review.InAppReviewManager
 import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
@@ -49,6 +50,7 @@ fun HomeRoute(
     selectedYear: Int,
     selectedMonth: Int,
     selectedDay: Int?,
+    isFromReplyDiary: Boolean,
     navigateToDiaryList: (year: Int, month: Int) -> Unit,
     navigateToSetting: () -> Unit,
     navigateToWriteDiary: (year: Int, month: Int, date: Int) -> Unit,
@@ -67,6 +69,7 @@ fun HomeRoute(
     val showFirstDraftPopup by homeViewModel.showFirstDraftPopup.collectAsStateWithLifecycle()
     val draftAlarmEnableToast by homeViewModel.draftAlarmEnableToast.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val showInAppReviewPopup by homeViewModel.showInAppReviewPopup.collectAsStateWithLifecycle()
 
     val isError = calendarState is CalendarState.Error || dailyDiariesState is DailyDiariesState.Error
     val errorMessage = when {
@@ -77,6 +80,11 @@ fun HomeRoute(
 
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
+
+        if (showInAppReviewPopup && isFromReplyDiary) {
+            InAppReviewManager.showPopup(context as Activity)
+            homeViewModel.updateShowInAppReviewPopup(false)
+        }
     }
 
     LaunchedEffect(selectedYear, selectedMonth, selectedDay) {

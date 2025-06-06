@@ -10,7 +10,7 @@ import com.sopt.clody.presentation.ui.replydiary.ReplyDiaryRoute
 import com.sopt.clody.presentation.utils.navigation.Route
 
 fun NavGraphBuilder.replyDiaryScreen(
-    navigateToHome: (year: Int, month: Int, date: Int) -> Unit,
+    navigateToHome: (year: Int, month: Int, date: Int, isFromReplyDiary: Boolean) -> Unit,
 ) {
     composable<Route.ReplyDiary> { backStackEntry ->
         backStackEntry.toRoute<Route.ReplyDiary>().apply {
