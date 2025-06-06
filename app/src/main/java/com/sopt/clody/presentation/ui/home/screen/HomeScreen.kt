@@ -72,13 +72,13 @@ fun HomeRoute(
     Timber.tag("showInAppReviewPopup").e(showInAppReviewPopup.toString())
     Timber.tag("isFromReplyDiary").e(isFromReplyDiary.toString())
 
-    LaunchedEffect(showInAppReviewPopup && isFromReplyDiary) {
-        InAppReviewManager.showPopup(context as Activity)
-        homeViewModel.updateShowInAppReviewPopup(false)
-    }
-
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
+
+        if (showInAppReviewPopup && isFromReplyDiary) {
+            InAppReviewManager.showPopup(context as Activity)
+            homeViewModel.updateShowInAppReviewPopup(false)
+        }
     }
 
     LaunchedEffect(selectedYear, selectedMonth, selectedDay) {
