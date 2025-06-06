@@ -73,7 +73,7 @@ fun HomeRoute(
     Timber.tag("isFromReplyDiary").e(isFromReplyDiary.toString())
 
     LaunchedEffect(showInAppReviewPopup && isFromReplyDiary) {
-        InAppReviewManager.showPopup(context as Activity, context)
+        InAppReviewManager.showPopup(context as Activity)
         homeViewModel.updateShowInAppReviewPopup(false)
     }
 

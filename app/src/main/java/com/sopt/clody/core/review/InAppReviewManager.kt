@@ -7,7 +7,7 @@ import com.sopt.clody.presentation.utils.appupdate.AppUpdateUtils
 import timber.log.Timber
 
 object InAppReviewManager {
-    fun showPopup(activity: Activity, context: Context) {
+    fun showPopup(activity: Activity) {
         if (activity.isFinishing || activity.isDestroyed) return
 
         val reviewManager = ReviewManagerFactory.create(activity)
@@ -19,7 +19,7 @@ object InAppReviewManager {
                 reviewManager.launchReviewFlow(activity, reviewInfo)
             } else {
                 try {
-                    AppUpdateUtils.navigateToMarket(context)
+                    AppUpdateUtils.navigateToMarket(activity)
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Timber.e(e, "Failed to open store for app review")
