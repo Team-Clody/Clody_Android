@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SaveDraftDiaryUseCase @Inject constructor(
     private val diaryRepository: DiaryRepository,
 ) {
-    suspend operator fun invoke(contents: List<String>): Result<CreatedDraftDiaryInfo> {
-        return diaryRepository.saveDraftDiary(contents)
+    suspend operator fun invoke(date: String, contents: List<String>): Result<CreatedDraftDiaryInfo> {
+        return diaryRepository.saveDraftDiary(date, contents)
     }
 }

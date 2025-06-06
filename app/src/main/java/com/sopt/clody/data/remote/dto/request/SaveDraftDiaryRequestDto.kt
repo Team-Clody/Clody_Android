@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SaveDraftDiaryRequestDto(
+    @SerialName("date") val date: String,
     @SerialName("draftDiaries") val draftDiaries: List<String>,
 )

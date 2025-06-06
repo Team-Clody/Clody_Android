@@ -98,10 +98,10 @@ class DiaryRepositoryImpl @Inject constructor(
             },
         )
 
-    override suspend fun saveDraftDiary(contents: List<String>): Result<CreatedDraftDiaryInfo> =
+    override suspend fun saveDraftDiary(date: String, contents: List<String>): Result<CreatedDraftDiaryInfo> =
         runCatching {
             diaryRemoteDataSource
-                .saveDraftDiary(SaveDraftDiaryRequestDto(draftDiaries = contents))
+                .saveDraftDiary(SaveDraftDiaryRequestDto(date = date, draftDiaries = contents))
                 .handleApiResponse()
                 .getOrThrow()
                 .toDomain()
