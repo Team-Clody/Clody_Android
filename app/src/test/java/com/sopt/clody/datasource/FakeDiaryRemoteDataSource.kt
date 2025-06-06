@@ -72,7 +72,7 @@ class FakeDiaryRemoteDataSource : DiaryRemoteDataSource {
         saveDraftResponse = ApiResponse(
             status = 201,
             message = "성공",
-            data = Unit
+            data = Unit,
         )
     }
 }
