@@ -1,7 +1,6 @@
 package com.sopt.clody.core.review
 
 import android.app.Activity
-import android.content.Context
 import com.google.android.play.core.review.ReviewManagerFactory
 import com.sopt.clody.presentation.utils.appupdate.AppUpdateUtils
 import timber.log.Timber

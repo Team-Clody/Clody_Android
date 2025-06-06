@@ -2,8 +2,7 @@ package com.sopt.clody.di
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.sopt.clody.data.local.datasource.AppReviewLocalDataSource
-import com.sopt.clody.data.local.datasourceimpl.AppReviewLocalDataSourceImpl
+import com.sopt.clody.di.qualifier.FirstDraftPrefs
 import com.sopt.clody.di.qualifier.ReviewPrefs
 import com.sopt.clody.di.qualifier.TokenPrefs
 import dagger.Module
@@ -16,11 +15,19 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object SharedPreferencesModule {
+
     @Provides
     @Singleton
     @TokenPrefs
-    fun provideSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+    fun provideTokenSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences("token_prefs", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    @Singleton
+    @FirstDraftPrefs
+    fun provideFirstDraftSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
+        return context.getSharedPreferences("first_draft_prefs", Context.MODE_PRIVATE)
     }
 
     @Provides
@@ -29,9 +36,4 @@ object SharedPreferencesModule {
     fun provideReviewSharedPreferences(@ApplicationContext context: Context): SharedPreferences {
         return context.getSharedPreferences("review_prefs", Context.MODE_PRIVATE)
     }
-
-    @Provides
-    @Singleton
-    fun provideAppReviewLocalDataSource(@ReviewPrefs sharedPreferences: SharedPreferences): AppReviewLocalDataSource =
-        AppReviewLocalDataSourceImpl(sharedPreferences)
 }

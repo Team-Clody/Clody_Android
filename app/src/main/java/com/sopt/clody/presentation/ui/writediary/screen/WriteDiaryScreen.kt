@@ -138,7 +138,11 @@ fun WriteDiaryRoute(
         onDismissLimitMessage = { viewModel.updateShowLimitMessage(false) },
         onDismissEmptyFieldsMessage = { viewModel.updateShowEmptyFieldsMessage(false) },
         onDismissFailureDialog = { viewModel.resetFailureDialog() },
-        onDismissExitDialog = { viewModel.updateShowExitDialog(false) },
+        onDismissExitDialog = {
+            viewModel.updateDraftUsage()
+            viewModel.updateShowExitDialog(false)
+            navigateToHome(year, month)
+        },
         onConfirmExitDialog = {
             viewModel.updateShowExitDialog(false)
             navigateToPrevious()

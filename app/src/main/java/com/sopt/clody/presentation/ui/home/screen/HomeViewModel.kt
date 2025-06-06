@@ -1,13 +1,20 @@
 package com.sopt.clody.presentation.ui.home.screen
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.core.fcm.FcmTokenProvider
+import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
+import com.sopt.clody.domain.repository.DraftRepository
+import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
+import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +26,10 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
+    private val notificationRepository: NotificationRepository,
     private val networkUtil: NetworkUtil,
+    private val draftRepository: DraftRepository,
+    private val fcmTokenProvider: FcmTokenProvider,
     private val reviewRepository: ReviewRepository,
 ) : ViewModel() {
 
@@ -63,6 +73,15 @@ class HomeViewModel @Inject constructor(
 
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
+
+    private val _showFirstDraftPopup = MutableStateFlow(draftRepository.getIsFirstUse())
+    val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
+
+    private val _draftAlarmChangeState = MutableStateFlow<NotificationChangeState>(NotificationChangeState.Idle)
+    val draftAlarmChangeState: StateFlow<NotificationChangeState> = _draftAlarmChangeState
+
+    private val _draftAlarmEnableToast = MutableStateFlow(false)
+    val draftAlarmEnableToast: StateFlow<Boolean> = _draftAlarmEnableToast
 
     private val _showInAppReviewPopup = MutableStateFlow(reviewRepository.getShouldShowPopup())
     val showInAppReviewPopup: StateFlow<Boolean> get() = _showInAppReviewPopup
@@ -183,6 +202,59 @@ class HomeViewModel @Inject constructor(
 
     fun setShowDiaryDeleteDialog(state: Boolean) {
         _showDiaryDeleteDialog.value = state
+    }
+
+    fun updateFirstDraftUse(newState: Boolean) {
+        draftRepository.setIsFirstUse(false)
+        _showFirstDraftPopup.value = newState
+    }
+
+    fun enableDraftAlarm(context: Context) {
+        viewModelScope.launch {
+            if (!networkUtil.isNetworkAvailable()) {
+                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+                return@launch
+            }
+
+            val fcmToken = fcmTokenProvider.getToken().orEmpty()
+            val notificationInfo = getNotificationInfo() ?: return@launch
+            val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
+            sendDraftAlarmRequest(request)
+        }
+    }
+
+    private suspend fun getNotificationInfo(): NotificationInfoResponseDto? {
+        return notificationRepository.getNotificationInfo().getOrElse {
+            _draftAlarmChangeState.value = NotificationChangeState.Failure("알림 정보를 가져오는데 실패했습니다.")
+            null
+        }
+    }
+
+    private fun buildDraftAlarmRequest(
+        info: NotificationInfoResponseDto,
+        fcmToken: String,
+    ): SendNotificationRequestDto = SendNotificationRequestDto(
+        isDiaryAlarm = info.isDiaryAlarm,
+        isDraftAlarm = true,
+        isReplyAlarm = info.isReplyAlarm,
+        time = info.time.ifEmpty { "21:30" },
+        fcmToken = fcmToken,
+    )
+
+    private suspend fun sendDraftAlarmRequest(request: SendNotificationRequestDto) {
+        notificationRepository.sendNotification(request).fold(
+            onSuccess = {
+                _draftAlarmEnableToast.value = true
+                _draftAlarmChangeState.value = NotificationChangeState.Success(it)
+            },
+            onFailure = {
+                _draftAlarmChangeState.value = NotificationChangeState.Failure("이어쓰기 알림 설정에 실패했습니다.")
+            },
+        )
+    }
+
+    fun resetDraftAlarmEnableToast() {
+        _draftAlarmEnableToast.value = false
     }
 
     fun updateShowInAppReviewPopup(state: Boolean) {
