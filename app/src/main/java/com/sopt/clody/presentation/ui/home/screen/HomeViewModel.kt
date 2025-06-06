@@ -3,7 +3,7 @@ package com.sopt.clody.presentation.ui.home.screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.ClodyFirebaseMessagingService.Companion.getTokenFromPreferences
+import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.data.local.datasource.FirstDraftLocalDataSource
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
@@ -28,6 +28,7 @@ class HomeViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
     private val networkUtil: NetworkUtil,
     private val firstDraftLocalDataSource: FirstDraftLocalDataSource,
+    private val fcmTokenProvider: FcmTokenProvider,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -210,20 +211,11 @@ class HomeViewModel @Inject constructor(
                 return@launch
             }
 
-            val fcmToken = getFcmToken(context) ?: return@launch
+            val fcmToken = fcmTokenProvider.getToken().orEmpty()
             val notificationInfo = getNotificationInfo() ?: return@launch
             val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
             sendDraftAlarmRequest(request)
         }
-    }
-
-    private suspend fun getFcmToken(context: Context): String? {
-        val token = getTokenFromPreferences(context)
-        if (token.isNullOrBlank()) {
-            _draftAlarmChangeState.value = NotificationChangeState.Failure("FCM Token을 가져오는데 실패했습니다.")
-            return null
-        }
-        return token
     }
 
     private suspend fun getNotificationInfo(): NotificationInfoResponseDto? {
