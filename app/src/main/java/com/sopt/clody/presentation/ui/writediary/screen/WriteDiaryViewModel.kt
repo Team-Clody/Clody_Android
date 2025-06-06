@@ -181,27 +181,30 @@ class WriteDiaryViewModel @Inject constructor(
 
     fun fetchDraftDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
+            _entries.clear()
+            _showWarnings.clear()
+
             val result = fetchDraftDiaryUseCase(year, month, day)
             result.onSuccess { response ->
-                _entries.clear()
-                _entries.addAll(response.draftDiaries)
+                val drafts = response.draftDiaries.ifEmpty { listOf("") }
+                _entries.addAll(drafts)
+                initialEntries = drafts.toList()
 
-                initialEntries = response.draftDiaries.toList()
-
-                _showWarnings.clear()
                 _showWarnings.addAll(List(_entries.size) { false })
                 checkLimitMessage()
                 checkEmptyFieldsMessage()
             }.onFailure {
+                ensureDefaultEntry()
                 _failureMessage.value = it.localizedMessage ?: UNKNOWN_ERROR
                 _showFailureDialog.value = true
             }
         }
     }
 
-    fun saveDraftDiary() {
+    fun saveDraftDiary(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
-            val result = saveDraftDiaryUseCase(_entries.toList())
+            val date = String.format("%04d-%02d-%02d", year, month, day)
+            val result = saveDraftDiaryUseCase(date, _entries.toList())
             result.onSuccess {
                 _failureMessage.value = ""
                 _showFailureDialog.value = false
@@ -210,6 +213,15 @@ class WriteDiaryViewModel @Inject constructor(
                 _showFailureDialog.value = true
             }
         }
+    }
+
+    private fun ensureDefaultEntry() {
+        _entries.clear()
+        _entries.add("")
+        _showWarnings.clear()
+        _showWarnings.add(false)
+        checkLimitMessage()
+        checkEmptyFieldsMessage()
     }
 
     companion object {
