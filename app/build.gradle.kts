@@ -133,6 +133,9 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.coroutines.test)
 
+    // Play Store
+    implementation(libs.bundles.plays)
+
     // ETC
     implementation(libs.timber)
     implementation(libs.lottie.compose)

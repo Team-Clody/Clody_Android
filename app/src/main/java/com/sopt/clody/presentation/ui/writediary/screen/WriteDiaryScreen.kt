@@ -159,9 +159,10 @@ fun WriteDiaryRoute(
         onDismissFailureDialog = { viewModel.resetFailureDialog() },
         onDismiss = { viewModel.updateShowExitDialog(false) },
         onDismissExitDialog = {
+            viewModel.updateDraftUsage()
             viewModel.updateShowExitDialog(false)
             viewModel.saveDraftDiary(year, month, date)
-            navigateToPrevious()
+            navigateToHome(year, month)
         },
         onConfirmExitDialog = {
             viewModel.updateShowExitDialog(false)

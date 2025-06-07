@@ -12,6 +12,7 @@ import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.usecase.FetchDraftDiaryUseCase
 import com.sopt.clody.domain.usecase.SaveDraftDiaryUseCase
 import com.sopt.clody.presentation.utils.network.ErrorMessages
+import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -27,6 +28,7 @@ class WriteDiaryViewModel @Inject constructor(
     private val fetchDraftDiaryUseCase: FetchDraftDiaryUseCase,
     private val saveDraftDiaryUseCase: SaveDraftDiaryUseCase,
     private val networkUtil: NetworkUtil,
+    private val draftRepository: DraftRepository,
 ) : ViewModel() {
 
     private val _writeDiaryState = MutableStateFlow<WriteDiaryState>(WriteDiaryState.Idle)
@@ -223,6 +225,13 @@ class WriteDiaryViewModel @Inject constructor(
         _showWarnings.add(false)
         checkLimitMessage()
         checkEmptyFieldsMessage()
+    }
+
+    fun updateDraftUsage() {
+        if (!draftRepository.getIsDraftUsed()) {
+            draftRepository.setIsDraftUsed(true)
+            draftRepository.setIsFirstUse(true)
+        }
     }
 
     companion object {

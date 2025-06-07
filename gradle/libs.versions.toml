@@ -51,6 +51,8 @@ mavericks = "3.0.9"
 kotestVersion = "5.9.0"
 mockk = "1.13.10"
 
+play-review = "2.0.2"
+
 [libraries]
 # AndroidX Core
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -130,6 +132,10 @@ kotest-property = { group = "io.kotest", name = "kotest-property", version.ref =
 
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
+# PlayStore In App Review
+play-review = { group = "com.google.android.play", name = "review", version.ref = "play-review"}
+play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review"}
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
@@ -205,4 +211,8 @@ kotest = [
     "kotest-runner",
     "kotest-assertions",
     "kotest-property"
+
+plays = [
+    "play-review",
+    "play-review-ktx"
 ]
