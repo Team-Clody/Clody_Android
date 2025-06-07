@@ -47,8 +47,9 @@ accompanist = "0.25.1"
 accompanist-insets = "0.28.0"
 
 firebase-config-ktx = "22.1.0"
-
 mavericks = "3.0.9"
+kotestVersion = "5.9.0"
+mockk = "1.13.10"
 
 play-review = "2.0.2"
 
@@ -124,6 +125,13 @@ mavericks = { module = "com.airbnb.android:mavericks", version.ref = "mavericks"
 mavericks-compose = { module = "com.airbnb.android:mavericks-compose", version.ref = "mavericks" }
 mavericks-hilt = { module = "com.airbnb.android:mavericks-hilt", version.ref = "mavericks" }
 
+# Kotest
+kotest-runner = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotestVersion" }
+kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotestVersion" }
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotestVersion" }
+
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
 # PlayStore In App Review
 play-review = { group = "com.google.android.play", name = "review", version.ref = "play-review"}
 play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review"}
@@ -165,7 +173,6 @@ test = [
     "androidx-junit",
     "espresso-core",
     "ui-test-junit4",
-    "coroutines-test"
 ]
 
 debug = [
@@ -198,6 +205,12 @@ mavericks = [
     "mavericks",
     "mavericks-compose",
     "mavericks-hilt"
+]
+
+kotest = [
+    "kotest-runner",
+    "kotest-assertions",
+    "kotest-property"
 ]
 
 plays = [

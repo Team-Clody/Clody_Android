@@ -1,5 +1,6 @@
 package com.sopt.clody.presentation.ui.writediary.screen
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -48,6 +49,7 @@ import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.base.BasePreview
 import com.sopt.clody.presentation.utils.base.ClodyPreview
+import com.sopt.clody.presentation.utils.extension.LaunchedEffectWhenStarted
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -74,12 +76,29 @@ fun WriteDiaryRoute(
     val showDialog by viewModel::showDialog
     val showExitDialog by viewModel::showExitDialog
 
+    LaunchedEffectWhenStarted {
+        viewModel.fetchDraftDiary(year, month, date)
+    }
+
     LaunchedEffect(writeDiaryState) {
         when (writeDiaryState) {
             is WriteDiaryState.Success -> navigateToReplyLoading(year, month, date)
             is WriteDiaryState.NoReply -> navigateToHome(year, month)
             is WriteDiaryState.Failure -> viewModel.updateShowDialog(false)
             else -> {}
+        }
+    }
+
+    BackHandler {
+        if (showExitDialog) {
+            viewModel.updateShowExitDialog(false)
+        } else {
+            if (viewModel.hasChangedFromInitial()) {
+                AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
+                viewModel.updateShowExitDialog(true)
+            } else {
+                navigateToPrevious()
+            }
         }
     }
 
@@ -95,7 +114,7 @@ fun WriteDiaryRoute(
         failureMessage = failureMessage,
         showExitDialog = showExitDialog,
         onClickBack = {
-            if (entries.any { it.isNotBlank() }) {
+            if (viewModel.hasChangedFromInitial()) {
                 AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
                 viewModel.updateShowExitDialog(true)
             } else {
@@ -138,9 +157,11 @@ fun WriteDiaryRoute(
         onDismissLimitMessage = { viewModel.updateShowLimitMessage(false) },
         onDismissEmptyFieldsMessage = { viewModel.updateShowEmptyFieldsMessage(false) },
         onDismissFailureDialog = { viewModel.resetFailureDialog() },
+        onDismiss = { viewModel.updateShowExitDialog(false) },
         onDismissExitDialog = {
             viewModel.updateDraftUsage()
             viewModel.updateShowExitDialog(false)
+            viewModel.saveDraftDiary(year, month, date)
             navigateToHome(year, month)
         },
         onConfirmExitDialog = {
@@ -177,6 +198,7 @@ fun WriteDiaryScreen(
     failureMessage: String,
     showExitDialog: Boolean,
     onDismissFailureDialog: () -> Unit,
+    onDismiss: () -> Unit,
     onDismissExitDialog: () -> Unit,
     onConfirmExitDialog: () -> Unit,
     year: Int,
@@ -285,7 +307,8 @@ fun WriteDiaryScreen(
                             confirmAction = onConfirmExitDialog,
                             confirmButtonColor = ClodyTheme.colors.red,
                             confirmButtonTextColor = ClodyTheme.colors.white,
-                            onDismiss = onDismissExitDialog,
+                            onDismiss = onDismiss,
+                            onDismissButtonClick = onDismissExitDialog,
                         )
                     }
                 }
@@ -382,6 +405,7 @@ private fun WriteDiaryScreenPreview() {
             failureMessage = "",
             showExitDialog = false,
             onDismissFailureDialog = {},
+            onDismiss = {},
             onDismissExitDialog = {},
             onConfirmExitDialog = {},
             year = 2023,

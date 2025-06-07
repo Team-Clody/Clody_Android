@@ -10,6 +10,9 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
+import com.sopt.clody.domain.usecase.FetchDraftDiaryUseCase
+import com.sopt.clody.domain.usecase.SaveDraftDiaryUseCase
+import com.sopt.clody.presentation.utils.network.ErrorMessages
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -22,6 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class WriteDiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
+    private val fetchDraftDiaryUseCase: FetchDraftDiaryUseCase,
+    private val saveDraftDiaryUseCase: SaveDraftDiaryUseCase,
     private val networkUtil: NetworkUtil,
     private val draftRepository: DraftRepository,
 ) : ViewModel() {
@@ -58,6 +63,8 @@ class WriteDiaryViewModel @Inject constructor(
 
     var showExitDialog by mutableStateOf(false)
         private set
+
+    private var initialEntries: List<String> = emptyList()
 
     fun writeDiary(year: Int, month: Int, day: Int, contents: List<String>) {
         viewModelScope.launch {
@@ -169,6 +176,55 @@ class WriteDiaryViewModel @Inject constructor(
 
     fun updateShowExitDialog(show: Boolean) {
         showExitDialog = show
+    }
+
+    fun hasChangedFromInitial(): Boolean {
+        return entries != initialEntries
+    }
+
+    fun fetchDraftDiary(year: Int, month: Int, day: Int) {
+        viewModelScope.launch {
+            _entries.clear()
+            _showWarnings.clear()
+
+            val result = fetchDraftDiaryUseCase(year, month, day)
+            result.onSuccess { response ->
+                val drafts = response.draftDiaries.ifEmpty { listOf("") }
+                _entries.addAll(drafts)
+                initialEntries = drafts.toList()
+
+                _showWarnings.addAll(List(_entries.size) { false })
+                checkLimitMessage()
+                checkEmptyFieldsMessage()
+            }.onFailure {
+                ensureDefaultEntry()
+                _failureMessage.value = ErrorMessages.FETCH_TEMP_DIARY_FAILED
+                _showFailureDialog.value = true
+            }
+        }
+    }
+
+    fun saveDraftDiary(year: Int, month: Int, day: Int) {
+        viewModelScope.launch {
+            val date = String.format("%04d-%02d-%02d", year, month, day)
+            val result = saveDraftDiaryUseCase(date, _entries.toList())
+            result.onSuccess {
+                _failureMessage.value = ""
+                _showFailureDialog.value = false
+            }.onFailure { e ->
+                _failureMessage.value = e.localizedMessage ?: UNKNOWN_ERROR
+                _showFailureDialog.value = true
+            }
+        }
+    }
+
+    private fun ensureDefaultEntry() {
+        _entries.clear()
+        _entries.add("")
+        _showWarnings.clear()
+        _showWarnings.add(false)
+        checkLimitMessage()
+        checkEmptyFieldsMessage()
     }
 
     fun updateDraftUsage() {

@@ -52,7 +52,7 @@ android {
     buildTypes {
         debug {
             isMinifyEnabled = false
-            buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
+            buildConfigField("String", "CLODY_BASE_URL", properties["clody.test.url"].toString())
         }
 
         release {
@@ -76,6 +76,11 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
+    }
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
     }
 }
 
@@ -122,6 +127,11 @@ dependencies {
 
     // Mavericks
     implementation(libs.bundles.mavericks)
+
+    // Kotest
+    testImplementation(libs.bundles.kotest)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
 
     // Play Store
     implementation(libs.bundles.plays)
