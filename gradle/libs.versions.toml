@@ -211,6 +211,7 @@ kotest = [
     "kotest-runner",
     "kotest-assertions",
     "kotest-property"
+]
 
 plays = [
     "play-review",
