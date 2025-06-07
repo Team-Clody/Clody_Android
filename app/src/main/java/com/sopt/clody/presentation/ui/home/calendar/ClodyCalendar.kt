@@ -72,7 +72,7 @@ fun ClodyCalendar(
                 DailyDiaryListItem(
                     date = selectedDate,
                     dayOfWeek = initialDayOfWeek,
-                    dailyDiaries = state.data.diaries,
+                    dailyDiary = state.data,
                     onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange,
                 )
             }
