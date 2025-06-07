@@ -25,9 +25,6 @@ fun NavGraphBuilder.homeScreen(
     composable<Route.Home> { backStackEntry ->
         backStackEntry.toRoute<Route.Home>().apply {
             HomeRoute(
-                selectedYear = selectedYear,
-                selectedMonth = selectedMonth,
-                selectedDay = selectedDay,
                 isFromReplyDiary = isFromReplyDiary,
                 navigateToDiaryList = navigateToDiaryList,
                 navigateToSetting = navigateToSetting,
