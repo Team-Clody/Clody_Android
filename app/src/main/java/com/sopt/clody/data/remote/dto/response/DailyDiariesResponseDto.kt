@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DailyDiariesResponseDto(
     @SerialName("diaries") val diaries: List<Diary>,
+    @SerialName("isDraft") val isDraft: Boolean,
 ) {
     @Serializable
     data class Diary(
