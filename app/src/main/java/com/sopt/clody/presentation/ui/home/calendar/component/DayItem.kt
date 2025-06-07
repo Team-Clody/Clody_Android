@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.type.DiaryCloverType
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
@@ -56,7 +57,7 @@ fun DayItem(
                 painter = painterResource(id = iconRes),
                 contentDescription = "Diary clover icon",
             )
-            if (diaryData.replyStatus == "READY_NOT_READ" && diaryData.diaryCount > 0) {
+            if (diaryData.replyStatus == ReplyStatus.READY_NOT_READ && diaryData.diaryCount > 0) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_home_unread_reply),
                     contentDescription = "Unread replies icon",
