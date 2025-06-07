@@ -30,7 +30,7 @@ import java.time.LocalDate
 fun DailyDiaryListItem(
     date: LocalDate,
     dayOfWeek: DayOfWeek,
-    dailyDiaries: List<DailyDiariesResponseDto.Diary>,
+    dailyDiary: DailyDiariesResponseDto,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit,
 ) {
     Column(
@@ -66,26 +66,44 @@ fun DailyDiaryListItem(
                     .clickable(onClick = { onShowDiaryDeleteStateChange(true) }),
             )
         }
-        if (dailyDiaries.isEmpty()) {
-            Box(
-                contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 44.dp),
-            ) {
-                Text(
-                    text = "아직 감사 일기가 없어요!",
-                    style = ClodyTheme.typography.body3Regular,
-                    color = ClodyTheme.colors.gray05,
-                    textAlign = TextAlign.Center,
-                )
+
+        when {
+            dailyDiary.isDraft -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 44.dp),
+                ) {
+                    Text(
+                        text = "임시저장된 일기가 있어요.",
+                        style = ClodyTheme.typography.body3Regular,
+                        color = ClodyTheme.colors.gray05,
+                        textAlign = TextAlign.Center,
+                    )
+                }
             }
-        } else {
-            dailyDiaries.forEachIndexed { index, diary ->
-                DiaryItem(
-                    index = index + 1,
-                    text = diary.content,
-                )
+
+            dailyDiary.diaries.isEmpty() -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(vertical = 44.dp),
+                ) {
+                    Text(
+                        text = "아직 감사 일기가 없어요!",
+                        style = ClodyTheme.typography.body3Regular,
+                        color = ClodyTheme.colors.gray05,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+
+            else -> {
+                dailyDiary.diaries.forEachIndexed { index, diary ->
+                    DiaryItem(index = index + 1, text = diary.content)
+                }
             }
         }
     }
