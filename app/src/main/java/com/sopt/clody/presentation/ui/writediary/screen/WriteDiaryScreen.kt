@@ -114,11 +114,11 @@ fun WriteDiaryRoute(
         failureMessage = failureMessage,
         showExitDialog = showExitDialog,
         onClickBack = {
-            if (viewModel.hasChangedFromInitial()) {
-                AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
-                viewModel.updateShowExitDialog(true)
-            } else {
+            AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
+            if (!viewModel.hasChangedFromInitial()) {
                 navigateToPrevious()
+            } else {
+                viewModel.updateShowExitDialog(true)
             }
         },
         onClickAdd = {
