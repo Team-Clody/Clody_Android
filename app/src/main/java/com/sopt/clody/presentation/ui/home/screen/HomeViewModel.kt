@@ -9,6 +9,7 @@ import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
@@ -56,8 +57,8 @@ class HomeViewModel @Inject constructor(
     private val _diaryCount = MutableStateFlow(0)
     val diaryCount: StateFlow<Int> get() = _diaryCount
 
-    private val _replyStatus = MutableStateFlow("UNREADY")
-    val replyStatus: StateFlow<String> get() = _replyStatus
+    private val _replyStatus = MutableStateFlow(ReplyStatus.UNREADY)
+    val replyStatus: StateFlow<ReplyStatus> get() = _replyStatus
 
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
@@ -73,6 +74,9 @@ class HomeViewModel @Inject constructor(
 
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
+
+    private val _showContinueDraftDialog = MutableStateFlow(false)
+    val showContinueDraftDialog: StateFlow<Boolean> get() = _showContinueDraftDialog
 
     private val _showFirstDraftPopup = MutableStateFlow(draftRepository.getIsFirstUse())
     val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
@@ -159,6 +163,10 @@ class HomeViewModel @Inject constructor(
                 onSuccess = {
                     loadCalendarData(year, month)
                     loadDailyDiariesData(year, month, day)
+                    _diaryCount.value = 0
+                    _isDeleted.value = false
+                    _replyStatus.value = ReplyStatus.UNREADY
+
                     DeleteDiaryState.Success
                 },
                 onFailure = {
@@ -169,7 +177,10 @@ class HomeViewModel @Inject constructor(
     }
 
     fun refreshCalendarDataCalendarData(year: Int, month: Int) {
-        if (calendarState.value is CalendarState.Success && _selectedDiaryDate.value.year == year && _selectedDiaryDate.value.month == month) {
+        if (calendarState.value is CalendarState.Success &&
+            _selectedDiaryDate.value.year == year &&
+            _selectedDiaryDate.value.month == month
+        ) {
             return
         }
         _selectedDiaryDate.value = DiaryDateData(year, month)
@@ -188,7 +199,7 @@ class HomeViewModel @Inject constructor(
     fun updateDiaryState(diaries: List<MonthlyCalendarResponseDto.Diary>) {
         val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
         _diaryCount.value = selectedDiary?.diaryCount ?: 0
-        _replyStatus.value = selectedDiary?.replyStatus ?: "UNREADY"
+        _replyStatus.value = selectedDiary?.replyStatus ?: ReplyStatus.UNREADY
         _isDeleted.value = selectedDiary?.isDeleted ?: false
     }
 
@@ -204,9 +215,30 @@ class HomeViewModel @Inject constructor(
         _showDiaryDeleteDialog.value = state
     }
 
+    fun setShowContinueDraftDialog(state: Boolean) {
+        _showContinueDraftDialog.value = state
+    }
+
     fun updateFirstDraftUse(newState: Boolean) {
         draftRepository.setIsFirstUse(false)
         _showFirstDraftPopup.value = newState
+    }
+
+    fun canWriteDiary(): Boolean {
+        val today = LocalDate.now()
+        val selected = _selectedDate.value
+        val isAvailableDay = selected == today || selected == today.minusDays(1)
+        return _diaryCount.value == 0 && isAvailableDay
+    }
+
+    fun canReplyDiary(): Boolean {
+        return _diaryCount.value > 0 && !_isDeleted.value
+    }
+
+    fun isValidDraftDate(): Boolean {
+        val today = LocalDate.now()
+        val selected = _selectedDate.value
+        return selected == today || selected == today.minusDays(1)
     }
 
     fun enableDraftAlarm(context: Context) {
