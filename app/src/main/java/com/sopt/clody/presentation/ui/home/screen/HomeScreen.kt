@@ -4,8 +4,10 @@ import android.app.Activity
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
@@ -205,13 +207,22 @@ fun HomeRoute(
         }
 
         if (draftAlarmEnableToast) {
-            ClodyToastMessage(
-                message = "이어쓰기 알림 설정을 완료했어요.",
-                iconResId = R.drawable.ic_toast_check_on_18,
-                backgroundColor = ClodyTheme.colors.gray04,
-                contentColor = ClodyTheme.colors.white,
-                durationMillis = 3000,
-                onDismiss = { homeViewModel.resetDraftAlarmEnableToast() },
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter,
+                content = {
+                    ClodyToastMessage(
+                        message = "이어쓰기 알림 설정을 완료했어요.",
+                        iconResId = R.drawable.ic_toast_check_on_18,
+                        backgroundColor = ClodyTheme.colors.gray04,
+                        contentColor = ClodyTheme.colors.white,
+                        durationMillis = 3000,
+                        onDismiss = { homeViewModel.resetDraftAlarmEnableToast() },
+                        modifier = Modifier
+                            .navigationBarsPadding()
+                            .padding(40.dp),
+                    )
+                },
             )
         }
 
