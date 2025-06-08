@@ -179,7 +179,10 @@ class WriteDiaryViewModel @Inject constructor(
     }
 
     fun hasChangedFromInitial(): Boolean {
-        return entries != initialEntries
+        if (initialEntries.isEmpty()) return false
+        val current = entries.map { it.trim() }
+        val initial = initialEntries.map { it.trim() }
+        return current != initial
     }
 
     fun fetchDraftDiary(year: Int, month: Int, day: Int) {
