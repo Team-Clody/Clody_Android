@@ -150,7 +150,6 @@ class HomeViewModel @Inject constructor(
                     _hasDraft.value = dailyResponse.isDraft
                     _diaryCount.value = dailyResponse.diaries.size
                     _isDeleted.value = dailyResponse.isDeleted
-                    _replyStatus.value = ReplyStatus.UNREADY
 
                     setErrorState(false)
                     DailyDiariesState.Success(dailyResponse)
