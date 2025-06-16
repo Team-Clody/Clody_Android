@@ -62,7 +62,7 @@ jobs:
             # local.properties
             - name: Generate local.properties
               env:
-                  BASE_URL: ${{ secrets.BASE_URL }}
+                  TEST_BASE_URL: ${{ secrets.TEST_BASE_URL }}
                   KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
                   AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
                   GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
@@ -71,7 +71,7 @@ jobs:
                   KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
                   KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
               run: |
-                  echo "baseUrl=$BASE_URL" >> local.properties
+                  echo "clody.test.url=$TEST_BASE_URL" >> local.properties
                   echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
                   echo "GOOGLE_ADMOB_APP_ID=$GOOGLE_ADMOB_APP_ID" >> local.properties
