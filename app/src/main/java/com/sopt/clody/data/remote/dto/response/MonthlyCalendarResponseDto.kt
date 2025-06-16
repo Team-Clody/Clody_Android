@@ -14,5 +14,6 @@ data class MonthlyCalendarResponseDto(
         @SerialName("diaryCount") val diaryCount: Int,
         @SerialName("replyStatus") val replyStatus: ReplyStatus,
         @SerialName("isDeleted") val isDeleted: Boolean,
+        @SerialName("date") val date: String,
     )
 }
