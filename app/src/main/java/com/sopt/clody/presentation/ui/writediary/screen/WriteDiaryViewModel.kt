@@ -103,9 +103,9 @@ class WriteDiaryViewModel @Inject constructor(
     }
 
     private fun isDiaryExpired(year: Int, month: Int, day: Int): Boolean {
-        val today = LocalDate.now()
         val diaryDate = LocalDate.of(year, month, day)
-        return diaryDate.isBefore(today)
+        val yesterday = LocalDate.now().minusDays(1)
+        return diaryDate.isBefore(yesterday)
     }
 
     fun resetFailureDialog() {
