@@ -7,12 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
+import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DiaryStateButton(
     hasDraft: Boolean,
     canWrite: Boolean,
     canReply: Boolean,
+    isInvalidDraft: Boolean,
     year: Int,
     month: Int,
     day: Int,
@@ -30,6 +32,17 @@ fun DiaryStateButton(
                 text = "이어쓰기",
                 enabled = true,
                 modifier = modifier,
+            )
+        }
+
+        isInvalidDraft -> {
+            ClodyButton(
+                onClick = { /* no-action */ },
+                text = "답장확인",
+                enabled = false,
+                modifier = modifier,
+                disabledContainerColor = ClodyTheme.colors.gray05,
+                disabledContentColor = ClodyTheme.colors.white,
             )
         }
 
