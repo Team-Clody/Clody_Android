@@ -71,6 +71,7 @@ jobs:
                   KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
                   KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
               run: |
+                  echo "clody.base.url=$CLODY_BASE_URL" >> local.properties
                   echo "clody.test.url=$CLODY_BASE_URL" >> local.properties
                   echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
