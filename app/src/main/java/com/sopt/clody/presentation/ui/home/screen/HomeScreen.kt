@@ -46,6 +46,7 @@ import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 
 @Composable
@@ -77,6 +78,7 @@ fun HomeRoute(
     val deleteDiaryState by homeViewModel.deleteDiaryState.collectAsStateWithLifecycle()
     val (isError, errorMessage) = homeViewModel.errorState.collectAsStateWithLifecycle().value
     val showYearMonthPickerState by homeViewModel.showYearMonthPickerState.collectAsStateWithLifecycle()
+    val hasDraft by homeViewModel.hasDraft.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
@@ -87,16 +89,14 @@ fun HomeRoute(
         }
     }
 
-    LaunchedEffect(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate.dayOfMonth) {
-        homeViewModel.refreshCalendarDataCalendarData(selectedDiaryDate.year, selectedDiaryDate.month)
+    LaunchedEffect(Unit) {
+        val year = selectedDiaryDate.year
+        val month = selectedDiaryDate.month
+        val day = selectedDate.dayOfMonth
 
-        if (selectedDate.dayOfMonth != 0) {
-            homeViewModel.updateSelectedDate(
-                LocalDate.of(selectedDiaryDate.year, selectedDiaryDate.month, selectedDate.dayOfMonth),
-            )
-        } else {
-            homeViewModel.updateSelectedDate(LocalDate.now())
-        }
+        homeViewModel.loadCalendarData(year, month)
+        delay(500)
+        homeViewModel.loadDailyDiariesData(year, month, day)
     }
     if (isError) {
         FailureScreen(
@@ -122,10 +122,8 @@ fun HomeRoute(
             onClickDiaryList = navigateToDiaryList,
             onClickSetting = navigateToSetting,
             onClickWriteDiary = { year, month, day ->
-                val hasDraft = replyStatus == ReplyStatus.HAS_DRAFT
-                val isValidDraftDate = homeViewModel.isValidDraftDate()
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                if (hasDraft && isValidDraftDate) {
+                if (hasDraft && !homeViewModel.isValidDraftDate()) {
                     homeViewModel.setShowContinueDraftDialog(true)
                 } else {
                     navigateToWriteDiary(year, month, day)
@@ -146,9 +144,10 @@ fun HomeRoute(
             selectedYear = selectedDiaryDate.year,
             selectedMonth = selectedDiaryDate.month,
             selectedDate = selectedDate,
-            hasDraft = replyStatus == ReplyStatus.HAS_DRAFT,
+            hasDraft = hasDraft,
             canWrite = homeViewModel.canWriteDiary(),
             canReply = homeViewModel.canReplyDiary(),
+            isInvalidDraft = replyStatus == ReplyStatus.INVALID_DRAFT,
         )
 
         if (showFirstDraftPopup) {
@@ -303,6 +302,7 @@ fun HomeScreen(
     hasDraft: Boolean,
     canWrite: Boolean,
     canReply: Boolean,
+    isInvalidDraft: Boolean,
 ) {
     if (isError) {
         FailureScreen(
@@ -395,6 +395,7 @@ fun HomeScreen(
                         hasDraft = hasDraft,
                         canWrite = canWrite,
                         canReply = canReply,
+                        isInvalidDraft = isInvalidDraft,
                         year = selectedYear,
                         month = selectedMonth,
                         day = selectedDate.dayOfMonth,
