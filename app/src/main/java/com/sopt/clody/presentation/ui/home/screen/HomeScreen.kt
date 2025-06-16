@@ -46,7 +46,8 @@ import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
 @Composable
@@ -94,9 +95,17 @@ fun HomeRoute(
         val month = selectedDiaryDate.month
         val day = selectedDate.dayOfMonth
 
-        homeViewModel.loadCalendarData(year, month)
-        delay(500)
-        homeViewModel.loadDailyDiariesData(year, month, day)
+        try {
+            coroutineScope {
+                val calendarDeferred = async { homeViewModel.loadCalendarData(year, month) }
+                val dailyDeferred = async { homeViewModel.loadDailyDiariesData(year, month, day) }
+
+                calendarDeferred.await()
+                dailyDeferred.await()
+            }
+        } catch (e: Exception) {
+            homeViewModel.setErrorState(true, "데이터를 불러오는데 실패했습니다.")
+        }
     }
     if (isError) {
         FailureScreen(
