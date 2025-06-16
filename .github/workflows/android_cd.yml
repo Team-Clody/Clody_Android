@@ -81,9 +81,9 @@ jobs:
                   echo "keyAlias=$KEY_ALIAS" >> local.properties
                   echo "keyPassword=$KEY_PASSWORD" >> local.properties
 
-            # Release APK 빌드
-            - name: Build Release APK
-              run: ./gradlew assembleRelease --stacktrace
+            # Debug APK 빌드
+            - name: Build Debug APK
+              run: ./gradlew assembleDebug --stacktrace
 
             # Set up Firebase Service Account Credentials
             - name: Set up Firebase Service Account Credentials
@@ -126,7 +126,7 @@ jobs:
                   export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
                   echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
 
-                  firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
+                  firebase appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk \
                   --app "$FIREBASE_APP_ID" \
                   --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다~" \
                   --groups "clody-tester-group"
