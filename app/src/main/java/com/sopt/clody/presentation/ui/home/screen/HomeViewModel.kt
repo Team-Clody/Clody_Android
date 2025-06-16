@@ -93,6 +93,9 @@ class HomeViewModel @Inject constructor(
     private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
     val errorState: StateFlow<Pair<Boolean, String>> = _errorState
 
+    private val _hasDraft = MutableStateFlow(false)
+    val hasDraft: StateFlow<Boolean> get() = _hasDraft
+
     private var isInitialized = false
 
     init {
@@ -143,9 +146,10 @@ class HomeViewModel @Inject constructor(
             _dailyDiariesState.value = DailyDiariesState.Loading
             val result = diaryRepository.getDailyDiariesData(year, month, date)
             _dailyDiariesState.value = result.fold(
-                onSuccess = {
+                onSuccess = { dailyResponse ->
+                    _hasDraft.value = dailyResponse.isDraft
                     setErrorState(false)
-                    DailyDiariesState.Success(it)
+                    DailyDiariesState.Success(dailyResponse)
                 },
                 onFailure = { exception ->
                     setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
