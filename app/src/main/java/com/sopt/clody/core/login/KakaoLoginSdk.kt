@@ -6,6 +6,8 @@ import com.kakao.sdk.common.model.AuthError
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.sopt.clody.R
+import com.sopt.clody.core.security.login.LoginSecurityChecker
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,8 +15,18 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 @Singleton
-class KakaoLoginSdk @Inject constructor() : LoginSdk {
+class KakaoLoginSdk @Inject constructor(
+    private val securityChecker: LoginSecurityChecker,
+) : LoginSdk {
     override suspend fun login(context: Context): Result<LoginAccessToken> = runCatching {
+        if (!securityChecker.isChromeInstalled(context)) {
+            throw LoginException.AuthException(context.getString(R.string.error_login_requires_chrome))
+        }
+
+        if (securityChecker.isDeviceRooted()) {
+            throw LoginException.AuthException(context.getString(R.string.error_login_rooted_device))
+        }
+
         suspendCancellableCoroutine { continuation ->
             val callback: (OAuthToken?, Throwable?) -> Unit = callback@{ token, throwable ->
                 if (!continuation.isActive) {
