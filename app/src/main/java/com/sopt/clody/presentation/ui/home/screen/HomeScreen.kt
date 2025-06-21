@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -171,28 +172,28 @@ fun HomeRoute(
                             .padding(horizontal = 16.dp),
                     ) {
                         Text(
-                            text = "기한이 지나면\n로디의 답장을 받을 수 없어요!",
+                            text = stringResource(R.string.home_draft_popup_title),
                             color = ClodyTheme.colors.gray01,
                             textAlign = TextAlign.Center,
                             style = ClodyTheme.typography.head3,
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "답장 마감 전에 일기를 이어쓸 수 있도록\n알려드리기 위해서는 알림 설정이 필요해요.",
+                            text = stringResource(R.string.home_draft_popup_description),
                             color = ClodyTheme.colors.gray04,
                             textAlign = TextAlign.Center,
                             style = ClodyTheme.typography.body3Regular,
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "[설정 > 애플리케이션 > 클로디 > 알림 > 알림표시]",
+                            text = stringResource(R.string.home_draft_popup_guide),
                             color = ClodyTheme.colors.gray04,
                             textAlign = TextAlign.Center,
                             style = ClodyTheme.typography.body3Regular,
                         )
                         Spacer(modifier = Modifier.height(28.dp))
                         ClodyButton(
-                            text = "알림 받기",
+                            text = stringResource(R.string.home_draft_popup_accept),
                             onClick = {
                                 homeViewModel.enableDraftAlarm(context)
                                 homeViewModel.updateFirstDraftUse(false)
@@ -201,7 +202,7 @@ fun HomeRoute(
                             modifier = Modifier.fillMaxWidth(),
                         )
                         Text(
-                            text = "다음에 하기",
+                            text = stringResource(R.string.home_draft_popup_dismiss),
                             modifier = Modifier
                                 .clickable(onClick = { homeViewModel.updateFirstDraftUse(false) })
                                 .padding(12.dp),
@@ -220,7 +221,7 @@ fun HomeRoute(
                 contentAlignment = Alignment.BottomCenter,
                 content = {
                     ClodyToastMessage(
-                        message = "이어쓰기 알림 설정을 완료했어요.",
+                        message = stringResource(R.string.home_draft_alarm_enabled_toast),
                         iconResId = R.drawable.ic_toast_check_on_18,
                         backgroundColor = ClodyTheme.colors.gray04,
                         contentColor = ClodyTheme.colors.white,
@@ -236,10 +237,10 @@ fun HomeRoute(
 
         if (showContinueDraftDialog) {
             ClodyDialog(
-                titleMassage = "임시저장된 일기를 이어 쓸까요?",
-                descriptionMassage = "답장 기한이 지나서 답장은 받을 수 없어요.",
-                confirmOption = "이어쓰기",
-                dismissOption = "아니오",
+                titleMassage = stringResource(R.string.home_continue_draft_title),
+                descriptionMassage = stringResource(R.string.home_continue_draft_description),
+                confirmOption = stringResource(R.string.home_continue_draft_confirm),
+                dismissOption = stringResource(R.string.home_continue_draft_dismiss),
                 confirmAction = {
                     homeViewModel.setShowContinueDraftDialog(false)
                     val date = homeViewModel.selectedDate.value
@@ -265,10 +266,10 @@ fun HomeRoute(
 
         if (showDiaryDeleteDialog) {
             ClodyDialog(
-                titleMassage = "정말 일기를 삭제할까요?",
-                descriptionMassage = "아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.",
-                confirmOption = "삭제할래요",
-                dismissOption = "아니요",
+                titleMassage = stringResource(R.string.home_delete_diary_title),
+                descriptionMassage = stringResource(R.string.home_delete_diary_description),
+                confirmOption = stringResource(R.string.home_delete_diary_confirm),
+                dismissOption = stringResource(R.string.home_delete_diary_dismiss),
                 confirmAction = {
                     homeViewModel.deleteDailyDiary(
                         selectedDiaryDate.year,
@@ -374,7 +375,7 @@ fun HomeScreen(
                     }
 
                     is CalendarState.Error -> {
-                        homeViewModel.setErrorState(true, calendarState.message ?: "알 수 없는 오류가 발생했습니다.")
+                        homeViewModel.setErrorState(true, calendarState.message ?: stringResource(R.string.home_error_unknown))
                     }
                 }
 
@@ -389,7 +390,7 @@ fun HomeScreen(
                     }
 
                     is DeleteDiaryState.Failure -> {
-                        homeViewModel.setErrorState(true, "일기 삭제 중 오류가 발생했습니다.")
+                        homeViewModel.setErrorState(true, stringResource(R.string.home_error_delete_diary))
                     }
                 }
             },

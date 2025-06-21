@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
@@ -60,7 +61,7 @@ fun DeleteWriteDiaryBottomSheet(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        text = "삭제하기",
+                        text = stringResource(R.string.bottom_sheet_delete_button),
                         style = ClodyTheme.typography.body4SemiBold,
                         color = ClodyTheme.colors.gray01,
                     )

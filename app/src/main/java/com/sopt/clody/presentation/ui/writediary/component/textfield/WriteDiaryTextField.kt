@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -130,7 +131,7 @@ fun WriteDiaryTextField(
                         decorationBox = { innerTextField ->
                             if (text.isEmpty()) {
                                 Text(
-                                    text = "일상 속 작은 감사함을 적어보세요",
+                                    text = stringResource(R.string.write_diary_text_field_hint),
                                     style = ClodyTheme.typography.body3Medium,
                                     color = ClodyTheme.colors.gray06,
                                 )
@@ -165,7 +166,7 @@ fun WriteDiaryTextField(
             ) {
                 if ((showWarning && !isTextValid) || isTextTooLong) {
                     Text(
-                        text = "2~50자 까지 입력할 수 있어요.",
+                        text = stringResource(R.string.write_diary_text_field_warning),
                         color = ClodyTheme.colors.red,
                         style = ClodyTheme.typography.detail1Medium,
                         modifier = Modifier.weight(1f),

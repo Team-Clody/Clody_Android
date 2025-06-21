@@ -11,7 +11,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -33,7 +35,7 @@ fun SendButton(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = "보내기",
+            text = stringResource(R.string.write_diary_text_button),
             color = if (isPressed) ClodyTheme.colors.gray07 else ClodyTheme.colors.gray01,
             style = ClodyTheme.typography.body2SemiBold,
         )

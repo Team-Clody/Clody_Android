@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.utils.extension.clickableWithoutRipple
@@ -85,7 +86,7 @@ fun BoxScope.AddDiaryEntryFAB(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = "추가하기",
+                    text = stringResource(R.string.write_diary_add_entry_fab),
                     color = contentColor,
                     style = ClodyTheme.typography.body2SemiBold,
                 )

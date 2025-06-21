@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -120,15 +121,23 @@ fun SoftUpdateDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("업데이트 필요") },
+        title = { Text(stringResource(R.string.soft_update_title)) },
         text = {
             Text(
-                text = "새로운 버전 ${latestVersion}을 사용할 수 있습니다.\n지금 업데이트하시겠습니까?",
+                text = stringResource(R.string.soft_update_message, latestVersion),
                 textAlign = TextAlign.Center,
             )
         },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("업데이트") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("나중에") } },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.soft_update_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.soft_update_dismiss))
+            }
+        },
     )
 }
 
@@ -140,10 +149,20 @@ fun HardUpdateDialog(
 ) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text("필수 업데이트") },
-        text = { Text("버전 ${latestVersion}으로 업데이트가 필요합니다.") },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("업데이트") } },
-        dismissButton = { TextButton(onClick = onExit) { Text("앱 종료") } },
+        title = { Text(stringResource(R.string.hard_update_title)) },
+        text = {
+            Text(stringResource(R.string.hard_update_message, latestVersion))
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.soft_update_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onExit) {
+                Text(stringResource(R.string.hard_update_exit))
+            }
+        },
     )
 }
 
