@@ -123,7 +123,6 @@
     <!--홈-->
     <string name="home_clover_count_format">클로버 %1$d개</string>
     <string name="home_year_and_month_format">%1$d년 %2$d월</string>
-    <string name="home_year_and_month_picker_icon_description">월 선택</string>
 
     <!-- 홈: 일기 작성 버튼 -->
     <string name="button_continue_draft">이어 쓰기</string>
