@@ -1,9 +1,9 @@
-package com.sopt.clody.presentation.ui.setting.screen
+package com.sopt.clody.presentation.ui.webview
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.webkit.WebSettings
 import android.webkit.WebView
-import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -16,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
+import com.sopt.clody.BuildConfig
+import com.sopt.clody.core.security.weview.SecureWebViewClient
 
 @Composable
 fun WebViewRoute(
@@ -34,8 +36,14 @@ fun WebViewScreen(
     encodedUrl: String,
     onClickBack: () -> Unit,
 ) {
+    val decodedUrl = remember(encodedUrl) {
+        Uri.decode(encodedUrl)
+    }
+
     var webView: WebView? by remember { mutableStateOf(null) }
     val canGoBack by remember { derivedStateOf { webView?.canGoBack() ?: false } }
+
+    val allowedDomains = BuildConfig.ALLOWED_WEBVIEW_DOMAINS.split(",").map { it.trim() }
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -43,18 +51,18 @@ fun WebViewScreen(
             AndroidView(
                 factory = { context ->
                     WebView(context).apply {
-                        webViewClient = WebViewClient()
+                        webViewClient = SecureWebViewClient(context, allowedDomains)
                         settings.apply {
                             javaScriptEnabled = true
                             domStorageEnabled = true
                             useWideViewPort = true
                             loadWithOverviewMode = true
-                            allowFileAccess = true
-                            allowContentAccess = true
-                            javaScriptCanOpenWindowsAutomatically = true
-                            mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+                            allowFileAccess = false
+                            allowContentAccess = false
+                            javaScriptCanOpenWindowsAutomatically = false
+                            mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
                         }
-                        loadUrl(encodedUrl)
+                        loadUrl(decodedUrl)
                         webView = this
                     }
                 },
