@@ -212,4 +212,7 @@
     <string name="time_am">오전</string>
     <string name="time_pm">오후</string>
     <string name="time_reminder_time_format">%1$s %2$s시 %3$s분</string>
+
+    <string name="year_format">%1$d년</string>
+    <string name="month_format">%1$d월</string>
 </resources>
