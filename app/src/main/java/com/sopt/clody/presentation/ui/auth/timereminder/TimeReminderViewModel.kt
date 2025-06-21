@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -16,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -77,22 +79,19 @@ class TimeReminderViewModel @Inject constructor(
         return sharedPreferences.getString("fcm_token", null)
     }
 
-    fun setSelectedTime(amPm: String, hour: String, minute: String) {
-        selectedTime = formatTime(amPm, hour, minute)
+    fun setSelectedTime(period: TimePeriod, hour: String, minute: String) {
+        selectedTime = formatTime(period, hour, minute)
     }
 
-    fun setFixedTime(hour: String, minute: String) {
-        selectedTime = String.format("%02d:%02d", hour.toInt(), minute.toInt())
+    fun setFixedTime(period: TimePeriod, hour: String, minute: String) {
+        selectedTime = formatTime(period, hour, minute)
     }
 
-    private fun formatTime(amPm: String, hour: String, minute: String): String {
-        val hourInt = if (amPm == "오후" && hour.toInt() != 12) {
-            hour.toInt() + 12
-        } else if (amPm == "오전" && hour.toInt() == 12) {
-            0
-        } else {
-            hour.toInt()
+    private fun formatTime(period: TimePeriod, hour: String, minute: String): String {
+        val hourInt = when (period) {
+            TimePeriod.PM -> if (hour.toInt() != 12) hour.toInt() + 12 else 12
+            TimePeriod.AM -> if (hour.toInt() == 12) 0 else hour.toInt()
         }
-        return String.format("%02d:%02d", hourInt, minute.toInt())
+        return String.format(Locale.US, "%02d:%02d", hourInt, minute.toInt())
     }
 }
