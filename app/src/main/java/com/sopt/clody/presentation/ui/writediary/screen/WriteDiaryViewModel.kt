@@ -20,6 +20,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -79,9 +80,13 @@ class WriteDiaryViewModel @Inject constructor(
             val result = diaryRepository.writeDiary(date, contents)
             _writeDiaryState.value = result.fold(
                 onSuccess = { response ->
-                    when (response.replyType) {
-                        "DELETED" -> WriteDiaryState.NoReply
-                        else -> WriteDiaryState.Success(response.createdAt)
+                    if (isDiaryExpired(year, month, day)) {
+                        WriteDiaryState.NoReply
+                    } else {
+                        when (response.replyType) {
+                            "DELETED" -> WriteDiaryState.NoReply
+                            else -> WriteDiaryState.Success(response.createdAt)
+                        }
                     }
                 },
                 onFailure = {
@@ -95,6 +100,12 @@ class WriteDiaryViewModel @Inject constructor(
                 },
             )
         }
+    }
+
+    private fun isDiaryExpired(year: Int, month: Int, day: Int): Boolean {
+        val diaryDate = LocalDate.of(year, month, day)
+        val yesterday = LocalDate.now().minusDays(1)
+        return diaryDate.isBefore(yesterday)
     }
 
     fun resetFailureDialog() {

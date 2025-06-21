@@ -92,7 +92,7 @@ fun DailyDiaryListItem(
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
-                        text = "아직 감사 일기가 없어요!",
+                        text = "작성된 감사 일기가 없어요!",
                         style = ClodyTheme.typography.body3Regular,
                         color = ClodyTheme.colors.gray05,
                         textAlign = TextAlign.Center,

@@ -62,7 +62,7 @@ jobs:
             # local.properties
             - name: Generate local.properties
               env:
-                  BASE_URL: ${{ secrets.BASE_URL }}
+                  CLODY_BASE_URL: ${{ secrets.CLODY_TEST_URL }}
                   KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
                   AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
                   GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
@@ -71,19 +71,20 @@ jobs:
                   KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
                   KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
               run: |
-                  echo "baseUrl=$BASE_URL" >> local.properties
+                  echo "clody.base.url=$CLODY_BASE_URL" >> local.properties
+                  echo "clody.test.url=$CLODY_BASE_URL" >> local.properties
                   echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
-                  echo "googleAdmob.app.id=$GOOGLE_ADMOB_APP_ID" >> local.properties
-                  echo "googleAdmob.unit.id=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
+                  echo "GOOGLE_ADMOB_APP_ID=$GOOGLE_ADMOB_APP_ID" >> local.properties
+                  echo "GOOGLE_ADMOB_UNIT_ID=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
                   echo "storeFile=keystore/clody_release.jks" >> local.properties
                   echo "storePassword=$STORE_PASSWORD" >> local.properties
                   echo "keyAlias=$KEY_ALIAS" >> local.properties
                   echo "keyPassword=$KEY_PASSWORD" >> local.properties
 
-            # Release APK 빌드
-            - name: Build Release APK
-              run: ./gradlew assembleRelease --stacktrace
+            # Debug APK 빌드
+            - name: Build Debug APK
+              run: ./gradlew assembleDebug --stacktrace
 
             # Set up Firebase Service Account Credentials
             - name: Set up Firebase Service Account Credentials
@@ -126,7 +127,7 @@ jobs:
                   export GOOGLE_APPLICATION_CREDENTIALS=$HOME/firebase-credentials.json
                   echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
 
-                  firebase appdistribution:distribute app/build/outputs/apk/release/app-release.apk \
+                  firebase appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk \
                   --app "$FIREBASE_APP_ID" \
                   --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다~" \
                   --groups "clody-tester-group"

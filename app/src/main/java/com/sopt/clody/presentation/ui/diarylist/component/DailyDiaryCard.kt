@@ -47,6 +47,7 @@ fun DailyDiaryCard(
     val iconRes = when {
         dailyDiary.replyStatus == ReplyStatus.READY_NOT_READ && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.replyStatus == ReplyStatus.UNREADY && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT -> R.drawable.ic_home_expired_written_clover
         dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.diaryCount in 1..2 -> R.drawable.ic_home_bottom_clover
         dailyDiary.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
@@ -123,6 +124,18 @@ fun ReplyDiaryButton(
     day: Int,
     onClickReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
 ) {
+    val isDisabled = dailyDiary.isDeleted || dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT
+    val containerColor = if (dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT) {
+        ClodyTheme.colors.gray08
+    } else {
+        ClodyTheme.colors.lightBlue
+    }
+    val contentColor = if (dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT) {
+        ClodyTheme.colors.gray06
+    } else {
+        ClodyTheme.colors.blue
+    }
+
     Box(
         contentAlignment = Alignment.TopEnd,
     ) {
@@ -131,10 +144,10 @@ fun ReplyDiaryButton(
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),
-            enabled = !(dailyDiary.isDeleted),
+            enabled = !isDisabled,
             colors = ButtonDefaults.buttonColors(
-                containerColor = ClodyTheme.colors.lightBlue,
-                contentColor = ClodyTheme.colors.blue,
+                containerColor = containerColor,
+                contentColor = contentColor,
                 disabledContainerColor = ClodyTheme.colors.gray08,
                 disabledContentColor = ClodyTheme.colors.gray06,
             ),
