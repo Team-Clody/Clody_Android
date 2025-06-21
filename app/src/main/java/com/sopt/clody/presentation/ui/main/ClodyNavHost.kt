@@ -30,8 +30,8 @@ import com.sopt.clody.presentation.ui.setting.navigation.navigateToSetting
 import com.sopt.clody.presentation.ui.setting.navigation.navigateToWebView
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingScreen
 import com.sopt.clody.presentation.ui.setting.navigation.settingScreen
-import com.sopt.clody.presentation.ui.setting.navigation.webViewScreen
 import com.sopt.clody.presentation.ui.splash.navigation.splashScreen
+import com.sopt.clody.presentation.ui.webview.webViewScreen
 import com.sopt.clody.presentation.ui.writediary.navigation.navigateToWriteDiary
 import com.sopt.clody.presentation.ui.writediary.navigation.writeDiaryScreen
 import com.sopt.clody.presentation.utils.navigation.safePopBackStack
@@ -73,6 +73,7 @@ fun ClodyNavHost(
             signUpScreen(
                 navigateToHome = navController::navigateToTimeReminder,
                 navigateToPrevious = navController::safePopBackStack,
+                navigateToWebView = navController::navigateToWebView,
             )
             timeReminderScreen(
                 navigateToGuide = navController::navigateToGuide,

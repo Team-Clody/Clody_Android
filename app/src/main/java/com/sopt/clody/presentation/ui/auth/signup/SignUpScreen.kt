@@ -18,6 +18,7 @@ fun SignUpRoute(
     viewModel: SignUpViewModel = mavericksViewModel(),
     navigateToHome: () -> Unit,
     navigateToPrevious: () -> Unit,
+    navigateToWebView: (String) -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
@@ -29,7 +30,11 @@ fun SignUpRoute(
                 when (effect) {
                     is SignUpContract.SignUpSideEffect.NavigateToTimeReminder -> navigateToHome()
                     is SignUpContract.SignUpSideEffect.ShowMessage -> {
-                        // 삐용삐용 에러 대응을 어떻게 할까요?
+                        // TODO: Snackbar나 Dialog로 에러 메시지 처리
+                    }
+
+                    is SignUpContract.SignUpSideEffect.NavigateToWebView -> {
+                        navigateToWebView(effect.url) // ✅ WebView 이동 처리
                     }
                 }
             }
@@ -68,6 +73,9 @@ fun SignUpScreen(
                 onTogglePrivacy = { onIntent(SignUpContract.SignUpIntent.TogglePrivacyChecked(it)) },
                 onAgreeClick = { onIntent(SignUpContract.SignUpIntent.ProceedTerms) },
                 navigateToPrevious = navigateToPrevious,
+                navigateToWebView = { url ->
+                    onIntent(SignUpContract.SignUpIntent.OpenWebView(url))
+                },
             )
         }
 

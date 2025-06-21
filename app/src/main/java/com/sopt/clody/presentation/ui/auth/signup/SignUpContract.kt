@@ -33,12 +33,13 @@ class SignUpContract {
         data class ToggleAllChecked(val checked: Boolean) : SignUpIntent()
         data class ToggleServiceChecked(val checked: Boolean) : SignUpIntent()
         data class TogglePrivacyChecked(val checked: Boolean) : SignUpIntent()
-
+        data class OpenWebView(val url: String) : SignUpIntent()
         data object BackToTerms : SignUpIntent()
     }
 
     sealed interface SignUpSideEffect {
         data object NavigateToTimeReminder : SignUpSideEffect
+        data class NavigateToWebView(val url: String) : SignUpSideEffect
         data class ShowMessage(val message: String) : SignUpSideEffect
     }
 
