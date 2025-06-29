@@ -5,7 +5,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import java.io.File
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * 기본 보안 점검 구현체.
@@ -14,7 +13,6 @@ import javax.inject.Singleton
  *
  */
 
-@Singleton
 class DefaultLoginSecurityChecker @Inject constructor() : LoginSecurityChecker {
 
     /**
