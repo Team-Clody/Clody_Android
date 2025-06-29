@@ -4,11 +4,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.compose.composable
-import androidx.navigation.toRoute
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingRoute
 import com.sopt.clody.presentation.ui.setting.screen.AccountManagementRoute
 import com.sopt.clody.presentation.ui.setting.screen.SettingRoute
-import com.sopt.clody.presentation.ui.setting.screen.WebViewRoute
 import com.sopt.clody.presentation.utils.navigation.Route
 
 fun NavGraphBuilder.settingScreen(
@@ -44,19 +42,6 @@ fun NavGraphBuilder.notificationSettingScreen(
 ) {
     composable<Route.NotificationSetting> {
         NotificationSettingRoute(navigateToPrevious = navigateToPrevious)
-    }
-}
-
-fun NavGraphBuilder.webViewScreen(
-    navigateToPrevious: () -> Unit,
-) {
-    composable<Route.WebView> { backStackEntry ->
-        backStackEntry.toRoute<Route.WebView>().apply {
-            WebViewRoute(
-                encodedUrl = encodedUrl,
-                navigateToPrevious = navigateToPrevious,
-            )
-        }
     }
 }
 

@@ -19,7 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -28,7 +27,6 @@ import com.sopt.clody.presentation.ui.auth.component.checkbox.CustomCheckbox
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
-import com.sopt.clody.presentation.ui.setting.screen.onClickSettingOption
 import com.sopt.clody.presentation.utils.base.BasePreview
 import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
@@ -44,8 +42,8 @@ fun TermsOfServicePage(
     onTogglePrivacy: (Boolean) -> Unit,
     onAgreeClick: () -> Unit,
     navigateToPrevious: () -> Unit,
+    navigateToWebView: (String) -> Unit,
 ) {
-    val context = LocalContext.current
     val isAgreeButtonEnabled = serviceChecked && privacyChecked
 
     Scaffold(
@@ -114,14 +112,14 @@ fun TermsOfServicePage(
                     text = stringResource(R.string.terms_service_use),
                     checked = serviceChecked,
                     onCheckedChange = onToggleService,
-                    onClickMore = { onClickSettingOption(context, SettingOptionUrls.TERMS_OF_SERVICE_URL) },
+                    onClickMore = { navigateToWebView(SettingOptionUrls.TERMS_OF_SERVICE_URL) },
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 TermsCheckboxRow(
                     text = stringResource(R.string.terms_service_privacy),
                     checked = privacyChecked,
                     onCheckedChange = onTogglePrivacy,
-                    onClickMore = { onClickSettingOption(context, SettingOptionUrls.PRIVACY_POLICY_URL) },
+                    onClickMore = { navigateToWebView(SettingOptionUrls.PRIVACY_POLICY_URL) },
                 )
             }
         },
@@ -171,6 +169,7 @@ private fun TermsOfServicePagePreview() {
             onTogglePrivacy = {},
             onAgreeClick = {},
             navigateToPrevious = {},
+            navigateToWebView = {},
         )
     }
 }

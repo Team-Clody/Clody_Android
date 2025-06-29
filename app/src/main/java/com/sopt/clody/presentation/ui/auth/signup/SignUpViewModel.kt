@@ -57,6 +57,7 @@ class SignUpViewModel @AssistedInject constructor(
             is SignUpContract.SignUpIntent.ToggleAllChecked -> handleToggleAllChecked(intent)
             is SignUpContract.SignUpIntent.ToggleServiceChecked -> handleToggleServiceChecked(intent)
             is SignUpContract.SignUpIntent.TogglePrivacyChecked -> handleTogglePrivacyChecked(intent)
+            is SignUpContract.SignUpIntent.OpenWebView -> handleOpenWebView(intent.url)
             SignUpContract.SignUpIntent.BackToTerms -> handleBackToTerms()
         }
     }
@@ -100,6 +101,10 @@ class SignUpViewModel @AssistedInject constructor(
 
     private fun handleTogglePrivacyChecked(intent: SignUpContract.SignUpIntent.TogglePrivacyChecked) {
         setState { copy(privacyChecked = intent.checked) }
+    }
+
+    private suspend fun handleOpenWebView(url: String) {
+        _sideEffects.send(SignUpContract.SignUpSideEffect.NavigateToWebView(url))
     }
 
     private fun handleBackToTerms() {
