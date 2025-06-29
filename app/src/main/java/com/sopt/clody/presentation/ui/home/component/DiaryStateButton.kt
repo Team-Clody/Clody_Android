@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -29,7 +31,7 @@ fun DiaryStateButton(
         hasDraft -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = "이어쓰기",
+                text = stringResource(R.string.button_continue_draft),
                 enabled = true,
                 modifier = modifier,
             )
@@ -38,7 +40,7 @@ fun DiaryStateButton(
         isInvalidDraft -> {
             ClodyButton(
                 onClick = { /* no-action */ },
-                text = "답장확인",
+                text = stringResource(R.string.button_check_reply),
                 enabled = false,
                 modifier = modifier,
                 disabledContainerColor = ClodyTheme.colors.gray05,
@@ -49,7 +51,7 @@ fun DiaryStateButton(
         canReply -> {
             ClodyReplyButton(
                 onClick = onClickReplyDiary,
-                text = "답장확인",
+                text = stringResource(R.string.button_check_reply),
                 enabled = true,
                 modifier = modifier,
             )
@@ -58,7 +60,7 @@ fun DiaryStateButton(
         canWrite -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = "일기쓰기",
+                text = stringResource(R.string.button_write_diary),
                 enabled = true,
                 modifier = modifier,
             )
@@ -67,7 +69,7 @@ fun DiaryStateButton(
         else -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = "일기쓰기",
+                text = stringResource(R.string.button_write_diary),
                 enabled = false,
                 modifier = modifier,
             )

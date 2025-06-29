@@ -1,11 +1,24 @@
 <resources>
     <string name="app_name">클로디</string>
 
+    <!-- 스플래시 -->
+    <!-- 소프트 업데이트 -->
+    <string name="soft_update_title">업데이트 필요</string>
+    <string name="soft_update_message">새로운 버전 %1$s을 사용할 수 있습니다.\n지금 업데이트하시겠습니까?</string>
+    <string name="soft_update_confirm">업데이트</string>
+    <string name="soft_update_dismiss">나중에</string>
+
+    <!-- 하드 업데이트 -->
+    <string name="hard_update_title">필수 업데이트</string>
+    <string name="hard_update_message">버전 %1$s으로 업데이트가 필요합니다.</string>
+    <string name="hard_update_exit">앱 종료</string>
+
     <!--회원가입 -->
     <string name="signup_title">행운을 전하는 감사일기</string>
     <string name="signup_btn_kakao">카카오로 로그인</string>
 
-    <!--닉네임 설정(온보딩)-->
+    <!-- 온보딩 -->
+    <!--닉네임 설정-->
     <string name="nickname_title">만나서 반가워요!\n어떻게 불러 드릴까요?</string>
     <string name="nickname_input_hint">닉네임을 입력해주세요</string>
     <string name="nickname_next">다음</string>
@@ -51,7 +64,7 @@
     <string name="loading_nearly_done_message">로디가 답장을 거의 다 써가요!\n조금만 기다려주세요</string>
     <string name="loading_button_open">열어보기</string>
     <string name="loading_button_confirm">확인</string>
-    <string name="diarylist_check_reply">답장 확인</string>
+    <string name="loading_button_watch_ad_and_get_reply">광고 보고 바로 답장 받기</string>
 
     <!-- 답장 확인 화면 -->
     <string name="reply_month_and_date">%1$d월 %2$d일</string>
@@ -74,9 +87,13 @@
     <string name="temp_save_dialog_exit_confirm">나가기</string>
     <string name="temp_save_dialog_exit_dismiss">임시저장</string>
 
-    <!--일기 작성-->
+    <!--일기 작성 화면-->
     <string name="write_diary_confirm_button">저장</string>
     <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
+    <string name="write_diary_add_entry_fab">추가하기</string>
+    <string name="write_diary_text_button">보내기</string>
+    <string name="write_diary_text_field_hint">일상 속 작은 감사함을 적어보세요</string>
+    <string name="write_diary_text_field_warning">2~50자 까지 입력할 수 있어요.</string>
 
     <!--토스트메시지-->
     <string name="toast_limit_message">최대 5개까지 작성할 수 있어요.</string>
@@ -96,7 +113,51 @@
     <string name="diary_list_empty_diary_list">작성된 감사일기가 없어요</string>
     <string name="diarylist_daily_diary_day">%1$s일</string>
     <string name="diarylist_daily_diary_day_of_week">/%1$s</string>
+    <string name="diarylist_check_reply">답장 확인</string>
 
+    <string name="daily_diary_draft_message">임시저장된 일기가 있어요.</string>
+    <string name="daily_diary_empty_message">작성된 감사 일기가 없어요!</string>
+    <string name="daily_diary_item_format">%1$d. %2$s</string>
+    <string name="daily_diary_day_of_week_format">%1$s요일</string>
+
+    <!--홈-->
+    <string name="home_clover_count_format">클로버 %1$d개</string>
+    <string name="home_year_and_month_format">%1$d년 %2$d월</string>
+
+    <!-- 홈: 일기 작성 버튼 -->
+    <string name="button_continue_draft">이어 쓰기</string>
+    <string name="button_check_reply">답장 확인</string>
+    <string name="button_write_diary">일기 쓰기</string>
+
+    <!-- 홈: 오류 처리 -->
+    <string name="home_error_data_load">데이터를 불러오는데 실패했습니다.</string>
+    <string name="home_error_unknown">알 수 없는 오류가 발생했습니다.</string>
+    <string name="home_error_delete_diary">일기 삭제 중 오류가 발생했습니다.</string>
+
+    <!-- 홈: 초반 알림 팝업 -->
+    <string name="home_draft_popup_title">기한이 지나면\n로디의 답장을 받을 수 없어요!</string>
+    <string name="home_draft_popup_description">답장 마감 전에 일기를 이어쓸 수 있도록\n알려드리기 위해서는 알림 설정이 필요해요.</string>
+    <string name="home_draft_popup_guide">[설정 > 애플리케이션 > 클로디 > 알림 > 알림표시]</string>
+    <string name="home_draft_popup_accept">알림 받기</string>
+    <string name="home_draft_popup_dismiss">다음에 하기</string>
+
+    <!-- 홈: 알림 설정 완료 -->
+    <string name="home_draft_alarm_enabled_toast">이어쓰기 알림 설정을 완료했어요.</string>
+
+    <!-- 홈: 임시저장 이어쓰기 다이얼로그 -->
+    <string name="home_continue_draft_title">임시저장된 일기를 이어 쓸까요?</string>
+    <string name="home_continue_draft_description">답장 기한이 지나서 답장은 받을 수 없어요.</string>
+    <string name="home_continue_draft_confirm">이어쓰기</string>
+    <string name="home_continue_draft_dismiss">아니오</string>
+
+    <!-- 홈: 일기 삭제 다이얼로그 -->
+    <string name="home_delete_diary_title">정말 일기를 삭제할까요?</string>
+    <string name="home_delete_diary_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
+    <string name="home_delete_diary_confirm">삭제할래요</string>
+    <string name="home_delete_diary_dismiss">아니요</string>
+
+    <!-- 접근성 -->
+    <string name="home_icon_choose_month">월 선택</string>
 
     <!-- 설정 -->
     <string name="setting_title">설정</string>
@@ -142,4 +203,16 @@
     <string name="failure_dialog_confirm_btn">확인</string>
     <string name="notification_setting_change_success_toast">알람 시간 설정을 완료했어요.</string>
 
+    <!-- 공통 컴포넌트-->
+    <string name="bottom_sheet_delete_button">삭제하기</string>
+    <string name="year_month_picker_title">다른 날짜 보기</string>
+    <string name="year_month_picker_confirm">완료</string>
+
+    <!-- remember로 된 시간 format -->
+    <string name="time_am">오전</string>
+    <string name="time_pm">오후</string>
+    <string name="time_reminder_time_format">%1$s %2$s시 %3$s분</string>
+
+    <string name="year_format">%1$d년</string>
+    <string name="month_format">%1$d월</string>
 </resources>

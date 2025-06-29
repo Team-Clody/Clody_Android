@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -22,7 +23,7 @@ fun YearAndMonthTitle(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
-    val text = "${selectedYear}년 ${selectedMonth}월"
+    val text = stringResource(R.string.home_year_and_month_format, selectedYear, selectedMonth)
 
     Column {
         Row(
@@ -41,8 +42,7 @@ fun YearAndMonthTitle(
             Image(
                 painter = painterResource(id = R.drawable.ic_home_under_arrow),
                 contentDescription = "choose month",
-                modifier = Modifier
-                    .padding(horizontal = 6.dp, vertical = 6.dp),
+                modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
             )
         }
     }

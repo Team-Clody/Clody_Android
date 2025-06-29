@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -85,7 +86,7 @@ fun NickNamePage(
                     focusManager.clearFocus()
                     onCompleteClick()
                 },
-                text = "다음",
+                text = stringResource(R.string.nickname_next),
                 enabled = nickname.isNotEmpty() && isValidNickname,
             )
         },
@@ -98,12 +99,12 @@ fun NickNamePage(
                     .padding(horizontal = 24.dp),
             ) {
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.056f))
-                Text("닉네임 입력", style = ClodyTheme.typography.head1)
+                Text(stringResource(R.string.nickname_title), style = ClodyTheme.typography.head1)
                 Spacer(modifier = Modifier.heightForScreenPercentage(0.06f))
                 NickNameTextField(
                     value = nickname,
                     onValueChange = onNicknameChange,
-                    hint = "닉네임을 입력하세요",
+                    hint = stringResource(R.string.nickname_input_hint),
                     isFocused = isFocused,
                     isValid = isValidNickname,
                     onFocusChanged = onFocusChanged,

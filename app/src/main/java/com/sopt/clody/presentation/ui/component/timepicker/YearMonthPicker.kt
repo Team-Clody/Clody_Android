@@ -23,9 +23,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
+import com.sopt.clody.presentation.utils.extension.YearMonthLabelUtil
+import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
+import com.sopt.clody.presentation.utils.extension.toLocalizedYearLabel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -35,6 +39,15 @@ fun YearMonthPicker(
     selectedMonth: Int,
     onYearMonthSelected: (Int, Int) -> Unit,
 ) {
+    val yearItems = remember { (YearMonthLabelUtil.MIN_YEAR..YearMonthLabelUtil.MAX_YEAR).toList() }
+    val monthItems = remember { (1..12).toList() }
+
+    val yearPickerState = rememberPickerState()
+    val monthPickerState = rememberPickerState()
+
+    val startYearIndex = (yearItems.indexOf(selectedYear) - 2).coerceAtLeast(0)
+    val startMonthIndex = (monthItems.indexOf(selectedMonth) - 2).coerceAtLeast(0)
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +62,6 @@ fun YearMonthPicker(
                 .wrapContentSize()
                 .background(color = ClodyTheme.colors.white)
                 .padding(horizontal = 24.dp),
-
         ) {
             Box(
                 modifier = Modifier
@@ -57,7 +69,7 @@ fun YearMonthPicker(
                     .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
-                    text = "다른 날짜 보기",
+                    text = stringResource(R.string.year_month_picker_title),
                     style = ClodyTheme.typography.body2SemiBold,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center),
@@ -76,19 +88,10 @@ fun YearMonthPicker(
                 }
             }
 
-            val yearItems = remember { (2000..2030).map { "${it}년" } }
-            val monthItems = remember { (1..12).map { "${it}월" } }
+            val yearLabelItems = yearItems.map { it.toLocalizedYearLabel() }
+            val monthLabelItems = monthItems.map { it.toLocalizedMonthLabel() }
 
-            val yearPickerState = rememberPickerState()
-            val monthPickerState = rememberPickerState()
-
-            val startYearIndex = (yearItems.indexOf("${selectedYear}년") - 2).coerceAtLeast(0)
-            val startMonthIndex = (monthItems.indexOf("${selectedMonth}월") - 2).coerceAtLeast(0)
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-            ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -97,30 +100,27 @@ fun YearMonthPicker(
                         .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp)),
                 )
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Spacer(modifier = Modifier.weight(1f))
                     YearMonthPickerItem(
                         state = yearPickerState,
-                        items = yearItems,
+                        items = yearLabelItems,
                         startIndex = startYearIndex,
                         visibleItemsCount = 5,
                         infiniteScroll = false,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
                     Spacer(modifier = Modifier.width(20.dp))
                     YearMonthPickerItem(
                         state = monthPickerState,
-                        items = monthItems,
+                        items = monthLabelItems,
                         startIndex = startMonthIndex,
                         visibleItemsCount = 5,
                         infiniteScroll = false,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
                     Spacer(modifier = Modifier.weight(1f))
@@ -128,12 +128,12 @@ fun YearMonthPicker(
             }
             ClodyButton(
                 onClick = {
-                    val selectedYear = yearPickerState.selectedItem.split("년")[0].toInt()
-                    val selectedMonth = monthPickerState.selectedItem.split("월")[0].toInt()
-                    onYearMonthSelected(selectedYear, selectedMonth)
+                    val year = yearItems[yearLabelItems.indexOf(yearPickerState.selectedItem)]
+                    val month = monthItems[monthLabelItems.indexOf(monthPickerState.selectedItem)]
+                    onYearMonthSelected(year, month)
                     onDismissRequest()
                 },
-                text = "완료",
+                text = stringResource(R.string.year_month_picker_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

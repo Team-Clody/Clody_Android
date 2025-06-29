@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
@@ -40,7 +41,7 @@ fun QuickReplyAdButton(
                 tint = Color.Unspecified,
             )
             Text(
-                text = "광고 보고 바로 답장 받기",
+                text = stringResource(R.string.loading_button_watch_ad_and_get_reply),
                 style = ClodyTheme.typography.body4Medium,
                 color = ClodyTheme.colors.blue,
                 modifier = Modifier.padding(start = 5.dp),

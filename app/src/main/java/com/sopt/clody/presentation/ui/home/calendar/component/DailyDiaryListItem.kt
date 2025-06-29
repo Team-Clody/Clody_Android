@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
@@ -52,7 +53,10 @@ fun DailyDiaryListItem(
                 modifier = Modifier.padding(vertical = 3.dp),
             )
             Text(
-                text = "${dayOfWeek.toKoreanShortLabel()}요일",
+                text = stringResource(
+                    id = R.string.daily_diary_day_of_week_format,
+                    dayOfWeek.toKoreanShortLabel(),
+                ),
                 style = ClodyTheme.typography.body2Medium,
                 color = ClodyTheme.colors.gray02,
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
@@ -76,7 +80,7 @@ fun DailyDiaryListItem(
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
-                        text = "임시저장된 일기가 있어요.",
+                        text = stringResource(R.string.daily_diary_draft_message),
                         style = ClodyTheme.typography.body3Regular,
                         color = ClodyTheme.colors.gray05,
                         textAlign = TextAlign.Center,
@@ -92,7 +96,7 @@ fun DailyDiaryListItem(
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
-                        text = "작성된 감사 일기가 없어요!",
+                        text = stringResource(R.string.daily_diary_empty_message),
                         style = ClodyTheme.typography.body3Regular,
                         color = ClodyTheme.colors.gray05,
                         textAlign = TextAlign.Center,
