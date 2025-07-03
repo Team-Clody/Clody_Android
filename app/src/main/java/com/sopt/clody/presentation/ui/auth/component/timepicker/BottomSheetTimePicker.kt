@@ -36,6 +36,22 @@ fun BottomSheetTimePicker(
     onDismissRequest: () -> Unit,
     onRemindTimeSelected: (TimePeriod, String, String) -> Unit,
 ) {
+    val amPmEnumItems = listOf(TimePeriod.AM, TimePeriod.PM)
+    val amPmLabelItems = amPmEnumItems.map { it.getLabel() }
+
+    val hourItems = remember { (1..12).map { it.toString() } }
+    val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
+
+    val amPmPickerState = rememberPickerState().apply {
+        selectedItem = amPmLabelItems[1]
+    }
+    val hourPickerState = rememberPickerState().apply {
+        selectedItem = "9"
+    }
+    val minutePickerState = rememberPickerState().apply {
+        selectedItem = "30"
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,16 +91,6 @@ fun BottomSheetTimePicker(
                     )
                 }
             }
-
-            val amPmEnumItems = listOf(TimePeriod.AM, TimePeriod.PM)
-            val amPmLabelItems = amPmEnumItems.map { it.getLabel() }
-
-            val hourItems = remember { (1..12).map { it.toString() } }
-            val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
-
-            val amPmPickerState = rememberPickerState()
-            val hourPickerState = rememberPickerState()
-            val minutePickerState = rememberPickerState()
 
             Box(modifier = Modifier.fillMaxWidth()) {
                 Box(
@@ -130,7 +136,7 @@ fun BottomSheetTimePicker(
             ClodyButton(
                 onClick = {
                     val selectedLabel = amPmPickerState.selectedItem
-                    val selectedPeriod = amPmEnumItems.getOrNull(amPmLabelItems.indexOf(selectedLabel)) ?: TimePeriod.PM
+                    val selectedPeriod = amPmEnumItems.getOrElse(amPmLabelItems.indexOf(selectedLabel)) { TimePeriod.PM }
                     val selectedHour = hourPickerState.selectedItem
                     val selectedMinute = minutePickerState.selectedItem
 
