@@ -12,6 +12,7 @@ class LoginContract {
 
     sealed class LoginIntent {
         data class LoginWithKakao(val context: Context) : LoginIntent()
+        data class LoginWithGoogle(val context: Context) : LoginIntent()
         data object ClearError : LoginIntent()
     }
 
