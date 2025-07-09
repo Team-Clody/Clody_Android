@@ -14,7 +14,6 @@
     <string name="hard_update_exit">앱 종료</string>
 
     <!--회원가입 -->
-    <string name="signup_title">행운을 전하는 감사일기</string>
     <string name="signup_btn_kakao">카카오로 로그인</string>
     <string name="signup_btn_google">Sign Up With Google</string>
 
