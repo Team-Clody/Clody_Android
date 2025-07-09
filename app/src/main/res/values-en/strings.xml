@@ -2,6 +2,15 @@
 <resources>
     <string name="app_name">Clody</string>
 
+    <string name="soft_update_title">Update Available</string>
+    <string name="soft_update_message">A new version %1$s is available. Do you want to update now?</string>
+    <string name="soft_update_confirm">Update</string>
+    <string name="soft_update_dismiss">Later</string>
+    <string name="hard_update_title">Update Required</string>
+    <string name="hard_update_message">Please update to version %1$s to continue</string>
+    <string name="hard_update_exit">Exit App</string>
+
+    <string name="signup_btn_kakao">Sign Up With KaKao</string>
     <string name="signup_btn_google">Sign Up With Google</string>
 
     <string name="terms_title">To use Clody,\nPlease agree to the terms\nand conditions</string>
