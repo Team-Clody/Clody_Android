@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Clody</string>
+
+    <string name="signup_btn_google">Sign Up With Google</string>
+
+    <string name="terms_title">To use Clody,\nPlease agree to the terms\nand conditions</string>
+    <string name="terms_agree_all">Agree to all</string>
+    <string name="terms_service_use">(Required) Terms of Service</string>
+    <string name="terms_service_privacy">(Required) Privacy Policy</string>
+    <string name="terms_next">Next</string>
+
+    <string name="nickname_title">Nice to meet you!\nWhat should I call you?</string>
+    <string name="nickname_input_hint">Please enter your nickname</string>
+    <string name="nickname_next">Next</string>
+
+    <string name="time_reminder_title">What time would you\nlike us to remind you to write?</string>
+    <string name="time_reminder_picker_title">Change reminder time</string>
+    <string name="time_reminder_complete_button">Save</string>
+    <string name="time_reminder_next_setting_button">Skip for now</string>
+
+    <string name="guide_page1_title">Hello!\nI\'m Lody</string>
+    <string name="guide_page1_description">I read your journal entries\nand reply with compliments\nand words of encouragement!</string>
+
+    <string name="guide_page2_title">Each reply comes\nwith a lucky four-leaf clover</string>
+    <string name="guide_page2_description">The more you confide in Lody\nthe luckier your clover becomes</string>
+
+    <string name="guide_page3_title">You can only journal\nfor today and yesterday</string>
+    <string name="guide_page3_description">Past or future dates aren\'t available,\nDon\'t miss your moment</string>
+
+    <string name="guide_page4_title">Ready to write\nyour first journal?\nI\'ll be waiting!</string>
+    <string name="guide_page4_description">From your second journal onward,\nyour next clover will take 12 hours to grow</string>
+
+    <string name="guide_next">Next</string>
+    <string name="guide_start">Get Started</string>
+</resources>

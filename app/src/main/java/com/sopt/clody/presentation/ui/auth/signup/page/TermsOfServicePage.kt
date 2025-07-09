@@ -105,7 +105,7 @@ fun TermsOfServicePage(
                         uncheckedImageRes = R.drawable.ic_terms_check_off_25,
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(18.dp))
                 HorizontalDivider(color = ClodyTheme.colors.gray07, thickness = 1.dp)
                 Spacer(modifier = Modifier.height(16.dp))
                 TermsCheckboxRow(
@@ -114,7 +114,7 @@ fun TermsOfServicePage(
                     onCheckedChange = onToggleService,
                     onClickMore = { navigateToWebView(SettingOptionUrls.TERMS_OF_SERVICE_URL) },
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 TermsCheckboxRow(
                     text = stringResource(R.string.terms_service_privacy),
                     checked = privacyChecked,
