@@ -66,7 +66,7 @@ fun NotificationSettingTimePicker(
                     .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
-                    stringResource(id = R.string.time_reminder_picker_title),
+                    text = stringResource(R.string.notification_setting_picker_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center),
@@ -144,7 +144,7 @@ fun NotificationSettingTimePicker(
                     ).to24HourFormat()
                     onConfirm(selectedTime)
                 },
-                text = stringResource(R.string.notification_setting_timepicker_confirm),
+                text = stringResource(R.string.notification_setting_picker_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

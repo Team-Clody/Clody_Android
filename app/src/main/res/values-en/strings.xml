@@ -42,4 +42,45 @@
 
     <string name="guide_next">Next</string>
     <string name="guide_start">Get Started</string>
+
+    <string name="setting_title">Settings</string>
+    <string name="setting_option_account_management">Profile and Account</string>
+    <string name="setting_option_notification_setting">Notification</string>
+    <string name="setting_option_announcement">Notices</string>
+    <string name="setting_option_inquiries_suggestions">Support/Feedback</string>
+    <string name="setting_option_terms_of_service">Terms of Service</string>
+    <string name="setting_option_privacy_policy">Privacy Policy</string>
+    <string name="setting_option_app_version">Version</string>
+    <string name="setting_option_app_version_info_failure">Fail to Fetch</string>
+
+    <string name="account_management_title">Profile and Account</string>
+    <string name="account_management_nickname">" "</string>
+    <string name="account_management_nickname_change_button">Edit</string>
+    <string name="account_management_nickname_change_notice">Please write without spaces or special characters</string>
+    <string name="account_management_nickname_change_confirm">Save</string>
+    <string name="account_management_nickname_change_toast">Save Changes</string>
+    <string name="account_management_logout_button">Logout</string>
+    <string name="account_management_logout_dialog_dismiss">Cancel</string>
+    <string name="account_management_revoke">Are you sure you want to delete your account?</string>
+    <string name="account_management_revoke_button">Withdraw</string>
+    <string name="account_management_logout_dialog_title">Log out now?</string>
+    <string name="account_management_logout_dialog_description">I\'ll be here, see you again soon!</string>
+    <string name="account_management_logout_dialog_confirm">Logout</string>
+    <string name="account_management_revoke_dialog_title">Delete your account?</string>
+    <string name="account_management_revoke_dialog_description">Your journals, replies, and clovers will be\\npermanently deleted and can\'t be restored.</string>
+    <string name="account_management_revoke_dialog_confirm">Withdraw</string>
+    <string name="account_management_revoke_dialog_dismiss">Cancel</string>
+    <string name="account_management_nickname_change_title">Edit Nickname</string>
+
+    <string name="notification_setting_title">Notification</string>
+    <string name="notification_setting_write_diary">Journal Reminder</string>
+    <string name="notification_setting_draft_diary">Draft Reminder</string>
+    <string name="notification_setting_notification_time">Reminder Time</string>
+    <string name="notification_setting_reply_diary">Reply Notification</string>
+    <string name="notification_setting_picker_title">Choose another time</string>
+    <string name="notification_setting_picker_confirm">Save</string>
+    <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
+    <string name="notification_setting_change_success_toast">Save your reminder time</string>
+
+
 </resources>

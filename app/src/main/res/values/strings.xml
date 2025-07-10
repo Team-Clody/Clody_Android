@@ -155,7 +155,6 @@
 
     <!-- 설정 -->
     <string name="setting_title">설정</string>
-    <string name="setting_version_info_failure">버전 정보를 불러오는데 실패했습니다.</string>
     <string name="setting_option_account_management">프로필 및 계정 관리</string>
     <string name="setting_option_notification_setting">알림 설정</string>
     <string name="setting_option_announcement">공지사항</string>
@@ -191,16 +190,17 @@
     <string name="notification_setting_draft_diary">이어쓰기 알림 받기</string>
     <string name="notification_setting_notification_time">알림 시간</string>
     <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
-    <string name="notification_setting_timepicker_confirm">완료</string>
+    <string name="notification_setting_picker_title">다른 시간 보기</string>
+    <string name="notification_setting_picker_confirm">완료</string>
     <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
-    <string name="failure_screen_refresh_btn">다시 시도</string>
-    <string name="failure_dialog_confirm_btn">확인</string>
     <string name="notification_setting_change_success_toast">알람 시간 설정을 완료했어요.</string>
 
     <!-- 공통 컴포넌트-->
     <string name="bottom_sheet_delete_button">삭제하기</string>
     <string name="year_month_picker_title">다른 날짜 보기</string>
     <string name="year_month_picker_confirm">완료</string>
+    <string name="failure_screen_refresh_btn">다시 시도</string>
+    <string name="failure_dialog_confirm_btn">확인</string>
 
     <!-- remember로 된 시간 format -->
     <string name="time_am">오전</string>
@@ -212,4 +212,5 @@
 
     <string name="error_login_requires_chrome">Chrome이 설치되어 있어야 로그인이 가능합니다.</string>
     <string name="error_login_rooted_device">루팅된 기기에서는 로그인할 수 없습니다.</string>
+
 </resources>
