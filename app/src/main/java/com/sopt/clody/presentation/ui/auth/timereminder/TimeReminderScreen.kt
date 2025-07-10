@@ -102,7 +102,7 @@ fun TimeReminderRoute(
 
     TimeReminderScreen(
         onStartClick = {
-            viewModel.setFixedTime(TimePeriod.PM, "21", "30")
+            viewModel.setFixedTime(TimePeriod.PM, "9", "30")
             viewModel.sendNotification(context, isNotificationPermissionGranted.value)
         },
         onTimeSelected = { period, hour, minute ->
