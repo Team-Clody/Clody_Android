@@ -43,6 +43,26 @@
     <string name="guide_next">Next</string>
     <string name="guide_start">Get Started</string>
 
+    <string name="home_total_clover">%1$d Clovers</string>
+    <string name="home_year_month_format">%2$d %1$d</string>
+    <string name="home_daily_diary_empty_message">No gratitude entries yet.</string>
+    <string name="home_daily_diary_draft_message">There are existing entries in drafts.</string>
+    <string name="home_daily_diary_month_day">%1$d. %2$s</string>
+    <string name="home_daily_diary_day_of_week">%1$s</string>
+    <string name="home_button_write_diary">Write a Journal</string>
+    <string name="home_button_check_reply">See my Reply</string>
+    <string name="home_button_continue_draft">Continue Writing</string>
+    <string name="home_draft_popup_title">Heads up- drafts expire\\nDon\'t miss Lody\'s reply!</string>
+    <string name="home_draft_popup_description">To receive a reminder before the reply deadline,\nconfirm notification permissions.</string>
+    <string name="home_draft_popup_guide">[Settings > Apps > Clody > Notifications]</string>
+    <string name="home_draft_popup_accept">Turn on Notifications</string>
+    <string name="home_draft_popup_dismiss">Skip for now</string>
+    <string name="home_draft_alarm_enabled_toast">Continue writing reminders are now on!</string>
+    <string name="home_continue_draft_dialog_title">Pick up where you left off?</string>
+    <string name="home_continue_draft_dialog_description">This journal\'s reply time has expired.</string>
+    <string name="home_continue_draft_dialog_confirm">Continue</string>
+    <string name="home_continue_draft_dialog_dismiss">Cancel</string>
+
     <string name="setting_title">Settings</string>
     <string name="setting_option_account_management">Profile and Account</string>
     <string name="setting_option_notification_setting">Notification</string>
@@ -82,5 +102,8 @@
     <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
     <string name="notification_setting_change_success_toast">Save your reminder time</string>
 
-
+    <string name="dialog_diary_delete_title">Delete this entry?</string>
+    <string name="dialog_diary_delete_description">You won\'t receive another reply\nif you delete and rewrite your entry.</string>
+    <string name="dialog_diary_delete_confirm">Delete</string>
+    <string name="dialog_diary_delete_dismiss">Cancel</string>
 </resources>

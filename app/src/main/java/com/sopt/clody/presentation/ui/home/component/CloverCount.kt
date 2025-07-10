@@ -18,7 +18,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun CloverCount(cloverCount: Int) {
-    val text = stringResource(R.string.home_clover_count_format, cloverCount)
+    val text = stringResource(R.string.home_total_clover, cloverCount)
 
     Box(
         modifier = Modifier

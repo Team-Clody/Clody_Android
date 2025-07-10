@@ -237,10 +237,10 @@ fun HomeRoute(
 
         if (showContinueDraftDialog) {
             ClodyDialog(
-                titleMassage = stringResource(R.string.home_continue_draft_title),
-                descriptionMassage = stringResource(R.string.home_continue_draft_description),
-                confirmOption = stringResource(R.string.home_continue_draft_confirm),
-                dismissOption = stringResource(R.string.home_continue_draft_dismiss),
+                titleMassage = stringResource(R.string.home_continue_draft_dialog_title),
+                descriptionMassage = stringResource(R.string.home_continue_draft_dialog_description),
+                confirmOption = stringResource(R.string.home_continue_draft_dialog_confirm),
+                dismissOption = stringResource(R.string.home_continue_draft_dialog_dismiss),
                 confirmAction = {
                     homeViewModel.setShowContinueDraftDialog(false)
                     val date = homeViewModel.selectedDate.value
@@ -266,10 +266,10 @@ fun HomeRoute(
 
         if (showDiaryDeleteDialog) {
             ClodyDialog(
-                titleMassage = stringResource(R.string.home_delete_diary_title),
-                descriptionMassage = stringResource(R.string.home_delete_diary_description),
-                confirmOption = stringResource(R.string.home_delete_diary_confirm),
-                dismissOption = stringResource(R.string.home_delete_diary_dismiss),
+                titleMassage = stringResource(R.string.dialog_diary_delete_title),
+                descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
+                confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
+                dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
                 confirmAction = {
                     homeViewModel.deleteDailyDiary(
                         selectedDiaryDate.year,

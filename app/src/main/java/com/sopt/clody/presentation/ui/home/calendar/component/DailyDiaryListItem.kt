@@ -54,7 +54,7 @@ fun DailyDiaryListItem(
             )
             Text(
                 text = stringResource(
-                    id = R.string.daily_diary_day_of_week_format,
+                    id = R.string.home_daily_diary_day_of_week,
                     dayOfWeek.toKoreanShortLabel(),
                 ),
                 style = ClodyTheme.typography.body2Medium,
@@ -80,7 +80,7 @@ fun DailyDiaryListItem(
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.daily_diary_draft_message),
+                        text = stringResource(R.string.home_daily_diary_draft_message),
                         style = ClodyTheme.typography.body3Regular,
                         color = ClodyTheme.colors.gray05,
                         textAlign = TextAlign.Center,
@@ -96,7 +96,7 @@ fun DailyDiaryListItem(
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
-                        text = stringResource(R.string.daily_diary_empty_message),
+                        text = stringResource(R.string.home_daily_diary_empty_message),
                         style = ClodyTheme.typography.body3Regular,
                         color = ClodyTheme.colors.gray05,
                         textAlign = TextAlign.Center,
