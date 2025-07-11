@@ -70,6 +70,15 @@
     <string name="write_diary_text_field_warning">Please enter between 2 and 100 characters.</string>
     <string name="write_diary_add_entry_fab">Add</string>
 
+    <string name="reply_loading_initial_description">Lody\'s working hard on your reply!</string>
+    <string name="reply_loading_complete_description">You\'ve got a lucky reply from Lody!</string>
+    <string name="reply_loading_after_ad_description">Lody\'s almost done writing your reply\\njust a little longer!</string>
+    <string name="reply_loading_btn_ad_request">Watch Ad for Instant Reply</string>
+    <string name="reply_loading_btn_open">Open Reply</string>
+
+    <string name="reply_month_and_date">%1$d %2$d</string>
+    <string name="reply_title">A lucky reply for %1$d</string>
+
     <string name="setting_title">Settings</string>
     <string name="setting_option_account_management">Profile and Account</string>
     <string name="setting_option_notification_setting">Notification</string>
@@ -123,6 +132,10 @@
     <string name="dialog_draft_save_description">Your journal will be lost if you exit now.</string>
     <string name="dialog_draft_save_confirm">Exit</string>
     <string name="dialog_draft_save_dismiss">Draft</string>
+
+    <string name="dialog_reply_clover_title">%1$s, your luck is here!</string>
+    <string name="dialog_reply_clover_description">1 Four-Leaf Clover</string>
+    <string name="dialog_reply_clover_confirm">Done</string>
 
     <string name="toast_write_diary_entry_empty">Field required to send.</string>
     <string name="toast_write_diary_entry_limit">You can write up to 5 entries.</string>

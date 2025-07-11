@@ -179,9 +179,9 @@ fun ReplyLoadingScreen(
     val minutes = ((remainingTime % 3600) / 60).toInt()
     val seconds = (remainingTime % 60).toInt()
 
-    val loadingMessage = stringResource(id = R.string.loading_message)
-    val nearlyDoneMessage = stringResource(id = R.string.loading_nearly_done_message)
-    val completeMessage = stringResource(id = R.string.loading_complete_message)
+    val loadingMessage = stringResource(id = R.string.reply_loading_initial_description)
+    val nearlyDoneMessage = stringResource(id = R.string.reply_loading_after_ad_description)
+    val completeMessage = stringResource(id = R.string.reply_loading_complete_description)
 
     // 메시지 분기
     val textToShow = when {
@@ -217,7 +217,7 @@ fun ReplyLoadingScreen(
                     if (isComplete) AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY_REPLY)
                     onCompleteClick()
                 },
-                text = stringResource(R.string.loading_button_open),
+                text = stringResource(R.string.reply_loading_btn_open),
                 enabled = isComplete,
             )
         },

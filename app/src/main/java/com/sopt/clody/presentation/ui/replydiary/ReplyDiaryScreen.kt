@@ -152,7 +152,7 @@ fun ReplyDiaryScreen(
                 ) {
                     val content = replyDiaryState.content
                     val nickname = replyDiaryState.nickname
-                    val replyMessage = stringResource(R.string.reply_message, nickname)
+                    val replyMessage = stringResource(R.string.reply_title, nickname)
 
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                     Image(
@@ -187,9 +187,9 @@ fun ReplyDiaryScreen(
     if (showDialog) {
         CloverDialog(
             onDismiss = { showDialog = false },
-            titleMassage = stringResource(R.string.clover_dialog_title, replyDiaryState.nickname),
-            descriptionMassage = stringResource(R.string.clover_dialog_description),
-            confirmOption = stringResource(R.string.clover_dialog_confirm_option),
+            titleMassage = stringResource(R.string.dialog_reply_clover_title, replyDiaryState.nickname),
+            descriptionMassage = stringResource(R.string.dialog_reply_clover_description),
+            confirmOption = stringResource(R.string.dialog_reply_clover_confirm),
             confirmAction = { showDialog = false },
             confirmButtonColor = ClodyTheme.colors.mainYellow,
         )
