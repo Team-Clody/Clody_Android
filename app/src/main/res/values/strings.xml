@@ -100,11 +100,11 @@
     <string name="reply_title">%1$s님을 위한 행운의 답장</string>
 
     <!-- 일기 모아보기 -->
-    <string name="diarylist_selected_year_month">%1$s년 %2$s월</string>
+    <string name="diary_list_selected_year_month">%1$s년 %2$s월</string>
     <string name="diary_list_empty_diary_list">작성된 감사일기가 없어요</string>
-    <string name="diarylist_daily_diary_day">%1$s일</string>
-    <string name="diarylist_daily_diary_day_of_week">/%1$s</string>
-    <string name="diarylist_check_reply">답장 확인</string>
+    <string name="diary_list_daily_diary_day">%1$s일</string>
+    <string name="diary_list_daily_diary_day_of_week">/%1$s</string>
+    <string name="diary_list_check_reply">답장 확인</string>
 
     <!-- 설정 -->
     <string name="setting_title">설정</string>
@@ -149,8 +149,8 @@
     <string name="notification_setting_change_success_toast">알람 시간 설정을 완료했어요.</string>
 
     <!-- 공통 컴포넌트-->
-    <string name="year_month_picker_title">다른 날짜 보기</string>
-    <string name="year_month_picker_confirm">완료</string>
+    <string name="bottom_sheet_year_month_picker_title">다른 날짜 보기</string>
+    <string name="bottom_sheet_year_month_picker_confirm">완료</string>
     <string name="failure_screen_refresh_btn">다시 시도</string>
     <string name="failure_dialog_confirm_btn">확인</string>
 

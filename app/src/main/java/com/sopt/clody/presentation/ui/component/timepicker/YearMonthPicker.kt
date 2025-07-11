@@ -69,7 +69,7 @@ fun YearMonthPicker(
                     .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.year_month_picker_title),
+                    text = stringResource(R.string.bottom_sheet_year_month_picker_title),
                     style = ClodyTheme.typography.body2SemiBold,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center),
@@ -133,7 +133,7 @@ fun YearMonthPicker(
                     onYearMonthSelected(year, month)
                     onDismissRequest()
                 },
-                text = stringResource(R.string.year_month_picker_confirm),
+                text = stringResource(R.string.bottom_sheet_year_month_picker_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

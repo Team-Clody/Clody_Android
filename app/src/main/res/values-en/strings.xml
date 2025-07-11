@@ -79,6 +79,12 @@
     <string name="reply_month_and_date">%1$d %2$d</string>
     <string name="reply_title">A lucky reply for %1$d</string>
 
+    <string name="diary_list_selected_year_month">%2$s %1$s</string>
+    <string name="diary_list_empty_diary_list">No gratitude entries yet.</string>
+    <string name="diary_list_daily_diary_day">%1$s</string>
+    <string name="diary_list_daily_diary_day_of_week">/%1$s</string>
+    <string name="diary_list_check_reply">Reply</string>
+
     <string name="setting_title">Settings</string>
     <string name="setting_option_account_management">Profile and Account</string>
     <string name="setting_option_notification_setting">Notification</string>
@@ -141,4 +147,7 @@
     <string name="toast_write_diary_entry_limit">You can write up to 5 entries.</string>
 
     <string name="bottom_sheet_diary_delete">Delete</string>
+
+    <string name="bottom_sheet_year_month_picker_title">View Another Day</string>
+    <string name="bottom_sheet_year_month_picker_confirm">Done</string>
 </resources>

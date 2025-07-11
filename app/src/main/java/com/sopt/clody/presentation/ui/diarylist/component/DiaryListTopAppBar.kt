@@ -50,7 +50,7 @@ fun DiaryListTopAppBar(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = stringResource(R.string.diarylist_selected_year_month, selectedYear, selectedMonth),
+                        text = stringResource(R.string.diary_list_selected_year_month, selectedYear, selectedMonth),
                         color = ClodyTheme.colors.gray01,
                         style = ClodyTheme.typography.head4,
                     )

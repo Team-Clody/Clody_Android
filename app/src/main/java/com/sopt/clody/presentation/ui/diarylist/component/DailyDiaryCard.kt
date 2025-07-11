@@ -85,14 +85,14 @@ fun DailyDiaryCard(
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
-                        text = stringResource(R.string.diarylist_daily_diary_day, day),
+                        text = stringResource(R.string.diary_list_daily_diary_day, day),
                         modifier = Modifier
                             .padding(end = 2.dp),
                         color = ClodyTheme.colors.gray01,
                         style = ClodyTheme.typography.body2SemiBold,
                     )
                     Text(
-                        text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
+                        text = stringResource(R.string.diary_list_daily_diary_day_of_week, dayOfWeek),
                         color = ClodyTheme.colors.gray04,
                         style = ClodyTheme.typography.body4Medium,
                     )
@@ -155,7 +155,7 @@ fun ReplyDiaryButton(
             contentPadding = PaddingValues(0.dp),
         ) {
             Text(
-                text = stringResource(R.string.diarylist_check_reply),
+                text = stringResource(R.string.diary_list_check_reply),
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 2.dp),
                 style = ClodyTheme.typography.detail1SemiBold,
