@@ -72,7 +72,7 @@ fun DiaryDeleteBottomSheetItem(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = stringResource(R.string.bottom_sheet_delete_button),
+                text = stringResource(R.string.bottom_sheet_diary_delete),
                 style = ClodyTheme.typography.body4SemiBold,
                 color = ClodyTheme.colors.gray01,
             )

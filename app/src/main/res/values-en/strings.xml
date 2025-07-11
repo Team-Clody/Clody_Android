@@ -63,6 +63,13 @@
     <string name="home_continue_draft_dialog_confirm">Continue</string>
     <string name="home_continue_draft_dialog_dismiss">Cancel</string>
 
+    <string name="write_diary_send">Send</string>
+    <string name="write_diary_month_and_date">%1$d %2$d</string>
+    <string name="write_diary_help_message">Please avoid using slang, profanity, or emojis.</string>
+    <string name="write_diary_text_field_hint">Something you\'re grateful for today.</string>
+    <string name="write_diary_text_field_warning">Please enter between 2 and 100 characters.</string>
+    <string name="write_diary_add_entry_fab">Add</string>
+
     <string name="setting_title">Settings</string>
     <string name="setting_option_account_management">Profile and Account</string>
     <string name="setting_option_notification_setting">Notification</string>
@@ -106,4 +113,19 @@
     <string name="dialog_diary_delete_description">You won\'t receive another reply\nif you delete and rewrite your entry.</string>
     <string name="dialog_diary_delete_confirm">Delete</string>
     <string name="dialog_diary_delete_dismiss">Cancel</string>
+
+    <string name="dialog_write_diary_title">Ready to share\nyour journal with Lody?</string>
+    <string name="dialog_write_diary_description">Sent journals can\'t be edited.</string>
+    <string name="dialog_write_diary_confirm">Send</string>
+    <string name="dialog_write_diary_dismiss">Cancel</string>
+
+    <string name="dialog_draft_save_title">Want to send this later instead?</string>
+    <string name="dialog_draft_save_description">Your journal will be lost if you exit now.</string>
+    <string name="dialog_draft_save_confirm">Exit</string>
+    <string name="dialog_draft_save_dismiss">Draft</string>
+
+    <string name="toast_write_diary_entry_empty">Field required to send.</string>
+    <string name="toast_write_diary_entry_limit">You can write up to 5 entries.</string>
+
+    <string name="bottom_sheet_diary_delete">Delete</string>
 </resources>

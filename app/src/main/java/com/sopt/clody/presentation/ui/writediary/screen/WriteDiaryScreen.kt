@@ -281,10 +281,10 @@ fun WriteDiaryScreen(
                     if (showDialog) {
                         ClodyDialog(
                             onDismiss = onDismissDialog,
-                            titleMassage = stringResource(R.string.write_diary_dialog_title),
-                            descriptionMassage = stringResource(R.string.write_diary_dialog_description),
-                            confirmOption = stringResource(R.string.write_diary_dialog_confirm_option),
-                            dismissOption = stringResource(R.string.write_diary_dialog_dismiss_option),
+                            titleMassage = stringResource(R.string.dialog_write_diary_title),
+                            descriptionMassage = stringResource(R.string.dialog_write_diary_description),
+                            confirmOption = stringResource(R.string.dialog_write_diary_confirm),
+                            dismissOption = stringResource(R.string.dialog_write_diary_dismiss),
                             confirmAction = onConfirmDialog,
                             confirmButtonColor = ClodyTheme.colors.mainYellow,
                             confirmButtonTextColor = ClodyTheme.colors.gray01,
@@ -300,10 +300,10 @@ fun WriteDiaryScreen(
 
                     if (showExitDialog) {
                         ClodyDialog(
-                            titleMassage = stringResource(R.string.temp_save_dialog_exit_title),
-                            descriptionMassage = stringResource(R.string.temp_save_dialog_exit_description),
-                            confirmOption = stringResource(R.string.temp_save_dialog_exit_confirm),
-                            dismissOption = stringResource(R.string.temp_save_dialog_exit_dismiss),
+                            titleMassage = stringResource(R.string.dialog_draft_save_title),
+                            descriptionMassage = stringResource(R.string.dialog_draft_save_description),
+                            confirmOption = stringResource(R.string.dialog_draft_save_confirm),
+                            dismissOption = stringResource(R.string.dialog_draft_save_dismiss),
                             confirmAction = onConfirmExitDialog,
                             confirmButtonColor = ClodyTheme.colors.red,
                             confirmButtonTextColor = ClodyTheme.colors.white,
@@ -356,7 +356,7 @@ private fun ShowToastMessages(
     ) {
         if (showLimitMessage) {
             ClodyToastMessage(
-                message = stringResource(R.string.toast_limit_message),
+                message = stringResource(R.string.toast_write_diary_entry_limit),
                 iconResId = R.drawable.ic_toast_error,
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,
@@ -367,7 +367,7 @@ private fun ShowToastMessages(
 
         if (showEmptyFieldsMessage) {
             ClodyToastMessage(
-                message = stringResource(R.string.toast_empty_fields_message),
+                message = stringResource(R.string.toast_write_diary_entry_empty),
                 iconResId = R.drawable.ic_toast_error,
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,

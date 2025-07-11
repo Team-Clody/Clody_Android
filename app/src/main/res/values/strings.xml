@@ -80,6 +80,14 @@
     <string name="home_continue_draft_dialog_confirm">이어쓰기</string>
     <string name="home_continue_draft_dialog_dismiss">아니오</string>
 
+    <!--일기 작성 화면-->
+    <string name="write_diary_send">보내기</string>
+    <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
+    <string name="write_diary_help_message">신조어, 비속어, 이모지 작성은 불가능해요</string>
+    <string name="write_diary_text_field_hint">일상 속 작은 감사함을 적어보세요</string>
+    <string name="write_diary_text_field_warning">2~50자 까지 입력할 수 있어요.</string>
+    <string name="write_diary_add_entry_fab">추가하기</string>
+
     <!-- 답장 로딩 화면 -->
     <string name="loading_message">로디가 열심히 답장을 쓰고 있어요</string>
     <string name="loading_complete_message">로디가 쓴 행운의 답장이 도착했어요!</string>
@@ -96,33 +104,6 @@
     <string name="clover_dialog_title">%1$s님을 위한 행운 도착</string>
     <string name="clover_dialog_description">1개의 네잎클로버 획득</string>
     <string name="clover_dialog_confirm_option">확인</string>
-
-    <!--일기 작성 다이얼로그-->
-    <string name="write_diary_dialog_title">일기를 로디에게 보낼까요?</string>
-    <string name="write_diary_dialog_description">보낸 일기는 수정이 어려워요.</string>
-    <string name="write_diary_dialog_confirm_option">보내기</string>
-    <string name="write_diary_dialog_dismiss_option">취소</string>
-
-    <!-- 임시저장 다이얼로그 -->
-    <string name="temp_save_dialog_exit_title">지금까지 쓴 일기를 임시저장할까요?</string>
-    <string name="temp_save_dialog_exit_description">나가기를 누르면 작성 중인 내용이 모두 사라져요.</string>
-    <string name="temp_save_dialog_exit_confirm">나가기</string>
-    <string name="temp_save_dialog_exit_dismiss">임시저장</string>
-
-    <!--일기 작성 화면-->
-    <string name="write_diary_confirm_button">저장</string>
-    <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
-    <string name="write_diary_add_entry_fab">추가하기</string>
-    <string name="write_diary_text_button">보내기</string>
-    <string name="write_diary_text_field_hint">일상 속 작은 감사함을 적어보세요</string>
-    <string name="write_diary_text_field_warning">2~50자 까지 입력할 수 있어요.</string>
-
-    <!--토스트메시지-->
-    <string name="toast_limit_message">최대 5개까지 작성할 수 있어요.</string>
-    <string name="toast_empty_fields_message">빈 칸을 채워야 보낼 수 있어요.</string>
-
-    <!--헬프 메시지-->
-    <string name="write_diary_help_message">신조어, 비속어, 이모지 작성은 불가능해요</string>
 
     <!-- 일기 모아보기 -->
     <string name="diarylist_selected_year_month">%1$s년 %2$s월</string>
@@ -174,7 +155,6 @@
     <string name="notification_setting_change_success_toast">알람 시간 설정을 완료했어요.</string>
 
     <!-- 공통 컴포넌트-->
-    <string name="bottom_sheet_delete_button">삭제하기</string>
     <string name="year_month_picker_title">다른 날짜 보기</string>
     <string name="year_month_picker_confirm">완료</string>
     <string name="failure_screen_refresh_btn">다시 시도</string>
@@ -196,6 +176,25 @@
     <string name="dialog_diary_delete_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
     <string name="dialog_diary_delete_confirm">삭제할래요</string>
     <string name="dialog_diary_delete_dismiss">아니요</string>
+
+    <!--일기 작성 다이얼로그-->
+    <string name="dialog_write_diary_title">일기를 로디에게 보낼까요?</string>
+    <string name="dialog_write_diary_description">보낸 일기는 수정이 어려워요.</string>
+    <string name="dialog_write_diary_confirm">보내기</string>
+    <string name="dialog_write_diary_dismiss">취소</string>
+
+    <!-- 임시저장 다이얼로그 -->
+    <string name="dialog_draft_save_title">지금까지 쓴 일기를 임시저장할까요?</string>
+    <string name="dialog_draft_save_description">나가기를 누르면 작성 중인 내용이 모두 사라져요.</string>
+    <string name="dialog_draft_save_confirm">나가기</string>
+    <string name="dialog_draft_save_dismiss">임시저장</string>
+
+    <!--토스트메시지-->
+    <string name="toast_write_diary_entry_limit">최대 5개까지 작성할 수 있어요.</string>
+    <string name="toast_write_diary_entry_empty">빈 칸을 채워야 보낼 수 있어요.</string>
+
+    <!-- 바텀시트 -->
+    <string name="bottom_sheet_diary_delete">삭제하기</string>
 
     <!-- 홈: 오류 처리 -->
     <string name="home_error_data_load">데이터를 불러오는데 실패했습니다.</string>
