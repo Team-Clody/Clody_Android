@@ -62,13 +62,15 @@ fun DailyDiaryListItem(
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
-            Image(
-                painter = painterResource(id = R.drawable.ic_home_kebab),
-                contentDescription = "go to delete",
-                modifier = Modifier
-                    .clip(RoundedCornerShape(12.dp))
-                    .clickable(onClick = { onShowDiaryDeleteStateChange(true) }),
-            )
+            if (dailyDiary.diaries.isNotEmpty()) {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_home_kebab),
+                    contentDescription = "go to delete",
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(12.dp))
+                        .clickable(onClick = { onShowDiaryDeleteStateChange(true) }),
+                )
+            }
         }
 
         when {
