@@ -73,7 +73,7 @@ fun TermsOfServicePage(
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 28.dp),
                 onClick = onAgreeClick,
-                text = stringResource(R.string.terms_next),
+                text = stringResource(R.string.terms_btn_next),
                 enabled = isAgreeButtonEnabled,
             )
         },

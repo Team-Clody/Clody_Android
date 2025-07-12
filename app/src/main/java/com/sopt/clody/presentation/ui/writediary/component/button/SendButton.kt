@@ -35,7 +35,7 @@ fun SendButton(
         contentAlignment = Alignment.Center,
     ) {
         Text(
-            text = stringResource(R.string.write_diary_send),
+            text = stringResource(R.string.write_diary_btn_send),
             color = if (isPressed) ClodyTheme.colors.gray07 else ClodyTheme.colors.gray01,
             style = ClodyTheme.typography.body2SemiBold,
         )

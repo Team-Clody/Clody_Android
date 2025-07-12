@@ -133,7 +133,7 @@ fun YearMonthPicker(
                     onYearMonthSelected(year, month)
                     onDismissRequest()
                 },
-                text = stringResource(R.string.bottom_sheet_year_month_picker_confirm),
+                text = stringResource(R.string.bottom_sheet_year_month_picker_btn_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

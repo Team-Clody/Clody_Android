@@ -155,7 +155,7 @@ fun ReplyDiaryButton(
             contentPadding = PaddingValues(0.dp),
         ) {
             Text(
-                text = stringResource(R.string.diary_list_check_reply),
+                text = stringResource(R.string.diary_list_btn_reply),
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 2.dp),
                 style = ClodyTheme.typography.detail1SemiBold,

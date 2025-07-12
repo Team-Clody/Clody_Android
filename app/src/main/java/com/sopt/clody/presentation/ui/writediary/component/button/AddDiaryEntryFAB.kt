@@ -86,7 +86,7 @@ fun BoxScope.AddDiaryEntryFAB(
                 )
                 Spacer(modifier = Modifier.width(10.dp))
                 Text(
-                    text = stringResource(R.string.write_diary_add_entry_fab),
+                    text = stringResource(R.string.write_diary_fab_add_entry),
                     color = contentColor,
                     style = ClodyTheme.typography.body2SemiBold,
                 )

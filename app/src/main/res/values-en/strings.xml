@@ -2,32 +2,29 @@
 <resources>
     <string name="app_name">Clody</string>
 
-    <string name="soft_update_title">Update Available</string>
-    <string name="soft_update_message">A new version %1$s is available. Do you want to update now?</string>
-    <string name="soft_update_confirm">Update</string>
-    <string name="soft_update_dismiss">Later</string>
-    <string name="hard_update_title">Update Required</string>
-    <string name="hard_update_message">Please update to version %1$s to continue</string>
-    <string name="hard_update_exit">Exit App</string>
-
+    <!-- Usage : Login -->
     <string name="signup_btn_kakao">Sign Up With KaKao</string>
     <string name="signup_btn_google">Sign Up With Google</string>
 
+    <!-- Usage : Onboarding - Terms -->
     <string name="terms_title">To use Clody,\nPlease agree to the terms\nand conditions</string>
     <string name="terms_agree_all">Agree to all</string>
     <string name="terms_service_use">(Required) Terms of Service</string>
     <string name="terms_service_privacy">(Required) Privacy Policy</string>
-    <string name="terms_next">Next</string>
+    <string name="terms_btn_next">Next</string>
 
+    <!-- Usage : Onboarding - Nickname -->
     <string name="nickname_title">Nice to meet you!\nWhat should I call you?</string>
     <string name="nickname_input_hint">Please enter your nickname</string>
-    <string name="nickname_next">Next</string>
+    <string name="nickname_btn_next">Next</string>
 
+    <!-- Usage : Onboarding - Time Reminder -->
     <string name="time_reminder_title">What time would you\nlike us to remind you to write?</string>
-    <string name="time_reminder_picker_title">Change reminder time</string>
-    <string name="time_reminder_complete_button">Save</string>
-    <string name="time_reminder_next_setting_button">Skip for now</string>
+    <string name="time_reminder_time_format">%2$s:%3$s %1$s</string>
+    <string name="time_reminder_btn_complete">Save</string>
+    <string name="time_reminder_btn_skip">Skip for now</string>
 
+    <!-- Usage : Onboarding - Guide -->
     <string name="guide_page1_title">Hello!\nI\'m Lody</string>
     <string name="guide_page1_description">I read your journal entries\nand reply with compliments\nand words of encouragement!</string>
 
@@ -40,51 +37,49 @@
     <string name="guide_page4_title">Ready to write\nyour first journal?\nI\'ll be waiting!</string>
     <string name="guide_page4_description">From your second journal onward,\nyour next clover will take 12 hours to grow</string>
 
-    <string name="guide_next">Next</string>
-    <string name="guide_start">Get Started</string>
+    <string name="guide_btn_next">Next</string>
+    <string name="guide_btn_start">Get Started</string>
 
+    <!-- Usage : Home -->
     <string name="home_total_clover">%1$d Clovers</string>
     <string name="home_year_month_format">%2$d %1$d</string>
+
     <string name="home_daily_diary_empty_message">No gratitude entries yet.</string>
     <string name="home_daily_diary_draft_message">There are existing entries in drafts.</string>
     <string name="home_daily_diary_month_day">%1$d. %2$s</string>
     <string name="home_daily_diary_day_of_week">%1$s</string>
-    <string name="home_button_write_diary">Write a Journal</string>
-    <string name="home_button_check_reply">See my Reply</string>
-    <string name="home_button_continue_draft">Continue Writing</string>
-    <string name="home_draft_popup_title">Heads up- drafts expire\\nDon\'t miss Lody\'s reply!</string>
-    <string name="home_draft_popup_description">To receive a reminder before the reply deadline,\nconfirm notification permissions.</string>
-    <string name="home_draft_popup_guide">[Settings > Apps > Clody > Notifications]</string>
-    <string name="home_draft_popup_accept">Turn on Notifications</string>
-    <string name="home_draft_popup_dismiss">Skip for now</string>
-    <string name="home_draft_alarm_enabled_toast">Continue writing reminders are now on!</string>
-    <string name="home_continue_draft_dialog_title">Pick up where you left off?</string>
-    <string name="home_continue_draft_dialog_description">This journal\'s reply time has expired.</string>
-    <string name="home_continue_draft_dialog_confirm">Continue</string>
-    <string name="home_continue_draft_dialog_dismiss">Cancel</string>
 
-    <string name="write_diary_send">Send</string>
+    <string name="home_btn_write_diary">Write a Journal</string>
+    <string name="home_btn_check_reply">See my Reply</string>
+    <string name="home_btn_continue_draft">Continue Writing</string>
+
+    <!-- Usage : Write Diary -->
+    <string name="write_diary_btn_send">Send</string>
     <string name="write_diary_month_and_date">%1$d %2$d</string>
     <string name="write_diary_help_message">Please avoid using slang, profanity, or emojis.</string>
     <string name="write_diary_text_field_hint">Something you\'re grateful for today.</string>
     <string name="write_diary_text_field_warning">Please enter between 2 and 100 characters.</string>
-    <string name="write_diary_add_entry_fab">Add</string>
+    <string name="write_diary_fab_add_entry">Add</string>
 
+    <!-- Usage : Reply Loading -->
     <string name="reply_loading_initial_description">Lody\'s working hard on your reply!</string>
     <string name="reply_loading_complete_description">You\'ve got a lucky reply from Lody!</string>
     <string name="reply_loading_after_ad_description">Lody\'s almost done writing your reply\\njust a little longer!</string>
     <string name="reply_loading_btn_ad_request">Watch Ad for Instant Reply</string>
     <string name="reply_loading_btn_open">Open Reply</string>
 
+    <!-- Usage : Reply -->
     <string name="reply_month_and_date">%1$d %2$d</string>
     <string name="reply_title">A lucky reply for %1$d</string>
 
+    <!-- Usage : Diary List -->
     <string name="diary_list_selected_year_month">%2$s %1$s</string>
     <string name="diary_list_empty_diary_list">No gratitude entries yet.</string>
     <string name="diary_list_daily_diary_day">%1$s</string>
     <string name="diary_list_daily_diary_day_of_week">/%1$s</string>
-    <string name="diary_list_check_reply">Reply</string>
+    <string name="diary_list_btn_reply">Reply</string>
 
+    <!-- Usage : Setting -->
     <string name="setting_title">Settings</string>
     <string name="setting_option_account_management">Profile and Account</string>
     <string name="setting_option_notification_setting">Notification</string>
@@ -95,34 +90,40 @@
     <string name="setting_option_app_version">Version</string>
     <string name="setting_option_app_version_info_failure">Fail to Fetch</string>
 
+    <!-- Usage : Account Management -->
     <string name="account_management_title">Profile and Account</string>
     <string name="account_management_nickname">" "</string>
-    <string name="account_management_nickname_change_button">Edit</string>
-    <string name="account_management_nickname_change_notice">Please write without spaces or special characters</string>
-    <string name="account_management_nickname_change_confirm">Save</string>
-    <string name="account_management_nickname_change_toast">Save Changes</string>
-    <string name="account_management_logout_button">Logout</string>
-    <string name="account_management_logout_dialog_dismiss">Cancel</string>
+    <string name="account_management_btn_change_nickname">Edit</string>
+    <string name="account_management_btn_logout">Logout</string>
     <string name="account_management_revoke">Are you sure you want to delete your account?</string>
-    <string name="account_management_revoke_button">Withdraw</string>
-    <string name="account_management_logout_dialog_title">Log out now?</string>
-    <string name="account_management_logout_dialog_description">I\'ll be here, see you again soon!</string>
-    <string name="account_management_logout_dialog_confirm">Logout</string>
-    <string name="account_management_revoke_dialog_title">Delete your account?</string>
-    <string name="account_management_revoke_dialog_description">Your journals, replies, and clovers will be\\npermanently deleted and can\'t be restored.</string>
-    <string name="account_management_revoke_dialog_confirm">Withdraw</string>
-    <string name="account_management_revoke_dialog_dismiss">Cancel</string>
-    <string name="account_management_nickname_change_title">Edit Nickname</string>
+    <string name="account_management_btn_revoke">Withdraw</string>
 
+    <!-- Usage : Notification Setting -->
     <string name="notification_setting_title">Notification</string>
     <string name="notification_setting_write_diary">Journal Reminder</string>
     <string name="notification_setting_draft_diary">Draft Reminder</string>
     <string name="notification_setting_notification_time">Reminder Time</string>
-    <string name="notification_setting_reply_diary">Reply Notification</string>
-    <string name="notification_setting_picker_title">Choose another time</string>
-    <string name="notification_setting_picker_confirm">Save</string>
     <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
-    <string name="notification_setting_change_success_toast">Save your reminder time</string>
+    <string name="notification_setting_reply_diary">Reply Notification</string>
+
+    <!-- Usage : ErrorScreen -->
+    <string name="failure_screen_btn_refresh">Try Again</string>
+    <string name="failure_dialog_btn_confirm">Close</string>
+
+    <!-- Usage : Dialog -->
+    <string name="dialog_soft_update_title">Update Available</string>
+    <string name="dialog_soft_update_description">A new version %1$s is available. Do you want to update now?</string>
+    <string name="dialog_soft_update_confirm">Update</string>
+    <string name="dialog_soft_update_dismiss">Later</string>
+
+    <string name="dialog_hard_update_title">Update Required</string>
+    <string name="dialog_hard_update_description">Please update to version %1$s to continue</string>
+    <string name="dialog_hard_update_exit">Exit App</string>
+
+    <string name="dialog_home_continue_draft_title">Pick up where you left off?</string>
+    <string name="dialog_home_continue_draft_description">This journal\'s reply time has expired.</string>
+    <string name="dialog_home_continue_draft_confirm">Continue</string>
+    <string name="dialog_home_continue_draft_dismiss">Cancel</string>
 
     <string name="dialog_diary_delete_title">Delete this entry?</string>
     <string name="dialog_diary_delete_description">You won\'t receive another reply\nif you delete and rewrite your entry.</string>
@@ -143,11 +144,53 @@
     <string name="dialog_reply_clover_description">1 Four-Leaf Clover</string>
     <string name="dialog_reply_clover_confirm">Done</string>
 
+    <string name="dialog_logout_title">Log out now?</string>
+    <string name="dialog_logout_description">I\'ll be here, see you again soon!</string>
+    <string name="dialog_logout_confirm">Logout</string>
+    <string name="dialog_logout_dismiss">Cancel</string>
+
+    <string name="dialog_revoke_title">Delete your account?</string>
+    <string name="dialog_revoke_description">Your journals, replies, and clovers will be\\npermanently deleted and can\'t be restored.</string>
+    <string name="dialog_revoke_confirm">Withdraw</string>
+    <string name="dialog_revoke_dismiss">Cancel</string>
+
+    <!-- Usage : Toast Message -->
+    <string name="toast_home_draft_alarm_enabled">Continue writing reminders are now on!</string>
     <string name="toast_write_diary_entry_empty">Field required to send.</string>
     <string name="toast_write_diary_entry_limit">You can write up to 5 entries.</string>
+    <string name="toast_account_management_nickname_change">Save Changes</string>
+    <string name="toast_notification_setting_time_change">Save your reminder time</string>
+
+    <!-- Usage : Bottom Sheet -->
+    <string name="bottom_sheet_time_reminder_picker_title">Change reminder time</string>
+    <string name="bottom_sheet_time_reminder_picker_btn_confirm">Save</string>
+
+    <string name="bottom_sheet_home_initial_draft_title">Heads up- drafts expire\\nDon\'t miss Lody\'s reply!</string>
+    <string name="bottom_sheet_home_initial_draft_description">To receive a reminder before the reply deadline,\nconfirm notification permissions.</string>
+    <string name="bottom_sheet_home_initial_draft_guide">[Settings > Apps > Clody > Notifications]</string>
+    <string name="bottom_sheet_home_initial_draft_accept">Turn on Notifications</string>
+    <string name="bottom_sheet_home_initial_draft_skip">Skip for now</string>
 
     <string name="bottom_sheet_diary_delete">Delete</string>
 
     <string name="bottom_sheet_year_month_picker_title">View Another Day</string>
-    <string name="bottom_sheet_year_month_picker_confirm">Done</string>
+    <string name="bottom_sheet_year_month_picker_btn_confirm">Done</string>
+
+    <string name="bottom_sheet_nickname_change_title">Edit Nickname</string>
+    <string name="bottom_sheet_nickname_change_notice">Please write without spaces or special characters</string>
+    <string name="bottom_sheet_nickname_change_confirm">Save</string>
+
+    <string name="bottom_sheet_notification_time_change_title">Choose another time</string>
+    <string name="bottom_sheet_notification_time_change_confirm">Save</string>
+
+    <!-- Others -->
+    <string name="time_am">AM</string>
+    <string name="time_pm">PM</string>
+    <string name="year_format">%1$d</string>
+    <string name="month_format">%1$d</string>
+    <string name="home_error_delete_diary">An error occurred while deleting the diary.</string>
+    <string name="error_login_requires_chrome">Chrome must be installed to log in.</string>
+    <string name="error_login_rooted_device">Login is not available on rooted devices for security reasons.</string>
+    <string name="home_error_data_load">Failed to load data.</string>
+    <string name="home_error_unknown">An unexpected error has occurred.</string>
 </resources>

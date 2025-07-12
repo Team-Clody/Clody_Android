@@ -100,9 +100,9 @@ fun GuideScreen(
                     }
                 },
                 text = if (pagerState.currentPage < pages.size - 1) {
-                    stringResource(id = R.string.guide_next)
+                    stringResource(id = R.string.guide_btn_next)
                 } else {
-                    stringResource(id = R.string.guide_start)
+                    stringResource(id = R.string.guide_btn_start)
                 },
                 enabled = true,
             )
