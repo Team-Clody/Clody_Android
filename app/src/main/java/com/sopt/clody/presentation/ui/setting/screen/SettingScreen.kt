@@ -79,7 +79,7 @@ fun SettingScreen(
 
             SettingSeparateLine()
 
-            SettingOption(option = stringResource(R.string.setting_option_notification_setting), onClickNotificationSetting,)
+            SettingOption(option = stringResource(R.string.setting_option_notification_setting), onClickNotificationSetting)
             SettingOption(option = stringResource(R.string.setting_option_announcement), onClickNotice)
             SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), onClickSupportFeedback)
 
