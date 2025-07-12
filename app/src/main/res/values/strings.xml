@@ -1,195 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">클로디</string>
+    <string name="app_name">Clody</string>
 
-    <!-- 사용화면 : 로그인 -->
-    <string name="signup_btn_kakao">카카오로 로그인</string>
+    <!-- Usage : Login -->
+    <string name="signup_btn_kakao">Sign Up With KaKao</string>
     <string name="signup_btn_google">Sign Up With Google</string>
 
-    <!-- 사용화면 : 온보딩 - 이용약관 -->
-    <string name="terms_title">"Clody 이용을 위해\n약관에 동의해 주세요"</string>
-    <string name="terms_agree_all">전체 동의하기</string>
-    <string name="terms_service_use">(필수) 서비스 이용약관</string>
-    <string name="terms_service_privacy">(필수) 개인정보 처리방침</string>
-    <string name="terms_btn_next">다음</string>
+    <!-- Usage : Onboarding - Terms -->
+    <string name="terms_title">To use Clody,\nPlease agree to the terms\nand conditions</string>
+    <string name="terms_agree_all">Agree to all</string>
+    <string name="terms_service_use">(Required) Terms of Service</string>
+    <string name="terms_service_privacy">(Required) Privacy Policy</string>
+    <string name="terms_btn_next">Next</string>
 
-    <!-- 사용화면 : 온보딩 - 닉네임 설정 -->
-    <string name="nickname_title">만나서 반가워요!\n어떻게 불러 드릴까요?</string>
-    <string name="nickname_input_hint">닉네임을 입력해주세요</string>
-    <string name="nickname_btn_next">다음</string>
+    <!-- Usage : Onboarding - Nickname -->
+    <string name="nickname_title">Nice to meet you!\nWhat should I call you?</string>
+    <string name="nickname_input_hint">Please enter your nickname</string>
+    <string name="nickname_btn_next">Next</string>
 
-    <!-- 사용화면 : 온보딩 - 알림시간 설정-->
-    <string name="time_reminder_title">몇시에 감사일기\n작성 알림을 드릴까요?</string>
-    <string name="time_reminder_time_format">%1$s %2$s시 %3$s분</string>
-    <string name="time_reminder_btn_complete">완료</string>
-    <string name="time_reminder_btn_skip">다음에 설정할게요</string>
+    <!-- Usage : Onboarding - Time Reminder -->
+    <string name="time_reminder_title">What time would you\nlike us to remind you to write?</string>
+    <string name="time_reminder_time_format">%2$s:%3$s %1$s</string>
+    <string name="time_reminder_btn_complete">Save</string>
+    <string name="time_reminder_btn_skip">Skip for now</string>
 
-    <!-- 사용화면 : 온보딩 - 앱 가이드 -->
-    <string name="guide_page1_title">안녕하세요!\n저는 로디라고 해요</string>
-    <string name="guide_page1_description">여러분이 써준 감사일기를 받고,\n칭찬과 응원을 담아 답장을 쓴답니다</string>
+    <!-- Usage : Onboarding - Guide -->
+    <string name="guide_page1_title">Hello!\nI\'m Lody</string>
+    <string name="guide_page1_description">I read your journal entries\nand reply with compliments\nand words of encouragement!</string>
 
-    <string name="guide_page2_title">답장마다 행운의\n네잎클로버를 함께 드려요</string>
-    <string name="guide_page2_description">하루에 받은 감사의 수가 많을수록\n색이 진한 네잎클로버를 전달해요</string>
+    <string name="guide_page2_title">Each reply comes\nwith a lucky four-leaf clover</string>
+    <string name="guide_page2_description">The more you confide in Lody\nthe luckier your clover becomes</string>
 
-    <string name="guide_page3_title">오늘과 전날 일기만\n작성할 수 있어요</string>
-    <string name="guide_page3_description">그전이나 다음날의 일기는 작성할 수\n없으니, 잊지 말고 기록해주세요</string>
+    <string name="guide_page3_title">You can only journal\nfor today and yesterday</string>
+    <string name="guide_page3_description">Past or future dates aren\'t available,\nDon\'t miss your moment</string>
 
-    <string name="guide_page4_title">이제 일기를 써볼까요?\n기다리고 있을게요!</string>
-    <string name="guide_page4_description">두번째 일기부터는 네잎클로버를 찾는 데\n12시간이 걸리니 조금만 기다려 주세요</string>
+    <string name="guide_page4_title">Ready to write\nyour first journal?\nI\'ll be waiting!</string>
+    <string name="guide_page4_description">From your second journal onward,\nyour next clover will take 12 hours to grow</string>
 
-    <string name="guide_btn_next">다음</string>
-    <string name="guide_btn_start">시작하기</string>
+    <string name="guide_btn_next">Next</string>
+    <string name="guide_btn_start">Get Started</string>
 
-    <!-- 사용 화면 : 홈 -->
-    <string name="home_total_clover">클로버 %1$d개</string>
-    <string name="home_year_month_format">%1$d년 %2$d월</string>
+    <!-- Usage : Home -->
+    <string name="home_total_clover">%1$d Clovers</string>
+    <string name="home_year_month_format">%2$d %1$d</string>
 
-    <string name="home_daily_diary_empty_message">작성된 감사 일기가 없어요!</string>
-    <string name="home_daily_diary_draft_message">임시저장된 일기가 있어요.</string>
+    <string name="home_daily_diary_empty_message">No gratitude entries yet.</string>
+    <string name="home_daily_diary_draft_message">There are existing entries in drafts.</string>
     <string name="home_daily_diary_month_day">%1$d. %2$s</string>
-    <string name="home_daily_diary_day_of_week">%1$s요일</string>
+    <string name="home_daily_diary_day_of_week">%1$s</string>
 
-    <string name="home_btn_write_diary">일기 쓰기</string>
-    <string name="home_btn_check_reply">답장 확인</string>
-    <string name="home_btn_continue_draft">이어 쓰기</string>
+    <string name="home_btn_write_diary">Write a Journal</string>
+    <string name="home_btn_check_reply">See my Reply</string>
+    <string name="home_btn_continue_draft">Continue Writing</string>
 
-    <!-- 사용 화면 : 일기 작성 -->
-    <string name="write_diary_btn_send">보내기</string>
-    <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
-    <string name="write_diary_help_message">신조어, 비속어, 이모지 작성은 불가능해요</string>
-    <string name="write_diary_text_field_hint">일상 속 작은 감사함을 적어보세요</string>
-    <string name="write_diary_text_field_warning">2~50자 까지 입력할 수 있어요.</string>
-    <string name="write_diary_fab_add_entry">추가하기</string>
+    <!-- Usage : Write Diary -->
+    <string name="write_diary_btn_send">Send</string>
+    <string name="write_diary_month_and_date">%1$d %2$d</string>
+    <string name="write_diary_help_message">Please avoid using slang, profanity, or emojis.</string>
+    <string name="write_diary_text_field_hint">Something you\'re grateful for today.</string>
+    <string name="write_diary_text_field_warning">Please enter between 2 and 100 characters.</string>
+    <string name="write_diary_fab_add_entry">Add</string>
 
-    <!-- 사용 화면 : 답장 대기 -->
-    <string name="reply_loading_initial_description">로디가 열심히 답장을 쓰고 있어요</string>
-    <string name="reply_loading_after_ad_description">로디가 답장을 거의 다 써가요!\n조금만 기다려주세요</string>
-    <string name="reply_loading_complete_description">로디가 쓴 행운의 답장이 도착했어요!</string>
-    <string name="reply_loading_btn_ad_request">광고 보고 바로 답장 받기</string>
-    <string name="reply_loading_btn_open">열어보기</string>
+    <!-- Usage : Reply Loading -->
+    <string name="reply_loading_initial_description">Lody\'s working hard on your reply!</string>
+    <string name="reply_loading_complete_description">You\'ve got a lucky reply from Lody!</string>
+    <string name="reply_loading_after_ad_description">Lody\'s almost done writing your reply\\njust a little longer!</string>
+    <string name="reply_loading_btn_ad_request">Watch Ad for Instant Reply</string>
+    <string name="reply_loading_btn_open">Open Reply</string>
 
-    <!-- 사용 화면 : 답장 확인 -->
-    <string name="reply_month_and_date">%1$d월 %2$d일</string>
-    <string name="reply_title">%1$s님을 위한 행운의 답장</string>
+    <!-- Usage : Reply -->
+    <string name="reply_month_and_date">%1$d %2$d</string>
+    <string name="reply_title">A lucky reply for %1$d</string>
 
-    <!-- 사용 화면 : 일기 리스트 -->
-    <string name="diary_list_selected_year_month">%1$s년 %2$s월</string>
-    <string name="diary_list_empty_diary_list">작성된 감사일기가 없어요</string>
-    <string name="diary_list_daily_diary_day">%1$s일</string>
+    <!-- Usage : Diary List -->
+    <string name="diary_list_selected_year_month">%2$s %1$s</string>
+    <string name="diary_list_empty_diary_list">No gratitude entries yet.</string>
+    <string name="diary_list_daily_diary_day">%1$s</string>
     <string name="diary_list_daily_diary_day_of_week">/%1$s</string>
-    <string name="diary_list_btn_reply">답장 확인</string>
+    <string name="diary_list_btn_reply">Reply</string>
 
-    <!-- 사용화면 : 설정 -->
-    <string name="setting_title">설정</string>
-    <string name="setting_option_account_management">프로필 및 계정 관리</string>
-    <string name="setting_option_notification_setting">알림 설정</string>
-    <string name="setting_option_announcement">공지사항</string>
-    <string name="setting_option_inquiries_suggestions">문의/제안하기</string>
-    <string name="setting_option_terms_of_service">서비스 이용 약관</string>
-    <string name="setting_option_privacy_policy">개인정보 처리방침</string>
-    <string name="setting_option_app_version">앱 버전</string>
-    <string name="setting_option_app_version_info_failure">버전 정보를 불러오는데 실패했습니다.</string>
+    <!-- Usage : Setting -->
+    <string name="setting_title">Settings</string>
+    <string name="setting_option_account_management">Profile and Account</string>
+    <string name="setting_option_notification_setting">Notification</string>
+    <string name="setting_option_announcement">Notices</string>
+    <string name="setting_option_inquiries_suggestions">Support/Feedback</string>
+    <string name="setting_option_terms_of_service">Terms of Service</string>
+    <string name="setting_option_privacy_policy">Privacy Policy</string>
+    <string name="setting_option_app_version">Version</string>
+    <string name="setting_option_app_version_info_failure">Fail to Fetch</string>
 
-    <!-- 사용화면 : 프로필 및 계정 관리 -->
-    <string name="account_management_title">프로필 및 계정 관리</string>
-    <string name="account_management_nickname">님</string>
-    <string name="account_management_btn_change_nickname">변경하기</string>
-    <string name="account_management_btn_logout">로그아웃</string>
-    <string name="account_management_revoke">계정을 삭제하시겠어요?</string>
-    <string name="account_management_btn_revoke">회원탈퇴</string>
+    <!-- Usage : Account Management -->
+    <string name="account_management_title">Profile and Account</string>
+    <string name="account_management_nickname">" "</string>
+    <string name="account_management_btn_change_nickname">Edit</string>
+    <string name="account_management_btn_logout">Logout</string>
+    <string name="account_management_revoke">Are you sure you want to delete your account?</string>
+    <string name="account_management_btn_revoke">Withdraw</string>
 
-    <!-- 사용화면 : 알림 설정 -->
-    <string name="notification_setting_title">알림 설정</string>
-    <string name="notification_setting_write_diary">일기 작성 알림 받기</string>
-    <string name="notification_setting_draft_diary">이어쓰기 알림 받기</string>
-    <string name="notification_setting_notification_time">알림 시간</string>
-    <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
-    <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
+    <!-- Usage : Notification Setting -->
+    <string name="notification_setting_title">Notification</string>
+    <string name="notification_setting_write_diary">Journal Reminder</string>
+    <string name="notification_setting_draft_diary">Draft Reminder</string>
+    <string name="notification_setting_notification_time">Reminder Time</string>
+    <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
+    <string name="notification_setting_reply_diary">Reply Notification</string>
 
-    <!-- 사용화면 : 오류 화면 -->
-    <string name="failure_screen_btn_refresh">다시 시도</string>
-    <string name="failure_dialog_btn_confirm">확인</string>
+    <!-- Usage : ErrorScreen -->
+    <string name="failure_screen_btn_refresh">Try Again</string>
+    <string name="failure_dialog_btn_confirm">Close</string>
 
-    <!-- 다이얼로그 -->
-    <string name="dialog_soft_update_title">업데이트 필요</string>
-    <string name="dialog_soft_update_description">새로운 버전 %1$s을 사용할 수 있습니다.\n지금 업데이트하시겠습니까?</string>
-    <string name="dialog_soft_update_confirm">업데이트</string>
-    <string name="dialog_soft_update_dismiss">나중에</string>
+    <!-- Usage : Dialog -->
+    <string name="dialog_soft_update_title">Update Available</string>
+    <string name="dialog_soft_update_description">A new version %1$s is available. Do you want to update now?</string>
+    <string name="dialog_soft_update_confirm">Update</string>
+    <string name="dialog_soft_update_dismiss">Later</string>
 
-    <string name="dialog_hard_update_title">필수 업데이트</string>
-    <string name="dialog_hard_update_description">버전 %1$s으로 업데이트가 필요합니다.</string>
-    <string name="dialog_hard_update_exit">앱 종료</string>
+    <string name="dialog_hard_update_title">Update Required</string>
+    <string name="dialog_hard_update_description">Please update to version %1$s to continue</string>
+    <string name="dialog_hard_update_exit">Exit App</string>
 
-    <string name="dialog_home_continue_draft_title">임시저장된 일기를 이어 쓸까요?</string>
-    <string name="dialog_home_continue_draft_description">답장 기한이 지나서 답장은 받을 수 없어요.</string>
-    <string name="dialog_home_continue_draft_confirm">이어쓰기</string>
-    <string name="dialog_home_continue_draft_dismiss">아니오</string>
+    <string name="dialog_home_continue_draft_title">Pick up where you left off?</string>
+    <string name="dialog_home_continue_draft_description">This journal\'s reply time has expired.</string>
+    <string name="dialog_home_continue_draft_confirm">Continue</string>
+    <string name="dialog_home_continue_draft_dismiss">Cancel</string>
 
-    <string name="dialog_diary_delete_title">정말 일기를 삭제할까요?</string>
-    <string name="dialog_diary_delete_description">아직 답장이 오지 않았거나 삭제하고\n다시 작성한 일기는 답장을 받을 수 없어요.</string>
-    <string name="dialog_diary_delete_confirm">삭제할래요</string>
-    <string name="dialog_diary_delete_dismiss">아니요</string>
+    <string name="dialog_diary_delete_title">Delete this entry?</string>
+    <string name="dialog_diary_delete_description">You won\'t receive another reply\nif you delete and rewrite your entry.</string>
+    <string name="dialog_diary_delete_confirm">Delete</string>
+    <string name="dialog_diary_delete_dismiss">Cancel</string>
 
-    <string name="dialog_write_diary_title">일기를 로디에게 보낼까요?</string>
-    <string name="dialog_write_diary_description">보낸 일기는 수정이 어려워요.</string>
-    <string name="dialog_write_diary_confirm">보내기</string>
-    <string name="dialog_write_diary_dismiss">취소</string>
+    <string name="dialog_write_diary_title">Ready to share\nyour journal with Lody?</string>
+    <string name="dialog_write_diary_description">Sent journals can\'t be edited.</string>
+    <string name="dialog_write_diary_confirm">Send</string>
+    <string name="dialog_write_diary_dismiss">Cancel</string>
 
-    <string name="dialog_draft_save_title">지금까지 쓴 일기를 임시저장할까요?</string>
-    <string name="dialog_draft_save_description">나가기를 누르면 작성 중인 내용이 모두 사라져요.</string>
-    <string name="dialog_draft_save_confirm">나가기</string>
-    <string name="dialog_draft_save_dismiss">임시저장</string>
+    <string name="dialog_draft_save_title">Want to send this later instead?</string>
+    <string name="dialog_draft_save_description">Your journal will be lost if you exit now.</string>
+    <string name="dialog_draft_save_confirm">Exit</string>
+    <string name="dialog_draft_save_dismiss">Draft</string>
 
-    <string name="dialog_reply_clover_title">%1$s님을 위한 행운 도착</string>
-    <string name="dialog_reply_clover_description">1개의 네잎클로버 획득</string>
-    <string name="dialog_reply_clover_confirm">확인</string>
+    <string name="dialog_reply_clover_title">%1$s, your luck is here!</string>
+    <string name="dialog_reply_clover_description">1 Four-Leaf Clover</string>
+    <string name="dialog_reply_clover_confirm">Done</string>
 
-    <string name="dialog_logout_title">로그아웃 하시겠어요?</string>
-    <string name="dialog_logout_description">기다릴게요, 다음에 다시 만나요!</string>
-    <string name="dialog_logout_confirm">로그아웃</string>
-    <string name="dialog_logout_dismiss">아니요</string>
+    <string name="dialog_logout_title">Log out now?</string>
+    <string name="dialog_logout_description">I\'ll be here, see you again soon!</string>
+    <string name="dialog_logout_confirm">Logout</string>
+    <string name="dialog_logout_dismiss">Cancel</string>
 
-    <string name="dialog_revoke_title">서비스를 탈퇴하시겠어요?</string>
-    <string name="dialog_revoke_description">작성하신 일기와 받은 답장 및 클로버가\n 모두 삭제되며 복구할 수 없어요.</string>
-    <string name="dialog_revoke_confirm">탈퇴할래요</string>
-    <string name="dialog_revoke_dismiss">아니요</string>
+    <string name="dialog_revoke_title">Delete your account?</string>
+    <string name="dialog_revoke_description">Your journals, replies, and clovers will be\\npermanently deleted and can\'t be restored.</string>
+    <string name="dialog_revoke_confirm">Withdraw</string>
+    <string name="dialog_revoke_dismiss">Cancel</string>
 
-    <!-- 토스트 메시지 -->
-    <string name="toast_home_draft_alarm_enabled">이어쓰기 알림 설정을 완료했어요.</string>
-    <string name="toast_write_diary_entry_limit">최대 5개까지 작성할 수 있어요.</string>
-    <string name="toast_write_diary_entry_empty">빈 칸을 채워야 보낼 수 있어요.</string>
-    <string name="toast_account_management_nickname_change">변경을 완료했어요.</string>
-    <string name="toast_notification_setting_time_change">알람 시간 설정을 완료했어요.</string>
+    <!-- Usage : Toast Message -->
+    <string name="toast_home_draft_alarm_enabled">Continue writing reminders are now on!</string>
+    <string name="toast_write_diary_entry_empty">Field required to send.</string>
+    <string name="toast_write_diary_entry_limit">You can write up to 5 entries.</string>
+    <string name="toast_account_management_nickname_change">Save Changes</string>
+    <string name="toast_notification_setting_time_change">Save your reminder time</string>
 
-    <!-- 바텀시트 -->
-    <string name="bottom_sheet_time_reminder_picker_title">발송 시간 변경</string>
-    <string name="bottom_sheet_time_reminder_picker_btn_confirm">완료</string>
+    <!-- Usage : Bottom Sheet -->
+    <string name="bottom_sheet_time_reminder_picker_title">Change reminder time</string>
+    <string name="bottom_sheet_time_reminder_picker_btn_confirm">Save</string>
 
-    <string name="bottom_sheet_home_initial_draft_title">기한이 지나면\n로디의 답장을 받을 수 없어요!</string>
-    <string name="bottom_sheet_home_initial_draft_description">답장 마감 전에 일기를 이어쓸 수 있도록\n알려드리기 위해서는 알림 설정이 필요해요.</string>
-    <string name="bottom_sheet_home_initial_draft_guide">[설정 > 애플리케이션 > 클로디 > 알림 > 알림표시]</string>
-    <string name="bottom_sheet_home_initial_draft_accept">알림 받기</string>
-    <string name="bottom_sheet_home_initial_draft_skip">다음에 하기</string>
+    <string name="bottom_sheet_home_initial_draft_title">Heads up- drafts expire\\nDon\'t miss Lody\'s reply!</string>
+    <string name="bottom_sheet_home_initial_draft_description">To receive a reminder before the reply deadline,\nconfirm notification permissions.</string>
+    <string name="bottom_sheet_home_initial_draft_guide">[Settings > Apps > Clody > Notifications]</string>
+    <string name="bottom_sheet_home_initial_draft_accept">Turn on Notifications</string>
+    <string name="bottom_sheet_home_initial_draft_skip">Skip for now</string>
 
-    <string name="bottom_sheet_diary_delete">삭제하기</string>
+    <string name="bottom_sheet_diary_delete">Delete</string>
 
-    <string name="bottom_sheet_year_month_picker_title">다른 날짜 보기</string>
-    <string name="bottom_sheet_year_month_picker_btn_confirm">완료</string>
+    <string name="bottom_sheet_year_month_picker_title">View Another Day</string>
+    <string name="bottom_sheet_year_month_picker_btn_confirm">Done</string>
 
-    <string name="bottom_sheet_nickname_change_title">닉네임 변경</string>
-    <string name="bottom_sheet_nickname_change_notice">특수문자, 띄어쓰기 없이 작성해주세요</string>
-    <string name="bottom_sheet_nickname_change_confirm">변경하기</string>
+    <string name="bottom_sheet_nickname_change_title">Edit Nickname</string>
+    <string name="bottom_sheet_nickname_change_notice">Please write without spaces or special characters</string>
+    <string name="bottom_sheet_nickname_change_confirm">Save</string>
 
-    <string name="bottom_sheet_notification_time_change_title">다른 시간 보기</string>
-    <string name="bottom_sheet_notification_time_change_confirm">완료</string>
+    <string name="bottom_sheet_notification_time_change_title">Choose another time</string>
+    <string name="bottom_sheet_notification_time_change_confirm">Save</string>
 
-    <!-- 기타 -->
-    <string name="time_am">오전</string>
-    <string name="time_pm">오후</string>
-    <string name="year_format">%1$d년</string>
-    <string name="month_format">%1$d월</string>
-    <string name="home_error_data_load">데이터를 불러오는데 실패했습니다.</string>
-    <string name="home_error_unknown">알 수 없는 오류가 발생했습니다.</string>
-    <string name="home_error_delete_diary">일기 삭제 중 오류가 발생했습니다.</string>
-    <string name="error_login_requires_chrome">Chrome이 설치되어 있어야 로그인이 가능합니다.</string>
-    <string name="error_login_rooted_device">루팅된 기기에서는 로그인할 수 없습니다.</string>
+    <!-- Others -->
+    <string name="time_am">AM</string>
+    <string name="time_pm">PM</string>
+    <string name="year_format">%1$d</string>
+    <string name="month_format">%1$d</string>
+    <string name="home_error_delete_diary">An error occurred while deleting the diary.</string>
+    <string name="error_login_requires_chrome">Chrome must be installed to log in.</string>
+    <string name="error_login_rooted_device">Login is not available on rooted devices for security reasons.</string>
+    <string name="home_error_data_load">Failed to load data.</string>
+    <string name="home_error_unknown">An unexpected error has occurred.</string>
 </resources>
