@@ -49,15 +49,31 @@ class SplashViewModel @AssistedInject constructor(
             is SplashContract.SplashIntent.HandleHardUpdate -> handleHardUpdate(intent)
             is SplashContract.SplashIntent.HandleSoftUpdateConfirm -> handleSoftUpdateConfirm()
             is SplashContract.SplashIntent.ClearUpdateState -> clearUpdateState()
+            is SplashContract.SplashIntent.DismissInspectionDialog -> handleDismissInspection()
         }
     }
 
-    private fun handleInitSplash(intent: SplashContract.SplashIntent.InitSplash) {
+    private suspend fun handleInitSplash(intent: SplashContract.SplashIntent.InitSplash) {
         if (intent.startIntent.hasExtra("google.message_id")) {
             AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
         }
+        if (checkInspectionAndHandle()) return
         attemptAutoLogin()
         checkVersionAndNavigate()
+    }
+
+    private suspend fun checkInspectionAndHandle(): Boolean {
+        if (appUpdateChecker.isUnderInspection()) {
+            val inspectionText = appUpdateChecker.getInspectionTimeText()
+            setState {
+                copy(
+                    showInspectionDialog = true,
+                    inspectionTimeText = inspectionText,
+                )
+            }
+            return true
+        }
+        return false
     }
 
     private fun attemptAutoLogin() {
@@ -66,20 +82,18 @@ class SplashViewModel @AssistedInject constructor(
         setState { copy(isUserLoggedIn = isLoggedIn) }
     }
 
-    private fun checkVersionAndNavigate() {
-        viewModelScope.launch {
-            val updateState = appUpdateChecker.getAppUpdateState(BuildConfig.VERSION_NAME)
-            setState { copy(updateState = updateState) }
+    private suspend fun checkVersionAndNavigate() {
+        val updateState = appUpdateChecker.getAppUpdateState(BuildConfig.VERSION_NAME)
+        setState { copy(updateState = updateState) }
 
-            if (updateState == AppUpdateState.Latest) {
-                delay(1000)
-                val isLoggedIn = withState(this@SplashViewModel) { it.isUserLoggedIn }
+        if (updateState == AppUpdateState.Latest) {
+            delay(1000)
+            val isLoggedIn = withState(this@SplashViewModel) { it.isUserLoggedIn }
 
-                if (isLoggedIn == true) {
-                    _sideEffects.send(SplashContract.SplashSideEffect.NavigateToHome)
-                } else {
-                    _sideEffects.send(SplashContract.SplashSideEffect.NavigateToLogin)
-                }
+            if (isLoggedIn == true) {
+                _sideEffects.send(SplashContract.SplashSideEffect.NavigateToHome)
+            } else {
+                _sideEffects.send(SplashContract.SplashSideEffect.NavigateToLogin)
             }
         }
     }
@@ -98,6 +112,11 @@ class SplashViewModel @AssistedInject constructor(
 
     private fun clearUpdateState() {
         setState { copy(updateState = AppUpdateState.Latest) }
+    }
+
+    private suspend fun handleDismissInspection() {
+        setState { copy(showInspectionDialog = false) }
+        _sideEffects.send(SplashContract.SplashSideEffect.FinishApp)
     }
 
     @AssistedFactory
