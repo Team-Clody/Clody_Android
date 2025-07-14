@@ -20,7 +20,7 @@ object AppUpdateModule {
     fun provideFirebaseRemoteConfig(): FirebaseRemoteConfig {
         val remoteConfig = FirebaseRemoteConfig.getInstance()
         val configSettings = FirebaseRemoteConfigSettings.Builder()
-            .setMinimumFetchIntervalInSeconds(600L)
+            .setMinimumFetchIntervalInSeconds(0)
             .build()
         remoteConfig.setConfigSettingsAsync(configSettings)
         return remoteConfig

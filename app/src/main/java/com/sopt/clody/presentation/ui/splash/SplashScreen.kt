@@ -25,6 +25,7 @@ import com.airbnb.mvrx.compose.collectAsState
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.sopt.clody.R
 import com.sopt.clody.domain.model.AppUpdateState
+import com.sopt.clody.presentation.ui.component.dialog.InspectionDialog
 import com.sopt.clody.presentation.utils.appupdate.AppUpdateUtils
 import com.sopt.clody.presentation.utils.base.BasePreview
 import com.sopt.clody.presentation.utils.base.ClodyPreview
@@ -93,6 +94,14 @@ fun SplashRoute(
         else -> {}
     }
 
+    if (state.showInspectionDialog) {
+        InspectionDialog(
+            inspectionTime = state.inspectionTimeText.orEmpty(),
+            onDismiss = {
+                viewModel.postIntent(SplashContract.SplashIntent.DismissInspectionDialog)
+            },
+        )
+    }
     SplashScreen()
 }
 
