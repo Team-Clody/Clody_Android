@@ -32,6 +32,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun InspectionDialog(
+    inspectionTime: String,
     onDismiss: () -> Unit,
 ) {
     Dialog(
@@ -69,7 +70,7 @@ fun InspectionDialog(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "점검시간 : ",
+                        text = "점검시간 : $inspectionTime",
                         color = ClodyTheme.colors.gray04,
                         textAlign = TextAlign.Center,
                         style = ClodyTheme.typography.body3Medium,
@@ -99,6 +100,7 @@ fun InspectionDialog(
 private fun PreviewInspectionDialog() {
     BasePreview {
         InspectionDialog(
+            inspectionTime = "",
             onDismiss = {},
         )
     }
