@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -39,6 +38,7 @@ fun InspectionDialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(
             dismissOnClickOutside = false,
+            dismissOnBackPress = false,
             usePlatformDefaultWidth = false,
         ),
     ) {
@@ -46,8 +46,8 @@ fun InspectionDialog(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black.copy(alpha = 0.5f))
-                .wrapContentSize(Alignment.Center)
                 .padding(horizontal = 24.dp),
+            contentAlignment = Alignment.Center,
         ) {
             Card(
                 shape = RoundedCornerShape(12.dp),
@@ -84,7 +84,7 @@ fun InspectionDialog(
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.mainYellow),
                     ) {
                         Text(
-                            text = "확인 후 앱 종료",
+                            text = "확인",
                             color = ClodyTheme.colors.gray02,
                             style = ClodyTheme.typography.body3SemiBold,
                         )
