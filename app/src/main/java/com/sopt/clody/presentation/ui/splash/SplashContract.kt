@@ -5,10 +5,11 @@ import com.airbnb.mvrx.MavericksState
 import com.sopt.clody.domain.model.AppUpdateState
 
 class SplashContract {
-
     data class SplashState(
         val isUserLoggedIn: Boolean? = null,
         val updateState: AppUpdateState? = null,
+        val showInspectionDialog: Boolean = false,
+        val inspectionTimeText: String? = null,
     ) : MavericksState
 
     sealed class SplashIntent {
@@ -16,6 +17,7 @@ class SplashContract {
         data class HandleHardUpdate(val isConfirm: Boolean) : SplashIntent()
         data object HandleSoftUpdateConfirm : SplashIntent()
         data object ClearUpdateState : SplashIntent()
+        data object DismissInspectionDialog : SplashIntent()
     }
 
     sealed interface SplashSideEffect {
