@@ -58,8 +58,8 @@ class SplashViewModel @AssistedInject constructor(
             AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
         }
         if (checkInspectionAndHandle()) return
-        attemptAutoLogin()
         checkVersionAndNavigate()
+        attemptAutoLogin()
     }
 
     private suspend fun checkInspectionAndHandle(): Boolean {
