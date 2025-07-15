@@ -31,10 +31,10 @@ fun SettingRoute(
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
     val currentLang = Locale.getDefault().language
-    val notice = if (currentLang == "ko") SettingOptionUrls.NOTICES_URL.krUrl else SettingOptionUrls.NOTICES_URL.enUrl
-    val supportFeedback = if (currentLang == "ko") SettingOptionUrls.SUPPORT_FEEDBACK_URL.krUrl else SettingOptionUrls.SUPPORT_FEEDBACK_URL.enUrl
-    val termsOfService = if (currentLang == "ko") SettingOptionUrls.TERMS_OF_SERVICE_URL.krUrl else SettingOptionUrls.TERMS_OF_SERVICE_URL.enUrl
-    val privacyPolicy = if (currentLang == "ko") SettingOptionUrls.PRIVACY_POLICY_URL.krUrl else SettingOptionUrls.PRIVACY_POLICY_URL.enUrl
+    val notice = if (currentLang == "ko") SettingOptionUrls.NOTICES_URL.koUrl else SettingOptionUrls.NOTICES_URL.enUrl
+    val supportFeedback = if (currentLang == "ko") SettingOptionUrls.SUPPORT_FEEDBACK_URL.koUrl else SettingOptionUrls.SUPPORT_FEEDBACK_URL.enUrl
+    val termsOfService = if (currentLang == "ko") SettingOptionUrls.TERMS_OF_SERVICE_URL.koUrl else SettingOptionUrls.TERMS_OF_SERVICE_URL.enUrl
+    val privacyPolicy = if (currentLang == "ko") SettingOptionUrls.PRIVACY_POLICY_URL.koUrl else SettingOptionUrls.PRIVACY_POLICY_URL.enUrl
 
     val versionInfo by settingViewModel::versionInfo
 

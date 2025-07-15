@@ -48,8 +48,8 @@ fun TermsOfServicePage(
     val isAgreeButtonEnabled = serviceChecked && privacyChecked
     val currentLang = Locale.getDefault().language
 
-    val termsOfService = if (currentLang == "ko") SettingOptionUrls.TERMS_OF_SERVICE_URL.krUrl else SettingOptionUrls.TERMS_OF_SERVICE_URL.enUrl
-    val privacyPolicy = if (currentLang == "ko") SettingOptionUrls.PRIVACY_POLICY_URL.krUrl else SettingOptionUrls.PRIVACY_POLICY_URL.enUrl
+    val termsOfService = if (currentLang == "ko") SettingOptionUrls.TERMS_OF_SERVICE_URL.koUrl else SettingOptionUrls.TERMS_OF_SERVICE_URL.enUrl
+    val privacyPolicy = if (currentLang == "ko") SettingOptionUrls.PRIVACY_POLICY_URL.koUrl else SettingOptionUrls.PRIVACY_POLICY_URL.enUrl
 
     Scaffold(
         topBar = {
