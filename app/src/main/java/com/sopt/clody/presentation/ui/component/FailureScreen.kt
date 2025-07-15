@@ -59,7 +59,7 @@ fun FailureScreen(
             colors = ButtonDefaults.buttonColors(ClodyTheme.colors.mainYellow),
         ) {
             Text(
-                text = stringResource(R.string.failure_screen_refresh_btn),
+                text = stringResource(R.string.failure_screen_btn_refresh),
                 modifier = Modifier.padding(6.dp),
                 color = ClodyTheme.colors.gray01,
                 style = ClodyTheme.typography.body2SemiBold,

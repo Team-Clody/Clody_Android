@@ -31,7 +31,7 @@ fun DiaryStateButton(
         hasDraft -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = stringResource(R.string.button_continue_draft),
+                text = stringResource(R.string.home_btn_continue_draft),
                 enabled = true,
                 modifier = modifier,
             )
@@ -40,7 +40,7 @@ fun DiaryStateButton(
         isInvalidDraft -> {
             ClodyButton(
                 onClick = { /* no-action */ },
-                text = stringResource(R.string.button_check_reply),
+                text = stringResource(R.string.home_btn_check_reply),
                 enabled = false,
                 modifier = modifier,
                 disabledContainerColor = ClodyTheme.colors.gray05,
@@ -51,7 +51,7 @@ fun DiaryStateButton(
         canReply -> {
             ClodyReplyButton(
                 onClick = onClickReplyDiary,
-                text = stringResource(R.string.button_check_reply),
+                text = stringResource(R.string.home_btn_check_reply),
                 enabled = true,
                 modifier = modifier,
             )
@@ -60,7 +60,7 @@ fun DiaryStateButton(
         canWrite -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = stringResource(R.string.button_write_diary),
+                text = stringResource(R.string.home_btn_write_diary),
                 enabled = true,
                 modifier = modifier,
             )
@@ -69,7 +69,7 @@ fun DiaryStateButton(
         else -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = stringResource(R.string.button_write_diary),
+                text = stringResource(R.string.home_btn_write_diary),
                 enabled = false,
                 modifier = modifier,
             )

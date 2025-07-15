@@ -197,10 +197,10 @@ fun DiaryListScreen(
 
     if (diaryDeleteDialogState) {
         ClodyDialog(
-            titleMassage = stringResource(R.string.diary_delete_dialog_title),
-            descriptionMassage = stringResource(R.string.diary_delete_dialog_description),
-            confirmOption = stringResource(R.string.diary_delete_dialog_confirm_option),
-            dismissOption = stringResource(R.string.diary_delete_dialog_dismiss_option),
+            titleMassage = stringResource(R.string.dialog_diary_delete_title),
+            descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
+            confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
+            dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
             confirmAction = {
                 onClickDiaryDelete(selectedDiaryDate.year, selectedDiaryDate.month, selectedDiaryDate.day)
                 dismissDiaryDeleteDialog()

@@ -83,7 +83,7 @@ fun FailureDialog(
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.mainYellow),
                     ) {
                         Text(
-                            text = stringResource(R.string.failure_dialog_confirm_btn),
+                            text = stringResource(R.string.failure_dialog_btn_confirm),
                             color = ClodyTheme.colors.gray02,
                             style = ClodyTheme.typography.body3SemiBold,
                         )

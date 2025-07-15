@@ -3,7 +3,6 @@ package com.sopt.clody.presentation.ui.auth.guide
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -51,7 +50,6 @@ fun GuideRoute(
     GuideScreen(onNextButtonClick = navigateToHome)
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun GuideScreen(
     onNextButtonClick: () -> Unit,
@@ -59,25 +57,21 @@ fun GuideScreen(
     val pages = listOf(
         BoardingPage(
             title = stringResource(R.string.guide_page1_title),
-            subtitle = stringResource(R.string.guide_page1_subtitle),
             description = stringResource(R.string.guide_page1_description),
             imageRes = R.drawable.img_guide_first,
         ),
         BoardingPage(
             title = stringResource(R.string.guide_page2_title),
-            subtitle = stringResource(R.string.guide_page2_subtitle),
             description = stringResource(R.string.guide_page2_description),
             imageRes = R.drawable.img_guide_second,
         ),
         BoardingPage(
             title = stringResource(R.string.guide_page3_title),
-            subtitle = stringResource(R.string.guide_page3_subtitle),
             description = stringResource(R.string.guide_page3_description),
             imageRes = R.drawable.img_guide_third,
         ),
         BoardingPage(
             title = stringResource(R.string.guide_page4_title),
-            subtitle = stringResource(R.string.guide_page4_subtitle),
             description = stringResource(R.string.guide_page4_description),
             imageRes = R.drawable.img_guide_fourth,
         ),
@@ -106,9 +100,9 @@ fun GuideScreen(
                     }
                 },
                 text = if (pagerState.currentPage < pages.size - 1) {
-                    stringResource(id = R.string.guide_next)
+                    stringResource(id = R.string.guide_btn_next)
                 } else {
-                    stringResource(id = R.string.guide_start)
+                    stringResource(id = R.string.guide_btn_start)
                 },
                 enabled = true,
             )
@@ -136,12 +130,6 @@ fun GuideScreen(
                         ) {
                             Text(
                                 text = pages[page].title,
-                                style = ClodyTheme.typography.head1,
-                                color = ClodyTheme.colors.gray01,
-                                textAlign = TextAlign.Center,
-                            )
-                            Text(
-                                text = pages[page].subtitle,
                                 style = ClodyTheme.typography.head1,
                                 color = ClodyTheme.colors.gray01,
                                 textAlign = TextAlign.Center,
@@ -194,7 +182,6 @@ fun GuideScreen(
 
 data class BoardingPage(
     val title: String,
-    val subtitle: String,
     val description: String,
     val imageRes: Int,
 )

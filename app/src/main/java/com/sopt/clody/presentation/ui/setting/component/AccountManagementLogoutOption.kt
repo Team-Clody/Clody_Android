@@ -41,7 +41,7 @@ fun AccountManagementLogoutOption(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.account_management_logout_button),
+            text = stringResource(R.string.account_management_btn_logout),
             modifier = Modifier.clickable(
                 onClick = { updateLogoutDialog(true) },
                 indication = null,

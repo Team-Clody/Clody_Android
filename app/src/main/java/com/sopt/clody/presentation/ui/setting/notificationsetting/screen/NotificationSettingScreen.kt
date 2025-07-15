@@ -85,7 +85,7 @@ fun NotificationSettingRoute(
             contentAlignment = Alignment.BottomCenter,
         ) {
             ClodyToastMessage(
-                message = stringResource(R.string.notification_setting_change_success_toast),
+                message = stringResource(R.string.toast_notification_setting_time_change),
                 iconResId = R.drawable.ic_toast_check_on_18,
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,

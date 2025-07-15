@@ -41,7 +41,7 @@ fun QuickReplyAdButton(
                 tint = Color.Unspecified,
             )
             Text(
-                text = stringResource(R.string.loading_button_watch_ad_and_get_reply),
+                text = stringResource(R.string.reply_loading_btn_ad_request),
                 style = ClodyTheme.typography.body4Medium,
                 color = ClodyTheme.colors.blue,
                 modifier = Modifier.padding(start = 5.dp),

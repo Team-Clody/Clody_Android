@@ -147,13 +147,13 @@ fun TimeReminderScreen(
             ) {
                 ClodyButton(
                     onClick = onCompleteClick,
-                    text = stringResource(id = R.string.time_reminder_complete_button),
+                    text = stringResource(id = R.string.time_reminder_btn_complete),
                     enabled = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.015f))
                 Text(
-                    text = stringResource(id = R.string.time_reminder_next_setting_button),
+                    text = stringResource(id = R.string.time_reminder_btn_skip),
                     modifier = Modifier
                         .clickable(
                             onClick = onStartClick,

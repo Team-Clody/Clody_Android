@@ -23,7 +23,7 @@ fun YearAndMonthTitle(
     selectedYear: Int,
     selectedMonth: Int,
 ) {
-    val text = stringResource(R.string.home_year_and_month_format, selectedYear, selectedMonth)
+    val text = stringResource(R.string.home_year_month_format, selectedYear, selectedMonth)
 
     Column {
         Row(

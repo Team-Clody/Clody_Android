@@ -73,7 +73,7 @@ fun BottomSheetTimePicker(
                     .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
-                    stringResource(id = R.string.time_picker_title),
+                    stringResource(id = R.string.bottom_sheet_time_reminder_picker_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center),
@@ -143,7 +143,7 @@ fun BottomSheetTimePicker(
                     onRemindTimeSelected(selectedPeriod, selectedHour, selectedMinute)
                     onDismissRequest()
                 },
-                text = stringResource(R.string.time_reminder_complete_button),
+                text = stringResource(R.string.bottom_sheet_year_month_picker_btn_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

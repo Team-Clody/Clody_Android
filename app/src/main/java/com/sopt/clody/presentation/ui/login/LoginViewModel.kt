@@ -46,6 +46,7 @@ class LoginViewModel @AssistedInject constructor(
     private suspend fun handleIntent(intent: LoginContract.LoginIntent) {
         when (intent) {
             is LoginContract.LoginIntent.LoginWithKakao -> loginWithKakao(intent.context)
+            is LoginContract.LoginIntent.LoginWithGoogle -> loginWithGoogle(intent.context)
             is LoginContract.LoginIntent.ClearError -> setState { copy(errorMessage = null) }
         }
     }
@@ -89,6 +90,9 @@ class LoginViewModel @AssistedInject constructor(
                 }
             },
         )
+    }
+
+    private suspend fun loginWithGoogle(context: Context) {
     }
 
     @AssistedFactory

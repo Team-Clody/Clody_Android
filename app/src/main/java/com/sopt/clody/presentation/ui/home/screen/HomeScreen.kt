@@ -172,28 +172,28 @@ fun HomeRoute(
                             .padding(horizontal = 16.dp),
                     ) {
                         Text(
-                            text = stringResource(R.string.home_draft_popup_title),
+                            text = stringResource(R.string.bottom_sheet_home_initial_draft_title),
                             color = ClodyTheme.colors.gray01,
                             textAlign = TextAlign.Center,
                             style = ClodyTheme.typography.head3,
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = stringResource(R.string.home_draft_popup_description),
+                            text = stringResource(R.string.bottom_sheet_home_initial_draft_description),
                             color = ClodyTheme.colors.gray04,
                             textAlign = TextAlign.Center,
                             style = ClodyTheme.typography.body3Regular,
                         )
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = stringResource(R.string.home_draft_popup_guide),
+                            text = stringResource(R.string.bottom_sheet_home_initial_draft_guide),
                             color = ClodyTheme.colors.gray04,
                             textAlign = TextAlign.Center,
                             style = ClodyTheme.typography.body3Regular,
                         )
                         Spacer(modifier = Modifier.height(28.dp))
                         ClodyButton(
-                            text = stringResource(R.string.home_draft_popup_accept),
+                            text = stringResource(R.string.bottom_sheet_home_initial_draft_accept),
                             onClick = {
                                 homeViewModel.enableDraftAlarm(context)
                                 homeViewModel.updateFirstDraftUse(false)
@@ -202,7 +202,7 @@ fun HomeRoute(
                             modifier = Modifier.fillMaxWidth(),
                         )
                         Text(
-                            text = stringResource(R.string.home_draft_popup_dismiss),
+                            text = stringResource(R.string.bottom_sheet_home_initial_draft_skip),
                             modifier = Modifier
                                 .clickable(onClick = { homeViewModel.updateFirstDraftUse(false) })
                                 .padding(12.dp),
@@ -221,7 +221,7 @@ fun HomeRoute(
                 contentAlignment = Alignment.BottomCenter,
                 content = {
                     ClodyToastMessage(
-                        message = stringResource(R.string.home_draft_alarm_enabled_toast),
+                        message = stringResource(R.string.toast_home_draft_alarm_enabled),
                         iconResId = R.drawable.ic_toast_check_on_18,
                         backgroundColor = ClodyTheme.colors.gray04,
                         contentColor = ClodyTheme.colors.white,
@@ -237,10 +237,10 @@ fun HomeRoute(
 
         if (showContinueDraftDialog) {
             ClodyDialog(
-                titleMassage = stringResource(R.string.home_continue_draft_title),
-                descriptionMassage = stringResource(R.string.home_continue_draft_description),
-                confirmOption = stringResource(R.string.home_continue_draft_confirm),
-                dismissOption = stringResource(R.string.home_continue_draft_dismiss),
+                titleMassage = stringResource(R.string.dialog_home_continue_draft_title),
+                descriptionMassage = stringResource(R.string.dialog_home_continue_draft_description),
+                confirmOption = stringResource(R.string.dialog_home_continue_draft_confirm),
+                dismissOption = stringResource(R.string.dialog_home_continue_draft_dismiss),
                 confirmAction = {
                     homeViewModel.setShowContinueDraftDialog(false)
                     val date = homeViewModel.selectedDate.value
@@ -266,10 +266,10 @@ fun HomeRoute(
 
         if (showDiaryDeleteDialog) {
             ClodyDialog(
-                titleMassage = stringResource(R.string.home_delete_diary_title),
-                descriptionMassage = stringResource(R.string.home_delete_diary_description),
-                confirmOption = stringResource(R.string.home_delete_diary_confirm),
-                dismissOption = stringResource(R.string.home_delete_diary_dismiss),
+                titleMassage = stringResource(R.string.dialog_diary_delete_title),
+                descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
+                confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
+                dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
                 confirmAction = {
                     homeViewModel.deleteDailyDiary(
                         selectedDiaryDate.year,

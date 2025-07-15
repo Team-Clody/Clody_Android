@@ -20,6 +20,7 @@ import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.util.Locale
 
 @Composable
 fun SettingRoute(
@@ -29,6 +30,12 @@ fun SettingRoute(
     navigateToWebView: (String) -> Unit,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
+    val currentLang = Locale.getDefault().language
+    val notice = if (currentLang == "ko") SettingOptionUrls.NOTICES_URL.krUrl else SettingOptionUrls.NOTICES_URL.enUrl
+    val supportFeedback = if (currentLang == "ko") SettingOptionUrls.SUPPORT_FEEDBACK_URL.krUrl else SettingOptionUrls.SUPPORT_FEEDBACK_URL.enUrl
+    val termsOfService = if (currentLang == "ko") SettingOptionUrls.TERMS_OF_SERVICE_URL.krUrl else SettingOptionUrls.TERMS_OF_SERVICE_URL.enUrl
+    val privacyPolicy = if (currentLang == "ko") SettingOptionUrls.PRIVACY_POLICY_URL.krUrl else SettingOptionUrls.PRIVACY_POLICY_URL.enUrl
+
     val versionInfo by settingViewModel::versionInfo
 
     LaunchedEffect(Unit) {
@@ -37,14 +44,14 @@ fun SettingRoute(
     }
 
     SettingScreen(
-        versionInfo = versionInfo ?: stringResource(R.string.setting_version_info_failure),
+        versionInfo = versionInfo ?: stringResource(R.string.setting_option_app_version_info_failure),
         onClickBack = navigateToPrevious,
         onClickAccountManagement = navigateToAccountManagement,
         onClickNotificationSetting = navigateToNotification,
-        onClickAnnouncement = { navigateToWebView(SettingOptionUrls.ANNOUNCEMENT_URL) },
-        onClickInquiriesSuggestions = { navigateToWebView(SettingOptionUrls.INQUIRIES_SUGGESTIONS_URL) },
-        onClickTerms = { navigateToWebView(SettingOptionUrls.TERMS_OF_SERVICE_URL) },
-        onClickPrivacy = { navigateToWebView(SettingOptionUrls.PRIVACY_POLICY_URL) },
+        onClickNotice = { navigateToWebView(notice) },
+        onClickSupportFeedback = { navigateToWebView(supportFeedback) },
+        onClickTerms = { navigateToWebView(termsOfService) },
+        onClickPrivacy = { navigateToWebView(privacyPolicy) },
     )
 }
 
@@ -55,8 +62,8 @@ fun SettingScreen(
     onClickBack: () -> Unit,
     onClickAccountManagement: () -> Unit,
     onClickNotificationSetting: () -> Unit,
-    onClickAnnouncement: () -> Unit,
-    onClickInquiriesSuggestions: () -> Unit,
+    onClickNotice: () -> Unit,
+    onClickSupportFeedback: () -> Unit,
     onClickTerms: () -> Unit,
     onClickPrivacy: () -> Unit,
 ) {
@@ -72,12 +79,9 @@ fun SettingScreen(
 
             SettingSeparateLine()
 
-            SettingOption(
-                option = stringResource(R.string.setting_option_notification_setting),
-                onClickNotificationSetting,
-            )
-            SettingOption(option = stringResource(R.string.setting_option_announcement), onClickAnnouncement)
-            SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), onClickInquiriesSuggestions)
+            SettingOption(option = stringResource(R.string.setting_option_notification_setting), onClickNotificationSetting)
+            SettingOption(option = stringResource(R.string.setting_option_announcement), onClickNotice)
+            SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), onClickSupportFeedback)
 
             SettingSeparateLine()
 

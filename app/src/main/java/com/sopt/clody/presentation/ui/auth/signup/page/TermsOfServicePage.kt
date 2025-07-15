@@ -31,6 +31,7 @@ import com.sopt.clody.presentation.utils.base.BasePreview
 import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.util.Locale
 
 @Composable
 fun TermsOfServicePage(
@@ -45,6 +46,10 @@ fun TermsOfServicePage(
     navigateToWebView: (String) -> Unit,
 ) {
     val isAgreeButtonEnabled = serviceChecked && privacyChecked
+    val currentLang = Locale.getDefault().language
+
+    val termsOfService = if (currentLang == "ko") SettingOptionUrls.TERMS_OF_SERVICE_URL.krUrl else SettingOptionUrls.TERMS_OF_SERVICE_URL.enUrl
+    val privacyPolicy = if (currentLang == "ko") SettingOptionUrls.PRIVACY_POLICY_URL.krUrl else SettingOptionUrls.PRIVACY_POLICY_URL.enUrl
 
     Scaffold(
         topBar = {
@@ -68,7 +73,7 @@ fun TermsOfServicePage(
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 28.dp),
                 onClick = onAgreeClick,
-                text = stringResource(R.string.terms_next),
+                text = stringResource(R.string.terms_btn_next),
                 enabled = isAgreeButtonEnabled,
             )
         },
@@ -105,21 +110,21 @@ fun TermsOfServicePage(
                         uncheckedImageRes = R.drawable.ic_terms_check_off_25,
                     )
                 }
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(18.dp))
                 HorizontalDivider(color = ClodyTheme.colors.gray07, thickness = 1.dp)
                 Spacer(modifier = Modifier.height(16.dp))
                 TermsCheckboxRow(
                     text = stringResource(R.string.terms_service_use),
                     checked = serviceChecked,
                     onCheckedChange = onToggleService,
-                    onClickMore = { navigateToWebView(SettingOptionUrls.TERMS_OF_SERVICE_URL) },
+                    onClickMore = { navigateToWebView(termsOfService) },
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(24.dp))
                 TermsCheckboxRow(
                     text = stringResource(R.string.terms_service_privacy),
                     checked = privacyChecked,
                     onCheckedChange = onTogglePrivacy,
-                    onClickMore = { navigateToWebView(SettingOptionUrls.PRIVACY_POLICY_URL) },
+                    onClickMore = { navigateToWebView(privacyPolicy) },
                 )
             }
         },

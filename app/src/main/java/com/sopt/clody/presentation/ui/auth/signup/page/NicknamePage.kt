@@ -86,7 +86,7 @@ fun NickNamePage(
                     focusManager.clearFocus()
                     onCompleteClick()
                 },
-                text = stringResource(R.string.nickname_next),
+                text = stringResource(R.string.nickname_btn_next),
                 enabled = nickname.isNotEmpty() && isValidNickname,
             )
         },

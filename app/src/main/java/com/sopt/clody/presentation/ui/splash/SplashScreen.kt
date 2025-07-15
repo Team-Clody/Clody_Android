@@ -130,21 +130,21 @@ fun SoftUpdateDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.soft_update_title)) },
+        title = { Text(stringResource(R.string.dialog_soft_update_title)) },
         text = {
             Text(
-                text = stringResource(R.string.soft_update_message, latestVersion),
+                text = stringResource(R.string.dialog_soft_update_description, latestVersion),
                 textAlign = TextAlign.Center,
             )
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.soft_update_confirm))
+                Text(stringResource(R.string.dialog_soft_update_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.soft_update_dismiss))
+                Text(stringResource(R.string.dialog_soft_update_dismiss))
             }
         },
     )
@@ -158,18 +158,18 @@ fun HardUpdateDialog(
 ) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(stringResource(R.string.hard_update_title)) },
+        title = { Text(stringResource(R.string.dialog_hard_update_title)) },
         text = {
-            Text(stringResource(R.string.hard_update_message, latestVersion))
+            Text(stringResource(R.string.dialog_hard_update_description, latestVersion))
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.soft_update_confirm))
+                Text(stringResource(R.string.dialog_soft_update_confirm))
             }
         },
         dismissButton = {
             TextButton(onClick = onExit) {
-                Text(stringResource(R.string.hard_update_exit))
+                Text(stringResource(R.string.dialog_hard_update_exit))
             }
         },
     )

@@ -22,14 +22,14 @@ import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun KaKaoButton(
+fun GoogleButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Button(
         onClick = onClick,
-        colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.kakaoYellow),
+        colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.gray08),
         shape = RoundedCornerShape(10.dp),
         modifier = modifier.height(48.dp),
     ) {
@@ -39,14 +39,14 @@ fun KaKaoButton(
             modifier = Modifier.fillMaxSize(),
         ) {
             Image(
-                painter = painterResource(id = R.drawable.ic_signup_kakao),
+                painter = painterResource(id = R.drawable.img_google_button_logo),
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
             )
             Spacer(modifier = Modifier.width(10.dp))
             Text(
                 text = text,
-                style = ClodyTheme.typography.body1SemiBold,
+                style = ClodyTheme.typography.body2SemiBold,
                 color = ClodyTheme.colors.gray01,
             )
         }
@@ -55,9 +55,9 @@ fun KaKaoButton(
 
 @Preview(showBackground = true)
 @Composable
-fun KaKaoButtonPreview() {
-    KaKaoButton(
-        text = "카카오 로그인",
+private fun GoogleButtonPreview() {
+    GoogleButton(
+        text = "Sign Up With Google",
         onClick = { /*TODO*/ },
     )
 }

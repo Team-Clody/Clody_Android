@@ -8,13 +8,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -32,6 +32,7 @@ import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.presentation.utils.extension.repeatOnStarted
 import com.sopt.clody.ui.theme.ClodyTheme
+import java.util.Locale
 
 @Composable
 fun LoginRoute(
@@ -59,9 +60,8 @@ fun LoginRoute(
 
     LoginScreen(
         isLoading = state.isLoading,
-        onLoginClick = {
-            viewModel.postIntent(LoginContract.LoginIntent.LoginWithKakao(context))
-        },
+        onKaKaoLoginClick = { viewModel.postIntent(LoginContract.LoginIntent.LoginWithKakao(context)) },
+        onGoogleLoginClick = { viewModel.postIntent(LoginContract.LoginIntent.LoginWithGoogle(context)) },
     )
 
     // 에러 메시지 추가로 다이얼로그로 처리하고 싶다면?
@@ -75,10 +75,12 @@ fun LoginRoute(
 @Composable
 fun LoginScreen(
     isLoading: Boolean,
-    onLoginClick: () -> Unit,
+    onKaKaoLoginClick: () -> Unit,
+    onGoogleLoginClick: () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     val backgroundColor = ClodyTheme.colors.white
+    val currentLang = Locale.getDefault().language
 
     LaunchedEffect(Unit) {
         systemUiController.setStatusBarColor(
@@ -91,10 +93,11 @@ fun LoginScreen(
         bottomBar = {
             KaKaoButton(
                 text = stringResource(id = R.string.signup_btn_kakao),
-                onClick = onLoginClick,
+                onClick = onKaKaoLoginClick,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .navigationBarsPadding()
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
                     .padding(bottom = 40.dp),
             )
         },
@@ -106,22 +109,11 @@ fun LoginScreen(
                 .padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Spacer(modifier = Modifier.heightForScreenPercentage(0.38f))
+            Spacer(modifier = Modifier.heightForScreenPercentage(0.36f))
             Image(
-                painter = painterResource(id = R.drawable.ic_signup_logo),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-            )
-            Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
-            Image(
-                painter = painterResource(id = R.drawable.ic__signup_title),
-                contentDescription = null,
-            )
-            Spacer(modifier = Modifier.heightForScreenPercentage(0.01f))
-            Image(
-                painter = painterResource(id = R.drawable.ic_signup_logotitle),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+                painter = painterResource(id = R.drawable.img_splash_logo),
+                contentDescription = "App Logo",
+                modifier = Modifier.size(160.dp),
             )
         }
     }
@@ -137,7 +129,8 @@ fun LoginScreenPreview() {
     BasePreview {
         LoginScreen(
             isLoading = false,
-            onLoginClick = {},
+            onKaKaoLoginClick = {},
+            onGoogleLoginClick = {},
         )
     }
 }

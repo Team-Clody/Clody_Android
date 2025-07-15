@@ -174,7 +174,7 @@ fun AccountManagementScreen(
             contentAlignment = Alignment.BottomCenter,
         ) {
             ClodyToastMessage(
-                message = stringResource(R.string.account_management_nickname_change_toast),
+                message = stringResource(R.string.toast_account_management_nickname_change),
                 iconResId = R.drawable.ic_toast_check_on_18,
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,
@@ -186,10 +186,10 @@ fun AccountManagementScreen(
 
     if (showLogoutDialog) {
         LogoutDialog(
-            titleMassage = stringResource(R.string.account_management_logout_dialog_title),
-            descriptionMassage = stringResource(R.string.account_management_logout_dialog_description),
-            confirmOption = stringResource(R.string.account_management_logout_dialog_confirm),
-            dismissOption = stringResource(R.string.account_management_logout_dialog_dismiss),
+            titleMassage = stringResource(R.string.dialog_logout_title),
+            descriptionMassage = stringResource(R.string.dialog_logout_description),
+            confirmOption = stringResource(R.string.dialog_logout_confirm),
+            dismissOption = stringResource(R.string.dialog_logout_dismiss),
             confirmAction = {
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
                 accountManagementViewModel.logOutAccount()
@@ -200,10 +200,10 @@ fun AccountManagementScreen(
 
     if (showRevokeDialog) {
         ClodyDialog(
-            titleMassage = stringResource(R.string.account_management_revoke_dialog_title),
-            descriptionMassage = stringResource(R.string.account_management_revoke_dialog_description),
-            confirmOption = stringResource(R.string.account_management_revoke_dialog_confirm),
-            dismissOption = stringResource(R.string.account_management_revoke_dialog_dismiss),
+            titleMassage = stringResource(R.string.dialog_revoke_title),
+            descriptionMassage = stringResource(R.string.dialog_revoke_description),
+            confirmOption = stringResource(R.string.dialog_revoke_confirm),
+            dismissOption = stringResource(R.string.dialog_revoke_dismiss),
             confirmAction = {
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REVOKE)
                 accountManagementViewModel.revokeAccount()

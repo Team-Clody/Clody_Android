@@ -84,7 +84,7 @@ fun NicknameChangeBottomSheetItem(
                     .padding(top = 8.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.account_management_nickname_change_title),
+                    text = stringResource(R.string.bottom_sheet_nickname_change_title),
                     modifier = Modifier.align(Alignment.Center),
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body2SemiBold,
@@ -163,7 +163,7 @@ fun NicknameChangeBottomSheetItem(
                     accountManagementViewModel.changeNickname(ModifyNicknameRequestDto(name = nickname.text))
                     onDismiss()
                 },
-                text = stringResource(R.string.account_management_nickname_change_confirm),
+                text = stringResource(R.string.bottom_sheet_nickname_change_confirm),
                 enabled = nicknameChangeState && isValidNickname,
                 modifier = Modifier
                     .fillMaxWidth()
