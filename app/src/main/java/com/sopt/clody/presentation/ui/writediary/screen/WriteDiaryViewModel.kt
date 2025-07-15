@@ -12,6 +12,7 @@ import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.usecase.FetchDraftDiaryUseCase
 import com.sopt.clody.domain.usecase.SaveDraftDiaryUseCase
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import com.sopt.clody.presentation.utils.network.ErrorMessages
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
@@ -30,6 +31,7 @@ class WriteDiaryViewModel @Inject constructor(
     private val saveDraftDiaryUseCase: SaveDraftDiaryUseCase,
     private val networkUtil: NetworkUtil,
     private val draftRepository: DraftRepository,
+    private val languageProvider: LanguageProvider,
 ) : ViewModel() {
 
     private val _writeDiaryState = MutableStateFlow<WriteDiaryState>(WriteDiaryState.Idle)
@@ -66,6 +68,9 @@ class WriteDiaryViewModel @Inject constructor(
         private set
 
     private var initialEntries: List<String> = emptyList()
+
+    private val _diaryMaxLength = MutableStateFlow(languageProvider.getDiaryMaxLength())
+    val diaryMaxLength: StateFlow<Int> = _diaryMaxLength
 
     fun writeDiary(year: Int, month: Int, day: Int, contents: List<String>) {
         viewModelScope.launch {
@@ -154,7 +159,7 @@ class WriteDiaryViewModel @Inject constructor(
 
     private fun isValidEntry(text: String): Boolean {
         val textWithoutSpaces = text.replace("\\s".toRegex(), "")
-        return textWithoutSpaces.matches(Regex(ENTRY_REGEX))
+        return textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,${_diaryMaxLength.value}$"))
     }
 
     private fun checkLimitMessage() {
@@ -250,6 +255,5 @@ class WriteDiaryViewModel @Inject constructor(
 
     companion object {
         const val MAX_ENTRIES = 5
-        const val ENTRY_REGEX = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$"
     }
 }

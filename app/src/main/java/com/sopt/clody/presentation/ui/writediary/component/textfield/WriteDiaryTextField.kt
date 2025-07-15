@@ -118,7 +118,7 @@ fun WriteDiaryTextField(
                             if (it.length <= maxLength) {
                                 onTextChange(it)
                                 val textWithoutSpaces = it.replace("\\s".toRegex(), "")
-                                isTextValid = textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,50}$"))
+                                isTextValid = textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,$maxLength}$"))
                                 isTextTooLong = false
                             } else {
                                 isTextTooLong = true

@@ -75,6 +75,7 @@ fun WriteDiaryRoute(
     val entryToDelete by viewModel::entryToDelete
     val showDialog by viewModel::showDialog
     val showExitDialog by viewModel::showExitDialog
+    val diaryMaxLength by viewModel.diaryMaxLength.collectAsState()
 
     LaunchedEffectWhenStarted {
         viewModel.fetchDraftDiary(year, month, date)
@@ -113,6 +114,7 @@ fun WriteDiaryRoute(
         showFailureDialog = showFailureDialog,
         failureMessage = failureMessage,
         showExitDialog = showExitDialog,
+        diaryMaxLength = diaryMaxLength,
         onClickBack = {
             AmplitudeUtils.trackEvent(AmplitudeConstraints.WRITING_DIARY_BACK)
             if (!viewModel.hasChangedFromInitial()) {
@@ -183,6 +185,7 @@ fun WriteDiaryScreen(
     showEmptyFieldsMessage: Boolean,
     showDeleteBottomSheet: Boolean,
     showDialog: Boolean,
+    diaryMaxLength: Int,
     onClickBack: () -> Unit,
     onClickAdd: () -> Unit,
     onClickRemove: (Int) -> Unit,
@@ -265,7 +268,7 @@ fun WriteDiaryScreen(
                                 onTextChange = { newText -> onTextChange(index, newText) },
                                 onRemove = { onClickRemove(index) },
                                 isRemovable = entries.size > 1,
-                                maxLength = 50,
+                                maxLength = diaryMaxLength,
                                 showWarning = showWarnings[index],
                             )
                         }
@@ -390,6 +393,7 @@ private fun WriteDiaryScreenPreview() {
             showEmptyFieldsMessage = false,
             showDeleteBottomSheet = false,
             showDialog = false,
+            diaryMaxLength = 100,
             onClickBack = {},
             onClickAdd = {},
             onClickRemove = {},
