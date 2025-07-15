@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -38,6 +37,7 @@ fun NicknameChangeBottomSheet(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
     isValidNickname: Boolean,
+    nicknameMaxLength: Int,
     nicknameMessage: String,
     onDismiss: () -> Unit,
 ) {
@@ -47,6 +47,7 @@ fun NicknameChangeBottomSheet(
                 accountManagementViewModel = accountManagementViewModel,
                 userName = userName,
                 isValidNickname = isValidNickname,
+                nicknameMaxLength = nicknameMaxLength,
                 nicknameMessage = nicknameMessage,
                 onDismiss = onDismiss,
             )
@@ -60,14 +61,13 @@ fun NicknameChangeBottomSheetItem(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
     isValidNickname: Boolean,
+    nicknameMaxLength: Int,
     nicknameMessage: String,
     onDismiss: () -> Unit,
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
     var nicknameChangeState by remember { mutableStateOf(false) }
     var isFocusedState by remember { mutableStateOf(false) }
-    val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
-    val nicknameMaxLength = 10
 
     Surface {
         Column(
@@ -112,6 +112,7 @@ fun NicknameChangeBottomSheetItem(
                     accountManagementViewModel.validateNickname(nickname.text)
                     nicknameChangeState = it.text.isNotEmpty()
                 },
+                nicknameMaxLength = nicknameMaxLength,
                 isFocused = isFocusedState,
                 isValid = isValidNickname,
                 onRemove = {

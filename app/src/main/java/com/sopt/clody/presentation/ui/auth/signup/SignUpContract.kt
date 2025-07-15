@@ -9,6 +9,7 @@ class SignUpContract {
         val nickname: String = "",
         val isNicknameFocused: Boolean = false,
         val isValidNickname: Boolean = true,
+        val nicknameMaxLength: Int = 15,
         val nicknameMessage: String = DEFAULT_NICKNAME_MESSAGE,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
@@ -28,6 +29,7 @@ class SignUpContract {
     sealed class SignUpIntent {
         data class SetNickname(val value: String) : SignUpIntent()
         data class SetNicknameFocus(val isFocused: Boolean) : SignUpIntent()
+        data object SetNicknameMaxLength : SignUpIntent()
         data object ProceedTerms : SignUpIntent()
         data class CompleteSignUp(val context: Context) : SignUpIntent()
         data object ClearError : SignUpIntent()

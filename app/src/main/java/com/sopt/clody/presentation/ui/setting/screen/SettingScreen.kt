@@ -20,7 +20,6 @@ import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
-import java.util.Locale
 
 @Composable
 fun SettingRoute(

@@ -29,6 +29,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NickNameTextField(
     value: String,
     onValueChange: (String) -> Unit,
+    maxLength: Int,
     isFocused: Boolean,
     isValid: Boolean,
     onRemove: () -> Unit,
@@ -36,8 +37,6 @@ fun NickNameTextField(
     modifier: Modifier = Modifier,
     hint: String = "",
 ) {
-    val maxLength = 10
-
     BasicTextField(
         value = value,
         onValueChange = {
@@ -102,6 +101,7 @@ fun PreviewNickNameTextField() {
     NickNameTextField(
         value = "닉네임",
         onValueChange = {},
+        maxLength = 15,
         isFocused = false,
         isValid = true,
         onRemove = {},

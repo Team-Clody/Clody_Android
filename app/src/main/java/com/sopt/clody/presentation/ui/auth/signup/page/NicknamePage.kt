@@ -38,6 +38,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NickNamePage(
     nickname: String,
     isValidNickname: Boolean,
+    nicknameMaxLength: Int,
     nicknameMessage: String,
     isLoading: Boolean,
     isFocused: Boolean,
@@ -56,7 +57,7 @@ fun NickNamePage(
             append(" / ")
         }
         withStyle(style = SpanStyle(color = ClodyTheme.colors.gray06)) {
-            append("10")
+            append("$nicknameMaxLength")
         }
     }
 
@@ -104,6 +105,7 @@ fun NickNamePage(
                 NickNameTextField(
                     value = nickname,
                     onValueChange = onNicknameChange,
+                    maxLength = nicknameMaxLength,
                     hint = stringResource(R.string.nickname_input_hint),
                     isFocused = isFocused,
                     isValid = isValidNickname,
@@ -146,6 +148,7 @@ private fun NicknamePagePreview() {
         NickNamePage(
             nickname = "클로디",
             isValidNickname = true,
+            nicknameMaxLength = 15,
             nicknameMessage = "사용 가능한 닉네임입니다.",
             isLoading = false,
             isFocused = false,

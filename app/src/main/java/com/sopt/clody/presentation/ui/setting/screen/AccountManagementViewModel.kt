@@ -7,6 +7,7 @@ import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AccountManagementRepository
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -23,6 +24,7 @@ class AccountManagementViewModel @Inject constructor(
     private val tokenDataStore: TokenDataStore,
     private val networkUtil: NetworkUtil,
     @ApplicationContext private val context: Context,
+    private val languageProvider: LanguageProvider,
 ) : ViewModel() {
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
@@ -47,6 +49,9 @@ class AccountManagementViewModel @Inject constructor(
 
     private val _failureDialogMessage = MutableStateFlow("")
     val failureDialogMessage: StateFlow<String> = _failureDialogMessage
+
+    private val _nicknameMaxLength = MutableStateFlow(languageProvider.getNicknameMaxLength())
+    val nicknameMaxLength: StateFlow<Int> = _nicknameMaxLength
 
     private val maxRetryCount = 3
     private var retryCount = 0
@@ -107,7 +112,7 @@ class AccountManagementViewModel @Inject constructor(
 
     fun validateNickname(nickname: String) {
         if (nickname.isNotEmpty()) {
-            val isValid = nickname.matches(Regex(NICKNAME_PATTERN))
+            val isValid = nickname.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${_nicknameMaxLength.value}}$"))
             _isValidNickname.value = isValid
             _nicknameMessage.value = if (isValid) DEFAULT_NICKNAME_MESSAGE else FAILURE_NICKNAME_MESSAGE
         } else {
@@ -164,7 +169,6 @@ class AccountManagementViewModel @Inject constructor(
     }
 
     companion object {
-        private const val NICKNAME_PATTERN = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$"
         private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
         private const val FAILURE_NICKNAME_MESSAGE = "사용할 수 없는 닉네임이에요"
     }

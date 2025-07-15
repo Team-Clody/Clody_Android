@@ -87,6 +87,7 @@ fun SignUpScreen(
                 onBackClick = { onIntent(SignUpContract.SignUpIntent.BackToTerms) },
                 isLoading = state.isLoading,
                 isValidNickname = state.isValidNickname,
+                nicknameMaxLength = state.nicknameMaxLength,
                 nicknameMessage = state.nicknameMessage,
                 isFocused = state.isNicknameFocused,
                 onFocusChanged = { onIntent(SignUpContract.SignUpIntent.SetNicknameFocus(it)) },

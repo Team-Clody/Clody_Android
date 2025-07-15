@@ -51,6 +51,7 @@ fun AccountManagementRoute(
     var showRevokeDialog by remember { mutableStateOf(false) }
     val showFailureDialog by accountManagementViewModel.showFailureDialog.collectAsState()
     val failureDialogMessage by accountManagementViewModel.failureDialogMessage.collectAsState()
+    val nicknameMaxLength by accountManagementViewModel.nicknameMaxLength.collectAsState()
 
     LaunchedEffect(Unit) {
         accountManagementViewModel.fetchUserInfo()
@@ -81,6 +82,7 @@ fun AccountManagementRoute(
         showNicknameChangeBottomSheet = showNicknameChangeBottomSheet,
         updateNicknameChangeBottomSheet = { state -> showNicknameChangeBottomSheet = state },
         isValidNickname = isValidNickname,
+        nicknameMaxLength = nicknameMaxLength,
         nicknameMessage = nicknameMessage,
         showLogoutDialog = showLogoutDialog,
         updateLogoutDialog = { state -> showLogoutDialog = state },
@@ -100,6 +102,7 @@ fun AccountManagementScreen(
     showNicknameChangeBottomSheet: Boolean,
     updateNicknameChangeBottomSheet: (Boolean) -> Unit,
     isValidNickname: Boolean,
+    nicknameMaxLength: Int,
     nicknameMessage: String,
     showLogoutDialog: Boolean,
     updateLogoutDialog: (Boolean) -> Unit,
@@ -160,6 +163,7 @@ fun AccountManagementScreen(
         NicknameChangeBottomSheet(
             accountManagementViewModel = accountManagementViewModel,
             userName = (userInfoState as UserInfoState.Success).data.name,
+            nicknameMaxLength = nicknameMaxLength,
             isValidNickname = isValidNickname,
             nicknameMessage = nicknameMessage,
             onDismiss = { updateNicknameChangeBottomSheet(false) },

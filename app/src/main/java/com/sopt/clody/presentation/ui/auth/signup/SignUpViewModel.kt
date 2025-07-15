@@ -13,6 +13,8 @@ import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.auth.signup.SignUpContract.Companion.DEFAULT_NICKNAME_MESSAGE
+import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -42,6 +44,7 @@ class SignUpViewModel @AssistedInject constructor(
             .receiveAsFlow()
             .onEach(::handleIntent)
             .launchIn(viewModelScope)
+        postIntent(SignUpContract.SignUpIntent.SetNicknameMaxLength)
         postIntent(SignUpContract.SignUpIntent.SetWebViewUrl)
     }
 
@@ -53,6 +56,7 @@ class SignUpViewModel @AssistedInject constructor(
         when (intent) {
             is SignUpContract.SignUpIntent.SetNickname -> handleSetNickname(intent)
             is SignUpContract.SignUpIntent.SetNicknameFocus -> handleSetNicknameFocus(intent)
+            is SignUpContract.SignUpIntent.SetNicknameMaxLength -> setNicknameMaxLength()
             is SignUpContract.SignUpIntent.ProceedTerms -> handleProceedTerms()
             is SignUpContract.SignUpIntent.CompleteSignUp -> signUp(intent.context)
             is SignUpContract.SignUpIntent.ClearError -> clearError()
@@ -82,6 +86,10 @@ class SignUpViewModel @AssistedInject constructor(
 
     private fun handleSetNicknameFocus(intent: SignUpContract.SignUpIntent.SetNicknameFocus) {
         setState { copy(isNicknameFocused = intent.isFocused) }
+    }
+
+    private fun setNicknameMaxLength() {
+        setState { copy(nicknameMaxLength = languageProvider.getNicknameMaxLength()) }
     }
 
     private fun handleProceedTerms() {
@@ -165,7 +173,9 @@ class SignUpViewModel @AssistedInject constructor(
     }
 
     private fun validateNickname(nickname: String): Boolean {
-        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$".toRegex()
+        val state = withState(this@SignUpViewModel) { it }
+        setState { copy(nicknameMaxLength = languageProvider.getNicknameMaxLength()) }
+        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${state.nicknameMaxLength}$".toRegex()
         return nickname.matches(regex)
     }
 
