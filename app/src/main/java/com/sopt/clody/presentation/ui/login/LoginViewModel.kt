@@ -10,6 +10,7 @@ import com.sopt.clody.core.login.LoginSdk
 import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -26,6 +27,7 @@ class LoginViewModel @AssistedInject constructor(
     private val authRepository: AuthRepository,
     private val tokenRepository: TokenRepository,
     private val fcmTokenProvider: FcmTokenProvider,
+    private val languageProvider: LanguageProvider,
 ) : MavericksViewModel<LoginContract.LoginState>(initialState) {
 
     private val _intents = Channel<LoginContract.LoginIntent>(BUFFERED)
@@ -37,6 +39,7 @@ class LoginViewModel @AssistedInject constructor(
             .receiveAsFlow()
             .onEach(::handleIntent)
             .launchIn(viewModelScope)
+        postIntent(LoginContract.LoginIntent.SetLoginType)
     }
 
     fun postIntent(intent: LoginContract.LoginIntent) {
@@ -45,6 +48,7 @@ class LoginViewModel @AssistedInject constructor(
 
     private suspend fun handleIntent(intent: LoginContract.LoginIntent) {
         when (intent) {
+            is LoginContract.LoginIntent.SetLoginType -> { setState { copy(loginType = languageProvider.getLoginType()) } }
             is LoginContract.LoginIntent.LoginWithKakao -> loginWithKakao(intent.context)
             is LoginContract.LoginIntent.LoginWithGoogle -> loginWithGoogle(intent.context)
             is LoginContract.LoginIntent.ClearError -> setState { copy(errorMessage = null) }
