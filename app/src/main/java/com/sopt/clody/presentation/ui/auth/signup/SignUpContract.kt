@@ -13,7 +13,9 @@ class SignUpContract {
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
         val serviceChecked: Boolean = false,
+        val serviceUrl: String = "",
         val privacyChecked: Boolean = false,
+        val privacyUrl: String = "",
     ) : MavericksState {
         val allChecked: Boolean
             get() = serviceChecked && privacyChecked
@@ -33,6 +35,7 @@ class SignUpContract {
         data class ToggleAllChecked(val checked: Boolean) : SignUpIntent()
         data class ToggleServiceChecked(val checked: Boolean) : SignUpIntent()
         data class TogglePrivacyChecked(val checked: Boolean) : SignUpIntent()
+        data object SetWebViewUrl : SignUpIntent()
         data class OpenWebView(val url: String) : SignUpIntent()
         data object BackToTerms : SignUpIntent()
     }

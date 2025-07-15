@@ -30,6 +30,7 @@ class SignUpViewModel @AssistedInject constructor(
     private val tokenRepository: TokenRepository,
     private val fcmTokenProvider: FcmTokenProvider,
     private val networkUtil: NetworkUtil,
+    private val languageProvider: LanguageProvider,
 ) : MavericksViewModel<SignUpContract.SignUpState>(initialState) {
 
     private val _intents = Channel<SignUpContract.SignUpIntent>(BUFFERED)
@@ -41,6 +42,7 @@ class SignUpViewModel @AssistedInject constructor(
             .receiveAsFlow()
             .onEach(::handleIntent)
             .launchIn(viewModelScope)
+        postIntent(SignUpContract.SignUpIntent.SetWebViewUrl)
     }
 
     fun postIntent(intent: SignUpContract.SignUpIntent) {
@@ -57,6 +59,7 @@ class SignUpViewModel @AssistedInject constructor(
             is SignUpContract.SignUpIntent.ToggleAllChecked -> handleToggleAllChecked(intent)
             is SignUpContract.SignUpIntent.ToggleServiceChecked -> handleToggleServiceChecked(intent)
             is SignUpContract.SignUpIntent.TogglePrivacyChecked -> handleTogglePrivacyChecked(intent)
+            is SignUpContract.SignUpIntent.SetWebViewUrl -> setWebViewUrl()
             is SignUpContract.SignUpIntent.OpenWebView -> handleOpenWebView(intent.url)
             SignUpContract.SignUpIntent.BackToTerms -> handleBackToTerms()
         }
@@ -101,6 +104,15 @@ class SignUpViewModel @AssistedInject constructor(
 
     private fun handleTogglePrivacyChecked(intent: SignUpContract.SignUpIntent.TogglePrivacyChecked) {
         setState { copy(privacyChecked = intent.checked) }
+    }
+
+    private fun setWebViewUrl() {
+        setState {
+            copy(
+                serviceUrl = languageProvider.getWebViewUrlFor(SettingOptionUrls.TERMS_OF_SERVICE_URL),
+                privacyUrl = languageProvider.getWebViewUrlFor(SettingOptionUrls.PRIVACY_POLICY_URL),
+            )
+        }
     }
 
     private suspend fun handleOpenWebView(url: String) {

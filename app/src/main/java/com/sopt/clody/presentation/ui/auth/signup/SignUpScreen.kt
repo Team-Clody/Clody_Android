@@ -68,14 +68,14 @@ fun SignUpScreen(
                 allChecked = state.allChecked,
                 serviceChecked = state.serviceChecked,
                 privacyChecked = state.privacyChecked,
+                serviceUrl = state.serviceUrl,
+                privacyUrl = state.privacyUrl,
                 onToggleAll = { onIntent(SignUpContract.SignUpIntent.ToggleAllChecked(it)) },
                 onToggleService = { onIntent(SignUpContract.SignUpIntent.ToggleServiceChecked(it)) },
                 onTogglePrivacy = { onIntent(SignUpContract.SignUpIntent.TogglePrivacyChecked(it)) },
                 onAgreeClick = { onIntent(SignUpContract.SignUpIntent.ProceedTerms) },
                 navigateToPrevious = navigateToPrevious,
-                navigateToWebView = { url ->
-                    onIntent(SignUpContract.SignUpIntent.OpenWebView(url))
-                },
+                navigateToWebView = { url -> onIntent(SignUpContract.SignUpIntent.OpenWebView(url)) },
             )
         }
 
