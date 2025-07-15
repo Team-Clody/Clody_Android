@@ -33,10 +33,7 @@ fun KaKaoButton(
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(containerColor = ClodyTheme.colors.kakaoYellow),
         shape = RoundedCornerShape(10.dp),
-        modifier = modifier
-            .fillMaxWidth()
-            .height(48.dp)
-            .padding(horizontal = 24.dp),
+        modifier = modifier.height(48.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

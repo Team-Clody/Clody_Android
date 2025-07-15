@@ -91,31 +91,13 @@ fun LoginScreen(
 
     Scaffold(
         bottomBar = {
-//            if (currentLang == "en") {
-//                GoogleButton(
-//                    text = stringResource(R.string.signup_btn_google),
-//                    onClick = onGoogleLoginClick,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .navigationBarsPadding()
-//                        .padding(bottom = 40.dp),
-//                )
-//            } else {
-//                KaKaoButton(
-//                    text = stringResource(id = R.string.signup_btn_kakao),
-//                    onClick = onKaKaoLoginClick,
-//                    modifier = Modifier
-//                        .fillMaxWidth()
-//                        .navigationBarsPadding()
-//                        .padding(bottom = 40.dp),
-//                )
-//            }
             KaKaoButton(
                 text = stringResource(id = R.string.signup_btn_kakao),
                 onClick = onKaKaoLoginClick,
                 modifier = Modifier
-                    .fillMaxWidth()
                     .navigationBarsPadding()
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
                     .padding(bottom = 40.dp),
             )
         },
