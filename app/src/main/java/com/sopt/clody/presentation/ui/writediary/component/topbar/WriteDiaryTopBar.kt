@@ -31,7 +31,7 @@ fun WriteDiaryTopBar(
             IconButton(onClick = onClickBack) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_nickname_back),
-                    contentDescription = "뒤로가기",
+                    contentDescription = null,
                     tint = ClodyTheme.colors.gray01,
                 )
             }

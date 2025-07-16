@@ -13,6 +13,8 @@ import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.auth.signup.SignUpContract.Companion.DEFAULT_NICKNAME_MESSAGE
+import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -30,6 +32,7 @@ class SignUpViewModel @AssistedInject constructor(
     private val tokenRepository: TokenRepository,
     private val fcmTokenProvider: FcmTokenProvider,
     private val networkUtil: NetworkUtil,
+    private val languageProvider: LanguageProvider,
 ) : MavericksViewModel<SignUpContract.SignUpState>(initialState) {
 
     private val _intents = Channel<SignUpContract.SignUpIntent>(BUFFERED)
@@ -41,6 +44,8 @@ class SignUpViewModel @AssistedInject constructor(
             .receiveAsFlow()
             .onEach(::handleIntent)
             .launchIn(viewModelScope)
+        postIntent(SignUpContract.SignUpIntent.SetNicknameMaxLength)
+        postIntent(SignUpContract.SignUpIntent.SetWebViewUrl)
     }
 
     fun postIntent(intent: SignUpContract.SignUpIntent) {
@@ -51,12 +56,14 @@ class SignUpViewModel @AssistedInject constructor(
         when (intent) {
             is SignUpContract.SignUpIntent.SetNickname -> handleSetNickname(intent)
             is SignUpContract.SignUpIntent.SetNicknameFocus -> handleSetNicknameFocus(intent)
+            is SignUpContract.SignUpIntent.SetNicknameMaxLength -> setNicknameMaxLength()
             is SignUpContract.SignUpIntent.ProceedTerms -> handleProceedTerms()
             is SignUpContract.SignUpIntent.CompleteSignUp -> signUp(intent.context)
             is SignUpContract.SignUpIntent.ClearError -> clearError()
             is SignUpContract.SignUpIntent.ToggleAllChecked -> handleToggleAllChecked(intent)
             is SignUpContract.SignUpIntent.ToggleServiceChecked -> handleToggleServiceChecked(intent)
             is SignUpContract.SignUpIntent.TogglePrivacyChecked -> handleTogglePrivacyChecked(intent)
+            is SignUpContract.SignUpIntent.SetWebViewUrl -> setWebViewUrl()
             is SignUpContract.SignUpIntent.OpenWebView -> handleOpenWebView(intent.url)
             SignUpContract.SignUpIntent.BackToTerms -> handleBackToTerms()
         }
@@ -81,6 +88,10 @@ class SignUpViewModel @AssistedInject constructor(
         setState { copy(isNicknameFocused = intent.isFocused) }
     }
 
+    private fun setNicknameMaxLength() {
+        setState { copy(nicknameMaxLength = languageProvider.getNicknameMaxLength()) }
+    }
+
     private fun handleProceedTerms() {
         setState { copy(currentStep = SignUpContract.SignUpState.Step.NICKNAME) }
     }
@@ -101,6 +112,15 @@ class SignUpViewModel @AssistedInject constructor(
 
     private fun handleTogglePrivacyChecked(intent: SignUpContract.SignUpIntent.TogglePrivacyChecked) {
         setState { copy(privacyChecked = intent.checked) }
+    }
+
+    private fun setWebViewUrl() {
+        setState {
+            copy(
+                serviceUrl = languageProvider.getWebViewUrlFor(SettingOptionUrls.TERMS_OF_SERVICE_URL),
+                privacyUrl = languageProvider.getWebViewUrlFor(SettingOptionUrls.PRIVACY_POLICY_URL),
+            )
+        }
     }
 
     private suspend fun handleOpenWebView(url: String) {
@@ -153,7 +173,9 @@ class SignUpViewModel @AssistedInject constructor(
     }
 
     private fun validateNickname(nickname: String): Boolean {
-        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$".toRegex()
+        val state = withState(this@SignUpViewModel) { it }
+        setState { copy(nicknameMaxLength = languageProvider.getNicknameMaxLength()) }
+        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${state.nicknameMaxLength}$".toRegex()
         return nickname.matches(regex)
     }
 

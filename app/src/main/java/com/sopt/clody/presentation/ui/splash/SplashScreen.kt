@@ -125,8 +125,8 @@ fun SplashScreen() {
 @Composable
 fun SoftUpdateDialog(
     latestVersion: String,
-    onDismiss: () -> Unit,
     onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -164,7 +164,7 @@ fun HardUpdateDialog(
         },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(stringResource(R.string.dialog_soft_update_confirm))
+                Text(stringResource(R.string.dialog_hard_update_confirm))
             }
         },
         dismissButton = {

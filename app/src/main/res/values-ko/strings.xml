@@ -118,6 +118,7 @@
 
     <string name="dialog_hard_update_title">필수 업데이트</string>
     <string name="dialog_hard_update_description">버전 %1$s으로 업데이트가 필요합니다.</string>
+    <string name="dialog_hard_update_confirm">업데이트</string>
     <string name="dialog_hard_update_exit">앱 종료</string>
 
     <string name="dialog_home_continue_draft_title">임시저장된 일기를 이어 쓸까요?</string>
