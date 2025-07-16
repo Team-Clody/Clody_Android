@@ -16,7 +16,10 @@ class ClodyApplication : Application() {
         initKakaoSdk()
         FirebaseApp.initializeApp(this)
         Mavericks.initialize(this)
-        initAmplitude(applicationContext)
+
+        if (!BuildConfig.DEBUG) {
+            initAmplitude(applicationContext)
+        }
     }
 
     private fun initKakaoSdk() {
