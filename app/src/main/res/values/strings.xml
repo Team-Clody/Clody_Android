@@ -118,6 +118,7 @@
 
     <string name="dialog_hard_update_title">Update Required</string>
     <string name="dialog_hard_update_description">Please update to version %1$s to continue</string>
+    <string name="dialog_hard_update_confirm">Update</string>
     <string name="dialog_hard_update_exit">Exit App</string>
 
     <string name="dialog_home_continue_draft_title">Pick up where you left off?</string>

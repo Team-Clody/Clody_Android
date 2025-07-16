@@ -53,7 +53,7 @@ fun WriteDiaryTextField(
 ) {
     var isTextValid by remember {
         mutableStateOf(
-            text.replace("\\s".toRegex(), "").matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,50}$")),
+            text.replace("\\s".toRegex(), "").matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,$maxLength}$")),
         )
     }
     var isFocused by remember { mutableStateOf(false) }
