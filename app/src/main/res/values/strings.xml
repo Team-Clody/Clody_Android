@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Clody</string>
-    <string name="app_name_dev">Donkey</string>
 
     <!-- Usage : Login -->
     <string name="signup_btn_kakao">Sign Up With KaKao</string>
