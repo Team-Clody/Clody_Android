@@ -54,8 +54,13 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix = ".dev"
+
             isMinifyEnabled = false
             buildConfigField("String", "CLODY_BASE_URL", properties["clody.test.url"].toString())
+
+            manifestPlaceholders["appLabel"] = "@string/app_name_dev"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_dev"
         }
 
         release {
@@ -67,6 +72,9 @@ android {
                 "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
+
+            manifestPlaceholders["appLabel"] = "@string/app_name"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
         }
     }
     compileOptions {

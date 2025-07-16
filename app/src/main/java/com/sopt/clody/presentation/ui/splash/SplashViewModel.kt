@@ -57,7 +57,7 @@ class SplashViewModel @AssistedInject constructor(
         if (intent.startIntent.hasExtra("google.message_id")) {
             AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
         }
-        if (checkInspectionAndHandle()) return
+        if (!BuildConfig.DEBUG && checkInspectionAndHandle()) return
         checkVersionAndNavigate()
         attemptAutoLogin()
     }
