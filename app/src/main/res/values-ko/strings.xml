@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">클로디</string>
+    <string name="app_name_dev">돈키</string>
 
     <!-- 사용화면 : 로그인 -->
     <string name="signup_btn_kakao">카카오로 로그인</string>
