@@ -175,7 +175,7 @@ class SignUpViewModel @AssistedInject constructor(
     private fun validateNickname(nickname: String): Boolean {
         val state = withState(this@SignUpViewModel) { it }
         setState { copy(nicknameMaxLength = languageProvider.getNicknameMaxLength()) }
-        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${state.nicknameMaxLength}$".toRegex()
+        val regex = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${state.nicknameMaxLength}}$".toRegex()
         return nickname.matches(regex)
     }
 

@@ -167,7 +167,7 @@
     <string name="bottom_sheet_time_reminder_picker_title">Change reminder time</string>
     <string name="bottom_sheet_time_reminder_picker_btn_confirm">Save</string>
 
-    <string name="bottom_sheet_home_initial_draft_title">Heads up- drafts expire\\nDon\'t miss Lody\'s reply!</string>
+    <string name="bottom_sheet_home_initial_draft_title">Heads up- drafts expire\nDon\'t miss Lody\'s reply!</string>
     <string name="bottom_sheet_home_initial_draft_description">To receive a reminder before the reply deadline,\nconfirm notification permissions.</string>
     <string name="bottom_sheet_home_initial_draft_guide">[Settings > Apps > Clody > Notifications]</string>
     <string name="bottom_sheet_home_initial_draft_accept">Turn on Notifications</string>
