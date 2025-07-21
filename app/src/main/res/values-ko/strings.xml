@@ -49,7 +49,6 @@
     <string name="home_daily_diary_empty_message">작성된 감사 일기가 없어요!</string>
     <string name="home_daily_diary_draft_message">임시저장된 일기가 있어요.</string>
     <string name="home_daily_diary_month_day">%1$d. %2$s</string>
-    <string name="home_daily_diary_day_of_week">%1$s요일</string>
 
     <string name="home_btn_write_diary">일기 쓰기</string>
     <string name="home_btn_check_reply">답장 확인</string>
@@ -57,7 +56,7 @@
 
     <!-- 사용 화면 : 일기 작성 -->
     <string name="write_diary_btn_send">보내기</string>
-    <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
+    <string name="write_diary_month_date_day_of_week">%2$s %3$s일 %1$s</string>
     <string name="write_diary_help_message">신조어, 비속어, 이모지 작성은 불가능해요</string>
     <string name="write_diary_text_field_hint">일상 속 작은 감사함을 적어보세요</string>
     <string name="write_diary_text_field_warning">2~50자 까지 입력할 수 있어요.</string>

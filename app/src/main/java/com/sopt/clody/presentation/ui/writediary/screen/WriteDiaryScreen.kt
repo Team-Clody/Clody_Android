@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -39,7 +40,6 @@ import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.writediary.component.bottomsheet.DeleteWriteDiaryBottomSheet
 import com.sopt.clody.presentation.ui.writediary.component.button.AddDiaryEntryFAB
-import com.sopt.clody.presentation.ui.writediary.component.text.DiaryTitleText
 import com.sopt.clody.presentation.ui.writediary.component.textfield.WriteDiaryTextField
 import com.sopt.clody.presentation.ui.writediary.component.tooltip.TooltipIcon
 import com.sopt.clody.presentation.ui.writediary.component.topbar.WriteDiaryTopBar
@@ -50,6 +50,7 @@ import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.LaunchedEffectWhenStarted
 import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -242,10 +243,15 @@ fun WriteDiaryScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        DiaryTitleText(
-                            date = stringResource(R.string.write_diary_month_and_date, month, day),
-                            separator = " ",
-                            day = getDayOfWeek(year, month, day),
+                        Text(
+                            text = stringResource(
+                                R.string.write_diary_month_date_day_of_week,
+                                getDayOfWeek(year, month, day),
+                                month.toLocalizedMonthLabel(),
+                                day,
+                            ),
+                            style = ClodyTheme.typography.head2,
+                            color = ClodyTheme.colors.gray01,
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         TooltipIcon(tooltipsText = stringResource(id = R.string.write_diary_help_message))

@@ -49,7 +49,6 @@
     <string name="home_daily_diary_empty_message">No gratitude entries yet.</string>
     <string name="home_daily_diary_draft_message">There are existing entries in drafts.</string>
     <string name="home_daily_diary_month_day">%1$d. %2$s</string>
-    <string name="home_daily_diary_day_of_week">%1$s</string>
 
     <string name="home_btn_write_diary">Write a Journal</string>
     <string name="home_btn_check_reply">See my Reply</string>
@@ -57,7 +56,7 @@
 
     <!-- Usage : Write Diary -->
     <string name="write_diary_btn_send">Send</string>
-    <string name="write_diary_month_and_date">%1$d %2$d</string>
+    <string name="write_diary_month_date_day_of_week">%1$s, %2$s %3$s</string>
     <string name="write_diary_help_message">Please avoid using slang, profanity, or emojis.</string>
     <string name="write_diary_text_field_hint">Something you\'re grateful for today.</string>
     <string name="write_diary_text_field_warning">Please enter between 2 and 100 characters.</string>
