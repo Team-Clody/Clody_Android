@@ -70,7 +70,7 @@
     <string name="reply_loading_btn_open">열어보기</string>
 
     <!-- 사용 화면 : 답장 확인 -->
-    <string name="reply_month_and_date">%1$d월 %2$d일</string>
+    <string name="reply_month_and_date">%1$s %2$s일</string>
     <string name="reply_title">%1$s님을 위한 행운의 답장</string>
 
     <!-- 사용 화면 : 일기 리스트 -->

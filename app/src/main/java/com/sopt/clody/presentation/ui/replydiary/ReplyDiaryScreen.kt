@@ -41,6 +41,7 @@ import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -118,7 +119,7 @@ fun ReplyDiaryScreen(
                 modifier = Modifier.statusBarsPadding(),
                 title = {
                     Text(
-                        text = stringResource(R.string.reply_month_and_date, month, date),
+                        text = stringResource(R.string.reply_month_and_date, month.toLocalizedMonthLabel(), date.toString()),
                         style = ClodyTheme.typography.head4,
                         color = ClodyTheme.colors.gray01,
                     )
@@ -137,13 +138,12 @@ fun ReplyDiaryScreen(
         content = { innerPadding ->
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
                     .background(ClodyTheme.colors.white)
                     .padding(innerPadding),
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(horizontal = 24.dp)
                         .padding(bottom = 28.dp)
                         .clip(RoundedCornerShape(16.dp))

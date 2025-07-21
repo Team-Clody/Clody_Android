@@ -70,8 +70,8 @@
     <string name="reply_loading_btn_open">Open Reply</string>
 
     <!-- Usage : Reply -->
-    <string name="reply_month_and_date">%1$d %2$d</string>
-    <string name="reply_title">A lucky reply for %1$d</string>
+    <string name="reply_month_and_date">%1$s %2$s</string>
+    <string name="reply_title">A lucky reply for %1$s</string>
 
     <!-- Usage : Diary List -->
     <string name="diary_list_selected_year_month">%2$s %1$s</string>
