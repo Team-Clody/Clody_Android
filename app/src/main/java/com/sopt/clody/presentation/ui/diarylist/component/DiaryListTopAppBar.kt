@@ -29,8 +29,8 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DiaryListTopAppBar(
-    selectedYear: Int,
-    selectedMonth: Int,
+    selectedYear: String,
+    selectedMonth: String,
     showYearMonthPicker: () -> Unit,
     onClickCalendar: () -> Unit,
 ) {

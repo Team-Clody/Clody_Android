@@ -74,7 +74,7 @@
     <string name="reply_title">%1$s님을 위한 행운의 답장</string>
 
     <!-- 사용 화면 : 일기 리스트 -->
-    <string name="diary_list_selected_year_month">%1$s년 %2$s월</string>
+    <string name="diary_list_selected_year_month">%1$s %2$s</string>
     <string name="diary_list_empty_diary_list">작성된 감사일기가 없어요</string>
     <string name="diary_list_daily_diary_day">%1$s일</string>
     <string name="diary_list_daily_diary_day_of_week">/%1$s</string>

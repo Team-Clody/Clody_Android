@@ -25,6 +25,8 @@ import com.sopt.clody.presentation.ui.diarylist.component.EmptyDiaryList
 import com.sopt.clody.presentation.ui.diarylist.component.MonthlyDiaryList
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
+import com.sopt.clody.presentation.utils.extension.toLocalizedYearLabel
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -130,8 +132,8 @@ fun DiaryListScreen(
     Scaffold(
         topBar = {
             DiaryListTopAppBar(
-                selectedYear = selectedYearInDiaryList,
-                selectedMonth = selectedMonthInDiaryList,
+                selectedYear = selectedYearInDiaryList.toLocalizedYearLabel(),
+                selectedMonth = selectedMonthInDiaryList.toLocalizedMonthLabel(),
                 showYearMonthPicker = showYearMonthPicker,
                 onClickCalendar = onClickCalendar,
             )
