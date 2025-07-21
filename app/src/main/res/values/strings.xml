@@ -42,7 +42,9 @@
 
     <!-- Usage : Home -->
     <string name="home_total_clover">%1$d Clovers</string>
-    <string name="home_year_month_format">%2$d %1$d</string>
+    <string name="year_format">%1$d</string>
+    <string name="month_format">%1$d</string>
+    <string name="home_year_month_format">%2$s %1$s</string>
 
     <string name="home_daily_diary_empty_message">No gratitude entries yet.</string>
     <string name="home_daily_diary_draft_message">There are existing entries in drafts.</string>
@@ -187,8 +189,6 @@
     <!-- Others -->
     <string name="time_am">AM</string>
     <string name="time_pm">PM</string>
-    <string name="year_format">%1$d</string>
-    <string name="month_format">%1$d</string>
     <string name="home_error_delete_diary">An error occurred while deleting the diary.</string>
     <string name="error_login_requires_chrome">Chrome must be installed to log in.</string>
     <string name="error_login_rooted_device">Login is not available on rooted devices for security reasons.</string>

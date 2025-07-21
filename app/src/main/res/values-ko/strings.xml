@@ -42,7 +42,9 @@
 
     <!-- 사용 화면 : 홈 -->
     <string name="home_total_clover">클로버 %1$d개</string>
-    <string name="home_year_month_format">%1$d년 %2$d월</string>
+    <string name="year_format">%1$d년</string>
+    <string name="month_format">%1$d월</string>
+    <string name="home_year_month_format">%1$s %2$s</string>
 
     <string name="home_daily_diary_empty_message">작성된 감사 일기가 없어요!</string>
     <string name="home_daily_diary_draft_message">임시저장된 일기가 있어요.</string>
@@ -187,8 +189,6 @@
     <!-- 기타 -->
     <string name="time_am">오전</string>
     <string name="time_pm">오후</string>
-    <string name="year_format">%1$d년</string>
-    <string name="month_format">%1$d월</string>
     <string name="home_error_data_load">데이터를 불러오는데 실패했습니다.</string>
     <string name="home_error_unknown">알 수 없는 오류가 발생했습니다.</string>
     <string name="home_error_delete_diary">일기 삭제 중 오류가 발생했습니다.</string>
