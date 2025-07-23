@@ -1,6 +1,7 @@
 package com.sopt.clody.data.repositoryimpl
 
 import com.sopt.clody.data.remote.datasource.AuthDataSource
+import com.sopt.clody.data.remote.dto.request.GoogleSignUpRequestDto
 import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.dto.response.LoginResponseDto
@@ -20,5 +21,10 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun signUp(authorization: String, requestSignUpDto: SignUpRequestDto): Result<SignUpResponseDto> =
         runCatching {
             authDataSource.signUp(authorization, requestSignUpDto).handleApiResponse().getOrThrow()
+        }
+
+    override suspend fun signUpWithGoogle(googleSignUpRequestDto: GoogleSignUpRequestDto): Result<SignUpResponseDto> =
+        runCatching {
+            authDataSource.signUpWithGoogle(googleSignUpRequestDto).handleApiResponse().getOrThrow()
         }
 }
