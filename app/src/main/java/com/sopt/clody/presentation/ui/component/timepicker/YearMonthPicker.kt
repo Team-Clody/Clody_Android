@@ -121,49 +121,49 @@ fun YearMonthPicker(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Spacer(modifier = Modifier.weight(1f))
                     if (LocalConfiguration.current.locales[0] == Locale.KOREA) {
+                        Spacer(modifier = Modifier.width(20.dp))
                         YearMonthPickerItem(
                             state = yearPickerState,
                             items = yearLabelItems,
                             startIndex = startYearIndex,
                             visibleItemsCount = 5,
                             infiniteScroll = false,
-                            modifier = Modifier.weight(2f),
+                            modifier = Modifier.weight(1f),
                             textModifier = Modifier.padding(8.dp),
                         )
-                        Spacer(modifier = Modifier.width(20.dp))
                         YearMonthPickerItem(
                             state = monthPickerState,
                             items = monthLabelItems,
                             startIndex = startMonthIndex,
                             visibleItemsCount = 5,
                             infiniteScroll = false,
-                            modifier = Modifier.weight(2f),
+                            modifier = Modifier.weight(1f),
                             textModifier = Modifier.padding(8.dp),
                         )
+                        Spacer(modifier = Modifier.width(20.dp))
                     } else {
+                        Spacer(modifier = Modifier.width(20.dp))
                         YearMonthPickerItem(
                             state = monthPickerState,
                             items = monthLabelItems,
                             startIndex = startMonthIndex,
                             visibleItemsCount = 5,
                             infiniteScroll = false,
-                            modifier = Modifier.weight(2f),
+                            modifier = Modifier.weight(1f),
                             textModifier = Modifier.padding(8.dp),
                         )
-                        Spacer(modifier = Modifier.width(20.dp))
                         YearMonthPickerItem(
                             state = yearPickerState,
                             items = yearLabelItems,
                             startIndex = startYearIndex,
                             visibleItemsCount = 5,
                             infiniteScroll = false,
-                            modifier = Modifier.weight(2f),
+                            modifier = Modifier.weight(1f),
                             textModifier = Modifier.padding(8.dp),
                         )
+                        Spacer(modifier = Modifier.width(20.dp))
                     }
-                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
 

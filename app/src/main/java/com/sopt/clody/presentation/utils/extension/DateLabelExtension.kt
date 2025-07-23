@@ -13,11 +13,11 @@ fun Int.toLocalizedYearLabel(): String = stringResource(R.string.year_format, th
 
 @Composable
 fun Int.toLocalizedMonthLabel(): String {
-    val locale = LocalContext.current.resources.configuration.locales[0]
+    val locales = LocalContext.current.resources.configuration.locales
+    val locale = if (locales.isEmpty) Locale.getDefault() else locales[0]
     return if (locale.language == "ko") {
         stringResource(R.string.month_format, this)
     } else {
         Month.of(this).getDisplayName(TextStyle.FULL, Locale.ENGLISH)
-            .lowercase().replaceFirstChar { it.titlecase() }
     }
 }

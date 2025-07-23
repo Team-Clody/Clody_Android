@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -76,7 +78,7 @@ class DiaryListViewModel @Inject constructor(
         val day = diaryDate[2].toInt()
 
         val date = LocalDate.of(year, month, day)
-        val dayOfWeek = date.dayOfWeek.toString()
+        val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
         _selectedDiaryDate.value = DiaryDate(year, month, day, dayOfWeek)
     }
 

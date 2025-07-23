@@ -55,7 +55,10 @@ fun DailyDiaryListItem(
                 modifier = Modifier.padding(vertical = 3.dp),
             )
             Text(
-                text = dayOfWeek.getDisplayName(TextStyle.FULL, LocalConfiguration.current.locales[0]),
+                text = dayOfWeek.getDisplayName(
+                    TextStyle.FULL,
+                    LocalConfiguration.current.locales.let { if (it.isEmpty) java.util.Locale.getDefault() else it[0] },
+                ),
                 style = ClodyTheme.typography.body2SemiBold,
                 color = ClodyTheme.colors.gray02,
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),

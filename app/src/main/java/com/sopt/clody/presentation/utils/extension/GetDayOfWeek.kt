@@ -8,5 +8,6 @@ import java.time.format.TextStyle
 @Composable
 fun getDayOfWeek(year: Int, month: Int, day: Int): String {
     val date = LocalDate.of(year, month, day)
-    return date.dayOfWeek.getDisplayName(TextStyle.FULL, LocalConfiguration.current.locales[0])
+    val locale = LocalConfiguration.current.locales.let { if (it.isEmpty) java.util.Locale.getDefault() else it[0] }
+    return date.dayOfWeek.getDisplayName(TextStyle.FULL, locale)
 }
