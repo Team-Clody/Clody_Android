@@ -53,6 +53,10 @@ mockk = "1.13.10"
 
 play-review = "2.0.2"
 
+androidxCredentials = "1.5.0"
+googleAuth = "21.3.0"
+datastore = "1.1.7"
+
 [libraries]
 # AndroidX Core
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -135,6 +139,10 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 # PlayStore In App Review
 play-review = { group = "com.google.android.play", name = "review", version.ref = "play-review"}
 play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review"}
+
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidxCredentials" }
+google-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "googleAuth" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
