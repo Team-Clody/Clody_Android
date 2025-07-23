@@ -2,6 +2,7 @@ package com.sopt.clody.presentation.ui.auth.signup
 
 import android.content.Context
 import com.airbnb.mvrx.MavericksState
+import com.sopt.clody.data.datastore.OAuthProvider
 
 class SignUpContract {
     data class SignUpState(
@@ -15,8 +16,9 @@ class SignUpContract {
         val errorMessage: String? = null,
         val serviceChecked: Boolean = false,
         val serviceUrl: String = "",
-        val privacyChecked: Boolean = false,
         val privacyUrl: String = "",
+        val privacyChecked: Boolean = false,
+        val platform: OAuthProvider = OAuthProvider.KAKAO,
     ) : MavericksState {
         val allChecked: Boolean
             get() = serviceChecked && privacyChecked
@@ -33,7 +35,6 @@ class SignUpContract {
         data object ProceedTerms : SignUpIntent()
         data class CompleteSignUp(val context: Context) : SignUpIntent()
         data object ClearError : SignUpIntent()
-
         data class ToggleAllChecked(val checked: Boolean) : SignUpIntent()
         data class ToggleServiceChecked(val checked: Boolean) : SignUpIntent()
         data class TogglePrivacyChecked(val checked: Boolean) : SignUpIntent()

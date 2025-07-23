@@ -8,11 +8,15 @@ import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
 import com.airbnb.mvrx.withState
 import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.login.LoginSdk
+import com.sopt.clody.data.remote.dto.request.GoogleSignUpRequestDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
+import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.auth.signup.SignUpContract.Companion.DEFAULT_NICKNAME_MESSAGE
+import com.sopt.clody.data.datastore.OAuthDataStore
+import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
@@ -31,6 +35,7 @@ class SignUpViewModel @AssistedInject constructor(
     private val authRepository: AuthRepository,
     private val tokenRepository: TokenRepository,
     private val fcmTokenProvider: FcmTokenProvider,
+    private val oAuthDataStore: OAuthDataStore,
     private val networkUtil: NetworkUtil,
     private val languageProvider: LanguageProvider,
 ) : MavericksViewModel<SignUpContract.SignUpState>(initialState) {
@@ -139,39 +144,69 @@ class SignUpViewModel @AssistedInject constructor(
         }
     }
 
-    private fun signUp(context: Context) {
-        viewModelScope.launch {
-            val state = withState(this@SignUpViewModel) { it }
-            if (!networkUtil.isNetworkAvailable()) {
-                setState { copy(errorMessage = "네트워크 연결을 확인해주세요.") }
-                return@launch
-            }
-            setState { copy(isLoading = true) }
-            loginSdk.login(context).fold(
-                onSuccess = { accessToken ->
-                    launch {
-                        val fcm = fcmTokenProvider.getToken().orEmpty()
-                        val req = SignUpRequestDto("kakao", state.nickname, fcm)
-                        authRepository.signUp("Bearer ${accessToken.value}", req).fold(
-                            onSuccess = {
-                                tokenRepository.setTokens(it.accessToken, it.refreshToken)
-                                _sideEffects.send(SignUpContract.SignUpSideEffect.NavigateToTimeReminder)
-                            },
-                            onFailure = {
-                                setState { copy(errorMessage = it.message ?: "알 수 없는 오류") }
-                            },
-                        )
+    private suspend fun signUp(context: Context) {
+        val state = withState(this@SignUpViewModel) { it }
 
-                        setState { copy(isLoading = false) }
-                    }
+        if (!networkUtil.isNetworkAvailable()) {
+            setState { copy(errorMessage = "네트워크 연결을 확인해주세요.") }
+            return
+        }
+
+        setState { copy(isLoading = true) }
+
+        val platform = oAuthDataStore.getPlatform()
+        val fcmToken = fcmTokenProvider.getToken().orEmpty()
+
+        if (platform == OAuthProvider.GOOGLE) {
+            val idToken = oAuthDataStore.getIdToken()
+            if (idToken.isNullOrBlank()) {
+                setState { copy(errorMessage = "Google ID Token이 없습니다.", isLoading = false) }
+                return
+            }
+
+            val request = GoogleSignUpRequestDto(
+                idToken = idToken,
+                platform = "Android",
+                name = state.nickname,
+                fcmToken = fcmToken,
+            )
+
+            val result = authRepository.signUpWithGoogle(request)
+            handleSignUpResult(result, isGoogle = true)
+        } else {
+            loginSdk.login(context).fold(
+                onSuccess = { token ->
+                    val request = SignUpRequestDto(
+                        platform = OAuthProvider.KAKAO.apiValue,
+                        name = state.nickname,
+                        fcmToken = fcmToken,
+                    )
+                    val result = authRepository.signUp("Bearer ${token.value}", request)
+                    handleSignUpResult(result, isGoogle = false)
                 },
                 onFailure = {
-                    setState { copy(errorMessage = it.message ?: "로그인 실패", isLoading = false) }
+                    setState { copy(errorMessage = "로그인에 실패했어요~", isLoading = false) }
                 },
             )
         }
     }
 
+    private suspend fun handleSignUpResult(
+        result: Result<SignUpResponseDto>,
+        isGoogle: Boolean,
+    ) {
+        result.fold(
+            onSuccess = {
+                tokenRepository.setTokens(it.accessToken, it.refreshToken)
+                if (isGoogle) oAuthDataStore.clear()
+                _sideEffects.send(SignUpContract.SignUpSideEffect.NavigateToTimeReminder)
+            },
+            onFailure = {
+                setState { copy(errorMessage = "회원가입에 실패했어요~") }
+            },
+        )
+        setState { copy(isLoading = false) }
+    }
     private fun validateNickname(nickname: String): Boolean {
         val state = withState(this@SignUpViewModel) { it }
         setState { copy(nicknameMaxLength = languageProvider.getNicknameMaxLength()) }
