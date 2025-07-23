@@ -45,6 +45,8 @@ import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
+import com.sopt.clody.presentation.utils.extension.toLocalizedYearLabel
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.async
@@ -345,8 +347,8 @@ fun HomeScreen(
                     },
                     onClickSetting = onClickSetting,
                     onShowYearMonthPickerStateChange = { newState -> homeViewModel.setShowYearMonthPickerState(newState) },
-                    selectedYear = selectedYear,
-                    selectedMonth = selectedMonth,
+                    selectedYear = selectedYear.toLocalizedYearLabel(),
+                    selectedMonth = selectedMonth.toLocalizedMonthLabel(),
                 )
             },
             containerColor = ClodyTheme.colors.white,
@@ -375,7 +377,7 @@ fun HomeScreen(
                     }
 
                     is CalendarState.Error -> {
-                        homeViewModel.setErrorState(true, calendarState.message ?: stringResource(R.string.home_error_unknown))
+                        homeViewModel.setErrorState(true, calendarState.message)
                     }
                 }
 

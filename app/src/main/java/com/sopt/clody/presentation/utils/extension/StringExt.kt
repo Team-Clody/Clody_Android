@@ -1,9 +1,14 @@
 package com.sopt.clody.presentation.utils.extension
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.sopt.clody.R
+
+@Composable
 fun String.convertTo12HourFormat(): String {
     val (hourBefore, minuteBefore) = this.split(":").map { it.toInt() }
 
-    val amPm = if (hourBefore < 12) "오전" else "오후"
+    val amPm = if (hourBefore < 12) stringResource(R.string.time_am) else stringResource(R.string.time_pm)
 
     val hourAfter = when {
         hourBefore == 0 -> 12
@@ -11,9 +16,9 @@ fun String.convertTo12HourFormat(): String {
         else -> hourBefore
     }
 
-    val minuteAfter = if (minuteBefore == 0) "00" else minuteBefore
+    val minuteAfter = if (minuteBefore == 0) "00" else minuteBefore.toString()
 
-    return String.format("$amPm ${hourAfter}시 ${minuteAfter}분")
+    return String.format(stringResource(R.string.notification_setting_selected_time, amPm, hourAfter, minuteAfter))
 }
 
 fun Triple<String, String, String>.to24HourFormat(): String {

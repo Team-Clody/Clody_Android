@@ -42,12 +42,13 @@
 
     <!-- 사용 화면 : 홈 -->
     <string name="home_total_clover">클로버 %1$d개</string>
-    <string name="home_year_month_format">%1$d년 %2$d월</string>
+    <string name="year_format">%1$d년</string>
+    <string name="month_format">%1$d월</string>
+    <string name="home_year_month_format">%1$s %2$s</string>
 
     <string name="home_daily_diary_empty_message">작성된 감사 일기가 없어요!</string>
     <string name="home_daily_diary_draft_message">임시저장된 일기가 있어요.</string>
     <string name="home_daily_diary_month_day">%1$d. %2$s</string>
-    <string name="home_daily_diary_day_of_week">%1$s요일</string>
 
     <string name="home_btn_write_diary">일기 쓰기</string>
     <string name="home_btn_check_reply">답장 확인</string>
@@ -55,7 +56,7 @@
 
     <!-- 사용 화면 : 일기 작성 -->
     <string name="write_diary_btn_send">보내기</string>
-    <string name="write_diary_month_and_date">%1$d월 %2$d일</string>
+    <string name="write_diary_month_date_day_of_week">%2$s %3$s일 %1$s</string>
     <string name="write_diary_help_message">신조어, 비속어, 이모지 작성은 불가능해요</string>
     <string name="write_diary_text_field_hint">일상 속 작은 감사함을 적어보세요</string>
     <string name="write_diary_text_field_warning">2~50자 까지 입력할 수 있어요.</string>
@@ -69,11 +70,11 @@
     <string name="reply_loading_btn_open">열어보기</string>
 
     <!-- 사용 화면 : 답장 확인 -->
-    <string name="reply_month_and_date">%1$d월 %2$d일</string>
+    <string name="reply_month_and_date">%1$s %2$s일</string>
     <string name="reply_title">%1$s님을 위한 행운의 답장</string>
 
     <!-- 사용 화면 : 일기 리스트 -->
-    <string name="diary_list_selected_year_month">%1$s년 %2$s월</string>
+    <string name="diary_list_selected_year_month">%1$s %2$s</string>
     <string name="diary_list_empty_diary_list">작성된 감사일기가 없어요</string>
     <string name="diary_list_daily_diary_day">%1$s일</string>
     <string name="diary_list_daily_diary_day_of_week">/%1$s</string>
@@ -103,7 +104,7 @@
     <string name="notification_setting_write_diary">일기 작성 알림 받기</string>
     <string name="notification_setting_draft_diary">이어쓰기 알림 받기</string>
     <string name="notification_setting_notification_time">알림 시간</string>
-    <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
+    <string name="notification_setting_selected_time">%1$s %2$d시 %3$s분</string>
     <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
 
     <!-- 사용화면 : 오류 화면 -->
@@ -187,8 +188,6 @@
     <!-- 기타 -->
     <string name="time_am">오전</string>
     <string name="time_pm">오후</string>
-    <string name="year_format">%1$d년</string>
-    <string name="month_format">%1$d월</string>
     <string name="home_error_data_load">데이터를 불러오는데 실패했습니다.</string>
     <string name="home_error_unknown">알 수 없는 오류가 발생했습니다.</string>
     <string name="home_error_delete_diary">일기 삭제 중 오류가 발생했습니다.</string>

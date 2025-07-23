@@ -77,6 +77,7 @@ fun ClodyDialog(
 
                     Text(
                         text = titleMassage,
+                        textAlign = TextAlign.Center,
                         style = ClodyTheme.typography.body1SemiBold,
                     )
 

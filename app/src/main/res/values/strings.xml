@@ -42,12 +42,13 @@
 
     <!-- Usage : Home -->
     <string name="home_total_clover">%1$d Clovers</string>
-    <string name="home_year_month_format">%2$d %1$d</string>
+    <string name="year_format">%1$d</string>
+    <string name="month_format">%1$d</string>
+    <string name="home_year_month_format">%2$s %1$s</string>
 
     <string name="home_daily_diary_empty_message">No gratitude entries yet.</string>
     <string name="home_daily_diary_draft_message">There are existing entries in drafts.</string>
     <string name="home_daily_diary_month_day">%1$d. %2$s</string>
-    <string name="home_daily_diary_day_of_week">%1$s</string>
 
     <string name="home_btn_write_diary">Write a Journal</string>
     <string name="home_btn_check_reply">See my Reply</string>
@@ -55,7 +56,7 @@
 
     <!-- Usage : Write Diary -->
     <string name="write_diary_btn_send">Send</string>
-    <string name="write_diary_month_and_date">%1$d %2$d</string>
+    <string name="write_diary_month_date_day_of_week">%1$s, %2$s %3$s</string>
     <string name="write_diary_help_message">Please avoid using slang, profanity, or emojis.</string>
     <string name="write_diary_text_field_hint">Something you\'re grateful for today.</string>
     <string name="write_diary_text_field_warning">Please enter between 2 and 100 characters.</string>
@@ -69,8 +70,8 @@
     <string name="reply_loading_btn_open">Open Reply</string>
 
     <!-- Usage : Reply -->
-    <string name="reply_month_and_date">%1$d %2$d</string>
-    <string name="reply_title">A lucky reply for %1$d</string>
+    <string name="reply_month_and_date">%1$s %2$s</string>
+    <string name="reply_title">A lucky reply for %1$s</string>
 
     <!-- Usage : Diary List -->
     <string name="diary_list_selected_year_month">%2$s %1$s</string>
@@ -103,7 +104,7 @@
     <string name="notification_setting_write_diary">Journal Reminder</string>
     <string name="notification_setting_draft_diary">Draft Reminder</string>
     <string name="notification_setting_notification_time">Reminder Time</string>
-    <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
+    <string name="notification_setting_selected_time">%2$d:%3$s %1$s</string>
     <string name="notification_setting_reply_diary">Reply Notification</string>
 
     <!-- Usage : ErrorScreen -->
@@ -166,7 +167,7 @@
     <string name="bottom_sheet_time_reminder_picker_title">Change reminder time</string>
     <string name="bottom_sheet_time_reminder_picker_btn_confirm">Save</string>
 
-    <string name="bottom_sheet_home_initial_draft_title">Heads up- drafts expire\\nDon\'t miss Lody\'s reply!</string>
+    <string name="bottom_sheet_home_initial_draft_title">Heads up- drafts expire\nDon\'t miss Lody\'s reply!</string>
     <string name="bottom_sheet_home_initial_draft_description">To receive a reminder before the reply deadline,\nconfirm notification permissions.</string>
     <string name="bottom_sheet_home_initial_draft_guide">[Settings > Apps > Clody > Notifications]</string>
     <string name="bottom_sheet_home_initial_draft_accept">Turn on Notifications</string>
@@ -187,8 +188,6 @@
     <!-- Others -->
     <string name="time_am">AM</string>
     <string name="time_pm">PM</string>
-    <string name="year_format">%1$d</string>
-    <string name="month_format">%1$d</string>
     <string name="home_error_delete_diary">An error occurred while deleting the diary.</string>
     <string name="error_login_requires_chrome">Chrome must be installed to log in.</string>
     <string name="error_login_rooted_device">Login is not available on rooted devices for security reasons.</string>

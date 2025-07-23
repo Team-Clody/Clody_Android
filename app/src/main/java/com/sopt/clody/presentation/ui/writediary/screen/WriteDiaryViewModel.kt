@@ -159,7 +159,7 @@ class WriteDiaryViewModel @Inject constructor(
 
     private fun isValidEntry(text: String): Boolean {
         val textWithoutSpaces = text.replace("\\s".toRegex(), "")
-        return textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,${_diaryMaxLength.value}$"))
+        return textWithoutSpaces.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣\\W]{2,${_diaryMaxLength.value}}$"))
     }
 
     private fun checkLimitMessage() {

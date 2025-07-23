@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,6 +27,7 @@ import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
+import java.time.format.TextStyle
 
 @Composable
 fun DailyDiaryListItem(
@@ -48,16 +50,16 @@ fun DailyDiaryListItem(
         ) {
             Text(
                 text = "${date.month.value}.${date.dayOfMonth}",
-                style = ClodyTheme.typography.body3Medium,
+                style = ClodyTheme.typography.body2Medium,
                 color = ClodyTheme.colors.gray04,
                 modifier = Modifier.padding(vertical = 3.dp),
             )
             Text(
-                text = stringResource(
-                    id = R.string.home_daily_diary_day_of_week,
-                    dayOfWeek.toKoreanShortLabel(),
+                text = dayOfWeek.getDisplayName(
+                    TextStyle.FULL,
+                    LocalConfiguration.current.locales.let { if (it.isEmpty) java.util.Locale.getDefault() else it[0] },
                 ),
-                style = ClodyTheme.typography.body2Medium,
+                style = ClodyTheme.typography.body2SemiBold,
                 color = ClodyTheme.colors.gray02,
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.DiaryRepository
-import com.sopt.clody.presentation.utils.extension.getDayOfWeek
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -12,6 +11,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -74,7 +76,9 @@ class DiaryListViewModel @Inject constructor(
         val year = diaryDate[0].toInt()
         val month = diaryDate[1].toInt()
         val day = diaryDate[2].toInt()
-        val dayOfWeek = getDayOfWeek(year, month, day)
+
+        val date = LocalDate.of(year, month, day)
+        val dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
         _selectedDiaryDate.value = DiaryDate(year, month, day, dayOfWeek)
     }
 
