@@ -2,19 +2,17 @@ package com.sopt.clody.presentation.ui.login
 
 import android.content.Context
 import com.airbnb.mvrx.MavericksState
+import com.sopt.clody.data.datastore.OAuthProvider
 
 class LoginContract {
 
     data class LoginState(
-        val loginType: LoginType = LoginType.GOOGLE,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
     ) : MavericksState
 
     sealed class LoginIntent {
-        data object SetLoginType : LoginIntent()
-        data class LoginWithKakao(val context: Context) : LoginIntent()
-        data class LoginWithGoogle(val context: Context) : LoginIntent()
+        data class LoginOAuth(val provider: OAuthProvider, val context: Context? = null, val idToken: String? = null) : LoginIntent()
         data object ClearError : LoginIntent()
     }
 
