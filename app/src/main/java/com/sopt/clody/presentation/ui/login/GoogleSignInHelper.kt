@@ -1,7 +1,6 @@
 package com.sopt.clody.presentation.ui.login
 
 import android.content.Context
-import android.util.Log
 import androidx.activity.result.IntentSenderRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity

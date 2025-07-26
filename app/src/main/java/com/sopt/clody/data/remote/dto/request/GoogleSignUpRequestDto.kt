@@ -6,7 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class GoogleSignUpRequestDto(
     @SerialName("idToken") val idToken: String,
-    @SerialName("platform") val platform: String,
     @SerialName("fcmToken") val fcmToken: String,
-    @SerialName("name") val name: String?,
 )

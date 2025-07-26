@@ -29,8 +29,8 @@ import com.airbnb.mvrx.compose.mavericksViewModel
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.sopt.clody.R
 import com.sopt.clody.data.datastore.OAuthProvider
+import com.sopt.clody.presentation.ui.auth.component.button.GoogleButton
 import com.sopt.clody.presentation.ui.auth.component.button.KaKaoButton
-import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.login.LoginContract.LoginIntent
 import com.sopt.clody.presentation.utils.base.BasePreview
@@ -76,11 +76,11 @@ fun LoginRoute(
     }
 
     LoginScreen(
-        isLoading = state.isLoading,
+        state = state,
         onKaKaoLoginClick = {
             viewModel.postIntent(LoginIntent.LoginOAuth(OAuthProvider.KAKAO, context = context))
         },
-        onLoginGoogleClick = {
+        onGoogleLoginClick = {
             googleSignInHelper.requestSignIn(
                 onSuccess = { intentSenderRequest -> googleSignInLauncher.launch(intentSenderRequest) },
                 onFailure = {
@@ -100,9 +100,9 @@ fun LoginRoute(
 
 @Composable
 fun LoginScreen(
-    isLoading: Boolean,
+    state: LoginContract.LoginState,
     onKaKaoLoginClick: () -> Unit,
-    onLoginGoogleClick: () -> Unit,
+    onGoogleLoginClick: () -> Unit,
 ) {
     val systemUiController = rememberSystemUiController()
     val backgroundColor = ClodyTheme.colors.white
@@ -116,15 +116,27 @@ fun LoginScreen(
 
     Scaffold(
         bottomBar = {
-            KaKaoButton(
-                text = stringResource(id = R.string.signup_btn_kakao),
-                onClick = onLoginGoogleClick,
-                modifier = Modifier
-                    .navigationBarsPadding()
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 40.dp),
-            )
+            if (state.loginType == OAuthProvider.KAKAO) {
+                KaKaoButton(
+                    text = stringResource(id = R.string.signup_btn_kakao),
+                    onClick = onKaKaoLoginClick,
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 40.dp),
+                )
+            } else {
+                GoogleButton(
+                    text = stringResource(id = R.string.signup_btn_google),
+                    onClick = onGoogleLoginClick,
+                    modifier = Modifier
+                        .navigationBarsPadding()
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp)
+                        .padding(bottom = 40.dp),
+                )
+            }
         },
     ) { innerPadding ->
         Column(
@@ -142,10 +154,6 @@ fun LoginScreen(
             )
         }
     }
-
-    if (isLoading) {
-        LoadingScreen()
-    }
 }
 
 @ClodyPreview
@@ -153,9 +161,13 @@ fun LoginScreen(
 fun LoginScreenPreview() {
     BasePreview {
         LoginScreen(
-            isLoading = false,
+            state = LoginContract.LoginState(
+                isLoading = false,
+                loginType = OAuthProvider.KAKAO,
+                errorMessage = null,
+            ),
             onKaKaoLoginClick = {},
-            onLoginGoogleClick = {},
+            onGoogleLoginClick = {},
         )
     }
 }

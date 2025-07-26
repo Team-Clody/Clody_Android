@@ -8,15 +8,14 @@ import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
 import com.airbnb.mvrx.withState
 import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.login.LoginSdk
-import com.sopt.clody.data.remote.dto.request.GoogleSignUpRequestDto
+import com.sopt.clody.data.datastore.OAuthDataStore
+import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.auth.signup.SignUpContract.Companion.DEFAULT_NICKNAME_MESSAGE
-import com.sopt.clody.data.datastore.OAuthDataStore
-import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
@@ -163,15 +162,13 @@ class SignUpViewModel @AssistedInject constructor(
                 setState { copy(errorMessage = "Google ID Token이 없습니다.", isLoading = false) }
                 return
             }
-
-            val request = GoogleSignUpRequestDto(
-                idToken = idToken,
-                platform = "Android",
+            val request = SignUpRequestDto(
+                platform = OAuthProvider.GOOGLE.apiValue,
                 name = state.nickname,
                 fcmToken = fcmToken,
             )
 
-            val result = authRepository.signUpWithGoogle(request)
+            val result = authRepository.signUp("Bearer $idToken", request)
             handleSignUpResult(result, isGoogle = true)
         } else {
             loginSdk.login(context).fold(

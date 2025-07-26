@@ -7,6 +7,7 @@ import com.sopt.clody.data.datastore.OAuthProvider
 class LoginContract {
 
     data class LoginState(
+        val loginType: OAuthProvider? = null,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
     ) : MavericksState

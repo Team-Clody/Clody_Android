@@ -108,9 +108,7 @@ class LoginViewModel @AssistedInject constructor(
         val fcmToken = fcmTokenProvider.getToken().orEmpty()
         val request = GoogleSignUpRequestDto(
             idToken = idToken,
-            platform = OAuthProvider.GOOGLE.apiValue,
             fcmToken = fcmToken,
-            name = null,
         )
 
         authRepository.signUpWithGoogle(request).fold(
