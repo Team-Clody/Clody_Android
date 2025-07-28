@@ -13,6 +13,7 @@ import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.login.LoginContract.LoginIntent
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -30,6 +31,7 @@ class LoginViewModel @AssistedInject constructor(
     private val tokenRepository: TokenRepository,
     private val fcmTokenProvider: FcmTokenProvider,
     private val oauthDataStore: OAuthDataStore,
+    private val languageProvider: LanguageProvider,
 ) : MavericksViewModel<LoginContract.LoginState>(initialState) {
 
     private val _intents = Channel<LoginIntent>(BUFFERED)
@@ -37,6 +39,7 @@ class LoginViewModel @AssistedInject constructor(
     val sideEffects = _sideEffects.receiveAsFlow()
 
     init {
+        setState { copy(loginType = languageProvider.getLoginType()) }
         _intents
             .receiveAsFlow()
             .onEach(::handleIntent)

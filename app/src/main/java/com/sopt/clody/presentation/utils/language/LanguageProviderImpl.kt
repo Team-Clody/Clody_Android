@@ -1,7 +1,7 @@
 package com.sopt.clody.presentation.utils.language
 
 import android.content.Context
-import com.sopt.clody.presentation.ui.login.LoginType
+import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
@@ -15,8 +15,11 @@ class LanguageProviderImpl @Inject constructor(
 
     private fun isKorean(): Boolean = locale.language == LANGUAGE_KO
 
-    override fun getLoginType(): LoginType {
-        return if (isKorean()) LoginType.KAKAO else LoginType.GOOGLE
+    override fun getLoginType(): OAuthProvider {
+        return when (locale.language) {
+            LANGUAGE_KO -> OAuthProvider.KAKAO
+            else -> OAuthProvider.GOOGLE
+        }
     }
 
     override fun getNicknameMaxLength(): Int {
