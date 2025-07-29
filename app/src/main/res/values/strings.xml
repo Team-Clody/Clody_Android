@@ -104,7 +104,7 @@
     <string name="notification_setting_write_diary">Journal Reminder</string>
     <string name="notification_setting_draft_diary">Draft Reminder</string>
     <string name="notification_setting_notification_time">Reminder Time</string>
-    <string name="notification_setting_selected_time">%2$d:%3$d %1$s</string>
+    <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
     <string name="notification_setting_reply_diary">Reply Notification</string>
 
     <!-- Usage : ErrorScreen -->
