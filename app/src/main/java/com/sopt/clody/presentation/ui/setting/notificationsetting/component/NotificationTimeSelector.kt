@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.sopt.clody.R
+import com.sopt.clody.presentation.utils.extension.convertKSTtoUTZ
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -22,6 +23,8 @@ fun NotificationTimeSelector(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val timeUST = convertKSTtoUTZ(time)
+
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -41,7 +44,7 @@ fun NotificationTimeSelector(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = time,
+                text = stringResource(R.string.notification_setting_selected_time, timeUST.first.getLabel(), timeUST.second, timeUST.third),
                 style = ClodyTheme.typography.body3Medium,
                 color = ClodyTheme.colors.gray05,
             )

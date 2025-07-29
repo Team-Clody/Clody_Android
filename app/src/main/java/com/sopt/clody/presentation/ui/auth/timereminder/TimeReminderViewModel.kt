@@ -10,6 +10,7 @@ import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.extension.TimePeriod
+import com.sopt.clody.presentation.utils.extension.convertUTZtoKST
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -17,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -80,18 +80,6 @@ class TimeReminderViewModel @Inject constructor(
     }
 
     fun setSelectedTime(period: TimePeriod, hour: String, minute: String) {
-        selectedTime = formatTime(period, hour, minute)
-    }
-
-    fun setFixedTime(period: TimePeriod, hour: String, minute: String) {
-        selectedTime = formatTime(period, hour, minute)
-    }
-
-    private fun formatTime(period: TimePeriod, hour: String, minute: String): String {
-        val hourInt = when (period) {
-            TimePeriod.PM -> if (hour.toInt() != 12) hour.toInt() + 12 else 12
-            TimePeriod.AM -> if (hour.toInt() == 12) 0 else hour.toInt()
-        }
-        return String.format(Locale.US, "%02d:%02d", hourInt, minute.toInt())
+        selectedTime = convertUTZtoKST(timePeriod = period, hour = hour, minute = minute)
     }
 }
