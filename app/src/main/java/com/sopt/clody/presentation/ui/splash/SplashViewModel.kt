@@ -79,7 +79,6 @@ class SplashViewModel @AssistedInject constructor(
     private fun attemptAutoLogin(): Boolean {
         val isLoggedIn = tokenRepository.getAccessToken().isNotBlank() &&
             tokenRepository.getRefreshToken().isNotBlank()
-        setState { copy(isUserLoggedIn = isLoggedIn) }
         return isLoggedIn
     }
 

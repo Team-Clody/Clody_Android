@@ -6,7 +6,6 @@ import com.sopt.clody.domain.model.AppUpdateState
 
 class SplashContract {
     data class SplashState(
-        val isUserLoggedIn: Boolean? = null,
         val updateState: AppUpdateState? = null,
         val showInspectionDialog: Boolean = false,
         val inspectionTimeText: String? = null,
