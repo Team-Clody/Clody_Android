@@ -135,12 +135,11 @@ fun AccountManagementScreen(
                         updateNicknameChangeBottomSheet = updateNicknameChangeBottomSheet,
                     )
 
-                    if (userInfo.platform == "kakao") {
-                        AccountManagementLogoutOption(
-                            userEmail = userInfo.email,
-                            updateLogoutDialog = updateLogoutDialog,
-                        )
-                    }
+                    AccountManagementLogoutOption(
+                        userEmail = userInfo.email,
+                        platform = userInfo.platform,
+                        updateLogoutDialog = updateLogoutDialog,
+                    )
 
                     SettingSeparateLine()
 

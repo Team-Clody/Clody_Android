@@ -4,7 +4,6 @@ import com.airbnb.mvrx.MavericksViewModel
 import com.airbnb.mvrx.MavericksViewModelFactory
 import com.airbnb.mvrx.hilt.AssistedViewModelFactory
 import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
-import com.airbnb.mvrx.withState
 import com.sopt.clody.BuildConfig
 import com.sopt.clody.domain.appupdate.AppUpdateChecker
 import com.sopt.clody.domain.model.AppUpdateState
@@ -58,8 +57,9 @@ class SplashViewModel @AssistedInject constructor(
             AmplitudeUtils.trackEvent(AmplitudeConstraints.ALARM)
         }
         if (!BuildConfig.DEBUG && checkInspectionAndHandle()) return
-        checkVersionAndNavigate()
-        attemptAutoLogin()
+
+        val isLoggedIn = attemptAutoLogin()
+        checkVersionAndNavigate(isLoggedIn)
     }
 
     private suspend fun checkInspectionAndHandle(): Boolean {
@@ -76,21 +76,19 @@ class SplashViewModel @AssistedInject constructor(
         return false
     }
 
-    private fun attemptAutoLogin() {
+    private fun attemptAutoLogin(): Boolean {
         val isLoggedIn = tokenRepository.getAccessToken().isNotBlank() &&
             tokenRepository.getRefreshToken().isNotBlank()
-        setState { copy(isUserLoggedIn = isLoggedIn) }
+        return isLoggedIn
     }
 
-    private suspend fun checkVersionAndNavigate() {
+    private suspend fun checkVersionAndNavigate(isLoggedIn: Boolean) {
         val updateState = appUpdateChecker.getAppUpdateState(BuildConfig.VERSION_NAME)
         setState { copy(updateState = updateState) }
 
         if (updateState == AppUpdateState.Latest) {
             delay(1000)
-            val isLoggedIn = withState(this@SplashViewModel) { it.isUserLoggedIn }
-
-            if (isLoggedIn == true) {
+            if (isLoggedIn) {
                 _sideEffects.send(SplashContract.SplashSideEffect.NavigateToHome)
             } else {
                 _sideEffects.send(SplashContract.SplashSideEffect.NavigateToLogin)

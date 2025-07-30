@@ -16,21 +16,27 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
+import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun AccountManagementLogoutOption(
     userEmail: String,
+    platform: OAuthProvider?,
     updateLogoutDialog: (Boolean) -> Unit,
 ) {
+    val platformIconRes = when (platform) {
+        OAuthProvider.KAKAO -> R.drawable.img_account_management_kakao
+        OAuthProvider.GOOGLE -> R.drawable.img_google_button_logo
+        else -> R.drawable.img_google_button_logo // 서버에서 google을 어떻게 내려줄까요?
+    }
+
     Row(
-        modifier = Modifier
-            .padding(top = 12.dp, bottom = 24.dp, start = 22.dp, end = 24.dp),
+        modifier = Modifier.padding(top = 12.dp, bottom = 24.dp, start = 22.dp, end = 24.dp),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_account_management_kakao),
-            modifier = Modifier
-                .size(24.dp),
+            painter = painterResource(id = platformIconRes),
+            modifier = Modifier.size(24.dp),
             contentDescription = null,
         )
         Spacer(modifier = Modifier.width(10.dp))

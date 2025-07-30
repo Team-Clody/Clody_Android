@@ -67,8 +67,9 @@ class AccountManagementViewModel @Inject constructor(
             val result = accountManagementRepository.getUserInfo()
             _userInfoState.value = result.fold(
                 onSuccess = {
+                    val platformEnum = it.platform
                     retryCount = 0
-                    UserInfoState.Success(it)
+                    UserInfoState.Success(it.copy(platform = platformEnum))
                 },
                 onFailure = {
                     retryCount++

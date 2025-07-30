@@ -29,13 +29,10 @@ fun SignUpRoute(
             viewModel.sideEffects.collect { effect ->
                 when (effect) {
                     is SignUpContract.SignUpSideEffect.NavigateToTimeReminder -> navigateToHome()
-                    is SignUpContract.SignUpSideEffect.ShowMessage -> {
-                        // TODO: Snackbar나 Dialog로 에러 메시지 처리
-                    }
-
                     is SignUpContract.SignUpSideEffect.NavigateToWebView -> {
                         navigateToWebView(effect.url) // ✅ WebView 이동 처리
                     }
+                    is SignUpContract.SignUpSideEffect.ShowMessage -> {}
                 }
             }
         }
@@ -83,7 +80,9 @@ fun SignUpScreen(
             NickNamePage(
                 nickname = state.nickname,
                 onNicknameChange = { onIntent(SignUpContract.SignUpIntent.SetNickname(it)) },
-                onCompleteClick = { onIntent(SignUpContract.SignUpIntent.CompleteSignUp(context)) },
+                onCompleteClick = {
+                    onIntent(SignUpContract.SignUpIntent.CompleteSignUp(context))
+                },
                 onBackClick = { onIntent(SignUpContract.SignUpIntent.BackToTerms) },
                 isLoading = state.isLoading,
                 isValidNickname = state.isValidNickname,
