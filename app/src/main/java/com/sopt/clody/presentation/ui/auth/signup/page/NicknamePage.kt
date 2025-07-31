@@ -27,6 +27,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.textfield.NickNameTextField
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.utils.base.BasePreview
@@ -39,7 +40,7 @@ fun NickNamePage(
     nickname: String,
     isValidNickname: Boolean,
     nicknameMaxLength: Int,
-    nicknameMessage: String,
+    nicknameMessage: NicknameMessage,
     isLoading: Boolean,
     isFocused: Boolean,
     onNicknameChange: (String) -> Unit,
@@ -119,7 +120,7 @@ fun NickNamePage(
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Text(
-                        text = nicknameMessage,
+                        text = nicknameMessage.getMessage(),
                         color = when {
                             nickname.isEmpty() -> ClodyTheme.colors.gray04
                             isValidNickname -> ClodyTheme.colors.gray04
@@ -149,7 +150,7 @@ private fun NicknamePagePreview() {
             nickname = "클로디",
             isValidNickname = true,
             nicknameMaxLength = 15,
-            nicknameMessage = "사용 가능한 닉네임입니다.",
+            nicknameMessage = NicknameMessage.DEFAULT,
             isLoading = false,
             isFocused = false,
             onNicknameChange = {},

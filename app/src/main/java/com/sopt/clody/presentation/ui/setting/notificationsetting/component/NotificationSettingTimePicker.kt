@@ -28,15 +28,16 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
 import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
-import com.sopt.clody.presentation.utils.extension.to24HourFormat
+import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NotificationSettingTimePicker(
     onDismissRequest: () -> Unit,
-    onConfirm: (String) -> Unit,
+    onConfirm: (TimePeriod, String, String) -> Unit,
 ) {
-    val amPmItems = remember { listOf("오전", "오후") }
+    val amPmItemsLabel = TimePeriod.entries.map { it.getLabel() }
+    val amPmItems = remember { amPmItemsLabel }
     val hourItems = remember { (1..12).map { it.toString() } }
     val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
 
@@ -137,12 +138,8 @@ fun NotificationSettingTimePicker(
             }
             ClodyButton(
                 onClick = {
-                    val selectedTime = Triple(
-                        amPmPickerState.selectedItem,
-                        hourPickerState.selectedItem,
-                        minutePickerState.selectedItem,
-                    ).to24HourFormat()
-                    onConfirm(selectedTime)
+                    val selectedPeriod = if (amPmPickerState.selectedItem == "오전") TimePeriod.AM else TimePeriod.PM
+                    onConfirm(selectedPeriod, hourPickerState.selectedItem, minutePickerState.selectedItem)
                 },
                 text = stringResource(R.string.bottom_sheet_notification_time_change_confirm),
                 enabled = true,

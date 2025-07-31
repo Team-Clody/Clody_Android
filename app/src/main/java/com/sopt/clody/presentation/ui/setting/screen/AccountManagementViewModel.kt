@@ -7,6 +7,7 @@ import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AccountManagementRepository
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
 import com.sopt.clody.presentation.utils.language.LanguageProvider
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
@@ -35,8 +36,8 @@ class AccountManagementViewModel @Inject constructor(
     private val _isValidNickname = MutableStateFlow(true)
     val isValidNickname: StateFlow<Boolean> = _isValidNickname
 
-    private val _nicknameMessage = MutableStateFlow(DEFAULT_NICKNAME_MESSAGE)
-    val nicknameMessage: StateFlow<String> = _nicknameMessage
+    private val _nicknameMessage = MutableStateFlow(NicknameMessage.DEFAULT)
+    val nicknameMessage: StateFlow<NicknameMessage> = _nicknameMessage
 
     private val _logOutState = MutableStateFlow<LogOutState>(LogOutState.Idle)
     val logOutState: StateFlow<LogOutState> = _logOutState
@@ -115,10 +116,10 @@ class AccountManagementViewModel @Inject constructor(
         if (nickname.isNotEmpty()) {
             val isValid = nickname.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${_nicknameMaxLength.value}}$"))
             _isValidNickname.value = isValid
-            _nicknameMessage.value = if (isValid) DEFAULT_NICKNAME_MESSAGE else FAILURE_NICKNAME_MESSAGE
+            _nicknameMessage.value = if (isValid) NicknameMessage.DEFAULT else NicknameMessage.INVALID
         } else {
             _isValidNickname.value = true
-            _nicknameMessage.value = DEFAULT_NICKNAME_MESSAGE
+            _nicknameMessage.value = NicknameMessage.DEFAULT
         }
     }
 
@@ -167,10 +168,5 @@ class AccountManagementViewModel @Inject constructor(
     fun dismissFailureDialog() {
         _showFailureDialog.value = false
         _failureDialogMessage.value = ""
-    }
-
-    companion object {
-        private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
-        private const val FAILURE_NICKNAME_MESSAGE = "사용할 수 없는 닉네임이에요"
     }
 }

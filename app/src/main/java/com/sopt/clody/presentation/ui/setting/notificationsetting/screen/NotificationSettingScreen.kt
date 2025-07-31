@@ -32,7 +32,6 @@ import com.sopt.clody.presentation.ui.setting.notificationsetting.component.Noti
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationSwitch
 import com.sopt.clody.presentation.ui.setting.notificationsetting.component.NotificationTimeSelector
 import com.sopt.clody.presentation.utils.base.ClodyPreview
-import com.sopt.clody.presentation.utils.extension.convertTo12HourFormat
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -66,11 +65,13 @@ fun NotificationSettingRoute(
     )
 
     if (showNotificationTimePicker) {
-        ClodyPopupBottomSheet(onDismissRequest = { showNotificationTimePicker = false }) {
+        ClodyPopupBottomSheet(
+            onDismissRequest = { showNotificationTimePicker = false },
+        ) {
             NotificationSettingTimePicker(
                 onDismissRequest = { showNotificationTimePicker = false },
-                onConfirm = { newNotificationTime ->
-                    notificationSettingViewModel.changeNotificationTime(context, newNotificationTime)
+                onConfirm = { timePeriod, hour, minute ->
+                    notificationSettingViewModel.changeNotificationTime(context, timePeriod, hour, minute)
                     showNotificationTimePicker = false
                 },
             )
@@ -153,7 +154,7 @@ fun NotificationSettingScreen(
                         )
                         Spacer(modifier = Modifier.height(24.dp))
                         NotificationTimeSelector(
-                            time = notificationTime.convertTo12HourFormat(),
+                            time = notificationTime,
                             onClick = onClickNotificationTime,
                         )
                         Spacer(modifier = Modifier.height(24.dp))

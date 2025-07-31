@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
 import com.sopt.clody.presentation.ui.component.bottomsheet.ClodyBottomSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.setting.screen.AccountManagementViewModel
@@ -38,7 +39,7 @@ fun NicknameChangeBottomSheet(
     userName: String,
     isValidNickname: Boolean,
     nicknameMaxLength: Int,
-    nicknameMessage: String,
+    nicknameMessage: NicknameMessage,
     onDismiss: () -> Unit,
 ) {
     ClodyBottomSheet(
@@ -62,7 +63,7 @@ fun NicknameChangeBottomSheetItem(
     userName: String,
     isValidNickname: Boolean,
     nicknameMaxLength: Int,
-    nicknameMessage: String,
+    nicknameMessage: NicknameMessage,
     onDismiss: () -> Unit,
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
@@ -134,7 +135,7 @@ fun NicknameChangeBottomSheetItem(
                     .padding(horizontal = 24.dp),
             ) {
                 Text(
-                    text = nicknameMessage,
+                    text = nicknameMessage.getMessage(),
                     color = when {
                         nickname.text.isEmpty() -> ClodyTheme.colors.gray04
                         isValidNickname -> ClodyTheme.colors.gray04

@@ -7,6 +7,8 @@ import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.Notification
 import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.presentation.utils.extension.TimePeriod
+import com.sopt.clody.presentation.utils.extension.convertUTZtoKST
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
 import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
@@ -140,7 +142,7 @@ class NotificationSettingViewModel @Inject constructor(
         }
     }
 
-    fun changeNotificationTime(context: Context, time: String) {
+    fun changeNotificationTime(context: Context, timePeriod: TimePeriod, hour: String, minute: String) {
         _notificationTimeChangeState.value = NotificationTimeChangeState.Loading
         viewModelScope.launch {
             if (!networkUtil.isNetworkAvailable()) {
@@ -157,7 +159,7 @@ class NotificationSettingViewModel @Inject constructor(
                 isDiaryAlarm = _diaryAlarm.value,
                 isDraftAlarm = _draftAlarm.value,
                 isReplyAlarm = _replyAlarm.value,
-                time = time,
+                time = convertUTZtoKST(timePeriod, hour, minute),
                 fcmToken = fcmToken,
             )
             notificationRepository.sendNotification(requestDto).fold(

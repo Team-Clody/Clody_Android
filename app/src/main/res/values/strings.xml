@@ -16,7 +16,10 @@
     <!-- Usage : Onboarding - Nickname -->
     <string name="nickname_title">Nice to meet you!\nWhat should I call you?</string>
     <string name="nickname_input_hint">Please enter your nickname</string>
+    <string name="nickname_message_default">Please write without spaces or special characters</string>
+    <string name="nickname_message_invalid">This nickname isn\'t available</string>
     <string name="nickname_btn_next">Next</string>
+
 
     <!-- Usage : Onboarding - Time Reminder -->
     <string name="time_reminder_title">What time would you\nlike us to remind you to write?</string>
@@ -31,7 +34,7 @@
     <string name="guide_page2_title">Each reply comes\nwith a lucky four-leaf clover</string>
     <string name="guide_page2_description">The more you confide in Lody\nthe luckier your clover becomes</string>
 
-    <string name="guide_page3_title">You can only journal\nfor today and yesterday</string>
+    <string name="guide_page3_title">You can only\njournal for today</string>
     <string name="guide_page3_description">Past or future dates aren\'t available,\nDon\'t miss your moment</string>
 
     <string name="guide_page4_title">Ready to write\nyour first journal?\nI\'ll be waiting!</string>
@@ -104,7 +107,7 @@
     <string name="notification_setting_write_diary">Journal Reminder</string>
     <string name="notification_setting_draft_diary">Draft Reminder</string>
     <string name="notification_setting_notification_time">Reminder Time</string>
-    <string name="notification_setting_selected_time">%2$d:%3$s %1$s</string>
+    <string name="notification_setting_selected_time">%2$s:%3$s %1$s</string>
     <string name="notification_setting_reply_diary">Reply Notification</string>
 
     <!-- Usage : ErrorScreen -->

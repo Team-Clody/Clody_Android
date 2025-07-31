@@ -7,6 +7,7 @@ import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.util.AuthInterceptor
 import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.data.remote.util.TimeZoneInterceptor
 import com.sopt.clody.domain.repository.TokenReissueRepository
 import dagger.Module
 import dagger.Provides
@@ -43,13 +44,19 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun provideTimeZoneInterceptor(): TimeZoneInterceptor = TimeZoneInterceptor()
+
+    @Provides
+    @Singleton
     fun provideClodyOkHttpClient(
         loggingInterceptor: HttpLoggingInterceptor,
         oauthInterceptor: AuthInterceptor,
+        timeZoneInterceptor: TimeZoneInterceptor,
     ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .addInterceptor(oauthInterceptor)
+            .addInterceptor(timeZoneInterceptor)
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .build()

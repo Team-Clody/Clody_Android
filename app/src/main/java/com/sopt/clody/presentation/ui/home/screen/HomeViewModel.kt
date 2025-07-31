@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -232,9 +233,14 @@ class HomeViewModel @Inject constructor(
     }
 
     fun canWriteDiary(): Boolean {
+        val userTimeZone = ZoneId.systemDefault().id
         val today = LocalDate.now()
         val selected = _selectedDate.value
-        val isAvailableDay = selected == today || selected == today.minusDays(1)
+        val isAvailableDay = if (userTimeZone == "Asia/Seoul") {
+            selected == today || selected == today.minusDays(1)
+        } else {
+            selected == today
+        }
         return _diaryCount.value == 0 && isAvailableDay
     }
 
@@ -276,7 +282,7 @@ class HomeViewModel @Inject constructor(
         isDiaryAlarm = info.isDiaryAlarm,
         isDraftAlarm = true,
         isReplyAlarm = info.isReplyAlarm,
-        time = info.time.ifEmpty { "21:30" },
+        time = info.time,
         fcmToken = fcmToken,
     )
 

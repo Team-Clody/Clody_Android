@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
@@ -103,7 +104,7 @@ fun AccountManagementScreen(
     updateNicknameChangeBottomSheet: (Boolean) -> Unit,
     isValidNickname: Boolean,
     nicknameMaxLength: Int,
-    nicknameMessage: String,
+    nicknameMessage: NicknameMessage,
     showLogoutDialog: Boolean,
     updateLogoutDialog: (Boolean) -> Unit,
     showRevokeDialog: Boolean,

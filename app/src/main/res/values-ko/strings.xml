@@ -16,6 +16,8 @@
     <!-- 사용화면 : 온보딩 - 닉네임 설정 -->
     <string name="nickname_title">만나서 반가워요!\n어떻게 불러 드릴까요?</string>
     <string name="nickname_input_hint">닉네임을 입력해주세요</string>
+    <string name="nickname_message_default">특수문자, 띄어쓰기 없이 작성해주세요</string>
+    <string name="nickname_message_invalid">사용할 수 없는 닉네임이에요</string>
     <string name="nickname_btn_next">다음</string>
 
     <!-- 사용화면 : 온보딩 - 알림시간 설정-->
@@ -104,7 +106,7 @@
     <string name="notification_setting_write_diary">일기 작성 알림 받기</string>
     <string name="notification_setting_draft_diary">이어쓰기 알림 받기</string>
     <string name="notification_setting_notification_time">알림 시간</string>
-    <string name="notification_setting_selected_time">%1$s %2$d시 %3$s분</string>
+    <string name="notification_setting_selected_time">%1$s %2$s시 %3$s분</string>
     <string name="notification_setting_reply_diary">답장 도착 알림 받기</string>
 
     <!-- 사용화면 : 오류 화면 -->
