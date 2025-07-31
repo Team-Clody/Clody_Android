@@ -36,7 +36,8 @@ fun NotificationSettingTimePicker(
     onDismissRequest: () -> Unit,
     onConfirm: (TimePeriod, String, String) -> Unit,
 ) {
-    val amPmItems = remember { listOf("오전", "오후") }
+    val amPmItemsLabel = TimePeriod.entries.map { it.getLabel() }
+    val amPmItems = remember { amPmItemsLabel }
     val hourItems = remember { (1..12).map { it.toString() } }
     val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
 
