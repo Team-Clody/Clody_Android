@@ -10,7 +10,7 @@ class SignUpContract {
         val isNicknameFocused: Boolean = false,
         val isValidNickname: Boolean = true,
         val nicknameMaxLength: Int = 15,
-        val nicknameMessage: String = DEFAULT_NICKNAME_MESSAGE,
+        val nicknameMessage: NicknameMessage = NicknameMessage.DEFAULT,
         val isLoading: Boolean = false,
         val errorMessage: String? = null,
         val serviceChecked: Boolean = false,
@@ -46,9 +46,5 @@ class SignUpContract {
         data object NavigateToTimeReminder : SignUpSideEffect
         data class NavigateToWebView(val url: String) : SignUpSideEffect
         data class ShowMessage(val message: String) : SignUpSideEffect
-    }
-
-    companion object {
-        const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
     }
 }

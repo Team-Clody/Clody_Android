@@ -12,7 +12,6 @@ import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
-import com.sopt.clody.presentation.ui.auth.signup.SignUpContract.Companion.DEFAULT_NICKNAME_MESSAGE
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
@@ -76,9 +75,9 @@ class SignUpViewModel @AssistedInject constructor(
                 nickname = intent.value,
                 isValidNickname = isValid,
                 nicknameMessage = if (intent.value.isEmpty() || isValid) {
-                    DEFAULT_NICKNAME_MESSAGE
+                    NicknameMessage.DEFAULT
                 } else {
-                    "사용할 수 없는 닉네임이에요"
+                    NicknameMessage.INVALID
                 },
             )
         }
@@ -134,7 +133,7 @@ class SignUpViewModel @AssistedInject constructor(
                 nickname = "",
                 isNicknameFocused = false,
                 isValidNickname = true,
-                nicknameMessage = SignUpContract.DEFAULT_NICKNAME_MESSAGE,
+                nicknameMessage = NicknameMessage.DEFAULT,
             )
         }
     }

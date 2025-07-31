@@ -16,7 +16,10 @@
     <!-- Usage : Onboarding - Nickname -->
     <string name="nickname_title">Nice to meet you!\nWhat should I call you?</string>
     <string name="nickname_input_hint">Please enter your nickname</string>
+    <string name="nickname_message_default">Please write without spaces or special characters</string>
+    <string name="nickname_message_invalid">This nickname isn\'t available</string>
     <string name="nickname_btn_next">Next</string>
+
 
     <!-- Usage : Onboarding - Time Reminder -->
     <string name="time_reminder_title">What time would you\nlike us to remind you to write?</string>
