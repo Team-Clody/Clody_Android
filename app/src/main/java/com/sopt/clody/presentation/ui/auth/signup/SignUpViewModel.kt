@@ -162,7 +162,7 @@ class SignUpViewModel @AssistedInject constructor(
                 return
             }
             val request = SignUpRequestDto(
-                platform = OAuthProvider.GOOGLE.apiValue,
+                platform = OAuthProvider.GOOGLE.platform,
                 name = state.nickname,
                 fcmToken = fcmToken,
             )
@@ -173,7 +173,7 @@ class SignUpViewModel @AssistedInject constructor(
             loginSdk.login(context).fold(
                 onSuccess = { token ->
                     val request = SignUpRequestDto(
-                        platform = OAuthProvider.KAKAO.apiValue,
+                        platform = OAuthProvider.KAKAO.platform,
                         name = state.nickname,
                         fcmToken = fcmToken,
                     )

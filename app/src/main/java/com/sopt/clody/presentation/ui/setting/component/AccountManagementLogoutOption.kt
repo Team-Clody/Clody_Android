@@ -16,18 +16,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun AccountManagementLogoutOption(
     userEmail: String,
-    platform: OAuthProvider?,
+    platform: String,
     updateLogoutDialog: (Boolean) -> Unit,
 ) {
     val platformIconRes = when (platform) {
-        OAuthProvider.KAKAO -> R.drawable.img_account_management_kakao
-        OAuthProvider.GOOGLE -> R.drawable.img_google_button_logo
+        "kakao" -> R.drawable.img_account_management_kakao
+        "google" -> R.drawable.img_google_button_logo
         else -> R.drawable.img_google_button_logo // 서버에서 google을 어떻게 내려줄까요?
     }
 

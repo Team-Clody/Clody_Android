@@ -1,6 +1,7 @@
 package com.sopt.clody.presentation.ui.login
 
 import android.content.Context
+import android.content.Intent
 import androidx.activity.result.IntentSenderRequest
 import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.identity.Identity
@@ -10,19 +11,6 @@ import com.sopt.clody.BuildConfig
 class GoogleSignInHelper(context: Context) {
 
     private val signInClient: SignInClient = Identity.getSignInClient(context.applicationContext)
-
-    fun buildSignInRequest(): BeginSignInRequest {
-        return BeginSignInRequest.Builder()
-            .setGoogleIdTokenRequestOptions(
-                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
-                    .setSupported(true)
-                    .setServerClientId(BuildConfig.GOOGLE_AUTH_WEB_CLIENT_ID)
-                    .setFilterByAuthorizedAccounts(false)
-                    .build(),
-            )
-            .setAutoSelectEnabled(false)
-            .build()
-    }
 
     fun requestSignIn(
         onSuccess: (IntentSenderRequest) -> Unit,
@@ -40,7 +28,20 @@ class GoogleSignInHelper(context: Context) {
             }
     }
 
-    fun extractIdToken(data: android.content.Intent?): String? {
+    private fun buildSignInRequest(): BeginSignInRequest {
+        return BeginSignInRequest.Builder()
+            .setGoogleIdTokenRequestOptions(
+                BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
+                    .setSupported(true)
+                    .setServerClientId(BuildConfig.GOOGLE_AUTH_WEB_CLIENT_ID)
+                    .setFilterByAuthorizedAccounts(false)
+                    .build(),
+            )
+            .setAutoSelectEnabled(false)
+            .build()
+    }
+
+    fun extractIdToken(data: Intent?): String? {
         return runCatching {
             val credential = signInClient.getSignInCredentialFromIntent(data)
             credential.googleIdToken

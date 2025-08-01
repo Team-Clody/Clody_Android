@@ -87,7 +87,7 @@ class LoginViewModel @AssistedInject constructor(
 
     private suspend fun validateKakaoUser(kakaoToken: String) {
         val fcmToken = fcmTokenProvider.getToken().orEmpty()
-        val request = LoginRequestDto(platform = OAuthProvider.KAKAO.apiValue, fcmToken = fcmToken)
+        val request = LoginRequestDto(platform = OAuthProvider.KAKAO.platform, fcmToken = fcmToken)
 
         authRepository.signIn("Bearer $kakaoToken", request).fold(
             onSuccess = {
@@ -98,7 +98,7 @@ class LoginViewModel @AssistedInject constructor(
             onFailure = { error ->
                 setState { copy(isLoading = false) }
                 val msg = error.message.orEmpty()
-                if (msg.contains("404") || msg.contains("유저가 없습니다")) {
+                if (msg.contains("404")) {
                     _sideEffects.send(LoginContract.LoginSideEffect.NavigateToSignUp)
                 } else {
                     _sideEffects.send(LoginContract.LoginSideEffect.ShowError(msg))
@@ -124,7 +124,7 @@ class LoginViewModel @AssistedInject constructor(
                 setState { copy(isLoading = false) }
 
                 val msg = error.message.orEmpty()
-                if (msg.contains("500") || msg.contains("유저가 없습니다")) {
+                if (msg.contains("404")) {
                     oauthDataStore.saveIdToken(idToken)
                     oauthDataStore.savePlatform(OAuthProvider.GOOGLE)
                     _sideEffects.send(LoginContract.LoginSideEffect.NavigateToSignUp)
