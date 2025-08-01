@@ -38,7 +38,6 @@ fun SettingRoute(
     val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        settingViewModel.getVersionInfo()
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.SETTING)
     }
 

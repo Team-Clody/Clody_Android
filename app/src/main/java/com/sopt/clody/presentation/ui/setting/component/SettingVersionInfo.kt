@@ -10,7 +10,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -34,9 +33,7 @@ fun SettingVersionInfo(
         Text(
             text = versionInfo,
             color = ClodyTheme.colors.gray05,
-            style = ClodyTheme.typography.body4Medium.copy(
-                letterSpacing = 2.sp,
-            ),
+            style = ClodyTheme.typography.body4Medium,
         )
     }
 }
