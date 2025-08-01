@@ -78,7 +78,4 @@ sealed interface Route {
 
     @Serializable
     data object NotificationSetting : Route
-
-    @Serializable
-    data class WebView(val encodedUrl: String) : Route
 }

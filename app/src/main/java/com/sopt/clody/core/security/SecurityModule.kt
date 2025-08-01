@@ -1,4 +1,4 @@
-package com.sopt.clody.core.security.login
+package com.sopt.clody.core.security
 
 import dagger.Binds
 import dagger.Module
