@@ -5,13 +5,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,7 +38,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
-import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -111,18 +110,16 @@ fun GuideScreen(
             AnimatedVisibility(
                 visible = !isExiting,
                 exit = fadeOut(animationSpec = tween(1000)), // 1초 페이드 아웃
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
+                modifier = Modifier.padding(innerPadding),
             ) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(modifier = Modifier.heightForScreenPercentage(0.21f))
+                    Spacer(modifier = Modifier.weight(1f))
                     HorizontalPager(
                         state = pagerState,
+                        modifier = Modifier.weight(4f),
                     ) { page ->
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
@@ -134,14 +131,14 @@ fun GuideScreen(
                                 color = ClodyTheme.colors.gray01,
                                 textAlign = TextAlign.Center,
                             )
-                            Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
+                            Spacer(modifier = Modifier.height(20.dp))
                             Text(
                                 text = pages[page].description,
                                 style = ClodyTheme.typography.body1Medium,
                                 color = ClodyTheme.colors.gray05,
                                 textAlign = TextAlign.Center,
                             )
-                            Spacer(modifier = Modifier.heightForScreenPercentage(0.04f))
+                            Spacer(modifier = Modifier.weight(1f))
                             Image(
                                 painter = painterResource(id = pages[page].imageRes),
                                 contentDescription = null,
@@ -149,12 +146,11 @@ fun GuideScreen(
                                     .fillMaxWidth(),
                                 contentScale = ContentScale.Fit,
                             )
+                            Spacer(modifier = Modifier.weight(1f))
                         }
                     }
-
-                    Spacer(modifier = Modifier.heightForScreenPercentage(0.2f))
                     Row(
-                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.padding(vertical = 50.dp),
                     ) {
                         repeat(pagerState.pageCount) { iteration ->
                             val color = if (pagerState.currentPage == iteration) ClodyTheme.colors.gray03 else ClodyTheme.colors.gray07
