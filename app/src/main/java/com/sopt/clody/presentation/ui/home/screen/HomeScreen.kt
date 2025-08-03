@@ -197,7 +197,7 @@ fun HomeRoute(
                         ClodyButton(
                             text = stringResource(R.string.bottom_sheet_home_initial_draft_accept),
                             onClick = {
-                                homeViewModel.enableDraftAlarm(context)
+                                homeViewModel.enableDraftAlarm()
                                 homeViewModel.updateFirstDraftUse(false)
                             },
                             enabled = true,
