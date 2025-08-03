@@ -7,20 +7,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.usecase.FetchDraftDiaryUseCase
 import com.sopt.clody.domain.usecase.SaveDraftDiaryUseCase
 import com.sopt.clody.presentation.utils.extension.convertDateToKstDateTime
 import com.sopt.clody.presentation.utils.language.LanguageProvider
-import com.sopt.clody.presentation.utils.network.ErrorMessages
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -30,9 +29,10 @@ class WriteDiaryViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val fetchDraftDiaryUseCase: FetchDraftDiaryUseCase,
     private val saveDraftDiaryUseCase: SaveDraftDiaryUseCase,
-    private val networkUtil: NetworkUtil,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
     private val draftRepository: DraftRepository,
     private val languageProvider: LanguageProvider,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : ViewModel() {
 
     private val _writeDiaryState = MutableStateFlow<WriteDiaryState>(WriteDiaryState.Idle)
@@ -75,8 +75,8 @@ class WriteDiaryViewModel @Inject constructor(
 
     fun writeDiary(year: Int, month: Int, day: Int, contents: List<String>) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureMessage.value = FAILURE_NETWORK_MESSAGE
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _failureMessage.value = errorMessageProvider.getNetworkError()
                 _showFailureDialog.value = true
                 return@launch
             }
@@ -98,9 +98,9 @@ class WriteDiaryViewModel @Inject constructor(
                 },
                 onFailure = {
                     _failureMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        it.localizedMessage ?: UNKNOWN_ERROR
+                        it.localizedMessage ?: errorMessageProvider.getUnknownError()
                     }
                     _showFailureDialog.value = true
                     WriteDiaryState.Failure(_failureMessage.value)
@@ -219,7 +219,7 @@ class WriteDiaryViewModel @Inject constructor(
                 checkEmptyFieldsMessage()
             }.onFailure {
                 ensureDefaultEntry()
-                _failureMessage.value = ErrorMessages.FETCH_TEMP_DIARY_FAILED
+                _failureMessage.value = errorMessageProvider.getFetchTempDiaryFailedError()
                 _showFailureDialog.value = true
             }
         }
@@ -233,7 +233,7 @@ class WriteDiaryViewModel @Inject constructor(
                 _failureMessage.value = ""
                 _showFailureDialog.value = false
             }.onFailure { e ->
-                _failureMessage.value = e.localizedMessage ?: UNKNOWN_ERROR
+                _failureMessage.value = e.localizedMessage ?: errorMessageProvider.getUnknownError()
                 _showFailureDialog.value = true
             }
         }

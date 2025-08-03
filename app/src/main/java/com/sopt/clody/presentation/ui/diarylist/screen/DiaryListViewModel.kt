@@ -2,14 +2,14 @@ package com.sopt.clody.presentation.ui.diarylist.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.domain.repository.DiaryRepository
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
@@ -19,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DiaryListViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
-    private val networkUtil: NetworkUtil,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : ViewModel() {
 
     private val _diaryListState = MutableStateFlow<DiaryListState>(DiaryListState.Idle)
@@ -44,8 +45,8 @@ class DiaryListViewModel @Inject constructor(
         if (retryCount >= maxRetryCount) return
         _diaryListState.value = DiaryListState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _diaryListState.value = DiaryListState.Failure(FAILURE_NETWORK_MESSAGE)
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _diaryListState.value = DiaryListState.Failure(errorMessageProvider.getNetworkError())
                 return@launch
             }
             val result = diaryRepository.getMonthlyDiary(year, month)
@@ -57,12 +58,12 @@ class DiaryListViewModel @Inject constructor(
                 onFailure = {
                     retryCount++
                     if (retryCount >= maxRetryCount) {
-                        DiaryListState.Failure(FAILURE_TEMPORARY_MESSAGE)
+                        DiaryListState.Failure(errorMessageProvider.getTemporaryError())
                     } else {
                         val errorMessage = if (it.message?.contains("200") == false) {
-                            FAILURE_TEMPORARY_MESSAGE
+                            errorMessageProvider.getTemporaryError()
                         } else {
-                            it.localizedMessage ?: UNKNOWN_ERROR
+                            errorMessageProvider.getUnknownError()
                         }
                         DiaryListState.Failure(errorMessage)
                     }
@@ -85,8 +86,8 @@ class DiaryListViewModel @Inject constructor(
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
         _diaryDeleteState.value = DiaryDeleteState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _failureDialogMessage.value = errorMessageProvider.getNetworkError()
                 DiaryDeleteState.Failure(_failureDialogMessage.value)
                 _showDiaryDeleteFailureDialog.value = true
                 return@launch
@@ -98,9 +99,9 @@ class DiaryListViewModel @Inject constructor(
                 },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        it.localizedMessage ?: UNKNOWN_ERROR
+                        it.localizedMessage ?: errorMessageProvider.getUnknownError()
                     }
                     _showDiaryDeleteFailureDialog.value = true
                     DiaryDeleteState.Failure(_failureDialogMessage.value)

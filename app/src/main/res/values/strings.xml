@@ -197,4 +197,15 @@
     <string name="error_login_rooted_device">Login is not available on rooted devices for security reasons.</string>
     <string name="home_error_data_load">Failed to load data.</string>
     <string name="home_error_unknown">An unexpected error has occurred.</string>
+
+    <!-- Error -->
+    <string name="error_network">Network connection is unstable.\nPlease check your network connection.</string>
+    <string name="error_temporary">A temporary error has occurred.\nPlease try again later.</string>
+    <string name="error_server">A server error has occurred.\nPlease try again later.</string>
+    <string name="error_fetch_temp_diary_failed">Failed to load draft.\nPlease try again later.</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_login_failed">Login failed.</string>
+    <string name="error_signup_failed">Sign up failed.</string>
+    <string name="error_google_id_token_missing">Google ID Token is missing.</string>
+    <string name="error_network_check">Please check your network connection.</string>
 </resources>

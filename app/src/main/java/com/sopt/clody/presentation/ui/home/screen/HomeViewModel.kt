@@ -1,14 +1,14 @@
 package com.sopt.clody.presentation.ui.home.screen
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.clody.core.fcm.FcmTokenProvider
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
-import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
@@ -16,10 +16,11 @@ import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
-import com.sopt.clody.presentation.utils.network.ErrorMessages
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
@@ -29,10 +30,11 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val notificationRepository: NotificationRepository,
-    private val networkUtil: NetworkUtil,
     private val draftRepository: DraftRepository,
     private val fcmTokenProvider: FcmTokenProvider,
     private val reviewRepository: ReviewRepository,
+    private val errorMessageProvider: ErrorMessageProvider,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -111,14 +113,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setErrorState(isError: Boolean, message: String = ErrorMessages.FAILURE_TEMPORARY_MESSAGE) {
+    fun setErrorState(isError: Boolean, message: String = errorMessageProvider.getTemporaryError()) {
         _errorState.value = isError to message
     }
 
     fun loadCalendarData(year: Int, month: Int) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
                 return@launch
             }
 
@@ -130,8 +132,8 @@ class HomeViewModel @Inject constructor(
                     CalendarState.Success(it)
                 },
                 onFailure = { exception ->
-                    setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
-                    CalendarState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
+                    setErrorState(true, errorMessageProvider.getTemporaryError())
+                    CalendarState.Error(errorMessageProvider.getTemporaryError())
                 },
             )
         }
@@ -139,8 +141,8 @@ class HomeViewModel @Inject constructor(
 
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
                 return@launch
             }
 
@@ -156,8 +158,8 @@ class HomeViewModel @Inject constructor(
                     DailyDiariesState.Success(dailyResponse)
                 },
                 onFailure = { exception ->
-                    setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
-                    DailyDiariesState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
+                    setErrorState(true, errorMessageProvider.getTemporaryError())
+                    DailyDiariesState.Error(errorMessageProvider.getTemporaryError())
                 },
             )
         }
@@ -178,7 +180,7 @@ class HomeViewModel @Inject constructor(
                     DeleteDiaryState.Success
                 },
                 onFailure = {
-                    DeleteDiaryState.Failure(it.message ?: "Unknown error")
+                    DeleteDiaryState.Failure(it.message ?: errorMessageProvider.getTemporaryError())
                 },
             )
         }
@@ -254,10 +256,10 @@ class HomeViewModel @Inject constructor(
         return selected == today || selected == today.minusDays(1)
     }
 
-    fun enableDraftAlarm(context: Context) {
+    fun enableDraftAlarm() {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
                 return@launch
             }
 
@@ -268,9 +270,13 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private suspend fun isNetworkAvailable(): Boolean {
+        return networkConnectivityObserver.networkStatus.first() == NetworkStatus.Available
+    }
+
     private suspend fun getNotificationInfo(): NotificationInfoResponseDto? {
         return notificationRepository.getNotificationInfo().getOrElse {
-            _draftAlarmChangeState.value = NotificationChangeState.Failure("알림 정보를 가져오는데 실패했습니다.")
+            _draftAlarmChangeState.value = NotificationChangeState.Failure(errorMessageProvider.getTemporaryError())
             null
         }
     }
@@ -293,7 +299,7 @@ class HomeViewModel @Inject constructor(
                 _draftAlarmChangeState.value = NotificationChangeState.Success(it)
             },
             onFailure = {
-                _draftAlarmChangeState.value = NotificationChangeState.Failure("이어쓰기 알림 설정에 실패했습니다.")
+                _draftAlarmChangeState.value = NotificationChangeState.Failure(errorMessageProvider.getTemporaryError())
             },
         )
     }

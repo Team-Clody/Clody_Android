@@ -14,6 +14,7 @@ import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.login.LoginContract.LoginIntent
 import com.sopt.clody.presentation.utils.language.LanguageProvider
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -32,6 +33,7 @@ class LoginViewModel @AssistedInject constructor(
     private val fcmTokenProvider: FcmTokenProvider,
     private val oauthDataStore: OAuthDataStore,
     private val languageProvider: LanguageProvider,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : MavericksViewModel<LoginContract.LoginState>(initialState) {
 
     private val _intents = Channel<LoginIntent>(BUFFERED)
@@ -68,7 +70,7 @@ class LoginViewModel @AssistedInject constructor(
                     },
                     onFailure = { error ->
                         setState { copy(isLoading = false) }
-                        _sideEffects.send(LoginContract.LoginSideEffect.ShowError("로그인에 실패했습니다"))
+                        _sideEffects.send(LoginContract.LoginSideEffect.ShowError(errorMessageProvider.getLoginFailedError()))
                     },
                 )
             }
@@ -76,7 +78,7 @@ class LoginViewModel @AssistedInject constructor(
             OAuthProvider.GOOGLE -> {
                 val idToken = intent.idToken
                 if (idToken.isNullOrBlank()) {
-                    _sideEffects.send(LoginContract.LoginSideEffect.ShowError("로그인에 실패했습니다."))
+                    _sideEffects.send(LoginContract.LoginSideEffect.ShowError(errorMessageProvider.getLoginFailedError()))
                     return
                 }
 
