@@ -27,11 +27,9 @@ import com.sopt.clody.presentation.ui.setting.navigation.accountManagementScreen
 import com.sopt.clody.presentation.ui.setting.navigation.navigateToAccountManagement
 import com.sopt.clody.presentation.ui.setting.navigation.navigateToNotificationSetting
 import com.sopt.clody.presentation.ui.setting.navigation.navigateToSetting
-import com.sopt.clody.presentation.ui.setting.navigation.navigateToWebView
 import com.sopt.clody.presentation.ui.setting.navigation.notificationSettingScreen
 import com.sopt.clody.presentation.ui.setting.navigation.settingScreen
 import com.sopt.clody.presentation.ui.splash.navigation.splashScreen
-import com.sopt.clody.presentation.ui.webview.webViewScreen
 import com.sopt.clody.presentation.ui.writediary.navigation.navigateToWriteDiary
 import com.sopt.clody.presentation.ui.writediary.navigation.writeDiaryScreen
 import com.sopt.clody.presentation.utils.navigation.safePopBackStack
@@ -73,7 +71,6 @@ fun ClodyNavHost(
             signUpScreen(
                 navigateToHome = navController::navigateToTimeReminder,
                 navigateToPrevious = navController::safePopBackStack,
-                navigateToWebView = navController::navigateToWebView,
             )
             timeReminderScreen(
                 navigateToGuide = navController::navigateToGuide,
@@ -108,16 +105,12 @@ fun ClodyNavHost(
                 navigateToAccountManagement = navController::navigateToAccountManagement,
                 navigateToNotification = navController::navigateToNotificationSetting,
                 navigateToPrevious = navController::safePopBackStack,
-                navigateToWebView = navController::navigateToWebView,
             )
             accountManagementScreen(
                 navigateToPrevious = navController::safePopBackStack,
                 navigateToLogin = navController::navigateToLogin,
             )
             notificationSettingScreen(
-                navigateToPrevious = navController::safePopBackStack,
-            )
-            webViewScreen(
                 navigateToPrevious = navController::safePopBackStack,
             )
         }

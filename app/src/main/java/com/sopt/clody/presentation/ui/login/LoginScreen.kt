@@ -83,9 +83,7 @@ fun LoginRoute(
         onGoogleLoginClick = {
             googleSignInHelper.requestSignIn(
                 onSuccess = { intentSenderRequest -> googleSignInLauncher.launch(intentSenderRequest) },
-                onFailure = {
-                    viewModel.postIntent(LoginIntent.ClearError)
-                },
+                onFailure = { viewModel.postIntent(LoginIntent.ClearError) },
             )
         },
     )

@@ -12,13 +12,13 @@ import com.sopt.clody.presentation.ui.auth.signup.page.NickNamePage
 import com.sopt.clody.presentation.ui.auth.signup.page.TermsOfServicePage
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.utils.extension.repeatOnStarted
+import com.sopt.clody.presentation.utils.openExternalBrowser
 
 @Composable
 fun SignUpRoute(
     viewModel: SignUpViewModel = mavericksViewModel(),
     navigateToHome: () -> Unit,
     navigateToPrevious: () -> Unit,
-    navigateToWebView: (String) -> Unit,
 ) {
     val state by viewModel.collectAsState()
     val context = LocalContext.current
@@ -29,9 +29,7 @@ fun SignUpRoute(
             viewModel.sideEffects.collect { effect ->
                 when (effect) {
                     is SignUpContract.SignUpSideEffect.NavigateToTimeReminder -> navigateToHome()
-                    is SignUpContract.SignUpSideEffect.NavigateToWebView -> {
-                        navigateToWebView(effect.url) // ✅ WebView 이동 처리
-                    }
+                    is SignUpContract.SignUpSideEffect.NavigateToWebView -> { openExternalBrowser(context, effect.url) }
                     is SignUpContract.SignUpSideEffect.ShowMessage -> {}
                 }
             }

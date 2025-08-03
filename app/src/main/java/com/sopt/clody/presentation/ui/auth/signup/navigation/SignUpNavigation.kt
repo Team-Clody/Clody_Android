@@ -10,13 +10,11 @@ import com.sopt.clody.presentation.utils.navigation.Route
 fun NavGraphBuilder.signUpScreen(
     navigateToHome: () -> Unit,
     navigateToPrevious: () -> Unit,
-    navigateToWebView: (String) -> Unit,
 ) {
     composable<Route.SignUp> {
         SignUpRoute(
             navigateToHome = navigateToHome,
             navigateToPrevious = navigateToPrevious,
-            navigateToWebView = navigateToWebView,
         )
     }
 }

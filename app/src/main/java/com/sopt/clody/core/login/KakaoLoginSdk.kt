@@ -7,7 +7,7 @@ import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
 import com.sopt.clody.R
-import com.sopt.clody.core.security.login.LoginSecurityChecker
+import com.sopt.clody.core.security.LoginSecurityChecker
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import javax.inject.Singleton

@@ -156,45 +156,43 @@ class SignUpViewModel @AssistedInject constructor(
         val fcmToken = fcmTokenProvider.getToken().orEmpty()
 
         if (platform == OAuthProvider.GOOGLE) {
-            val idToken = oAuthDataStore.getIdToken()
+            val idToken = oAuthDataStore.getIdToken(platform = "google")
             if (idToken.isNullOrBlank()) {
                 setState { copy(errorMessage = "Google ID Token이 없습니다.", isLoading = false) }
                 return
             }
             val request = SignUpRequestDto(
-                platform = OAuthProvider.GOOGLE.apiValue,
+                platform = OAuthProvider.GOOGLE.platform,
                 name = state.nickname,
                 fcmToken = fcmToken,
             )
 
             val result = authRepository.signUp("Bearer $idToken", request)
-            handleSignUpResult(result, isGoogle = true)
+            handleSignUpResult(result)
         } else {
-            loginSdk.login(context).fold(
-                onSuccess = { token ->
-                    val request = SignUpRequestDto(
-                        platform = OAuthProvider.KAKAO.apiValue,
-                        name = state.nickname,
-                        fcmToken = fcmToken,
-                    )
-                    val result = authRepository.signUp("Bearer ${token.value}", request)
-                    handleSignUpResult(result, isGoogle = false)
-                },
-                onFailure = {
-                    setState { copy(errorMessage = "로그인에 실패했어요~", isLoading = false) }
-                },
+            val idToken = oAuthDataStore.getIdToken(platform = "kakao")
+            if (idToken.isNullOrBlank()) {
+                setState { copy(errorMessage = "Kakao ID Token이 없습니다.", isLoading = false) }
+                return
+            }
+            val request = SignUpRequestDto(
+                platform = OAuthProvider.KAKAO.platform,
+                name = state.nickname,
+                fcmToken = fcmToken,
             )
+
+            val result = authRepository.signUp("Bearer $idToken", request)
+            handleSignUpResult(result)
         }
     }
 
     private suspend fun handleSignUpResult(
         result: Result<SignUpResponseDto>,
-        isGoogle: Boolean,
     ) {
         result.fold(
             onSuccess = {
                 tokenRepository.setTokens(it.accessToken, it.refreshToken)
-                if (isGoogle) oAuthDataStore.clear()
+                oAuthDataStore.clear()
                 _sideEffects.send(SignUpContract.SignUpSideEffect.NavigateToTimeReminder)
             },
             onFailure = {

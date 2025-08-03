@@ -57,6 +57,8 @@ androidxCredentials = "1.5.0"
 googleAuth = "21.3.0"
 datastore = "1.1.7"
 
+airbridge = "4.7.0"
+
 [libraries]
 # AndroidX Core
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
@@ -119,6 +121,7 @@ lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", versio
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 admob = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "admob" }
+airbridge = { group = "io.airbridge", name = "sdk-android", version.ref = "airbridge"}
 
 # Accompanist
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
