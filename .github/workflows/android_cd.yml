@@ -54,7 +54,7 @@ jobs:
             # google-services.json (debug)
             -   name: Decode Debug google-services.json
                 env:
-                    FIREBASE_SECRET: ${{ secrets.FIREBASE_DEBUG_SECRET }}
+                    FIREBASE_DEBUG_SECRET: ${{ secrets.FIREBASE_DEBUG_SECRET }}
                 run: echo $FIREBASE_DEBUG_SECRET | base64 --decode > app/src/debug/google-services.json
 
             # keystore 복호화
