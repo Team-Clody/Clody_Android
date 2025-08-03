@@ -45,11 +45,17 @@ jobs:
             - name: Install Firebase CLI
               run: curl -sL https://firebase.tools | bash
 
-            # google-services.json
-            - name: Decode google-services.json
+            # google-services.json (prod)
+            - name: Decode Prod google-services.json
               env:
                   FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
               run: echo $FIREBASE_SECRET | base64 --decode > app/google-services.json
+
+            # google-services.json (debug)
+            -   name: Decode Debug google-services.json
+                env:
+                    FIREBASE_SECRET: ${{ secrets.FIREBASE_DEBUG_SECRET }}
+                run: echo $FIREBASE_DEBUG_SECRET | base64 --decode > app/src/debug/google-services.json
 
             # keystore 복호화
             - name: Decode keystore file
@@ -67,6 +73,7 @@ jobs:
                   AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
                   GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
                   GOOGLE_ADMOB_UNIT_ID: ${{ secrets.GOOGLE_ADMOB_UNIT_ID }}
+                  GOOGLE_AUTH_WEB_CLIENT_ID: ${{ secrets.GOOGLE_AUTH_WEB_CLIENT_ID }}
                   STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
                   KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
                   KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -77,6 +84,7 @@ jobs:
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
                   echo "GOOGLE_ADMOB_APP_ID=$GOOGLE_ADMOB_APP_ID" >> local.properties
                   echo "GOOGLE_ADMOB_UNIT_ID=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
+                  echo "GOOGLE_AUTH_WEB_CLIENT_ID" >> local.properties
                   echo "storeFile=keystore/clody_release.jks" >> local.properties
                   echo "storePassword=$STORE_PASSWORD" >> local.properties
                   echo "keyAlias=$KEY_ALIAS" >> local.properties
