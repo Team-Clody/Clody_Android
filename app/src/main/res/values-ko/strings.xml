@@ -195,4 +195,15 @@
     <string name="home_error_delete_diary">일기 삭제 중 오류가 발생했습니다.</string>
     <string name="error_login_requires_chrome">Chrome이 설치되어 있어야 로그인이 가능합니다.</string>
     <string name="error_login_rooted_device">루팅된 기기에서는 로그인할 수 없습니다.</string>
+
+    <!-- 에러 -->
+    <string name="error_network">서비스 접속이 원활하지 않아요.\n네트워크 연결을 확인해주세요.</string>
+    <string name="error_temporary">일시적인 오류가 발생했어요.\n잠시 후 다시 시도해주세요.</string>
+    <string name="error_server">서버 오류가 발생했어요.\n잠시 후 다시 시도해주세요.</string>
+    <string name="error_fetch_temp_diary_failed">임시저장 불러오기에 실패했어요.\n잠시 후 다시 시도해주세요.</string>
+    <string name="error_unknown">알수없는 에러</string>
+    <string name="error_login_failed">로그인에 실패했어요.</string>
+    <string name="error_signup_failed">회원가입에 실패했어요.</string>
+    <string name="error_google_id_token_missing">Google ID Token이 없습니다.</string>
+    <string name="error_network_check">네트워크 연결을 확인해주세요.</string>
 </resources>
