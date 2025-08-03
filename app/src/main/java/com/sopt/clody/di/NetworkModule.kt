@@ -1,12 +1,10 @@
 package com.sopt.clody.di
 
 import android.content.Context
-import android.net.ConnectivityManager
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import com.sopt.clody.BuildConfig
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.util.AuthInterceptor
-import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.data.remote.util.TimeZoneInterceptor
 import com.sopt.clody.domain.repository.TokenReissueRepository
 import dagger.Module
@@ -78,12 +76,5 @@ object NetworkModule {
             .baseUrl(baseUrl)
             .client(okHttpClient)
             .build()
-    }
-
-    @Provides
-    @Singleton
-    fun provideNetworkUtil(@ApplicationContext context: Context): NetworkUtil {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        return NetworkUtil(connectivityManager)
     }
 }
