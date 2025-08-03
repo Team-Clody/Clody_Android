@@ -1,5 +1,6 @@
 package com.sopt.clody.domain.repository
 
+import com.sopt.clody.data.remote.dto.base.ApiResponse
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto

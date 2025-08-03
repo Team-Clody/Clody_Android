@@ -2,45 +2,41 @@ package com.sopt.clody.data.remote.datasourceimpl
 
 import com.sopt.clody.data.remote.api.DiaryService
 import com.sopt.clody.data.remote.datasource.DiaryRemoteDataSource
-import com.sopt.clody.data.remote.dto.base.ApiResponse
 import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.request.WriteDiaryRequestDto
-import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
-import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
-import com.sopt.clody.data.remote.dto.response.DraftDiariesResponseDto
-import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
-import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
-import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
+import com.sopt.clody.data.remote.util.safeApiCall
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import javax.inject.Inject
 
 class DiaryRemoteDataSourceImpl @Inject constructor(
     private val diaryService: DiaryService,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : DiaryRemoteDataSource {
-    override suspend fun writeDiary(date: String, content: List<String>): ApiResponse<WriteDiaryResponseDto> =
-        diaryService.writeDiary(WriteDiaryRequestDto(date, content))
 
-    override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): ApiResponse<DailyDiariesResponseDto> =
-        diaryService.deleteDailyDiary(year = year, month = month, date = date)
+    override suspend fun writeDiary(date: String, content: List<String>) =
+        safeApiCall(errorMessageProvider) { diaryService.writeDiary(WriteDiaryRequestDto(date, content)) }
 
-    override suspend fun getDailyDiariesData(year: Int, month: Int, date: Int): ApiResponse<DailyDiariesResponseDto> =
-        diaryService.getDailyDiariesData(year = year, month = month, date = date)
+    override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.deleteDailyDiary(year, month, date) }
 
-    override suspend fun getDiaryTime(year: Int, month: Int, date: Int): ApiResponse<DiaryTimeResponseDto> =
-        diaryService.getDiaryTime(year = year, month = month, date = date)
+    override suspend fun getDailyDiariesData(year: Int, month: Int, date: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.getDailyDiariesData(year, month, date) }
 
-    override suspend fun getMonthlyCalendarData(year: Int, month: Int): ApiResponse<MonthlyCalendarResponseDto> =
-        diaryService.getMonthlyCalendarData(year = year, month = month)
+    override suspend fun getDiaryTime(year: Int, month: Int, date: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.getDiaryTime(year, month, date) }
 
-    override suspend fun getMonthlyDiary(year: Int, month: Int): ApiResponse<MonthlyDiaryResponseDto> =
-        diaryService.getMonthlyDiary(year = year, month = month)
+    override suspend fun getMonthlyCalendarData(year: Int, month: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.getMonthlyCalendarData(year, month) }
 
-    override suspend fun getReplyDiary(year: Int, month: Int, date: Int): ApiResponse<ReplyDiaryResponseDto> =
-        diaryService.getReplyDiary(year = year, month = month, date = date)
+    override suspend fun getMonthlyDiary(year: Int, month: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.getMonthlyDiary(year, month) }
 
-    override suspend fun fetchDraftDiary(year: Int, month: Int, date: Int): ApiResponse<DraftDiariesResponseDto> =
-        diaryService.fetchDraftDiary(year = year, month = month, date = date)
+    override suspend fun getReplyDiary(year: Int, month: Int, date: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.getReplyDiary(year, month, date) }
 
-    override suspend fun saveDraftDiary(request: SaveDraftDiaryRequestDto): ApiResponse<Unit> =
-        diaryService.saveDraftDiary(request)
+    override suspend fun fetchDraftDiary(year: Int, month: Int, date: Int) =
+        safeApiCall(errorMessageProvider) { diaryService.fetchDraftDiary(year, month, date) }
+
+    override suspend fun saveDraftDiary(request: SaveDraftDiaryRequestDto) =
+        safeApiCall(errorMessageProvider) { diaryService.saveDraftDiary(request) }
 }
