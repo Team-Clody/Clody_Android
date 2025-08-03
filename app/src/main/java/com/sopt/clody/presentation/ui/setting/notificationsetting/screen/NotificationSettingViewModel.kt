@@ -3,25 +3,26 @@ package com.sopt.clody.presentation.ui.setting.notificationsetting.screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.Notification
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.presentation.utils.extension.convertUTZtoKST
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class NotificationSettingViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val networkUtil: NetworkUtil,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : ViewModel() {
 
     private val _diaryAlarm = MutableStateFlow(false)
@@ -62,8 +63,8 @@ class NotificationSettingViewModel @Inject constructor(
         if (retryCount >= maxRetryCount) return
         _notificationInfoState.value = NotificationInfoState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _notificationInfoState.value = NotificationInfoState.Failure(FAILURE_NETWORK_MESSAGE)
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _notificationInfoState.value = NotificationInfoState.Failure(errorMessageProvider.getNetworkError())
                 return@launch
             }
             val result = notificationRepository.getNotificationInfo()
@@ -79,12 +80,12 @@ class NotificationSettingViewModel @Inject constructor(
                 onFailure = {
                     retryCount++
                     if (retryCount >= maxRetryCount) {
-                        NotificationInfoState.Failure(FAILURE_TEMPORARY_MESSAGE)
+                        NotificationInfoState.Failure(errorMessageProvider.getTemporaryError())
                     } else {
                         if (it.message?.contains("200") == false) {
-                            NotificationInfoState.Failure(FAILURE_TEMPORARY_MESSAGE)
+                            NotificationInfoState.Failure(errorMessageProvider.getTemporaryError())
                         } else {
-                            NotificationInfoState.Failure(UNKNOWN_ERROR)
+                            NotificationInfoState.Failure(errorMessageProvider.getUnknownError())
                         }
                     }
                 },
@@ -95,8 +96,8 @@ class NotificationSettingViewModel @Inject constructor(
     fun changeAlarm(context: Context, notificationType: Notification) {
         _notificationChangeState.value = NotificationChangeState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _failureDialogMessage.value = errorMessageProvider.getNetworkError()
                 _showFailureDialog.value = true
                 return@launch
             }
@@ -131,9 +132,9 @@ class NotificationSettingViewModel @Inject constructor(
                 },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        UNKNOWN_ERROR
+                        errorMessageProvider.getUnknownError()
                     }
                     _showFailureDialog.value = true
                     _notificationChangeState.value = NotificationChangeState.Failure(_failureDialogMessage.value)
@@ -145,8 +146,8 @@ class NotificationSettingViewModel @Inject constructor(
     fun changeNotificationTime(context: Context, timePeriod: TimePeriod, hour: String, minute: String) {
         _notificationTimeChangeState.value = NotificationTimeChangeState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _failureDialogMessage.value = errorMessageProvider.getNetworkError()
                 _showFailureDialog.value = true
                 return@launch
             }
@@ -169,9 +170,9 @@ class NotificationSettingViewModel @Inject constructor(
                 },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        UNKNOWN_ERROR
+                        errorMessageProvider.getUnknownError()
                     }
                     _showFailureDialog.value = true
                     _notificationTimeChangeState.value = NotificationTimeChangeState.Failure(_failureDialogMessage.value)

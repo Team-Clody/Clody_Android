@@ -8,20 +8,23 @@ import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
 import com.airbnb.mvrx.withState
 import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.login.LoginSdk
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.datastore.OAuthDataStore
 import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.dto.response.SignUpResponseDto
-import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AuthRepository
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 import com.sopt.clody.presentation.utils.language.LanguageProvider
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,8 +37,9 @@ class SignUpViewModel @AssistedInject constructor(
     private val tokenRepository: TokenRepository,
     private val fcmTokenProvider: FcmTokenProvider,
     private val oAuthDataStore: OAuthDataStore,
-    private val networkUtil: NetworkUtil,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
     private val languageProvider: LanguageProvider,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : MavericksViewModel<SignUpContract.SignUpState>(initialState) {
 
     private val _intents = Channel<SignUpContract.SignUpIntent>(BUFFERED)
@@ -145,8 +149,8 @@ class SignUpViewModel @AssistedInject constructor(
     private suspend fun signUp(context: Context) {
         val state = withState(this@SignUpViewModel) { it }
 
-        if (!networkUtil.isNetworkAvailable()) {
-            setState { copy(errorMessage = "네트워크 연결을 확인해주세요.") }
+        if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+            setState { copy(errorMessage = errorMessageProvider.getNetworkCheckError()) }
             return
         }
 
@@ -158,7 +162,7 @@ class SignUpViewModel @AssistedInject constructor(
         if (platform == OAuthProvider.GOOGLE) {
             val idToken = oAuthDataStore.getIdToken()
             if (idToken.isNullOrBlank()) {
-                setState { copy(errorMessage = "Google ID Token이 없습니다.", isLoading = false) }
+                setState { copy(errorMessage = errorMessageProvider.getGoogleIdTokenMissingError(), isLoading = false) }
                 return
             }
             val request = SignUpRequestDto(
@@ -181,7 +185,7 @@ class SignUpViewModel @AssistedInject constructor(
                     handleSignUpResult(result, isGoogle = false)
                 },
                 onFailure = {
-                    setState { copy(errorMessage = "로그인에 실패했어요~", isLoading = false) }
+                    setState { copy(errorMessage = errorMessageProvider.getLoginFailedError(), isLoading = false) }
                 },
             )
         }
@@ -198,7 +202,7 @@ class SignUpViewModel @AssistedInject constructor(
                 _sideEffects.send(SignUpContract.SignUpSideEffect.NavigateToTimeReminder)
             },
             onFailure = {
-                setState { copy(errorMessage = "회원가입에 실패했어요~") }
+                setState { copy(errorMessage = errorMessageProvider.getSignupFailedError()) }
             },
         )
         setState { copy(isLoading = false) }
