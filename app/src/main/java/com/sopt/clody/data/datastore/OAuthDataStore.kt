@@ -11,12 +11,20 @@ class OAuthDataStore @Inject constructor(@ApplicationContext context: Context) {
     private val Context.dataStore by preferencesDataStore(name = "oauth_pref")
     private val dataStore = context.dataStore
 
-    suspend fun saveIdToken(token: String) {
-        dataStore.edit { it[OAuthDataStoreKeys.GOOGLE_ID_TOKEN] = token }
+    suspend fun saveIdToken(platform: String, token: String) {
+        if (platform == OAuthProvider.GOOGLE.platform) {
+            dataStore.edit { it[OAuthDataStoreKeys.GOOGLE_ID_TOKEN] = token }
+        } else {
+            dataStore.edit { it[OAuthDataStoreKeys.KAKAO_ID_TOKEN] = token }
+        }
     }
 
-    suspend fun getIdToken(): String? {
-        return dataStore.data.first()[OAuthDataStoreKeys.GOOGLE_ID_TOKEN]
+    suspend fun getIdToken(platform: String): String? {
+        return if (platform == OAuthProvider.GOOGLE.platform) {
+            dataStore.data.first()[OAuthDataStoreKeys.GOOGLE_ID_TOKEN]
+        } else {
+            dataStore.data.first()[OAuthDataStoreKeys.KAKAO_ID_TOKEN]
+        }
     }
 
     suspend fun savePlatform(provider: OAuthProvider) {
@@ -32,6 +40,7 @@ class OAuthDataStore @Inject constructor(@ApplicationContext context: Context) {
     suspend fun clear() {
         dataStore.edit {
             it.remove(OAuthDataStoreKeys.GOOGLE_ID_TOKEN)
+            it.remove(OAuthDataStoreKeys.KAKAO_ID_TOKEN)
             it.remove(OAuthDataStoreKeys.OAUTH_PLATFORM)
         }
     }

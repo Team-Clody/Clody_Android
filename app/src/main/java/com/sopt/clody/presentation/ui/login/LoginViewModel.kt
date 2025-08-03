@@ -99,6 +99,8 @@ class LoginViewModel @AssistedInject constructor(
                 setState { copy(isLoading = false) }
                 val msg = error.message.orEmpty()
                 if (msg.contains("404")) {
+                    oauthDataStore.saveIdToken(platform = "kakao", token = kakaoToken)
+                    oauthDataStore.savePlatform(OAuthProvider.KAKAO)
                     _sideEffects.send(LoginContract.LoginSideEffect.NavigateToSignUp)
                 } else {
                     _sideEffects.send(LoginContract.LoginSideEffect.ShowError(msg))
@@ -109,10 +111,7 @@ class LoginViewModel @AssistedInject constructor(
 
     private suspend fun validateGoogleUser(idToken: String) {
         val fcmToken = fcmTokenProvider.getToken().orEmpty()
-        val request = GoogleSignUpRequestDto(
-            idToken = idToken,
-            fcmToken = fcmToken,
-        )
+        val request = GoogleSignUpRequestDto(idToken = idToken, fcmToken = fcmToken)
 
         authRepository.signUpWithGoogle(request).fold(
             onSuccess = {
@@ -125,7 +124,7 @@ class LoginViewModel @AssistedInject constructor(
 
                 val msg = error.message.orEmpty()
                 if (msg.contains("404")) {
-                    oauthDataStore.saveIdToken(idToken)
+                    oauthDataStore.saveIdToken(platform = "google", token = idToken)
                     oauthDataStore.savePlatform(OAuthProvider.GOOGLE)
                     _sideEffects.send(LoginContract.LoginSideEffect.NavigateToSignUp)
                 } else {
