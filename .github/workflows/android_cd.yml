@@ -68,7 +68,8 @@ jobs:
             # local.properties
             - name: Generate local.properties
               env:
-                  CLODY_BASE_URL: ${{ secrets.CLODY_TEST_URL }}
+                  CLODY_BASE_URL: ${{ secrets.CLODY_BASE_URL }}
+                  CLODY_TEST_URL: ${{ secrets.CLODY_TEST_URL }}
                   KAKAO_API_KEY: ${{ secrets.KAKAO_API_KEY }}
                   AMPLITUDE_API_KEY: ${{ secrets.AMPLITUDE_API_KEY }}
                   GOOGLE_ADMOB_APP_ID: ${{ secrets.GOOGLE_ADMOB_APP_ID }}
@@ -79,7 +80,7 @@ jobs:
                   KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
               run: |
                   echo "clody.base.url=$CLODY_BASE_URL" >> local.properties
-                  echo "clody.test.url=$CLODY_BASE_URL" >> local.properties
+                  echo "clody.test.url=$CLODY_TEST_URL" >> local.properties
                   echo "kakao.api.key=$KAKAO_API_KEY" >> local.properties
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
                   echo "GOOGLE_ADMOB_APP_ID=$GOOGLE_ADMOB_APP_ID" >> local.properties
@@ -92,20 +93,7 @@ jobs:
 
             # Debug APK 빌드
             - name: Build Debug APK
-              run: |
-                  echo "🔨 Debug APK 빌드 시작..."
-                  echo "📁 현재 디렉토리: $(pwd)"
-                  echo "📁 파일 목록:"
-                  ls -la
-                  echo ""
-                  echo "📁 app 디렉토리:"
-                  ls -la app/
-                  echo ""
-                  echo "📁 google-services.json 확인:"
-                  ls -la app/google-services.json app/src/debug/google-services.json 2>/dev/null || echo "일부 파일이 없습니다"
-                  echo ""
-                  echo "🚀 Gradle 빌드 시작..."
-                  ./gradlew assembleDebug --stacktrace
+              run: ./gradlew assembleDebug --stacktrace
 
             # Set up Firebase Service Account Credentials
             - name: Set up Firebase Service Account Credentials
