@@ -9,8 +9,8 @@ class DiaryRepositoryImpl @Inject constructor(
     private val diaryRemoteDataSource: DiaryRemoteDataSource,
 ) : DiaryRepository {
 
-    override suspend fun writeDiary(date: String, content: List<String>) =
-        diaryRemoteDataSource.writeDiary(date, content)
+    override suspend fun writeDiary(lang: String, date: String, content: List<String>) =
+        diaryRemoteDataSource.writeDiary(lang, date, content)
 
     override suspend fun deleteDailyDiary(year: Int, month: Int, day: Int) =
         diaryRemoteDataSource.deleteDailyDiary(year, month, day)

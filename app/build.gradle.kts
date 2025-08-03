@@ -32,14 +32,12 @@ android {
         val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
         val googleAdmobUnitId: String = properties.getProperty("GOOGLE_ADMOB_UNIT_ID", "")
         val googleAuthWebClientId: String = properties.getProperty("GOOGLE_AUTH_WEB_CLIENT_ID", "")
-        val allowedDomains: String = properties.getProperty("allowed.webview.domains", "notion.so,google.com")
 
         buildConfigField("String", "GOOGLE_ADMOB_APP_ID", "\"$googleAdmobAppId\"")
         buildConfigField("String", "GOOGLE_ADMOB_UNIT_ID", "\"$googleAdmobUnitId\"")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
         buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
         buildConfigField("String", "GOOGLE_AUTH_WEB_CLIENT_ID", "\"$googleAuthWebClientId\"")
-        buildConfigField("String", "ALLOWED_WEBVIEW_DOMAINS", "\"$allowedDomains\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
         manifestPlaceholders["GOOGLE_ADMOB_APP_ID"] = googleAdmobAppId
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -159,4 +157,5 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.google.auth)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.airbridge)
 }

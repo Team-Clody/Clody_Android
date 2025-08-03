@@ -7,8 +7,8 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 /**
-*   @param time 서버로부터 수신받은 시간으로 "21:30" 와 같은 형태로 전달받는다.
-* */
+ *   @param time 서버로부터 수신받은 시간으로 "21:30" 와 같은 형태로 전달받는다.
+ * */
 fun convertKSTtoUTZ(time: String, referenceDate: LocalDate = LocalDate.now()): Triple<TimePeriod, String, String> {
     val kstZoneId = ZoneId.of("Asia/Seoul")
     val userZoneId = ZoneId.systemDefault()
@@ -57,4 +57,26 @@ fun convertUTZtoKST(timePeriod: TimePeriod, hour: String, minute: String, refere
     val kstMinute = kstZoned.minute
 
     return String.format(java.util.Locale.ROOT, "%02d:%02d", kstHour, kstMinute)
+}
+
+/**
+ *  일기작성 API 호출 시 유저의 현재 시점(연/월/일/시각)을 KST 시간대로 변환 후 "yyyy-MM-dd'T'HH:mm:ss" 형식으로 전달한다.
+ *  @param year 작성된 일기의 연도
+ *  @param month 작성된 일기의 월
+ *  @param day 작성된 일기의 일
+ * */
+fun convertDateToKstDateTime(year: Int, month: Int, day: Int): String {
+    val localNowDate = LocalDate.now()
+    val targetDate = LocalDate.of(year, month, day)
+    val kstZone = ZoneId.of("Asia/Seoul")
+    val nowKst = ZonedDateTime.now(kstZone)
+
+    val targetZonedDateTime = if (targetDate == localNowDate) {
+        nowKst
+    } else {
+        nowKst.minusDays(1)
+    }
+
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+    return targetZonedDateTime.format(formatter)
 }

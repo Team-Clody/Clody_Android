@@ -92,6 +92,7 @@
     <string name="setting_option_terms_of_service">Terms of Service</string>
     <string name="setting_option_privacy_policy">Privacy Policy</string>
     <string name="setting_option_app_version">Version</string>
+    <string name="setting_option_app_version_info_latest">Latest version</string>
     <string name="setting_option_app_version_info_failure">Fail to Fetch</string>
 
     <!-- Usage : Account Management -->

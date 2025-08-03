@@ -1,5 +1,6 @@
 package com.sopt.clody.data.remote.datasource
 
+import com.sopt.clody.data.remote.dto.base.ApiResponse
 import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
@@ -10,7 +11,7 @@ import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 
 interface DiaryRemoteDataSource {
-    suspend fun writeDiary(date: String, content: List<String>): Result<WriteDiaryResponseDto>
+    suspend fun writeDiary(lang: String, date: String, content: List<String>): Result<WriteDiaryResponseDto>
     suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): Result<DailyDiariesResponseDto>
     suspend fun getDailyDiariesData(year: Int, month: Int, date: Int): Result<DailyDiariesResponseDto>
     suspend fun getDiaryTime(year: Int, month: Int, date: Int): Result<DiaryTimeResponseDto>

@@ -13,8 +13,8 @@ class DiaryRemoteDataSourceImpl @Inject constructor(
     private val errorMessageProvider: ErrorMessageProvider,
 ) : DiaryRemoteDataSource {
 
-    override suspend fun writeDiary(date: String, content: List<String>) =
-        safeApiCall(errorMessageProvider) { diaryService.writeDiary(WriteDiaryRequestDto(date, content)) }
+    override suspend fun writeDiary(lang: String, date: String, content: List<String>) =
+        safeApiCall(errorMessageProvider) { diaryService.writeDiary(lang, WriteDiaryRequestDto(date, content)) }
 
     override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int) =
         safeApiCall(errorMessageProvider) { diaryService.deleteDailyDiary(year, month, date) }

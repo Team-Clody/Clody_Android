@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
@@ -19,6 +20,7 @@ import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.openExternalBrowser
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
@@ -26,7 +28,6 @@ fun SettingRoute(
     navigateToAccountManagement: () -> Unit,
     navigateToNotification: () -> Unit,
     navigateToPrevious: () -> Unit,
-    navigateToWebView: (String) -> Unit,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
     val notice by settingViewModel::noticeUrl
@@ -34,9 +35,9 @@ fun SettingRoute(
     val termsOfService by settingViewModel::termsOfServiceUrl
     val privacyPolicy by settingViewModel::privacyPolicyUrl
     val versionInfo by settingViewModel::versionInfo
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        settingViewModel.getVersionInfo()
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.SETTING)
     }
 
@@ -45,10 +46,10 @@ fun SettingRoute(
         onClickBack = navigateToPrevious,
         onClickAccountManagement = navigateToAccountManagement,
         onClickNotificationSetting = navigateToNotification,
-        onClickNotice = { navigateToWebView(notice) },
-        onClickSupportFeedback = { navigateToWebView(supportFeedback) },
-        onClickTerms = { navigateToWebView(termsOfService) },
-        onClickPrivacy = { navigateToWebView(privacyPolicy) },
+        onClickNotice = { openExternalBrowser(context, notice) },
+        onClickSupportFeedback = { openExternalBrowser(context, supportFeedback) },
+        onClickTerms = { openExternalBrowser(context, termsOfService) },
+        onClickPrivacy = { openExternalBrowser(context, privacyPolicy) },
     )
 }
 

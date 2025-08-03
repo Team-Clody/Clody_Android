@@ -13,14 +13,12 @@ fun NavGraphBuilder.settingScreen(
     navigateToAccountManagement: () -> Unit,
     navigateToNotification: () -> Unit,
     navigateToPrevious: () -> Unit,
-    navigateToWebView: (String) -> Unit,
 ) {
     composable<Route.Setting> {
         SettingRoute(
             navigateToAccountManagement = navigateToAccountManagement,
             navigateToNotification = navigateToNotification,
             navigateToPrevious = navigateToPrevious,
-            navigateToWebView = navigateToWebView,
         )
     }
 }
@@ -61,11 +59,4 @@ fun NavController.navigateToNotificationSetting(
     navOptions: NavOptionsBuilder.() -> Unit = {},
 ) {
     navigate(Route.NotificationSetting, navOptions)
-}
-
-fun NavController.navigateToWebView(
-    encodedUrl: String,
-    navOptions: NavOptionsBuilder.() -> Unit = {},
-) {
-    navigate(Route.WebView(encodedUrl), navOptions)
 }

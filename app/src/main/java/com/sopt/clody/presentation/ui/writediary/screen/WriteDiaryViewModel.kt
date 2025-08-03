@@ -13,6 +13,7 @@ import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.usecase.FetchDraftDiaryUseCase
 import com.sopt.clody.domain.usecase.SaveDraftDiaryUseCase
+import com.sopt.clody.presentation.utils.extension.convertDateToKstDateTime
 import com.sopt.clody.presentation.utils.language.LanguageProvider
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -81,8 +82,9 @@ class WriteDiaryViewModel @Inject constructor(
             }
 
             _writeDiaryState.value = WriteDiaryState.Loading
-            val date = String.format("%04d-%02d-%02d", year, month, day)
-            val result = diaryRepository.writeDiary(date, contents)
+            val lang = languageProvider.getCurrentLanguageTag()
+            val date = convertDateToKstDateTime(year, month, day)
+            val result = diaryRepository.writeDiary(lang, date, contents)
             _writeDiaryState.value = result.fold(
                 onSuccess = { response ->
                     if (isDiaryExpired(year, month, day)) {
