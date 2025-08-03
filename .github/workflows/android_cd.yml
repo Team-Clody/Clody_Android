@@ -84,7 +84,7 @@ jobs:
                   echo "amplitude.api.key=$AMPLITUDE_API_KEY" >> local.properties
                   echo "GOOGLE_ADMOB_APP_ID=$GOOGLE_ADMOB_APP_ID" >> local.properties
                   echo "GOOGLE_ADMOB_UNIT_ID=$GOOGLE_ADMOB_UNIT_ID" >> local.properties
-                  echo "GOOGLE_AUTH_WEB_CLIENT_ID" >> local.properties
+                  echo "GOOGLE_AUTH_WEB_CLIENT_ID=$GOOGLE_AUTH_WEB_CLIENT_ID" >> local.properties
                   echo "storeFile=keystore/clody_release.jks" >> local.properties
                   echo "storePassword=$STORE_PASSWORD" >> local.properties
                   echo "keyAlias=$KEY_ALIAS" >> local.properties
@@ -92,7 +92,20 @@ jobs:
 
             # Debug APK 빌드
             - name: Build Debug APK
-              run: ./gradlew assembleDebug --stacktrace
+              run: |
+                  echo "🔨 Debug APK 빌드 시작..."
+                  echo "📁 현재 디렉토리: $(pwd)"
+                  echo "📁 파일 목록:"
+                  ls -la
+                  echo ""
+                  echo "📁 app 디렉토리:"
+                  ls -la app/
+                  echo ""
+                  echo "📁 google-services.json 확인:"
+                  ls -la app/google-services.json app/src/debug/google-services.json 2>/dev/null || echo "일부 파일이 없습니다"
+                  echo ""
+                  echo "🚀 Gradle 빌드 시작..."
+                  ./gradlew assembleDebug --stacktrace
 
             # Set up Firebase Service Account Credentials
             - name: Set up Firebase Service Account Credentials
