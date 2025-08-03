@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class WriteDiaryRequestDto(
     @SerialName("date") val date: String,
-    @SerialName("content")val content: List<String>,
+    @SerialName("content") val content: List<String>,
 )

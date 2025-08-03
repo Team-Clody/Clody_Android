@@ -17,8 +17,8 @@ import javax.inject.Inject
 class DiaryRemoteDataSourceImpl @Inject constructor(
     private val diaryService: DiaryService,
 ) : DiaryRemoteDataSource {
-    override suspend fun writeDiary(date: String, content: List<String>): ApiResponse<WriteDiaryResponseDto> =
-        diaryService.writeDiary(WriteDiaryRequestDto(date, content))
+    override suspend fun writeDiary(lang: String, date: String, content: List<String>): ApiResponse<WriteDiaryResponseDto> =
+        diaryService.writeDiary(lang, WriteDiaryRequestDto(date, content))
 
     override suspend fun deleteDailyDiary(year: Int, month: Int, date: Int): ApiResponse<DailyDiariesResponseDto> =
         diaryService.deleteDailyDiary(year = year, month = month, date = date)

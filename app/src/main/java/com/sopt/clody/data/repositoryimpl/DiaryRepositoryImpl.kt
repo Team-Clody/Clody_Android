@@ -19,9 +19,9 @@ import javax.inject.Inject
 class DiaryRepositoryImpl @Inject constructor(
     private val diaryRemoteDataSource: DiaryRemoteDataSource,
 ) : DiaryRepository {
-    override suspend fun writeDiary(date: String, content: List<String>): Result<WriteDiaryResponseDto> =
+    override suspend fun writeDiary(lang: String, date: String, content: List<String>): Result<WriteDiaryResponseDto> =
         runCatching {
-            diaryRemoteDataSource.writeDiary(date, content).handleApiResponse().getOrThrow()
+            diaryRemoteDataSource.writeDiary(lang, date, content).handleApiResponse().getOrThrow()
         }
 
     override suspend fun deleteDailyDiary(year: Int, month: Int, day: Int): Result<DailyDiariesResponseDto> =

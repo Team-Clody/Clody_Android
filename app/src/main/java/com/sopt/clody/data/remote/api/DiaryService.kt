@@ -13,12 +13,14 @@ import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface DiaryService {
     @POST("api/v1/diary")
     suspend fun writeDiary(
+        @Header("Accept-Language") lang: String,
         @Body writeDiaryRequestDto: WriteDiaryRequestDto,
     ): ApiResponse<WriteDiaryResponseDto>
 
