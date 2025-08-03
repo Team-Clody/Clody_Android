@@ -122,13 +122,13 @@ jobs:
             - name: Upload APK to Firebase App Distribution
               env:
                   GOOGLE_APPLICATION_CREDENTIALS: $HOME/firebase-credentials.json
-                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+                  FIREBASE_APP_ID: ${{ secrets.FIREBASE_DEBUG_APP_ID }}
               run: |
-                  echo "🔥 FIREBASE_APP_ID 확인: $FIREBASE_APP_ID"
+                  echo "🔥 FIREBASE_DEBUG_APP_ID 확인: $FIREBASE_DEBUG_APP_ID"
 
-                  # 만약 FIREBASE_APP_ID가 없으면 에러 출력 후 종료
-                  if [ -z "$FIREBASE_APP_ID" ]; then
-                    echo "❌ ERROR: FIREBASE_APP_ID가 설정되지 않았습니다. GitHub Secrets에서 확인하세요."
+                  # 만약 FIREBASE_DEBUG_APP_ID가 없으면 에러 출력 후 종료
+                  if [ -z "$FIREBASE_DEBUG_APP_ID" ]; then
+                    echo "❌ ERROR: FIREBASE_DEBUG_APP_ID가 설정되지 않았습니다. GitHub Secrets에서 확인하세요."
                     exit 1
                   fi
 
@@ -137,7 +137,7 @@ jobs:
                   echo "GOOGLE_APPLICATION_CREDENTIALS=$GOOGLE_APPLICATION_CREDENTIALS"
 
                   firebase appdistribution:distribute app/build/outputs/apk/debug/app-debug.apk \
-                  --app "$FIREBASE_APP_ID" \
+                  --app "$FIREBASE_DEBUG_APP_ID" \
                   --release-notes "🍀 새로운 테스트 버전이 업로드되었습니다~" \
                   --groups "clody-tester-group"
 
