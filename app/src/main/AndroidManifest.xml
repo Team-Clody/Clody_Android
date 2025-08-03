@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
@@ -19,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CLODY"
         android:usesCleartextTraffic="true"
-        tools:replace="icon, label"
+        tools:replace="android:icon,android:label,android:dataExtractionRules,android:fullBackupContent"
         tools:targetApi="31">
 
         <meta-data

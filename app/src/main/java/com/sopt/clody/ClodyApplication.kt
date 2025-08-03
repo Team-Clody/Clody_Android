@@ -1,6 +1,8 @@
 package com.sopt.clody
 
 import android.app.Application
+import co.ab180.airbridge.Airbridge
+import co.ab180.airbridge.AirbridgeOptionBuilder
 import com.airbnb.mvrx.Mavericks
 import com.google.firebase.FirebaseApp
 import com.kakao.sdk.common.KakaoSdk
@@ -17,9 +19,15 @@ class ClodyApplication : Application() {
         FirebaseApp.initializeApp(this)
         Mavericks.initialize(this)
         initAmplitude(applicationContext)
+        initAirBridge()
     }
 
     private fun initKakaoSdk() {
         KakaoSdk.init(this, BuildConfig.KAKAO_API_KEY)
+    }
+
+    private fun initAirBridge() {
+        val option = AirbridgeOptionBuilder("clody", "3ba2277abcd044f29356dc0ee32165ff").build()
+        Airbridge.initializeSDK(this, option)
     }
 }

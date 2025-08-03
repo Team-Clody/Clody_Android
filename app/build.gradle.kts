@@ -157,4 +157,5 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.google.auth)
     implementation(libs.androidx.datastore.preferences)
+    implementation(libs.airbridge)
 }
