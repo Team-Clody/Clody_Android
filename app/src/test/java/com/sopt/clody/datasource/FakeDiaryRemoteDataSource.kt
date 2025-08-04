@@ -17,7 +17,7 @@ class FakeDiaryRemoteDataSource : DiaryRemoteDataSource {
     var draftDiariesResponse: ApiResponse<DraftDiariesResponseDto>? = null
     var saveDraftResponse: ApiResponse<Unit>? = null
 
-    override suspend fun writeDiary(date: String, content: List<String>): Result<WriteDiaryResponseDto> {
+    override suspend fun writeDiary(lang: String, date: String, content: List<String>): Result<WriteDiaryResponseDto> {
         throw NotImplementedError()
     }
 
