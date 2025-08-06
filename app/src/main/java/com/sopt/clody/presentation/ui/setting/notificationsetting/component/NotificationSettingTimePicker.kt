@@ -28,16 +28,16 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
 import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
-import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationSettingViewModel
+import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun NotificationSettingTimePicker(
-    notificationSettingViewModel: NotificationSettingViewModel,
-    onTimeSelected: (String) -> Unit,
     onDismissRequest: () -> Unit,
+    onConfirm: (TimePeriod, String, String) -> Unit,
 ) {
-    val amPmItems = remember { listOf("오전", "오후") }
+    val amPmItemsLabel = TimePeriod.entries.map { it.getLabel() }
+    val amPmItems = remember { amPmItemsLabel }
     val hourItems = remember { (1..12).map { it.toString() } }
     val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
 
@@ -67,7 +67,7 @@ fun NotificationSettingTimePicker(
                     .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
-                    stringResource(id = R.string.time_picker_title),
+                    text = stringResource(R.string.bottom_sheet_notification_time_change_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center),
@@ -138,14 +138,10 @@ fun NotificationSettingTimePicker(
             }
             ClodyButton(
                 onClick = {
-                    val selectedTime = notificationSettingViewModel.convertTo24HourFormat(
-                        amPmPickerState.selectedItem,
-                        hourPickerState.selectedItem,
-                        minutePickerState.selectedItem,
-                    )
-                    onTimeSelected(selectedTime)
+                    val selectedPeriod = if (amPmPickerState.selectedItem == "오전") TimePeriod.AM else TimePeriod.PM
+                    onConfirm(selectedPeriod, hourPickerState.selectedItem, minutePickerState.selectedItem)
                 },
-                text = stringResource(R.string.notification_setting_timepicker_confirm),
+                text = stringResource(R.string.bottom_sheet_notification_time_change_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

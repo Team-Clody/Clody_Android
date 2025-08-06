@@ -3,17 +3,19 @@ package com.sopt.clody.presentation.ui.setting.screen
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.datastore.TokenDataStore
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
-import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.AccountManagementRepository
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
+import com.sopt.clody.presentation.utils.language.LanguageProvider
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,8 +23,10 @@ import javax.inject.Inject
 class AccountManagementViewModel @Inject constructor(
     private val accountManagementRepository: AccountManagementRepository,
     private val tokenDataStore: TokenDataStore,
-    private val networkUtil: NetworkUtil,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
     @ApplicationContext private val context: Context,
+    private val languageProvider: LanguageProvider,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : ViewModel() {
     private val _userInfoState = MutableStateFlow<UserInfoState>(UserInfoState.Idle)
     val userInfoState: StateFlow<UserInfoState> = _userInfoState
@@ -33,8 +37,8 @@ class AccountManagementViewModel @Inject constructor(
     private val _isValidNickname = MutableStateFlow(true)
     val isValidNickname: StateFlow<Boolean> = _isValidNickname
 
-    private val _nicknameMessage = MutableStateFlow(DEFAULT_NICKNAME_MESSAGE)
-    val nicknameMessage: StateFlow<String> = _nicknameMessage
+    private val _nicknameMessage = MutableStateFlow(NicknameMessage.DEFAULT)
+    val nicknameMessage: StateFlow<NicknameMessage> = _nicknameMessage
 
     private val _logOutState = MutableStateFlow<LogOutState>(LogOutState.Idle)
     val logOutState: StateFlow<LogOutState> = _logOutState
@@ -48,6 +52,9 @@ class AccountManagementViewModel @Inject constructor(
     private val _failureDialogMessage = MutableStateFlow("")
     val failureDialogMessage: StateFlow<String> = _failureDialogMessage
 
+    private val _nicknameMaxLength = MutableStateFlow(languageProvider.getNicknameMaxLength())
+    val nicknameMaxLength: StateFlow<Int> = _nicknameMaxLength
+
     private val maxRetryCount = 3
     private var retryCount = 0
 
@@ -55,8 +62,8 @@ class AccountManagementViewModel @Inject constructor(
         if (retryCount >= maxRetryCount) return
         _userInfoState.value = UserInfoState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _userInfoState.value = UserInfoState.Failure(FAILURE_NETWORK_MESSAGE)
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _userInfoState.value = UserInfoState.Failure(errorMessageProvider.getNetworkError())
                 return@launch
             }
             val result = accountManagementRepository.getUserInfo()
@@ -68,12 +75,12 @@ class AccountManagementViewModel @Inject constructor(
                 onFailure = {
                     retryCount++
                     if (retryCount >= maxRetryCount) {
-                        UserInfoState.Failure(FAILURE_TEMPORARY_MESSAGE)
+                        UserInfoState.Failure(errorMessageProvider.getTemporaryError())
                     } else {
                         val errorMessage = if (it.message?.contains("200") == false) {
-                            FAILURE_TEMPORARY_MESSAGE
+                            errorMessageProvider.getTemporaryError()
                         } else {
-                            UNKNOWN_ERROR
+                            errorMessageProvider.getUnknownError()
                         }
                         UserInfoState.Failure(errorMessage)
                     }
@@ -84,8 +91,8 @@ class AccountManagementViewModel @Inject constructor(
 
     fun changeNickname(modifyNicknameRequestDto: ModifyNicknameRequestDto) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _failureDialogMessage.value = errorMessageProvider.getNetworkError()
                 _showFailureDialog.value = true
             }
             _userNicknameState.value = UserNicknameState.Loading
@@ -94,9 +101,9 @@ class AccountManagementViewModel @Inject constructor(
                 onSuccess = { UserNicknameState.Success(it) },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        UNKNOWN_ERROR
+                        errorMessageProvider.getUnknownError()
                     }
                     _showFailureDialog.value = true
                     UserNicknameState.Failure(_failureDialogMessage.value)
@@ -107,12 +114,12 @@ class AccountManagementViewModel @Inject constructor(
 
     fun validateNickname(nickname: String) {
         if (nickname.isNotEmpty()) {
-            val isValid = nickname.matches(Regex(NICKNAME_PATTERN))
+            val isValid = nickname.matches(Regex("^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,${_nicknameMaxLength.value}}$"))
             _isValidNickname.value = isValid
-            _nicknameMessage.value = if (isValid) DEFAULT_NICKNAME_MESSAGE else FAILURE_NICKNAME_MESSAGE
+            _nicknameMessage.value = if (isValid) NicknameMessage.DEFAULT else NicknameMessage.INVALID
         } else {
             _isValidNickname.value = true
-            _nicknameMessage.value = DEFAULT_NICKNAME_MESSAGE
+            _nicknameMessage.value = NicknameMessage.DEFAULT
         }
     }
 
@@ -135,8 +142,8 @@ class AccountManagementViewModel @Inject constructor(
     fun revokeAccount() {
         _revokeAccountState.value = RevokeAccountState.Loading
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _failureDialogMessage.value = FAILURE_NETWORK_MESSAGE
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _failureDialogMessage.value = errorMessageProvider.getNetworkError()
                 _showFailureDialog.value = true
             }
             val result = accountManagementRepository.revokeAccount()
@@ -147,9 +154,9 @@ class AccountManagementViewModel @Inject constructor(
                 },
                 onFailure = {
                     _failureDialogMessage.value = if (it.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        it.localizedMessage ?: UNKNOWN_ERROR
+                        it.localizedMessage ?: errorMessageProvider.getUnknownError()
                     }
                     _showFailureDialog.value = true
                     RevokeAccountState.Failure(_failureDialogMessage.value)
@@ -161,11 +168,5 @@ class AccountManagementViewModel @Inject constructor(
     fun dismissFailureDialog() {
         _showFailureDialog.value = false
         _failureDialogMessage.value = ""
-    }
-
-    companion object {
-        private const val NICKNAME_PATTERN = "^[a-zA-Z가-힣0-9ㄱ-ㅎㅏ-ㅣ가-힣]{2,10}$"
-        private const val DEFAULT_NICKNAME_MESSAGE = "특수문자, 띄어쓰기 없이 작성해주세요"
-        private const val FAILURE_NICKNAME_MESSAGE = "사용할 수 없는 닉네임이에요"
     }
 }

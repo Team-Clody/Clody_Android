@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
@@ -30,14 +31,14 @@ import com.sopt.clody.presentation.ui.setting.component.LogoutDialog
 import com.sopt.clody.presentation.ui.setting.component.NicknameChangeBottomSheet
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
-import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun AccountManagementRoute(
-    navigator: SettingNavigator,
+    navigateToPrevious: () -> Unit,
+    navigateToLogin: () -> Unit,
     accountManagementViewModel: AccountManagementViewModel = hiltViewModel(),
 ) {
     val userInfoState by accountManagementViewModel.userInfoState.collectAsState()
@@ -51,6 +52,7 @@ fun AccountManagementRoute(
     var showRevokeDialog by remember { mutableStateOf(false) }
     val showFailureDialog by accountManagementViewModel.showFailureDialog.collectAsState()
     val failureDialogMessage by accountManagementViewModel.failureDialogMessage.collectAsState()
+    val nicknameMaxLength by accountManagementViewModel.nicknameMaxLength.collectAsState()
 
     LaunchedEffect(Unit) {
         accountManagementViewModel.fetchUserInfo()
@@ -64,17 +66,13 @@ fun AccountManagementRoute(
 
     LaunchedEffect(revokeAccountState) {
         if (revokeAccountState is RevokeAccountState.Success) {
-            navigator.navController.navigate("register_graph") {
-                popUpTo("home") { inclusive = true }
-            }
+            navigateToLogin()
         }
     }
 
     LaunchedEffect(logOutState) {
         if (logOutState is LogOutState.Success) {
-            navigator.navController.navigate("register_graph") {
-                popUpTo("home") { inclusive = true }
-            }
+            navigateToLogin()
         }
     }
 
@@ -85,6 +83,7 @@ fun AccountManagementRoute(
         showNicknameChangeBottomSheet = showNicknameChangeBottomSheet,
         updateNicknameChangeBottomSheet = { state -> showNicknameChangeBottomSheet = state },
         isValidNickname = isValidNickname,
+        nicknameMaxLength = nicknameMaxLength,
         nicknameMessage = nicknameMessage,
         showLogoutDialog = showLogoutDialog,
         updateLogoutDialog = { state -> showLogoutDialog = state },
@@ -92,7 +91,7 @@ fun AccountManagementRoute(
         updateRevokeDialog = { state -> showRevokeDialog = state },
         showFailureDialog = showFailureDialog,
         failureDialogMessage = failureDialogMessage,
-        onBackClick = { navigator.navigateBack() },
+        onBackClick = navigateToPrevious,
     )
 }
 
@@ -104,7 +103,8 @@ fun AccountManagementScreen(
     showNicknameChangeBottomSheet: Boolean,
     updateNicknameChangeBottomSheet: (Boolean) -> Unit,
     isValidNickname: Boolean,
-    nicknameMessage: String,
+    nicknameMaxLength: Int,
+    nicknameMessage: NicknameMessage,
     showLogoutDialog: Boolean,
     updateLogoutDialog: (Boolean) -> Unit,
     showRevokeDialog: Boolean,
@@ -136,12 +136,11 @@ fun AccountManagementScreen(
                         updateNicknameChangeBottomSheet = updateNicknameChangeBottomSheet,
                     )
 
-                    if (userInfo.platform == "kakao") {
-                        AccountManagementLogoutOption(
-                            userEmail = userInfo.email,
-                            updateLogoutDialog = updateLogoutDialog,
-                        )
-                    }
+                    AccountManagementLogoutOption(
+                        userEmail = userInfo.email,
+                        platform = userInfo.platform,
+                        updateLogoutDialog = updateLogoutDialog,
+                    )
 
                     SettingSeparateLine()
 
@@ -164,6 +163,7 @@ fun AccountManagementScreen(
         NicknameChangeBottomSheet(
             accountManagementViewModel = accountManagementViewModel,
             userName = (userInfoState as UserInfoState.Success).data.name,
+            nicknameMaxLength = nicknameMaxLength,
             isValidNickname = isValidNickname,
             nicknameMessage = nicknameMessage,
             onDismiss = { updateNicknameChangeBottomSheet(false) },
@@ -178,7 +178,7 @@ fun AccountManagementScreen(
             contentAlignment = Alignment.BottomCenter,
         ) {
             ClodyToastMessage(
-                message = stringResource(R.string.account_management_nickname_change_toast),
+                message = stringResource(R.string.toast_account_management_nickname_change),
                 iconResId = R.drawable.ic_toast_check_on_18,
                 backgroundColor = ClodyTheme.colors.gray04,
                 contentColor = ClodyTheme.colors.white,
@@ -190,10 +190,10 @@ fun AccountManagementScreen(
 
     if (showLogoutDialog) {
         LogoutDialog(
-            titleMassage = stringResource(R.string.account_management_logout_dialog_title),
-            descriptionMassage = stringResource(R.string.account_management_logout_dialog_description),
-            confirmOption = stringResource(R.string.account_management_logout_dialog_confirm),
-            dismissOption = stringResource(R.string.account_management_logout_dialog_dismiss),
+            titleMassage = stringResource(R.string.dialog_logout_title),
+            descriptionMassage = stringResource(R.string.dialog_logout_description),
+            confirmOption = stringResource(R.string.dialog_logout_confirm),
+            dismissOption = stringResource(R.string.dialog_logout_dismiss),
             confirmAction = {
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.LOGOUT)
                 accountManagementViewModel.logOutAccount()
@@ -204,10 +204,10 @@ fun AccountManagementScreen(
 
     if (showRevokeDialog) {
         ClodyDialog(
-            titleMassage = stringResource(R.string.account_management_revoke_dialog_title),
-            descriptionMassage = stringResource(R.string.account_management_revoke_dialog_description),
-            confirmOption = stringResource(R.string.account_management_revoke_dialog_confirm),
-            dismissOption = stringResource(R.string.account_management_revoke_dialog_dismiss),
+            titleMassage = stringResource(R.string.dialog_revoke_title),
+            descriptionMassage = stringResource(R.string.dialog_revoke_description),
+            confirmOption = stringResource(R.string.dialog_revoke_confirm),
+            dismissOption = stringResource(R.string.dialog_revoke_dismiss),
             confirmAction = {
                 AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.REVOKE)
                 accountManagementViewModel.revokeAccount()

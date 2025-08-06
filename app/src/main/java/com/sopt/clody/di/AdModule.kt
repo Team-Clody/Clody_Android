@@ -1,6 +1,6 @@
 package com.sopt.clody.di
 
-import com.sopt.clody.core.RewardAdShower
+import com.sopt.clody.core.ad.RewardAdShower
 import com.sopt.clody.data.ad.RewardAdShowerImpl
 import dagger.Binds
 import dagger.Module

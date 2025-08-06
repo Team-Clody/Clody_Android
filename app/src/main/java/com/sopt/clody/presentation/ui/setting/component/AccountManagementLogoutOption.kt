@@ -21,16 +21,21 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @Composable
 fun AccountManagementLogoutOption(
     userEmail: String,
+    platform: String,
     updateLogoutDialog: (Boolean) -> Unit,
 ) {
+    val platformIconRes = when (platform) {
+        "kakao" -> R.drawable.img_account_management_kakao
+        "google" -> R.drawable.img_google_button_logo
+        else -> R.drawable.img_google_button_logo // 서버에서 google을 어떻게 내려줄까요?
+    }
+
     Row(
-        modifier = Modifier
-            .padding(top = 12.dp, bottom = 24.dp, start = 22.dp, end = 24.dp),
+        modifier = Modifier.padding(top = 12.dp, bottom = 24.dp, start = 22.dp, end = 24.dp),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.img_account_management_kakao),
-            modifier = Modifier
-                .size(24.dp),
+            painter = painterResource(id = platformIconRes),
+            modifier = Modifier.size(24.dp),
             contentDescription = null,
         )
         Spacer(modifier = Modifier.width(10.dp))
@@ -41,7 +46,7 @@ fun AccountManagementLogoutOption(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.account_management_logout_button),
+            text = stringResource(R.string.account_management_btn_logout),
             modifier = Modifier.clickable(
                 onClick = { updateLogoutDialog(true) },
                 indication = null,

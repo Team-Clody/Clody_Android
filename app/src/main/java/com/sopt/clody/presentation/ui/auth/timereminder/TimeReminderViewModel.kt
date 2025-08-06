@@ -6,22 +6,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.data.remote.util.NetworkUtil
 import com.sopt.clody.domain.repository.NotificationRepository
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.utils.extension.TimePeriod
+import com.sopt.clody.presentation.utils.extension.convertUTZtoKST
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class TimeReminderViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository,
-    private val networkUtil: NetworkUtil,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
+    private val errorMessageProvider: ErrorMessageProvider,
 ) : ViewModel() {
 
     private val _timeReminderState = MutableStateFlow<TimeReminderState>(TimeReminderState.Idle)
@@ -32,8 +35,8 @@ class TimeReminderViewModel @Inject constructor(
 
     fun sendNotification(context: Context, isPermissionGranted: Boolean) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _timeReminderState.value = TimeReminderState.Failure(FAILURE_NETWORK_MESSAGE)
+            if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
+                _timeReminderState.value = TimeReminderState.Failure(errorMessageProvider.getNetworkError())
                 return@launch
             }
 
@@ -45,6 +48,7 @@ class TimeReminderViewModel @Inject constructor(
 
             val requestDto = SendNotificationRequestDto(
                 isDiaryAlarm = isPermissionGranted,
+                isDraftAlarm = false,
                 isReplyAlarm = isPermissionGranted,
                 time = selectedTime,
                 fcmToken = fcmToken,
@@ -57,9 +61,9 @@ class TimeReminderViewModel @Inject constructor(
                 },
                 onFailure = { error ->
                     val errorMessage = if (error.message?.contains("200") == false) {
-                        FAILURE_TEMPORARY_MESSAGE
+                        errorMessageProvider.getTemporaryError()
                     } else {
-                        error.localizedMessage ?: UNKNOWN_ERROR
+                        error.localizedMessage ?: errorMessageProvider.getUnknownError()
                     }
                     _timeReminderState.value = TimeReminderState.Failure(errorMessage)
                 },
@@ -76,22 +80,7 @@ class TimeReminderViewModel @Inject constructor(
         return sharedPreferences.getString("fcm_token", null)
     }
 
-    fun setSelectedTime(amPm: String, hour: String, minute: String) {
-        selectedTime = formatTime(amPm, hour, minute)
-    }
-
-    fun setFixedTime(hour: String, minute: String) {
-        selectedTime = String.format("%02d:%02d", hour.toInt(), minute.toInt())
-    }
-
-    private fun formatTime(amPm: String, hour: String, minute: String): String {
-        val hourInt = if (amPm == "오후" && hour.toInt() != 12) {
-            hour.toInt() + 12
-        } else if (amPm == "오전" && hour.toInt() == 12) {
-            0
-        } else {
-            hour.toInt()
-        }
-        return String.format("%02d:%02d", hourInt, minute.toInt())
+    fun setSelectedTime(period: TimePeriod, hour: String, minute: String) {
+        selectedTime = convertUTZtoKST(timePeriod = period, hour = hour, minute = minute)
     }
 }

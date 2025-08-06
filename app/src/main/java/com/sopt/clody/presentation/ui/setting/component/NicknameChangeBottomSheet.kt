@@ -15,7 +15,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -28,6 +27,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.request.ModifyNicknameRequestDto
+import com.sopt.clody.presentation.ui.auth.signup.NicknameMessage
 import com.sopt.clody.presentation.ui.component.bottomsheet.ClodyBottomSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.setting.screen.AccountManagementViewModel
@@ -38,7 +38,8 @@ fun NicknameChangeBottomSheet(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
     isValidNickname: Boolean,
-    nicknameMessage: String,
+    nicknameMaxLength: Int,
+    nicknameMessage: NicknameMessage,
     onDismiss: () -> Unit,
 ) {
     ClodyBottomSheet(
@@ -47,6 +48,7 @@ fun NicknameChangeBottomSheet(
                 accountManagementViewModel = accountManagementViewModel,
                 userName = userName,
                 isValidNickname = isValidNickname,
+                nicknameMaxLength = nicknameMaxLength,
                 nicknameMessage = nicknameMessage,
                 onDismiss = onDismiss,
             )
@@ -60,14 +62,13 @@ fun NicknameChangeBottomSheetItem(
     accountManagementViewModel: AccountManagementViewModel,
     userName: String,
     isValidNickname: Boolean,
-    nicknameMessage: String,
+    nicknameMaxLength: Int,
+    nicknameMessage: NicknameMessage,
     onDismiss: () -> Unit,
 ) {
     var nickname by remember { mutableStateOf(TextFieldValue("")) }
     var nicknameChangeState by remember { mutableStateOf(false) }
     var isFocusedState by remember { mutableStateOf(false) }
-    val userNicknameState by accountManagementViewModel.userNicknameState.collectAsState()
-    val nicknameMaxLength = 10
 
     Surface {
         Column(
@@ -84,7 +85,7 @@ fun NicknameChangeBottomSheetItem(
                     .padding(top = 8.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.account_management_nickname_change_title),
+                    text = stringResource(R.string.bottom_sheet_nickname_change_title),
                     modifier = Modifier.align(Alignment.Center),
                     color = ClodyTheme.colors.gray01,
                     style = ClodyTheme.typography.body2SemiBold,
@@ -112,6 +113,7 @@ fun NicknameChangeBottomSheetItem(
                     accountManagementViewModel.validateNickname(nickname.text)
                     nicknameChangeState = it.text.isNotEmpty()
                 },
+                nicknameMaxLength = nicknameMaxLength,
                 isFocused = isFocusedState,
                 isValid = isValidNickname,
                 onRemove = {
@@ -133,7 +135,7 @@ fun NicknameChangeBottomSheetItem(
                     .padding(horizontal = 24.dp),
             ) {
                 Text(
-                    text = nicknameMessage,
+                    text = nicknameMessage.getMessage(),
                     color = when {
                         nickname.text.isEmpty() -> ClodyTheme.colors.gray04
                         isValidNickname -> ClodyTheme.colors.gray04
@@ -163,7 +165,7 @@ fun NicknameChangeBottomSheetItem(
                     accountManagementViewModel.changeNickname(ModifyNicknameRequestDto(name = nickname.text))
                     onDismiss()
                 },
-                text = stringResource(R.string.account_management_nickname_change_confirm),
+                text = stringResource(R.string.bottom_sheet_nickname_change_confirm),
                 enabled = nicknameChangeState && isValidNickname,
                 modifier = Modifier
                     .fillMaxWidth()

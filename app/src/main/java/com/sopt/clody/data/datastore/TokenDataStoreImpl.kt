@@ -1,10 +1,11 @@
 package com.sopt.clody.data.datastore
 
 import android.content.SharedPreferences
+import com.sopt.clody.di.qualifier.TokenPrefs
 import javax.inject.Inject
 
 class TokenDataStoreImpl @Inject constructor(
-    private val sharedPreferences: SharedPreferences,
+    @TokenPrefs private val sharedPreferences: SharedPreferences,
 ) : TokenDataStore {
     override var accessToken: String
         get() = sharedPreferences.getString(ACCESS_TOKEN, "") ?: ""

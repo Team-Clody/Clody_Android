@@ -31,6 +31,7 @@ import com.sopt.clody.ui.theme.ClodyTheme
 fun NickNameChangeTextField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
+    nicknameMaxLength: Int,
     isFocused: Boolean,
     isValid: Boolean,
     onRemove: () -> Unit,
@@ -38,8 +39,6 @@ fun NickNameChangeTextField(
     modifier: Modifier = Modifier,
     hint: String = "",
 ) {
-    val nicknameMaxLength = 10
-
     Box(modifier = modifier) {
         BasicTextField(
             value = value,

@@ -47,6 +47,17 @@ accompanist = "0.25.1"
 accompanist-insets = "0.28.0"
 
 firebase-config-ktx = "22.1.0"
+mavericks = "3.0.9"
+kotestVersion = "5.9.0"
+mockk = "1.13.10"
+
+play-review = "2.0.2"
+
+androidxCredentials = "1.5.0"
+googleAuth = "21.3.0"
+datastore = "1.1.7"
+
+airbridge = "4.7.0"
 
 [libraries]
 # AndroidX Core
@@ -110,10 +121,31 @@ lottie-compose = { group = "com.airbnb.android", name = "lottie-compose", versio
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 kakao-user = { group = "com.kakao.sdk", name = "v2-user", version.ref = "kakao" }
 admob = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "admob" }
+airbridge = { group = "io.airbridge", name = "sdk-android", version.ref = "airbridge"}
 
 # Accompanist
 accompanist-systemuicontroller = { group = "com.google.accompanist", name = "accompanist-systemuicontroller", version.ref = "accompanist" }
 accompanist-insets = { group = "com.google.accompanist", name = "accompanist-insets", version.ref = "accompanist-insets" }
+
+# Mavericks
+mavericks = { module = "com.airbnb.android:mavericks", version.ref = "mavericks" }
+mavericks-compose = { module = "com.airbnb.android:mavericks-compose", version.ref = "mavericks" }
+mavericks-hilt = { module = "com.airbnb.android:mavericks-hilt", version.ref = "mavericks" }
+
+# Kotest
+kotest-runner = { group = "io.kotest", name = "kotest-runner-junit5", version.ref = "kotestVersion" }
+kotest-assertions = { group = "io.kotest", name = "kotest-assertions-core", version.ref = "kotestVersion" }
+kotest-property = { group = "io.kotest", name = "kotest-property", version.ref = "kotestVersion" }
+
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+
+# PlayStore In App Review
+play-review = { group = "com.google.android.play", name = "review", version.ref = "play-review"}
+play-review-ktx = { group = "com.google.android.play", name = "review-ktx", version.ref = "play-review"}
+
+androidx-credentials-play-services-auth = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "androidxCredentials" }
+google-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "googleAuth" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -152,7 +184,6 @@ test = [
     "androidx-junit",
     "espresso-core",
     "ui-test-junit4",
-    "coroutines-test"
 ]
 
 debug = [
@@ -179,4 +210,21 @@ firebase = [
     "firebase-messaging",
     "firebase-analytics",
     "firebase-crashlytics"
+]
+
+mavericks = [
+    "mavericks",
+    "mavericks-compose",
+    "mavericks-hilt"
+]
+
+kotest = [
+    "kotest-runner",
+    "kotest-assertions",
+    "kotest-property"
+]
+
+plays = [
+    "play-review",
+    "play-review-ktx"
 ]

@@ -3,19 +3,20 @@ package com.sopt.clody.presentation.ui.replyloading.screen
 import android.app.Activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.core.RewardAdShower
+import com.sopt.clody.core.ad.RewardAdShower
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
-import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.data.remote.util.ApiError
 import com.sopt.clody.domain.repository.AdRepository
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.presentation.utils.extension.throttleFirst
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_NETWORK_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.FAILURE_TEMPORARY_MESSAGE
-import com.sopt.clody.presentation.utils.network.ErrorMessages.UNKNOWN_ERROR
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -27,8 +28,9 @@ import javax.inject.Inject
 class ReplyLoadingViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
     private val adRepository: AdRepository,
-    private val networkUtil: NetworkUtil,
     private val rewardAdShower: RewardAdShower,
+    private val errorMessageProvider: ErrorMessageProvider,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
 ) : ViewModel() {
 
     private val _replyLoadingState = MutableStateFlow<ReplyLoadingState>(ReplyLoadingState.Idle)
@@ -65,9 +67,7 @@ class ReplyLoadingViewModel @Inject constructor(
     private fun setupRetryFlow() {
         _retryFlow
             .throttleFirst(2000L)
-            .onEach {
-                getDiaryTimeInternal(lastYear, lastMonth, lastDate)
-            }
+            .onEach { getDiaryTimeInternal(lastYear, lastMonth, lastDate) }
             .launchIn(viewModelScope)
     }
 
@@ -82,8 +82,9 @@ class ReplyLoadingViewModel @Inject constructor(
         _replyLoadingState.value = ReplyLoadingState.Loading
 
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                _replyLoadingState.value = ReplyLoadingState.Failure(FAILURE_NETWORK_MESSAGE)
+            val isConnected = networkConnectivityObserver.networkStatus.first() == NetworkStatus.Available
+            if (!isConnected) {
+                _replyLoadingState.value = ReplyLoadingState.Failure(errorMessageProvider.getNetworkError())
                 return@launch
             }
 
@@ -95,15 +96,9 @@ class ReplyLoadingViewModel @Inject constructor(
     private fun handleResult(result: Result<DiaryTimeResponseDto>) {
         result.fold(
             onSuccess = { data ->
-                val diaryWrittenDay = data.date.split("-")
-                var targetDateTime = LocalDateTime.of(
-                    diaryWrittenDay[0].toInt(),
-                    diaryWrittenDay[1].toInt(),
-                    diaryWrittenDay[2].toInt(),
-                    data.HH,
-                    data.mm,
-                    data.ss,
-                ).plusMinutes(if (data.isFirst) INITIAL_REMINDER_MINUTES else REGULAR_REMINDER_HOURS * 60)
+                val (y, m, d) = data.date.split("-").map { it.toInt() }
+                var targetDateTime = LocalDateTime.of(y, m, d, data.HH, data.mm, data.ss)
+                    .plusMinutes(if (data.isFirst) INITIAL_REMINDER_MINUTES else REGULAR_REMINDER_HOURS * 60)
 
                 if (_isAdCompleted.value || data.isFromAd) {
                     targetDateTime = LocalDateTime.now()
@@ -114,9 +109,13 @@ class ReplyLoadingViewModel @Inject constructor(
                 _isWaitingForPatchResponse.value = false
             },
             onFailure = { throwable ->
-                _replyLoadingState.value = ReplyLoadingState.Failure(FAILURE_TEMPORARY_MESSAGE)
-                val errorMessage = throwable.localizedMessage ?: UNKNOWN_ERROR
-                Timber.tag("ReplyLoadingViewModel").e("API 요청 실패: %s", errorMessage)
+                val message = if (throwable is ApiError) {
+                    errorMessageProvider.getApiError(throwable)
+                } else {
+                    errorMessageProvider.getTemporaryError()
+                }
+                _replyLoadingState.value = ReplyLoadingState.Failure(message)
+                Timber.tag("ReplyLoadingViewModel").e(throwable, "DiaryTime API 요청 실패")
             },
         )
     }
@@ -138,7 +137,7 @@ class ReplyLoadingViewModel @Inject constructor(
             val startAdResult = adRepository.startAd(lastYear, lastMonth, lastDate)
             if (startAdResult.isFailure) {
                 _isAdLoading.value = false
-                _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
+                _adErrorMessage.value = errorMessageProvider.getTemporaryError()
                 return@launch
             }
 
@@ -152,7 +151,7 @@ class ReplyLoadingViewModel @Inject constructor(
                     _isAdPreloaded = true
                     showRewardedAd(activity)
                 } else {
-                    _adErrorMessage.value = "잠시 후 다시 시도해주세요!"
+                    _adErrorMessage.value = errorMessageProvider.getTemporaryError()
                 }
             }
         }
@@ -164,7 +163,6 @@ class ReplyLoadingViewModel @Inject constructor(
             onAdRewarded = {
                 viewModelScope.launch {
                     _isWaitingForPatchResponse.value = true
-
                     adRepository.endAd(lastYear, lastMonth, lastDate).onSuccess {
                         _replyLoadingState.value = ReplyLoadingState.Success(LocalDateTime.now())
                         _isWaitingForPatchResponse.value = false

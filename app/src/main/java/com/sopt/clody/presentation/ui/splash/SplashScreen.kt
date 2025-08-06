@@ -1,6 +1,7 @@
 package com.sopt.clody.presentation.ui.splash
 
 import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -16,64 +17,91 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.airbnb.mvrx.compose.collectAsState
+import com.airbnb.mvrx.compose.mavericksViewModel
 import com.sopt.clody.R
 import com.sopt.clody.domain.model.AppUpdateState
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
+import com.sopt.clody.presentation.ui.component.dialog.InspectionDialog
 import com.sopt.clody.presentation.utils.appupdate.AppUpdateUtils
+import com.sopt.clody.presentation.utils.base.BasePreview
+import com.sopt.clody.presentation.utils.base.ClodyPreview
+import com.sopt.clody.presentation.utils.extension.repeatOnStarted
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.delay
-import java.time.LocalDate
 
 @Composable
 fun SplashRoute(
-    navigator: AuthNavigator,
-    viewModel: SplashViewModel = hiltViewModel(),
+    viewModel: SplashViewModel = mavericksViewModel(),
+    startIntent: Intent,
+    onLoginRequired: () -> Unit,
+    onAlreadyLoggedIn: () -> Unit,
 ) {
-    val isUserLoggedIn by viewModel.isUserLoggedIn.collectAsStateWithLifecycle()
-    val updateState by viewModel.updateState.collectAsStateWithLifecycle()
+    val state by viewModel.collectAsState()
     val context = LocalContext.current
     val activity = context as Activity
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(isUserLoggedIn, updateState) {
-        if (isUserLoggedIn != null && updateState == AppUpdateState.Latest) {
-            delay(1000)
-            navigator.navController.navigate(
-                if (isUserLoggedIn == true) {
-                    "home/${LocalDate.now().year}/${LocalDate.now().monthValue}"
-                } else {
-                    "register_graph"
-                },
-            ) {
-                popUpTo("splash") { inclusive = true }
+    LaunchedEffect(viewModel) {
+        viewModel.postIntent(SplashContract.SplashIntent.InitSplash(startIntent))
+
+        lifecycleOwner.repeatOnStarted {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    is SplashContract.SplashSideEffect.NavigateToLogin -> onLoginRequired()
+                    is SplashContract.SplashSideEffect.NavigateToHome -> onAlreadyLoggedIn()
+                    is SplashContract.SplashSideEffect.NavigateToMarketAndFinish -> {
+                        AppUpdateUtils.navigateToMarketAndFinish(activity)
+                    }
+
+                    is SplashContract.SplashSideEffect.FinishApp -> {
+                        activity.finishAffinity()
+                    }
+
+                    is SplashContract.SplashSideEffect.NavigateToMarket -> {
+                        AppUpdateUtils.navigateToMarket(context)
+                    }
+                }
             }
         }
     }
 
-    when (val state = updateState) {
+    when (val updateState = state.updateState) {
         is AppUpdateState.SoftUpdate -> {
             SoftUpdateDialog(
-                latestVersion = state.latestVersion,
-                onDismiss = { viewModel.clearUpdateState() },
-                onConfirm = { AppUpdateUtils.navigateToMarket(context) },
+                latestVersion = updateState.latestVersion,
+                onDismiss = { viewModel.postIntent(SplashContract.SplashIntent.ClearUpdateState) },
+                onConfirm = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleSoftUpdateConfirm)
+                },
             )
         }
 
         is AppUpdateState.HardUpdate -> {
             HardUpdateDialog(
-                latestVersion = state.latestVersion,
-                onConfirm = { AppUpdateUtils.navigateToMarketAndFinish(activity) },
-                onExit = { activity.finishAffinity() },
+                latestVersion = updateState.latestVersion,
+                onConfirm = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleHardUpdate(isConfirm = true))
+                },
+                onExit = {
+                    viewModel.postIntent(SplashContract.SplashIntent.HandleHardUpdate(isConfirm = false))
+                },
             )
         }
 
         else -> {}
     }
 
+    if (state.showInspectionDialog) {
+        InspectionDialog(
+            inspectionTime = state.inspectionTimeText.orEmpty(),
+            onDismiss = {
+                viewModel.postIntent(SplashContract.SplashIntent.DismissInspectionDialog)
+            },
+        )
+    }
     SplashScreen()
 }
 
@@ -97,20 +125,28 @@ fun SplashScreen() {
 @Composable
 fun SoftUpdateDialog(
     latestVersion: String,
-    onDismiss: () -> Unit,
     onConfirm: () -> Unit,
+    onDismiss: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("업데이트 필요") },
+        title = { Text(stringResource(R.string.dialog_soft_update_title)) },
         text = {
             Text(
-                text = "새로운 버전 ${latestVersion}을 사용할 수 있습니다.\n지금 업데이트하시겠습니까?",
+                text = stringResource(R.string.dialog_soft_update_description, latestVersion),
                 textAlign = TextAlign.Center,
             )
         },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("업데이트") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("나중에") } },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.dialog_soft_update_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.dialog_soft_update_dismiss))
+            }
+        },
     )
 }
 
@@ -122,15 +158,27 @@ fun HardUpdateDialog(
 ) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text("필수 업데이트") },
-        text = { Text("버전 ${latestVersion}으로 업데이트가 필요합니다.") },
-        confirmButton = { TextButton(onClick = onConfirm) { Text("업데이트") } },
-        dismissButton = { TextButton(onClick = onExit) { Text("앱 종료") } },
+        title = { Text(stringResource(R.string.dialog_hard_update_title)) },
+        text = {
+            Text(stringResource(R.string.dialog_hard_update_description, latestVersion))
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(R.string.dialog_hard_update_confirm))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onExit) {
+                Text(stringResource(R.string.dialog_hard_update_exit))
+            }
+        },
     )
 }
 
-@Preview(showBackground = true)
+@ClodyPreview
 @Composable
 fun SplashScreenPreview() {
-    SplashScreen()
+    BasePreview {
+        SplashScreen()
+    }
 }

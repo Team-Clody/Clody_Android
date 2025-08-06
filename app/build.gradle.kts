@@ -25,16 +25,19 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = 28
         targetSdk = 35
-        versionCode = 25
-        versionName = "1.1.1"
+        versionCode = 28
+        versionName = "1.4.0"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
         val googleAdmobUnitId: String = properties.getProperty("GOOGLE_ADMOB_UNIT_ID", "")
+        val googleAuthWebClientId: String = properties.getProperty("GOOGLE_AUTH_WEB_CLIENT_ID", "")
+
         buildConfigField("String", "GOOGLE_ADMOB_APP_ID", "\"$googleAdmobAppId\"")
         buildConfigField("String", "GOOGLE_ADMOB_UNIT_ID", "\"$googleAdmobUnitId\"")
         buildConfigField("String", "KAKAO_API_KEY", "\"$kakaoApiKey\"")
         buildConfigField("String", "AMPLITUDE_API_KEY", "\"$amplitudeApiKey\"")
+        buildConfigField("String", "GOOGLE_AUTH_WEB_CLIENT_ID", "\"$googleAuthWebClientId\"")
         manifestPlaceholders["kakaoRedirectUri"] = "kakao$kakaoApiKey"
         manifestPlaceholders["GOOGLE_ADMOB_APP_ID"] = googleAdmobAppId
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -51,8 +54,13 @@ android {
 
     buildTypes {
         debug {
+            applicationIdSuffix = ".dev"
+
             isMinifyEnabled = false
-            buildConfigField("String", "CLODY_BASE_URL", properties["clody.base.url"].toString())
+            buildConfigField("String", "CLODY_BASE_URL", properties["clody.test.url"].toString())
+
+            manifestPlaceholders["appLabel"] = "@string/app_name_dev"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher_dev"
         }
 
         release {
@@ -64,6 +72,9 @@ android {
                 "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("release")
+
+            manifestPlaceholders["appLabel"] = "@string/app_name"
+            manifestPlaceholders["appIcon"] = "@mipmap/ic_launcher"
         }
     }
     compileOptions {
@@ -76,6 +87,11 @@ android {
     buildFeatures {
         buildConfig = true
         compose = true
+    }
+    testOptions {
+        unitTests.all {
+            it.useJUnitPlatform()
+        }
     }
 }
 
@@ -120,10 +136,26 @@ dependencies {
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.insets)
 
+    // Mavericks
+    implementation(libs.bundles.mavericks)
+
+    // Kotest
+    testImplementation(libs.bundles.kotest)
+    testImplementation(libs.mockk)
+    testImplementation(libs.coroutines.test)
+
+    // Play Store
+    implementation(libs.bundles.plays)
+
     // ETC
     implementation(libs.timber)
     implementation(libs.lottie.compose)
     implementation(libs.coil)
     implementation(libs.kakao.user)
     implementation(libs.kotlinx.datetime)
+
+    implementation(libs.androidx.credentials.play.services.auth)
+    implementation(libs.google.auth)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.airbridge)
 }

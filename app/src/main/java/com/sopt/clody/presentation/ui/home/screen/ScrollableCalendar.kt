@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.home.calendar.ClodyCalendar
 import com.sopt.clody.presentation.ui.home.component.CloverCount
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -26,13 +27,16 @@ fun ScrollableCalendar(
     diaries: List<MonthlyCalendarResponseDto.Diary>,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit,
     selectedDate: LocalDate,
-    onDiaryDataUpdated: (Int, String) -> Unit,
+    onDiaryDataUpdated: (Int, ReplyStatus) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LaunchedEffect(selectedDate, diaries) {
         if (selectedDate.year == selectedYear && selectedDate.monthValue == selectedMonth) {
             homeViewModel.updateDiaryState(diaries)
-            onDiaryDataUpdated(homeViewModel.diaryCount.value, homeViewModel.replyStatus.value)
+            onDiaryDataUpdated(
+                homeViewModel.diaryCount.value,
+                homeViewModel.replyStatus.value,
+            )
         }
     }
     val scrollState = rememberScrollState()

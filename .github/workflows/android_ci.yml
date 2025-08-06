@@ -63,6 +63,14 @@ jobs:
                   FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}   # base64로 암호화된 json 사용
               run: echo $FIREBASE_SECRET | base64 --decode > app/google-services.json
 
+            # Firebase dubug google-services.json 복호화 및 설정
+            -   name: Decode debug google-services.json
+                env:
+                    FIREBASE_DEBUG_SECRET: ${{ secrets.FIREBASE_DEBUG_SECRET }}
+                run: |
+                    mkdir -p app/src/debug
+                    echo "$FIREBASE_DEBUG_SECRET" | base64 --decode > app/src/debug/google-services.json
+
             # keystore 복호화
             - name: Decode keystore file
               env:

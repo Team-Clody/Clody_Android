@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -41,11 +42,12 @@ fun DailyDiaryCard(
     day: Int,
     dayOfWeek: String,
     showDiaryDeleteBottomSheet: () -> Unit,
-    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
 ) {
     val iconRes = when {
-        dailyDiary.replyStatus == "READY_NOT_READ" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
-        dailyDiary.replyStatus == "UNREADY" && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.replyStatus == ReplyStatus.READY_NOT_READ && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.replyStatus == ReplyStatus.UNREADY && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
+        dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT -> R.drawable.ic_home_expired_written_clover
         dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.diaryCount in 1..2 -> R.drawable.ic_home_bottom_clover
         dailyDiary.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
@@ -83,14 +85,14 @@ fun DailyDiaryCard(
                     verticalAlignment = Alignment.Bottom,
                 ) {
                     Text(
-                        text = stringResource(R.string.diarylist_daily_diary_day, day),
+                        text = stringResource(R.string.diary_list_daily_diary_day, day),
                         modifier = Modifier
                             .padding(end = 2.dp),
                         color = ClodyTheme.colors.gray01,
                         style = ClodyTheme.typography.body2SemiBold,
                     )
                     Text(
-                        text = stringResource(R.string.diarylist_daily_diary_day_of_week, dayOfWeek),
+                        text = stringResource(R.string.diary_list_daily_diary_day_of_week, dayOfWeek),
                         color = ClodyTheme.colors.gray04,
                         style = ClodyTheme.typography.body4Medium,
                     )
@@ -120,8 +122,20 @@ fun ReplyDiaryButton(
     year: Int,
     month: Int,
     day: Int,
-    onClickReplyDiary: (Int, Int, Int, String) -> Unit,
+    onClickReplyDiary: (Int, Int, Int, ReplyStatus) -> Unit,
 ) {
+    val isDisabled = dailyDiary.isDeleted || dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT
+    val containerColor = if (dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT) {
+        ClodyTheme.colors.gray08
+    } else {
+        ClodyTheme.colors.lightBlue
+    }
+    val contentColor = if (dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT) {
+        ClodyTheme.colors.gray06
+    } else {
+        ClodyTheme.colors.blue
+    }
+
     Box(
         contentAlignment = Alignment.TopEnd,
     ) {
@@ -130,10 +144,10 @@ fun ReplyDiaryButton(
             modifier = Modifier
                 .height(33.dp)
                 .padding(horizontal = 3.dp, vertical = 3.dp),
-            enabled = !(dailyDiary.isDeleted),
+            enabled = !isDisabled,
             colors = ButtonDefaults.buttonColors(
-                containerColor = ClodyTheme.colors.lightBlue,
-                contentColor = ClodyTheme.colors.blue,
+                containerColor = containerColor,
+                contentColor = contentColor,
                 disabledContainerColor = ClodyTheme.colors.gray08,
                 disabledContentColor = ClodyTheme.colors.gray06,
             ),
@@ -141,13 +155,13 @@ fun ReplyDiaryButton(
             contentPadding = PaddingValues(0.dp),
         ) {
             Text(
-                text = stringResource(R.string.diarylist_check_reply),
+                text = stringResource(R.string.diary_list_btn_reply),
                 modifier = Modifier
                     .padding(horizontal = 10.dp, vertical = 2.dp),
                 style = ClodyTheme.typography.detail1SemiBold,
             )
         }
-        if (dailyDiary.replyStatus == "READY_NOT_READ") {
+        if (dailyDiary.replyStatus == ReplyStatus.READY_NOT_READ) {
             Image(
                 painter = painterResource(id = R.drawable.ic_reply_diary_new),
                 modifier = Modifier

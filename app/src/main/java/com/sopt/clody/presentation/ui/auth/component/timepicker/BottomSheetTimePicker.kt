@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,13 +29,30 @@ import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.timepicker.ClodyPicker
 import com.sopt.clody.presentation.ui.component.timepicker.rememberPickerState
+import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun BottomSheetTimePicker(
     onDismissRequest: () -> Unit,
-    onRemindTimeSelected: (String, String, String) -> Unit,
+    onRemindTimeSelected: (TimePeriod, String, String) -> Unit,
 ) {
+    val amPmEnumItems = listOf(TimePeriod.AM, TimePeriod.PM)
+    val amPmLabelItems = amPmEnumItems.map { it.getLabel() }
+
+    val hourItems = remember { (1..12).map { it.toString() } }
+    val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
+
+    val amPmPickerState = rememberPickerState().apply {
+        selectedItem = amPmLabelItems[1]
+    }
+    val hourPickerState = rememberPickerState().apply {
+        selectedItem = "9"
+    }
+    val minutePickerState = rememberPickerState().apply {
+        selectedItem = "30"
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -49,7 +67,6 @@ fun BottomSheetTimePicker(
                 .wrapContentSize()
                 .background(color = ClodyTheme.colors.white)
                 .padding(horizontal = 24.dp),
-
         ) {
             Box(
                 modifier = Modifier
@@ -57,7 +74,7 @@ fun BottomSheetTimePicker(
                     .padding(top = 16.dp, bottom = 30.dp),
             ) {
                 Text(
-                    stringResource(id = R.string.time_picker_title),
+                    stringResource(id = R.string.bottom_sheet_time_reminder_picker_title),
                     style = ClodyTheme.typography.head4,
                     color = ClodyTheme.colors.gray01,
                     modifier = Modifier.align(Alignment.Center),
@@ -76,18 +93,7 @@ fun BottomSheetTimePicker(
                 }
             }
 
-            val amPmItems = remember { listOf("오후", "오전") }
-            val hourItems = remember { (1..12).map { it.toString() } }
-            val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
-
-            val amPmPickerState = rememberPickerState()
-            val hourPickerState = rememberPickerState()
-            val minutePickerState = rememberPickerState()
-
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth(),
-            ) {
+            Box(modifier = Modifier.fillMaxWidth()) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -96,18 +102,17 @@ fun BottomSheetTimePicker(
                         .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(8.dp)),
                 )
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
+                    Spacer(Modifier.weight(1f))
                     ClodyPicker(
                         state = amPmPickerState,
-                        items = amPmItems,
+                        items = amPmLabelItems,
                         startIndex = 1,
                         visibleItemsCount = 3,
                         infiniteScroll = false,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
                     ClodyPicker(
@@ -116,8 +121,7 @@ fun BottomSheetTimePicker(
                         startIndex = 8,
                         visibleItemsCount = 5,
                         infiniteScroll = true,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
                     ClodyPicker(
@@ -126,22 +130,23 @@ fun BottomSheetTimePicker(
                         startIndex = 3,
                         visibleItemsCount = 5,
                         infiniteScroll = true,
-                        modifier = Modifier
-                            .weight(1f),
+                        modifier = Modifier.weight(1f),
                         textModifier = Modifier.padding(8.dp),
                     )
+                    Spacer(Modifier.weight(1f))
                 }
             }
             ClodyButton(
                 onClick = {
-                    onRemindTimeSelected(
-                        amPmPickerState.selectedItem,
-                        hourPickerState.selectedItem,
-                        minutePickerState.selectedItem,
-                    )
+                    val selectedLabel = amPmPickerState.selectedItem
+                    val selectedPeriod = amPmEnumItems.getOrElse(amPmLabelItems.indexOf(selectedLabel)) { TimePeriod.PM }
+                    val selectedHour = hourPickerState.selectedItem
+                    val selectedMinute = minutePickerState.selectedItem
+
+                    onRemindTimeSelected(selectedPeriod, selectedHour, selectedMinute)
                     onDismissRequest()
                 },
-                text = "완료",
+                text = stringResource(R.string.bottom_sheet_year_month_picker_btn_confirm),
                 enabled = true,
                 modifier = Modifier
                     .fillMaxWidth()

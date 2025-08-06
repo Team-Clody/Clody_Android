@@ -2,23 +2,39 @@ package com.sopt.clody.presentation.ui.home.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.core.fcm.FcmTokenProvider
+import com.sopt.clody.core.network.NetworkConnectivityObserver
+import com.sopt.clody.core.network.NetworkStatus
+import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.data.remote.util.NetworkUtil
+import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.domain.repository.DiaryRepository
-import com.sopt.clody.presentation.ui.home.model.DiaryDateData
-import com.sopt.clody.presentation.utils.network.ErrorMessages
+import com.sopt.clody.domain.repository.DraftRepository
+import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.domain.repository.ReviewRepository
+import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
+import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
+import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val diaryRepository: DiaryRepository,
-    private val networkUtil: NetworkUtil,
+    private val notificationRepository: NotificationRepository,
+    private val draftRepository: DraftRepository,
+    private val fcmTokenProvider: FcmTokenProvider,
+    private val reviewRepository: ReviewRepository,
+    private val errorMessageProvider: ErrorMessageProvider,
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
 ) : ViewModel() {
 
     private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
@@ -44,8 +60,8 @@ class HomeViewModel @Inject constructor(
     private val _diaryCount = MutableStateFlow(0)
     val diaryCount: StateFlow<Int> get() = _diaryCount
 
-    private val _replyStatus = MutableStateFlow("UNREADY")
-    val replyStatus: StateFlow<String> get() = _replyStatus
+    private val _replyStatus = MutableStateFlow(ReplyStatus.UNREADY)
+    val replyStatus: StateFlow<ReplyStatus> get() = _replyStatus
 
     private val _isToday = MutableStateFlow(false)
     val isToday: StateFlow<Boolean> get() = _isToday
@@ -62,8 +78,26 @@ class HomeViewModel @Inject constructor(
     private val _showDiaryDeleteDialog = MutableStateFlow(false)
     val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
 
+    private val _showContinueDraftDialog = MutableStateFlow(false)
+    val showContinueDraftDialog: StateFlow<Boolean> get() = _showContinueDraftDialog
+
+    private val _showFirstDraftPopup = MutableStateFlow(draftRepository.getIsFirstUse())
+    val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
+
+    private val _draftAlarmChangeState = MutableStateFlow<NotificationChangeState>(NotificationChangeState.Idle)
+    val draftAlarmChangeState: StateFlow<NotificationChangeState> = _draftAlarmChangeState
+
+    private val _draftAlarmEnableToast = MutableStateFlow(false)
+    val draftAlarmEnableToast: StateFlow<Boolean> = _draftAlarmEnableToast
+
+    private val _showInAppReviewPopup = MutableStateFlow(reviewRepository.getShouldShowPopup())
+    val showInAppReviewPopup: StateFlow<Boolean> get() = _showInAppReviewPopup
+
     private val _errorState = MutableStateFlow<Pair<Boolean, String>>(false to "")
     val errorState: StateFlow<Pair<Boolean, String>> = _errorState
+
+    private val _hasDraft = MutableStateFlow(false)
+    val hasDraft: StateFlow<Boolean> get() = _hasDraft
 
     private var isInitialized = false
 
@@ -79,14 +113,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun setErrorState(isError: Boolean, message: String = ErrorMessages.FAILURE_TEMPORARY_MESSAGE) {
+    fun setErrorState(isError: Boolean, message: String = errorMessageProvider.getTemporaryError()) {
         _errorState.value = isError to message
     }
 
     fun loadCalendarData(year: Int, month: Int) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
                 return@launch
             }
 
@@ -98,8 +132,8 @@ class HomeViewModel @Inject constructor(
                     CalendarState.Success(it)
                 },
                 onFailure = { exception ->
-                    setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
-                    CalendarState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
+                    setErrorState(true, errorMessageProvider.getTemporaryError())
+                    CalendarState.Error(errorMessageProvider.getTemporaryError())
                 },
             )
         }
@@ -107,21 +141,25 @@ class HomeViewModel @Inject constructor(
 
     fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
         viewModelScope.launch {
-            if (!networkUtil.isNetworkAvailable()) {
-                setErrorState(true, ErrorMessages.FAILURE_NETWORK_MESSAGE)
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
                 return@launch
             }
 
             _dailyDiariesState.value = DailyDiariesState.Loading
             val result = diaryRepository.getDailyDiariesData(year, month, date)
             _dailyDiariesState.value = result.fold(
-                onSuccess = {
+                onSuccess = { dailyResponse ->
+                    _hasDraft.value = dailyResponse.isDraft
+                    _diaryCount.value = dailyResponse.diaries.size
+                    _isDeleted.value = dailyResponse.isDeleted
+
                     setErrorState(false)
-                    DailyDiariesState.Success(it)
+                    DailyDiariesState.Success(dailyResponse)
                 },
                 onFailure = { exception ->
-                    setErrorState(true, exception.message ?: ErrorMessages.UNKNOWN_ERROR)
-                    DailyDiariesState.Error(exception.message ?: ErrorMessages.UNKNOWN_ERROR)
+                    setErrorState(true, errorMessageProvider.getTemporaryError())
+                    DailyDiariesState.Error(errorMessageProvider.getTemporaryError())
                 },
             )
         }
@@ -135,17 +173,24 @@ class HomeViewModel @Inject constructor(
                 onSuccess = {
                     loadCalendarData(year, month)
                     loadDailyDiariesData(year, month, day)
+                    _diaryCount.value = 0
+                    _isDeleted.value = false
+                    _replyStatus.value = ReplyStatus.UNREADY
+
                     DeleteDiaryState.Success
                 },
                 onFailure = {
-                    DeleteDiaryState.Failure(it.message ?: "Unknown error")
+                    DeleteDiaryState.Failure(it.message ?: errorMessageProvider.getTemporaryError())
                 },
             )
         }
     }
 
     fun refreshCalendarDataCalendarData(year: Int, month: Int) {
-        if (calendarState.value is CalendarState.Success && _selectedDiaryDate.value.year == year && _selectedDiaryDate.value.month == month) {
+        if (calendarState.value is CalendarState.Success &&
+            _selectedDiaryDate.value.year == year &&
+            _selectedDiaryDate.value.month == month
+        ) {
             return
         }
         _selectedDiaryDate.value = DiaryDateData(year, month)
@@ -164,7 +209,7 @@ class HomeViewModel @Inject constructor(
     fun updateDiaryState(diaries: List<MonthlyCalendarResponseDto.Diary>) {
         val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
         _diaryCount.value = selectedDiary?.diaryCount ?: 0
-        _replyStatus.value = selectedDiary?.replyStatus ?: "UNREADY"
+        _replyStatus.value = selectedDiary?.replyStatus ?: ReplyStatus.UNREADY
         _isDeleted.value = selectedDiary?.isDeleted ?: false
     }
 
@@ -178,5 +223,93 @@ class HomeViewModel @Inject constructor(
 
     fun setShowDiaryDeleteDialog(state: Boolean) {
         _showDiaryDeleteDialog.value = state
+    }
+
+    fun setShowContinueDraftDialog(state: Boolean) {
+        _showContinueDraftDialog.value = state
+    }
+
+    fun updateFirstDraftUse(newState: Boolean) {
+        draftRepository.setIsFirstUse(false)
+        _showFirstDraftPopup.value = newState
+    }
+
+    fun canWriteDiary(): Boolean {
+        val userTimeZone = ZoneId.systemDefault().id
+        val today = LocalDate.now()
+        val selected = _selectedDate.value
+        val isAvailableDay = if (userTimeZone == "Asia/Seoul") {
+            selected == today || selected == today.minusDays(1)
+        } else {
+            selected == today
+        }
+        return _diaryCount.value == 0 && isAvailableDay
+    }
+
+    fun canReplyDiary(): Boolean {
+        return _diaryCount.value > 0 && !_isDeleted.value
+    }
+
+    fun isValidDraftDate(): Boolean {
+        val today = LocalDate.now()
+        val selected = _selectedDate.value
+        return selected == today || selected == today.minusDays(1)
+    }
+
+    fun enableDraftAlarm() {
+        viewModelScope.launch {
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
+                return@launch
+            }
+
+            val fcmToken = fcmTokenProvider.getToken().orEmpty()
+            val notificationInfo = getNotificationInfo() ?: return@launch
+            val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
+            sendDraftAlarmRequest(request)
+        }
+    }
+
+    private suspend fun isNetworkAvailable(): Boolean {
+        return networkConnectivityObserver.networkStatus.first() == NetworkStatus.Available
+    }
+
+    private suspend fun getNotificationInfo(): NotificationInfoResponseDto? {
+        return notificationRepository.getNotificationInfo().getOrElse {
+            _draftAlarmChangeState.value = NotificationChangeState.Failure(errorMessageProvider.getTemporaryError())
+            null
+        }
+    }
+
+    private fun buildDraftAlarmRequest(
+        info: NotificationInfoResponseDto,
+        fcmToken: String,
+    ): SendNotificationRequestDto = SendNotificationRequestDto(
+        isDiaryAlarm = info.isDiaryAlarm,
+        isDraftAlarm = true,
+        isReplyAlarm = info.isReplyAlarm,
+        time = info.time,
+        fcmToken = fcmToken,
+    )
+
+    private suspend fun sendDraftAlarmRequest(request: SendNotificationRequestDto) {
+        notificationRepository.sendNotification(request).fold(
+            onSuccess = {
+                _draftAlarmEnableToast.value = true
+                _draftAlarmChangeState.value = NotificationChangeState.Success(it)
+            },
+            onFailure = {
+                _draftAlarmChangeState.value = NotificationChangeState.Failure(errorMessageProvider.getTemporaryError())
+            },
+        )
+    }
+
+    fun resetDraftAlarmEnableToast() {
+        _draftAlarmEnableToast.value = false
+    }
+
+    fun updateShowInAppReviewPopup(state: Boolean) {
+        reviewRepository.setShouldShowPopup(state)
+        _showInAppReviewPopup.value = state
     }
 }

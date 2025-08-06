@@ -1,9 +1,11 @@
 package com.sopt.clody.data.remote.api
 
 import com.sopt.clody.data.remote.dto.base.ApiResponse
+import com.sopt.clody.data.remote.dto.request.SaveDraftDiaryRequestDto
 import com.sopt.clody.data.remote.dto.request.WriteDiaryRequestDto
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.DiaryTimeResponseDto
+import com.sopt.clody.data.remote.dto.response.DraftDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
 import com.sopt.clody.data.remote.dto.response.ReplyDiaryResponseDto
@@ -11,12 +13,14 @@ import com.sopt.clody.data.remote.dto.response.WriteDiaryResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface DiaryService {
     @POST("api/v1/diary")
     suspend fun writeDiary(
+        @Header("Accept-Language") lang: String,
         @Body writeDiaryRequestDto: WriteDiaryRequestDto,
     ): ApiResponse<WriteDiaryResponseDto>
 
@@ -59,4 +63,16 @@ interface DiaryService {
         @Query("month") month: Int,
         @Query("date") date: Int,
     ): ApiResponse<ReplyDiaryResponseDto>
+
+    @GET("api/v1/draft")
+    suspend fun fetchDraftDiary(
+        @Query("year") year: Int,
+        @Query("month") month: Int,
+        @Query("date") date: Int,
+    ): ApiResponse<DraftDiariesResponseDto>
+
+    @POST("api/v1/draft")
+    suspend fun saveDraftDiary(
+        @Body request: SaveDraftDiaryRequestDto,
+    ): ApiResponse<Unit>
 }

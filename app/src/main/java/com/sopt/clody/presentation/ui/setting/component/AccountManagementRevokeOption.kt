@@ -28,7 +28,7 @@ fun AccountManagementRevokeOption(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.account_management_revoke_button),
+            text = stringResource(R.string.account_management_btn_revoke),
             modifier = Modifier.clickable(
                 onClick = { updateRevokeDialog(true) },
                 indication = null,

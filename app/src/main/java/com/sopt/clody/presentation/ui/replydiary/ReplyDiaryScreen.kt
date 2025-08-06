@@ -35,21 +35,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
-import com.sopt.clody.presentation.ui.replydiary.navigation.ReplyDiaryNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun ReplyDiaryRoute(
-    navigator: ReplyDiaryNavigator,
     year: Int,
     month: Int,
     date: Int,
-    replyStatus: String,
+    replyStatus: ReplyStatus,
+    navigateToHome: (year: Int, month: Int, date: Int, isFromReplyDiary: Boolean) -> Unit,
     viewModel: ReplyDiaryViewModel = hiltViewModel(),
 ) {
     val replyDiaryState by viewModel.replyDiaryState.collectAsState()
@@ -65,7 +66,7 @@ fun ReplyDiaryRoute(
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome(year, month)
+            navigateToHome(year, month, date, true)
         } else {
             backPressedTime = currentTime
         }
@@ -79,7 +80,7 @@ fun ReplyDiaryRoute(
         is ReplyDiaryState.Success -> {
             val successState = replyDiaryState as ReplyDiaryState.Success
             ReplyDiaryScreen(
-                onClickBack = { navigator.navigateHome(year, month) },
+                navigateToHome = { navigateToHome(year, month, date, true) },
                 replyStatus = replyStatus,
                 replyDiaryState = successState,
             )
@@ -99,18 +100,17 @@ fun ReplyDiaryRoute(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReplyDiaryScreen(
-    onClickBack: () -> Unit,
-    replyStatus: String,
+    navigateToHome: () -> Unit,
+    replyStatus: ReplyStatus,
     replyDiaryState: ReplyDiaryState.Success,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(replyDiaryState) {
-        if (replyStatus == "READY_NOT_READ") {
+        if (replyStatus == ReplyStatus.READY_NOT_READ || replyStatus == ReplyStatus.UNREADY) {
             showDialog = true
         }
     }
-
     Scaffold(
         topBar = {
             val month = replyDiaryState.month
@@ -119,13 +119,13 @@ fun ReplyDiaryScreen(
                 modifier = Modifier.statusBarsPadding(),
                 title = {
                     Text(
-                        text = stringResource(R.string.reply_month_and_date, month, date),
+                        text = stringResource(R.string.reply_month_and_date, month.toLocalizedMonthLabel(), date.toString()),
                         style = ClodyTheme.typography.head4,
                         color = ClodyTheme.colors.gray01,
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = onClickBack) {
+                    IconButton(onClick = navigateToHome) {
                         Image(
                             painterResource(id = R.drawable.ic_nickname_back),
                             contentDescription = "back",
@@ -138,13 +138,12 @@ fun ReplyDiaryScreen(
         content = { innerPadding ->
             Box(
                 modifier = Modifier
-                    .fillMaxSize()
                     .background(ClodyTheme.colors.white)
                     .padding(innerPadding),
             ) {
                 Column(
                     modifier = Modifier
-                        .fillMaxWidth()
+                        .fillMaxSize()
                         .padding(horizontal = 24.dp)
                         .padding(bottom = 28.dp)
                         .clip(RoundedCornerShape(16.dp))
@@ -153,7 +152,7 @@ fun ReplyDiaryScreen(
                 ) {
                     val content = replyDiaryState.content
                     val nickname = replyDiaryState.nickname
-                    val replyMessage = stringResource(R.string.reply_message, nickname)
+                    val replyMessage = stringResource(R.string.reply_title, nickname)
 
                     Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
                     Image(
@@ -188,9 +187,9 @@ fun ReplyDiaryScreen(
     if (showDialog) {
         CloverDialog(
             onDismiss = { showDialog = false },
-            titleMassage = stringResource(R.string.clover_dialog_title, replyDiaryState.nickname),
-            descriptionMassage = stringResource(R.string.clover_dialog_description),
-            confirmOption = stringResource(R.string.clover_dialog_confirm_option),
+            titleMassage = stringResource(R.string.dialog_reply_clover_title, replyDiaryState.nickname),
+            descriptionMassage = stringResource(R.string.dialog_reply_clover_description),
+            confirmOption = stringResource(R.string.dialog_reply_clover_confirm),
             confirmAction = { showDialog = false },
             confirmButtonColor = ClodyTheme.colors.mainYellow,
         )

@@ -43,7 +43,7 @@ fun AccountManagementNicknameOption(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = stringResource(R.string.account_management_nickname_change_button),
+            text = stringResource(R.string.account_management_btn_change_nickname),
             modifier = Modifier.clickable(
                 onClick = { updateNicknameChangeBottomSheet(true) },
                 indication = null,

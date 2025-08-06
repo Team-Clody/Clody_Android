@@ -37,28 +37,31 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.airbnb.lottie.compose.LottieConstants
 import com.sopt.clody.R
+import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.replyloading.component.LottieAnimation
 import com.sopt.clody.presentation.ui.replyloading.component.QuickReplyAdButton
-import com.sopt.clody.presentation.ui.replyloading.navigation.ReplyLoadingNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
+import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 
 @Composable
 fun ReplyLoadingRoute(
-    navigator: ReplyLoadingNavigator,
     year: Int,
     month: Int,
-    day: Int,
-    from: String,
-    replyStatus: String,
+    date: Int,
+    from: Route.ReplyLoading.ReplyLoadingFrom,
+    replyStatus: ReplyStatus,
+    navigateToReplyDiary: (year: Int, month: Int, day: Int, status: ReplyStatus) -> Unit,
+    navigateToHome: (year: Int, month: Int, day: Int) -> Unit,
+    navigateToDiaryList: (year: Int, month: Int) -> Unit,
     viewModel: ReplyLoadingViewModel = hiltViewModel(),
 ) {
     val replyLoadingState by viewModel.replyLoadingState.collectAsState()
@@ -71,16 +74,24 @@ fun ReplyLoadingRoute(
 
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY)
-        viewModel.getDiaryTime(year, month, day)
+        viewModel.getDiaryTime(year, month, date)
     }
 
     var backPressedTime by remember { mutableStateOf(0L) }
     val backPressThreshold = 2000
 
+    val handleBackNavigation = {
+        when (from) {
+            Route.ReplyLoading.ReplyLoadingFrom.HOME -> navigateToHome(year, month, date)
+
+            Route.ReplyLoading.ReplyLoadingFrom.DIARY_LIST -> navigateToDiaryList(year, month)
+        }
+    }
+
     BackHandler {
         val currentTime = System.currentTimeMillis()
         if (currentTime - backPressedTime <= backPressThreshold) {
-            navigator.navigateHome(year, month)
+            handleBackNavigation()
         } else {
             backPressedTime = currentTime
         }
@@ -94,8 +105,10 @@ fun ReplyLoadingRoute(
         is ReplyLoadingState.Success -> {
             val successState = replyLoadingState as ReplyLoadingState.Success
             ReplyLoadingScreen(
-                onCompleteClick = { navigator.navigateReplyDiary(year, month, day, replyStatus) },
-                onBackClick = { navigator.navigateBack(year, month, from) },
+                onCompleteClick = {
+                    navigateToReplyDiary(year, month, date, replyStatus)
+                },
+                onBackClick = { handleBackNavigation() },
                 replyLoadingState = successState,
                 onShowAdClick = {
                     viewModel.loadAndShowRewardedAd(activity)
@@ -166,9 +179,9 @@ fun ReplyLoadingScreen(
     val minutes = ((remainingTime % 3600) / 60).toInt()
     val seconds = (remainingTime % 60).toInt()
 
-    val loadingMessage = stringResource(id = R.string.loading_message)
-    val nearlyDoneMessage = stringResource(id = R.string.loading_nearly_done_message)
-    val completeMessage = stringResource(id = R.string.loading_complete_message)
+    val loadingMessage = stringResource(id = R.string.reply_loading_initial_description)
+    val nearlyDoneMessage = stringResource(id = R.string.reply_loading_after_ad_description)
+    val completeMessage = stringResource(id = R.string.reply_loading_complete_description)
 
     // 메시지 분기
     val textToShow = when {
@@ -204,7 +217,7 @@ fun ReplyLoadingScreen(
                     if (isComplete) AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.WAITING_DIARY_REPLY)
                     onCompleteClick()
                 },
-                text = stringResource(R.string.loading_button_open),
+                text = stringResource(R.string.reply_loading_btn_open),
                 enabled = isComplete,
             )
         },

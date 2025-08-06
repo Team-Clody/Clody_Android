@@ -10,13 +10,15 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.R
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun CloverCount(cloverCount: Int) {
-    val text = "클로버 ${cloverCount}개"
+    val text = stringResource(R.string.home_total_clover, cloverCount)
 
     Box(
         modifier = Modifier

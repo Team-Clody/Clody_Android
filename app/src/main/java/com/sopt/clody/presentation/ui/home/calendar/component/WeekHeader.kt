@@ -11,38 +11,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
+import java.time.format.TextStyle
 
 @Composable
-fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
-    val itemWidth = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7
+fun WeekHeader(
+    modifier: Modifier = Modifier,
+    itemWidth: Dp = (LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7,
+) {
+    val dayOfWeekArray = listOf(
+        DayOfWeek.SUNDAY,
+        DayOfWeek.MONDAY,
+        DayOfWeek.TUESDAY,
+        DayOfWeek.WEDNESDAY,
+        DayOfWeek.THURSDAY,
+        DayOfWeek.FRIDAY,
+        DayOfWeek.SATURDAY,
+    )
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = modifier.fillMaxWidth(),
     ) {
-        val weekLabelArray = listOf(
-            DayOfWeek.SUNDAY,
-            DayOfWeek.MONDAY,
-            DayOfWeek.TUESDAY,
-            DayOfWeek.WEDNESDAY,
-            DayOfWeek.THURSDAY,
-            DayOfWeek.FRIDAY,
-            DayOfWeek.SATURDAY,
-        )
-
-        val koreanWeekLabels = weekLabelArray.map { it.toKoreanShortLabel() }
-
-        koreanWeekLabels.forEach { week ->
+        dayOfWeekArray.forEach { week ->
             Box(
                 modifier = Modifier.width(itemWidth),
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = week,
+                    text = week.getDisplayName(TextStyle.NARROW, LocalConfiguration.current.locales[0]),
                     color = ClodyTheme.colors.gray05,
                     style = ClodyTheme.typography.detail1Medium,
                     textAlign = TextAlign.Center,
@@ -50,21 +50,4 @@ fun WeekHeader(modifier: Modifier = Modifier, itemWidth: Dp) {
             }
         }
     }
-}
-
-fun DayOfWeek.toKoreanShortLabel(): String {
-    return when (this) {
-        DayOfWeek.SUNDAY -> "일"
-        DayOfWeek.MONDAY -> "월"
-        DayOfWeek.TUESDAY -> "화"
-        DayOfWeek.WEDNESDAY -> "수"
-        DayOfWeek.THURSDAY -> "목"
-        DayOfWeek.FRIDAY -> "금"
-        DayOfWeek.SATURDAY -> "토"
-    }
-}
-
-@Composable
-@Preview(showBackground = true)
-fun WeekHeaderPreview() {
 }

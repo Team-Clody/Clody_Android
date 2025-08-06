@@ -1,8 +1,5 @@
 package com.sopt.clody.presentation.ui.setting.screen
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,29 +18,38 @@ import com.sopt.clody.presentation.ui.setting.component.SettingOption
 import com.sopt.clody.presentation.ui.setting.component.SettingSeparateLine
 import com.sopt.clody.presentation.ui.setting.component.SettingTopAppBar
 import com.sopt.clody.presentation.ui.setting.component.SettingVersionInfo
-import com.sopt.clody.presentation.ui.setting.navigation.SettingNavigator
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.openExternalBrowser
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun SettingRoute(
-    navigator: SettingNavigator,
+    navigateToAccountManagement: () -> Unit,
+    navigateToNotification: () -> Unit,
+    navigateToPrevious: () -> Unit,
     settingViewModel: SettingViewModel = hiltViewModel(),
 ) {
+    val notice by settingViewModel::noticeUrl
+    val supportFeedback by settingViewModel::supportFeedbackUrl
+    val termsOfService by settingViewModel::termsOfServiceUrl
+    val privacyPolicy by settingViewModel::privacyPolicyUrl
     val versionInfo by settingViewModel::versionInfo
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
-        settingViewModel.getVersionInfo()
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.SETTING)
     }
 
     SettingScreen(
-        versionInfo = versionInfo ?: stringResource(R.string.setting_version_info_failure),
-        onClickBack = { navigator.navigateBack() },
-        onClickAccountManagement = { navigator.navigateAccountManagement() },
-        onClickNotificationSetting = { navigator.navigateNotificationSetting() },
-        onClickInquiriesSuggestions = { navigator.navigateWebView(SettingOptionUrls.INQUIRIES_SUGGESTIONS_URL) },
+        versionInfo = versionInfo ?: stringResource(R.string.setting_option_app_version_info_failure),
+        onClickBack = navigateToPrevious,
+        onClickAccountManagement = navigateToAccountManagement,
+        onClickNotificationSetting = navigateToNotification,
+        onClickNotice = { openExternalBrowser(context, notice) },
+        onClickSupportFeedback = { openExternalBrowser(context, supportFeedback) },
+        onClickTerms = { openExternalBrowser(context, termsOfService) },
+        onClickPrivacy = { openExternalBrowser(context, privacyPolicy) },
     )
 }
 
@@ -54,60 +60,33 @@ fun SettingScreen(
     onClickBack: () -> Unit,
     onClickAccountManagement: () -> Unit,
     onClickNotificationSetting: () -> Unit,
-    onClickInquiriesSuggestions: () -> Unit,
+    onClickNotice: () -> Unit,
+    onClickSupportFeedback: () -> Unit,
+    onClickTerms: () -> Unit,
+    onClickPrivacy: () -> Unit,
 ) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val context = LocalContext.current
 
     Scaffold(
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = { SettingTopAppBar(stringResource(R.string.setting_title), onClickBack) },
         containerColor = ClodyTheme.colors.white,
     ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding),
-        ) {
+        Column(modifier = Modifier.padding(innerPadding)) {
             SettingOption(option = stringResource(R.string.setting_option_account_management), onClickAccountManagement)
 
             SettingSeparateLine()
 
-            SettingOption(
-                option = stringResource(R.string.setting_option_notification_setting),
-                onClickNotificationSetting,
-            )
-            SettingOption(option = stringResource(R.string.setting_option_announcement)) {
-                onClickSettingOption(
-                    context,
-                    SettingOptionUrls.ANNOUNCEMENT_URL,
-                )
-            }
-            SettingOption(
-                option = stringResource(R.string.setting_option_inquiries_suggestions),
-                onClickInquiriesSuggestions,
-            )
+            SettingOption(option = stringResource(R.string.setting_option_notification_setting), onClickNotificationSetting)
+            SettingOption(option = stringResource(R.string.setting_option_announcement), onClickNotice)
+            SettingOption(option = stringResource(R.string.setting_option_inquiries_suggestions), onClickSupportFeedback)
 
             SettingSeparateLine()
 
-            SettingOption(option = stringResource(R.string.setting_option_terms_of_service)) {
-                onClickSettingOption(
-                    context,
-                    SettingOptionUrls.TERMS_OF_SERVICE_URL,
-                )
-            }
-            SettingOption(option = stringResource(R.string.setting_option_privacy_policy)) {
-                onClickSettingOption(
-                    context,
-                    SettingOptionUrls.PRIVACY_POLICY_URL,
-                )
-            }
+            SettingOption(option = stringResource(R.string.setting_option_terms_of_service), onClickTerms)
+            SettingOption(option = stringResource(R.string.setting_option_privacy_policy), onClickPrivacy)
+
             SettingVersionInfo(versionInfo = versionInfo)
         }
     }
-}
-
-fun onClickSettingOption(context: Context, url: String) {
-    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-    context.startActivity(intent)
 }

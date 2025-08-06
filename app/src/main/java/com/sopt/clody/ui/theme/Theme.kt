@@ -3,12 +3,29 @@ package com.sopt.clody.ui.theme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalConfiguration
 
 @Composable
-fun CLODYTheme(
+fun provideTypographyByLocale(): ClodyTypography {
+    val configuration = LocalConfiguration.current
+    val locale = remember(configuration) { configuration.locales[0] }
+
+    return if (locale.language == "ko") clodyKoreanTypography else clodyEnglishTypography
+}
+
+@Composable
+fun ClodyTheme(
     content: @Composable () -> Unit,
 ) {
-    CompositionLocalProvider(content = content)
+    val colors = defaultClodyColors
+    val typography = provideTypographyByLocale()
+
+    CompositionLocalProvider(
+        LocalClodyColors provides colors,
+        LocalClodyTypography provides typography,
+        content = content,
+    )
 }
 
 object ClodyTheme {

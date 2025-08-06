@@ -4,71 +4,74 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
-import java.time.LocalDate
+import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DiaryStateButton(
-    diaryCount: Int,
-    isDeleted: Boolean,
+    hasDraft: Boolean,
+    canWrite: Boolean,
+    canReply: Boolean,
+    isInvalidDraft: Boolean,
     year: Int,
     month: Int,
     day: Int,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
 ) {
-    val today = LocalDate.now()
-    val isAvailableDay = year == today.year && month == today.monthValue && (day == today.dayOfMonth || day == today.dayOfMonth - 1)
-
-    val writeDiaryEnabled = diaryCount == 0 && isAvailableDay
-    val writeDiaryDisabled = diaryCount == 0 && !isAvailableDay
-    val checkReplyEnabled = diaryCount != 0 && !isDeleted
-    val checkReplyDisabled = diaryCount != 0 && isDeleted
+    val modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 16.dp)
 
     when {
-        writeDiaryEnabled -> {
+        hasDraft -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = "일기쓰기",
+                text = stringResource(R.string.home_btn_continue_draft),
                 enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = modifier,
             )
         }
 
-        writeDiaryDisabled -> {
+        isInvalidDraft -> {
+            ClodyButton(
+                onClick = { /* no-action */ },
+                text = stringResource(R.string.home_btn_check_reply),
+                enabled = false,
+                modifier = modifier,
+                disabledContainerColor = ClodyTheme.colors.gray05,
+                disabledContentColor = ClodyTheme.colors.white,
+            )
+        }
+
+        canReply -> {
+            ClodyReplyButton(
+                onClick = onClickReplyDiary,
+                text = stringResource(R.string.home_btn_check_reply),
+                enabled = true,
+                modifier = modifier,
+            )
+        }
+
+        canWrite -> {
             ClodyButton(
                 onClick = { onClickWriteDiary(year, month, day) },
-                text = "일기쓰기",
-                enabled = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-            )
-        }
-
-        checkReplyEnabled -> {
-            ClodyReplyButton(
-                onClick = onClickReplyDiary,
-                text = "답장확인",
+                text = stringResource(R.string.home_btn_write_diary),
                 enabled = true,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = modifier,
             )
         }
 
-        checkReplyDisabled -> {
-            ClodyReplyButton(
-                onClick = onClickReplyDiary,
-                text = "답장확인",
+        else -> {
+            ClodyButton(
+                onClick = { onClickWriteDiary(year, month, day) },
+                text = stringResource(R.string.home_btn_write_diary),
                 enabled = false,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = modifier,
             )
         }
     }

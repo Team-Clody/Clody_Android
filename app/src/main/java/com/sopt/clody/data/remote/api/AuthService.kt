@@ -1,6 +1,7 @@
 package com.sopt.clody.data.remote.api
 
 import com.sopt.clody.data.remote.dto.base.ApiResponse
+import com.sopt.clody.data.remote.dto.request.GoogleSignUpRequestDto
 import com.sopt.clody.data.remote.dto.request.LoginRequestDto
 import com.sopt.clody.data.remote.dto.request.SignUpRequestDto
 import com.sopt.clody.data.remote.dto.response.LoginResponseDto
@@ -20,5 +21,10 @@ interface AuthService {
     suspend fun signUp(
         @Header("Authorization") authorization: String,
         @Body signUpRequestDto: SignUpRequestDto,
+    ): ApiResponse<SignUpResponseDto>
+
+    @POST("api/v1/auth/oauth2/google")
+    suspend fun signUpWithGoogle(
+        @Body body: GoogleSignUpRequestDto,
     ): ApiResponse<SignUpResponseDto>
 }

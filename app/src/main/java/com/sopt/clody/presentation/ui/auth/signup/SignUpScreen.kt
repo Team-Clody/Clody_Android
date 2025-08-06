@@ -1,129 +1,94 @@
 package com.sopt.clody.presentation.ui.auth.signup
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.sopt.clody.R
-import com.sopt.clody.presentation.ui.auth.component.button.KaKaoButton
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
-import com.sopt.clody.presentation.ui.component.LoadingScreen
-import com.sopt.clody.presentation.utils.base.UiState
-import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
-import com.sopt.clody.ui.theme.ClodyTheme
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.airbnb.mvrx.compose.collectAsState
+import com.airbnb.mvrx.compose.mavericksViewModel
+import com.sopt.clody.presentation.ui.auth.signup.page.NickNamePage
+import com.sopt.clody.presentation.ui.auth.signup.page.TermsOfServicePage
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
+import com.sopt.clody.presentation.utils.extension.repeatOnStarted
+import com.sopt.clody.presentation.utils.openExternalBrowser
 
 @Composable
 fun SignUpRoute(
-    authNavigator: AuthNavigator,
+    viewModel: SignUpViewModel = mavericksViewModel(),
+    navigateToHome: () -> Unit,
+    navigateToPrevious: () -> Unit,
 ) {
-    val viewModel: SignUpViewModel = hiltViewModel()
-    val signInState by viewModel.signInState.collectAsState()
+    val state by viewModel.collectAsState()
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(signInState) {
-        when (signInState.uiState) {
-            is UiState.Success -> {
-                authNavigator.navigateHome()
+    LaunchedEffect(viewModel) {
+        lifecycleOwner.repeatOnStarted {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    is SignUpContract.SignUpSideEffect.NavigateToTimeReminder -> navigateToHome()
+                    is SignUpContract.SignUpSideEffect.NavigateToWebView -> { openExternalBrowser(context, effect.url) }
+                    is SignUpContract.SignUpSideEffect.ShowMessage -> {}
+                }
             }
-
-            is UiState.Failure -> {
-                authNavigator.navigateTermsOfService()
-            }
-
-            else -> {}
         }
     }
 
     SignUpScreen(
-        isLoading = signInState.uiState is UiState.Loading,
-        onSignInClick = { viewModel.signInWithKakao(context) },
+        state = state,
+        onIntent = { viewModel.postIntent(it) },
+        context = context,
+        navigateToPrevious = navigateToPrevious,
     )
+
+    state.errorMessage?.let {
+        FailureDialog(message = it) {
+            viewModel.postIntent(SignUpContract.SignUpIntent.ClearError)
+        }
+    }
 }
 
 @Composable
 fun SignUpScreen(
-    isLoading: Boolean,
-    onSignInClick: () -> Unit,
+    state: SignUpContract.SignUpState,
+    onIntent: (SignUpContract.SignUpIntent) -> Unit,
+    context: Context,
+    navigateToPrevious: () -> Unit,
 ) {
-    val systemUiController = rememberSystemUiController()
-    val backgroundColor = ClodyTheme.colors.white
-
-    LaunchedEffect(Unit) {
-        systemUiController.setStatusBarColor(
-            color = backgroundColor,
-            darkIcons = true,
-        )
-    }
-
-    Scaffold(
-        bottomBar = {
-            KaKaoButton(
-                text = stringResource(id = R.string.signup_btn_kakao),
-                onClick = onSignInClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .navigationBarsPadding()
-                    .padding(bottom = 40.dp),
+    when (state.currentStep) {
+        SignUpContract.SignUpState.Step.TERMS -> {
+            TermsOfServicePage(
+                allChecked = state.allChecked,
+                serviceChecked = state.serviceChecked,
+                privacyChecked = state.privacyChecked,
+                serviceUrl = state.serviceUrl,
+                privacyUrl = state.privacyUrl,
+                onToggleAll = { onIntent(SignUpContract.SignUpIntent.ToggleAllChecked(it)) },
+                onToggleService = { onIntent(SignUpContract.SignUpIntent.ToggleServiceChecked(it)) },
+                onTogglePrivacy = { onIntent(SignUpContract.SignUpIntent.TogglePrivacyChecked(it)) },
+                onAgreeClick = { onIntent(SignUpContract.SignUpIntent.ProceedTerms) },
+                navigateToPrevious = navigateToPrevious,
+                navigateToWebView = { url -> onIntent(SignUpContract.SignUpIntent.OpenWebView(url)) },
             )
-        },
-        content = { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = backgroundColor)
-                    .padding(innerPadding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Spacer(modifier = Modifier.heightForScreenPercentage(0.38f))
-                Image(
-                    painter = painterResource(id = R.drawable.ic_signup_logo),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
-                Spacer(modifier = Modifier.heightForScreenPercentage(0.02f))
-                Image(
-                    painter = painterResource(id = R.drawable.ic__signup_title),
-                    contentDescription = null,
-                )
-                Spacer(modifier = Modifier.heightForScreenPercentage(0.01f))
-                Image(
-                    painter = painterResource(id = R.drawable.ic_signup_logotitle),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                )
-            }
-        },
-    )
+        }
 
-    if (isLoading) {
-        LoadingScreen()
+        SignUpContract.SignUpState.Step.NICKNAME -> {
+            NickNamePage(
+                nickname = state.nickname,
+                onNicknameChange = { onIntent(SignUpContract.SignUpIntent.SetNickname(it)) },
+                onCompleteClick = {
+                    onIntent(SignUpContract.SignUpIntent.CompleteSignUp(context))
+                },
+                onBackClick = { onIntent(SignUpContract.SignUpIntent.BackToTerms) },
+                isLoading = state.isLoading,
+                isValidNickname = state.isValidNickname,
+                nicknameMaxLength = state.nicknameMaxLength,
+                nicknameMessage = state.nicknameMessage,
+                isFocused = state.isNicknameFocused,
+                onFocusChanged = { onIntent(SignUpContract.SignUpIntent.SetNicknameFocus(it)) },
+            )
+        }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun RegisterScreenPreview() {
-    SignUpScreen(
-        isLoading = false,
-        onSignInClick = {},
-    )
 }

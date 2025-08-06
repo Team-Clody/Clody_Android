@@ -49,6 +49,7 @@ class AuthInterceptor @Inject constructor(
     private fun shouldAddAuthorization(url: String): Boolean {
         return !url.contains("api/v1/auth/signin") &&
             !url.contains("api/v1/auth/signup") &&
+            !url.contains("api/v1/auth/oauth2/google") &&
             !url.contains("api/v1/auth/reissue")
     }
 

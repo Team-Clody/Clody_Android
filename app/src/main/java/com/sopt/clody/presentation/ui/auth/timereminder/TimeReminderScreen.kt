@@ -37,7 +37,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.container.PickerBox
 import com.sopt.clody.presentation.ui.auth.component.timepicker.BottomSheetTimePicker
-import com.sopt.clody.presentation.ui.auth.navigation.AuthNavigator
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
@@ -45,11 +44,12 @@ import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun TimeReminderRoute(
-    navigator: AuthNavigator,
+    navigateToGuide: () -> Unit,
     viewModel: TimeReminderViewModel = hiltViewModel(),
 ) {
     val timeReminderState by viewModel.timeReminderState.collectAsState()
@@ -81,15 +81,11 @@ fun TimeReminderRoute(
     // 알림 권한 요청 결과에 따른 처리
     LaunchedEffect(timeReminderState) {
         when (val result = timeReminderState) {
-            is TimeReminderState.Success -> {
-                navigator.navigateGuide()
-            }
-
+            is TimeReminderState.Success -> navigateToGuide()
             is TimeReminderState.Failure -> {
                 showDialog = true
                 dialogMessage = result.error
             }
-
             else -> {}
         }
     }
@@ -106,11 +102,11 @@ fun TimeReminderRoute(
 
     TimeReminderScreen(
         onStartClick = {
-            viewModel.setFixedTime("21", "30")
+            viewModel.setSelectedTime(TimePeriod.PM, "9", "30")
             viewModel.sendNotification(context, isNotificationPermissionGranted.value)
         },
-        onTimeSelected = { amPm, hour, minute ->
-            viewModel.setSelectedTime(amPm, hour, minute)
+        onTimeSelected = { period, hour, minute ->
+            viewModel.setSelectedTime(period, hour, minute)
         },
         onCompleteClick = {
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.ONBOARDING_ALARM)
@@ -123,20 +119,20 @@ fun TimeReminderRoute(
 @Composable
 fun TimeReminderScreen(
     onStartClick: () -> Unit,
-    onTimeSelected: (String, String, String) -> Unit,
+    onTimeSelected: (TimePeriod, String, String) -> Unit,
     onCompleteClick: () -> Unit,
     isLoading: Boolean,
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
-    var selectedAmPm by remember { mutableStateOf("오후") }
+    var selectedTimePeriod by remember { mutableStateOf(TimePeriod.PM) }
     var selectedHour by remember { mutableStateOf("9") }
     var selectedMinute by remember { mutableStateOf("30") }
 
-    val onRemindTimeSelected: (String, String, String) -> Unit = { amPm, hour, minute ->
-        selectedAmPm = amPm
+    val onRemindTimeSelected: (TimePeriod, String, String) -> Unit = { period, hour, minute ->
+        selectedTimePeriod = period
         selectedHour = hour
         selectedMinute = minute
-        onTimeSelected(amPm, hour, minute)
+        onTimeSelected(period, hour, minute)
     }
 
     Scaffold(
@@ -151,13 +147,13 @@ fun TimeReminderScreen(
             ) {
                 ClodyButton(
                     onClick = onCompleteClick,
-                    text = stringResource(id = R.string.time_reminder_complete_button),
+                    text = stringResource(id = R.string.time_reminder_btn_complete),
                     enabled = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.015f))
                 Text(
-                    text = stringResource(id = R.string.time_reminder_next_setting_button),
+                    text = stringResource(id = R.string.time_reminder_btn_skip),
                     modifier = Modifier
                         .clickable(
                             onClick = onStartClick,
@@ -188,7 +184,12 @@ fun TimeReminderScreen(
                 )
                 Spacer(modifier = Modifier.height(LocalConfiguration.current.screenHeightDp.dp * 0.05f))
                 PickerBox(
-                    time = "$selectedAmPm ${selectedHour}시 ${selectedMinute}분",
+                    time = stringResource(
+                        id = R.string.time_reminder_time_format,
+                        selectedTimePeriod.getLabel(),
+                        selectedHour,
+                        selectedMinute,
+                    ),
                     modifier = Modifier.fillMaxWidth(),
                     onClick = { showBottomSheet = true },
                 )
