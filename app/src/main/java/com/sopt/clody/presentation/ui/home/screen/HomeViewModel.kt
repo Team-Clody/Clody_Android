@@ -99,6 +99,8 @@ class HomeViewModel @Inject constructor(
     private val _hasDraft = MutableStateFlow(false)
     val hasDraft: StateFlow<Boolean> get() = _hasDraft
 
+    private val _isNotificationPermissionGranted = MutableStateFlow(false)
+
     private var isInitialized = false
 
     init {
@@ -311,5 +313,9 @@ class HomeViewModel @Inject constructor(
     fun updateShowInAppReviewPopup(state: Boolean) {
         reviewRepository.setShouldShowPopup(state)
         _showInAppReviewPopup.value = state
+    }
+
+    fun updateNotificationPermissionGranted(isGranted: Boolean) {
+        _isNotificationPermissionGranted.value = isGranted
     }
 }

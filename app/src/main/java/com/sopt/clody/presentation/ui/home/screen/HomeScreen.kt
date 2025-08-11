@@ -1,7 +1,12 @@
 package com.sopt.clody.presentation.ui.home.screen
 
+import android.Manifest
 import android.app.Activity
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -26,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.clody.R
@@ -84,12 +90,38 @@ fun HomeRoute(
     val showYearMonthPickerState by homeViewModel.showYearMonthPickerState.collectAsStateWithLifecycle()
     val hasDraft by homeViewModel.hasDraft.collectAsStateWithLifecycle()
 
+    // 알림 권한 관련 상태
+    val isNotificationPermissionGranted = remember { mutableStateOf(false) }
+
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        isNotificationPermissionGranted.value = isGranted
+        homeViewModel.updateNotificationPermissionGranted(isGranted)
+    }
+
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
 
         if (showInAppReviewPopup && isFromReplyDiary) {
             InAppReviewManager.showPopup(context as Activity)
             homeViewModel.updateShowInAppReviewPopup(false)
+        }
+    }
+
+    // 알림 권한 요청
+    LaunchedEffect(Unit) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
+            if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(notificationPermission)
+            } else {
+                isNotificationPermissionGranted.value = true
+                homeViewModel.updateNotificationPermissionGranted(true)
+            }
+        } else {
+            isNotificationPermissionGranted.value = true
+            homeViewModel.updateNotificationPermissionGranted(true)
         }
     }
 
