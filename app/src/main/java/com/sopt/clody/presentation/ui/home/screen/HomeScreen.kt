@@ -46,7 +46,6 @@ import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
-import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
@@ -55,8 +54,6 @@ import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
 import com.sopt.clody.presentation.utils.extension.toLocalizedYearLabel
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import java.time.LocalDate
 
 @Composable
@@ -120,31 +117,18 @@ fun HomeRoute(
     }
 
     LaunchedEffect(Unit) {
-        val year = selectedDiaryDate.year
-        val month = selectedDiaryDate.month
-        val day = selectedDate.dayOfMonth
-
-        try {
-            coroutineScope {
-                val calendarDeferred = async { homeViewModel.loadCalendarData(year, month) }
-                val dailyDeferred = async { homeViewModel.loadDailyDiariesData(year, month, day) }
-
-                calendarDeferred.await()
-                dailyDeferred.await()
-            }
-        } catch (e: Exception) {
-            homeViewModel.setErrorState(true, "데이터를 불러오는데 실패했습니다.")
-        }
+        homeViewModel.updateYearMonthAndLoadData(
+            selectedDiaryDate.year,
+            selectedDiaryDate.month,
+            selectedDate.dayOfMonth,
+        )
     }
+
     if (isError) {
         FailureScreen(
             message = errorMessage,
             confirmAction = {
-                homeViewModel.refreshCalendarDataCalendarData(
-                    selectedDiaryDate.year,
-                    selectedDiaryDate.month,
-                )
-                homeViewModel.loadDailyDiariesData(
+                homeViewModel.updateYearMonthAndLoadData(
                     selectedDiaryDate.year,
                     selectedDiaryDate.month,
                     selectedDate.dayOfMonth,
@@ -299,10 +283,11 @@ fun HomeRoute(
                 confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
                 dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
                 confirmAction = {
+                    val d = homeViewModel.selectedDate.value
                     homeViewModel.deleteDailyDiary(
-                        selectedDiaryDate.year,
-                        selectedDiaryDate.month,
-                        selectedDate.dayOfMonth,
+                        d.year,
+                        d.monthValue,
+                        d.dayOfMonth,
                     )
                     homeViewModel.setShowDiaryDeleteDialog(false)
                 },
@@ -346,8 +331,7 @@ fun HomeScreen(
         FailureScreen(
             message = errorMessage,
             confirmAction = {
-                homeViewModel.refreshCalendarDataCalendarData(selectedYear, selectedMonth)
-                homeViewModel.loadDailyDiariesData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
+                homeViewModel.updateYearMonthAndLoadData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
             },
         )
     } else {
@@ -414,8 +398,7 @@ fun HomeScreen(
                         LoadingScreen()
                     }
 
-                    is DeleteDiaryState.Success -> {
-                    }
+                    is DeleteDiaryState.Success -> {}
 
                     is DeleteDiaryState.Failure -> {
                         homeViewModel.setErrorState(true, stringResource(R.string.home_error_delete_diary))
@@ -459,8 +442,7 @@ fun HomeScreen(
                     selectedYear = selectedYear,
                     selectedMonth = selectedMonth,
                     onYearMonthSelected = { year, month ->
-                        homeViewModel.updateSelectedDiaryDate(DiaryDateData(year, month))
-                        homeViewModel.loadCalendarData(year, month)
+                        homeViewModel.updateYearMonthAndLoadData(year, month)
                     },
                 )
             }
