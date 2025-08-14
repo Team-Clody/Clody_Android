@@ -2,6 +2,7 @@ package com.sopt.clody.presentation.ui.home.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.sopt.clody.ClodyFirebaseMessagingService.Companion.getTokenFromPreferences
 import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.network.NetworkConnectivityObserver
 import com.sopt.clody.core.network.NetworkStatus
@@ -14,6 +15,7 @@ import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
+import com.sopt.clody.presentation.ui.auth.timereminder.TimeReminderState
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
@@ -98,8 +100,6 @@ class HomeViewModel @Inject constructor(
 
     private val _hasDraft = MutableStateFlow(false)
     val hasDraft: StateFlow<Boolean> get() = _hasDraft
-
-    private val _isNotificationPermissionGranted = MutableStateFlow(false)
 
     private var isInitialized = false
 
@@ -315,7 +315,18 @@ class HomeViewModel @Inject constructor(
         _showInAppReviewPopup.value = state
     }
 
-    fun updateNotificationPermissionGranted(isGranted: Boolean) {
-        _isNotificationPermissionGranted.value = isGranted
+    fun sendNotification(isGranted: Boolean) {
+        viewModelScope.launch {
+            val fcmToken = fcmTokenProvider.getToken().orEmpty()
+            val notificationInfo = getNotificationInfo() ?: return@launch
+            val requestDto = SendNotificationRequestDto(
+                isDiaryAlarm = isGranted,
+                isDraftAlarm = notificationInfo.isDraftAlarm,
+                isReplyAlarm = isGranted,
+                time = notificationInfo.time,
+                fcmToken = fcmToken,
+            )
+            notificationRepository.sendNotification(requestDto)
+        }
     }
 }

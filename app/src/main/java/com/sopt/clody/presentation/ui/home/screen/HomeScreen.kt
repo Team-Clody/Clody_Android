@@ -90,14 +90,10 @@ fun HomeRoute(
     val showYearMonthPickerState by homeViewModel.showYearMonthPickerState.collectAsStateWithLifecycle()
     val hasDraft by homeViewModel.hasDraft.collectAsStateWithLifecycle()
 
-    // 알림 권한 관련 상태
-    val isNotificationPermissionGranted = remember { mutableStateOf(false) }
-
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
-        isNotificationPermissionGranted.value = isGranted
-        homeViewModel.updateNotificationPermissionGranted(isGranted)
+        homeViewModel.sendNotification(isGranted)
     }
 
     LaunchedEffect(Unit) {
@@ -116,12 +112,10 @@ fun HomeRoute(
             if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(notificationPermission)
             } else {
-                isNotificationPermissionGranted.value = true
-                homeViewModel.updateNotificationPermissionGranted(true)
+                homeViewModel.sendNotification(true)
             }
         } else {
-            isNotificationPermissionGranted.value = true
-            homeViewModel.updateNotificationPermissionGranted(true)
+            homeViewModel.sendNotification(true)
         }
     }
 
