@@ -76,14 +76,14 @@ fun TimeReminderRoute(
     TimeReminderScreen(
         onStartClick = {
             viewModel.setSelectedTime(TimePeriod.PM, "9", "30")
-            viewModel.sendNotification(context, true)
+            viewModel.sendNotification(context)
         },
         onTimeSelected = { period, hour, minute ->
             viewModel.setSelectedTime(period, hour, minute)
         },
         onCompleteClick = {
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.ONBOARDING_ALARM)
-            viewModel.sendNotification(context, true)
+            viewModel.sendNotification(context)
         },
         isLoading = timeReminderState is TimeReminderState.Loading,
     )
