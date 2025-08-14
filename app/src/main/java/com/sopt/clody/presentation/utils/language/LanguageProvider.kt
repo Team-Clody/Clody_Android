@@ -5,6 +5,7 @@ import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 
 interface LanguageProvider {
     fun getCurrentLanguageTag(): String
+    fun getInspectionTimeText(start: String, end: String): String?
     fun getLoginType(): OAuthProvider
     fun getNicknameMaxLength(): Int
     fun getDiaryMaxLength(): Int

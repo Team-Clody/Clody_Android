@@ -2,6 +2,8 @@ package com.sopt.clody.presentation.utils.language
 
 import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
@@ -12,6 +14,25 @@ class LanguageProviderImpl @Inject constructor() : LanguageProvider {
 
     override fun getCurrentLanguageTag(): String =
         locale.toLanguageTag() // e.g., "ko-KR" or "en-US"
+
+    override fun getInspectionTimeText(start: String, end: String): String? {
+        return runCatching {
+            val startLdt = LocalDateTime.parse(start, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            val endLdt = LocalDateTime.parse(end, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+            if (isKorean()) {
+                val koPattern = DateTimeFormatter.ofPattern("M/d(E) HH시mm분", Locale.KOREAN)
+                "${startLdt.format(koPattern)} ~ ${endLdt.format(koPattern)}"
+            } else {
+                val enDatePattern = DateTimeFormatter.ofPattern("MMM d (EEE)", Locale.ENGLISH)
+                val enTimePattern = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
+
+                val left = "${startLdt.format(enDatePattern)}, ${startLdt.format(enTimePattern)}"
+                val right = "${endLdt.format(enDatePattern)} ${endLdt.format(enTimePattern)}"
+                "$left ~ $right"
+            }
+        }.getOrNull()
+    }
 
     override fun getLoginType(): OAuthProvider =
         if (isKorean()) OAuthProvider.KAKAO else OAuthProvider.GOOGLE
