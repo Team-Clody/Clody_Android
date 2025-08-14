@@ -2,7 +2,6 @@ package com.sopt.clody.presentation.ui.home.screen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sopt.clody.ClodyFirebaseMessagingService.Companion.getTokenFromPreferences
 import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.network.NetworkConnectivityObserver
 import com.sopt.clody.core.network.NetworkStatus
@@ -15,7 +14,6 @@ import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
-import com.sopt.clody.presentation.ui.auth.timereminder.TimeReminderState
 import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
