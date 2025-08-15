@@ -32,7 +32,7 @@ class LanguageProviderImpl @Inject constructor() : LanguageProvider {
                 "${startUser.format(koPattern)} ~ ${endUser.format(koPattern)}"
             } else {
                 val enDatePattern = DateTimeFormatter.ofPattern("MMM d (EEE)", Locale.ENGLISH)
-                val enTimePattern = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
+                val enTimePattern = DateTimeFormatter.ofPattern("HH:mm", Locale.ENGLISH)
                 val left = "${startUser.format(enDatePattern)}, ${startUser.format(enTimePattern)}"
                 val right = "${endUser.format(enDatePattern)} ${endUser.format(enTimePattern)}"
                 "$left ~ $right"
