@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.checkbox.CustomCheckbox
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
-import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.utils.base.BasePreview
 import com.sopt.clody.presentation.utils.base.ClodyPreview
 import com.sopt.clody.presentation.utils.extension.heightForScreenPercentage
@@ -107,7 +107,11 @@ fun TermsOfServicePage(
                     )
                 }
                 Spacer(modifier = Modifier.height(18.dp))
-                HorizontalDivider(color = ClodyTheme.colors.gray07, thickness = 1.dp)
+                HorizontalDivider(
+                    color = ClodyTheme.colors.gray07,
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth(),
+                )
                 Spacer(modifier = Modifier.height(16.dp))
                 TermsCheckboxRow(
                     text = stringResource(R.string.terms_service_use),

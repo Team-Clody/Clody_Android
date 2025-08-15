@@ -1,18 +1,15 @@
 package com.sopt.clody.presentation.ui.home.component
 
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
-fun DiaryStateButton(
+fun DailyStateButton(
     hasDraft: Boolean,
     canWrite: Boolean,
     canReply: Boolean,
@@ -22,11 +19,8 @@ fun DiaryStateButton(
     day: Int,
     onClickWriteDiary: (Int, Int, Int) -> Unit,
     onClickReplyDiary: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp)
-
     when {
         hasDraft -> {
             ClodyButton(

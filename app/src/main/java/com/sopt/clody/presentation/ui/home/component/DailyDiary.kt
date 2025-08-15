@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home.calendar.component
+package com.sopt.clody.presentation.ui.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,7 +30,7 @@ import java.time.LocalDate
 import java.time.format.TextStyle
 
 @Composable
-fun DailyDiaryListItem(
+fun DailyDiary(
     date: LocalDate,
     dayOfWeek: DayOfWeek,
     dailyDiary: DailyDiariesResponseDto,
