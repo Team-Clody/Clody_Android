@@ -3,6 +3,7 @@ package com.sopt.clody.presentation.utils.language
 import com.sopt.clody.data.datastore.OAuthProvider
 import com.sopt.clody.presentation.ui.setting.screen.SettingOptionUrls
 import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
@@ -20,15 +21,20 @@ class LanguageProviderImpl @Inject constructor() : LanguageProvider {
             val startLdt = LocalDateTime.parse(start, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
             val endLdt = LocalDateTime.parse(end, DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
+            val serverZone = ZoneId.of("Asia/Seoul")
+            val userZone = ZoneId.systemDefault()
+
+            val startUser = startLdt.atZone(serverZone).withZoneSameInstant(userZone)
+            val endUser = endLdt.atZone(serverZone).withZoneSameInstant(userZone)
+
             if (isKorean()) {
                 val koPattern = DateTimeFormatter.ofPattern("M/d(E) HH시mm분", Locale.KOREAN)
-                "${startLdt.format(koPattern)} ~ ${endLdt.format(koPattern)}"
+                "${startUser.format(koPattern)} ~ ${endUser.format(koPattern)}"
             } else {
                 val enDatePattern = DateTimeFormatter.ofPattern("MMM d (EEE)", Locale.ENGLISH)
                 val enTimePattern = DateTimeFormatter.ofPattern("h:mm a", Locale.ENGLISH)
-
-                val left = "${startLdt.format(enDatePattern)}, ${startLdt.format(enTimePattern)}"
-                val right = "${endLdt.format(enDatePattern)} ${endLdt.format(enTimePattern)}"
+                val left = "${startUser.format(enDatePattern)}, ${startUser.format(enTimePattern)}"
+                val right = "${endUser.format(enDatePattern)} ${endUser.format(enTimePattern)}"
                 "$left ~ $right"
             }
         }.getOrNull()

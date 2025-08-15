@@ -4,7 +4,8 @@ import com.sopt.clody.data.remote.datasource.RemoteConfigDataSource
 import com.sopt.clody.domain.appupdate.AppUpdateChecker
 import com.sopt.clody.domain.model.AppUpdateState
 import com.sopt.clody.domain.util.VersionComparator
-import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 class AppUpdateCheckerImpl @Inject constructor(
@@ -35,17 +36,18 @@ class AppUpdateCheckerImpl @Inject constructor(
     override suspend fun isUnderInspection(): Boolean {
         val start = remoteConfigDataSource.getInspectionStart() ?: return false
         val end = remoteConfigDataSource.getInspectionEnd() ?: return false
-        val now = LocalDateTime.now()
-        return now.isAfter(start) && now.isBefore(end)
+        val serverZone = ZoneId.of("Asia/Seoul")
+
+        val nowServer = ZonedDateTime.now(serverZone)
+        val startZ = start.atZone(serverZone)
+        val endZ = end.atZone(serverZone)
+
+        return nowServer.isAfter(startZ) && nowServer.isBefore(endZ)
     }
 
     override suspend fun getInspectionTimeText(): Pair<String, String>? {
-        val start = remoteConfigDataSource.getInspectionStart()
-        val end = remoteConfigDataSource.getInspectionEnd()
-        if (start == null || end == null) return null
-
-        val startText = start.toString()
-        val endText = end.toString()
-        return startText to endText
+        val start = remoteConfigDataSource.getInspectionStart() ?: return null
+        val end = remoteConfigDataSource.getInspectionEnd() ?: return null
+        return start.toString() to end.toString()
     }
 }
