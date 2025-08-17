@@ -431,7 +431,7 @@ fun HomeScreen(
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
                 onYearMonthSelected = { year, month ->
-                    homeViewModel.updateYearMonthAndLoadData(year, month)
+                    homeViewModel.updateYearMonthAndLoadData(year, month, day = 1)
                 },
             )
         }

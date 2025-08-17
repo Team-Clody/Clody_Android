@@ -107,6 +107,7 @@ class HomeViewModel @Inject constructor(
     val hasDraft: StateFlow<Boolean> get() = _hasDraft
 
     private var isInitialized = false
+    private val loadDataMutex = Mutex()
 
     init {
         initialize()
@@ -189,33 +190,6 @@ class HomeViewModel @Inject constructor(
                     DeleteDiaryState.Failure(it.message ?: errorMessageProvider.getTemporaryError())
                 },
             )
-        }
-    }
-
-    private val loadDataMutex = Mutex()
-    fun updateYearMonthAndLoadData(year: Int, month: Int) {
-        viewModelScope.launch {
-            loadDataMutex.withLock {
-                val sameYm = _selectedDiaryDate.value.year == year &&
-                    _selectedDiaryDate.value.month == month
-
-                val calendarLoaded = calendarState.value is CalendarState.Success
-                val dailyLoaded = dailyDiariesState.value is DailyDiariesState.Success
-                val selectedIsFirst = _selectedDate.value.dayOfMonth == 1
-                val alreadyLoaded = sameYm && calendarLoaded && (selectedIsFirst && dailyLoaded)
-
-                if (alreadyLoaded) return@withLock
-
-                _selectedDiaryDate.value = DiaryDateData(year, month)
-                _selectedDate.value = LocalDate.of(year, month, 1)
-
-                coroutineScope {
-                    awaitAll(
-                        async { loadCalendarData(year, month) },
-                        async { loadDailyDiariesData(year, month, 1) },
-                    )
-                }
-            }
         }
     }
 
