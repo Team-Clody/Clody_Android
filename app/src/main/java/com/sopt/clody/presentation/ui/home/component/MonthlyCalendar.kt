@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
-import com.sopt.clody.presentation.ui.type.DiaryCloverType
+import com.sopt.clody.presentation.ui.type.DailyCloverType
+import com.sopt.clody.presentation.ui.type.ReplyStatus
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -146,7 +146,7 @@ fun DailyClover(
     val today = LocalDate.now()
     val isToday = date == today
 
-    val iconRes = DiaryCloverType.getCalendarCloverType(diaryData, isToday).iconRes
+    val iconRes = DailyCloverType.getCalendarCloverType(diaryData, isToday).iconRes
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

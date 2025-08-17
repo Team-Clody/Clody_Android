@@ -1,6 +1,6 @@
 package com.sopt.clody.presentation.utils.navigation
 
-import com.sopt.clody.domain.model.ReplyStatus
+import com.sopt.clody.presentation.ui.type.ReplyStatus
 import kotlinx.serialization.Serializable
 
 /**

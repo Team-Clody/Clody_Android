@@ -3,7 +3,6 @@ package com.sopt.clody.presentation.ui.type
 import androidx.annotation.DrawableRes
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
 
 /**
  * DiaryData를 기반으로 해당 날짜에 보여줄 클로버 아이콘 타입을 반환.
@@ -17,7 +16,7 @@ import com.sopt.clody.domain.model.ReplyStatus
  * - 이 외의 경우 기본값 👉 [UNGIVEN_CLOVER]
  */
 
-enum class DiaryCloverType(@DrawableRes val iconRes: Int) {
+enum class DailyCloverType(@DrawableRes val iconRes: Int) {
     TODAY_UNWRITTEN(R.drawable.ic_home_today_unwritten_clover),
     TODAY_WRITTEN(R.drawable.ic_home_today_written_clover),
     UNGIVEN_CLOVER(R.drawable.ic_home_ungiven_clover),
@@ -32,7 +31,7 @@ enum class DiaryCloverType(@DrawableRes val iconRes: Int) {
         fun getCalendarCloverType(
             diaryData: MonthlyCalendarResponseDto.Diary,
             isToday: Boolean,
-        ): DiaryCloverType {
+        ): DailyCloverType {
             val count = diaryData.diaryCount
             val reply = diaryData.replyStatus
 

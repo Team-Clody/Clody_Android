@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
+import com.sopt.clody.presentation.ui.type.ReplyStatus
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 

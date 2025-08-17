@@ -22,11 +22,11 @@ import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
 import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
+import com.sopt.clody.presentation.ui.type.ReplyStatus
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 import java.time.YearMonth
