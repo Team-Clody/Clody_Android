@@ -41,12 +41,13 @@ enum class DailyCloverType(@DrawableRes val iconRes: Int) {
             val hasDraft = reply == ReplyStatus.HAS_DRAFT
             val draftExpired = reply == ReplyStatus.INVALID_DRAFT
             val hasUnreadOrNoReply = reply.isUnreadOrNotRead
+            val isDeleted = diaryData.isDeleted
 
             return when {
                 hasDraft -> DRAFT_SAVED
                 isToday && noDiary -> TODAY_UNWRITTEN
                 isToday && hasUnreadOrNoReply -> TODAY_WRITTEN
-                draftExpired -> EXPIRED_WRITTEN
+                isDeleted || draftExpired -> EXPIRED_WRITTEN
                 hasDiary && hasUnreadOrNoReply -> UNGIVEN_CLOVER
                 count in 1..2 -> BOTTOM_CLOVER
                 count in 3..4 -> MID_CLOVER
