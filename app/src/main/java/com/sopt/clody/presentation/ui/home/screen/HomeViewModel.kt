@@ -15,7 +15,7 @@ import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
 import com.sopt.clody.presentation.ui.home.component.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
-import com.sopt.clody.presentation.ui.type.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

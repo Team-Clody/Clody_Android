@@ -3,6 +3,7 @@ package com.sopt.clody.presentation.ui.type
 import androidx.annotation.DrawableRes
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.type.ReplyStatus
 
 /**
  * DiaryData를 기반으로 해당 날짜에 보여줄 클로버 아이콘 타입을 반환.

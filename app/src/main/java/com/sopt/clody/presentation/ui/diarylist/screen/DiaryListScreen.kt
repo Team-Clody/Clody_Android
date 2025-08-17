@@ -12,7 +12,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
-import com.sopt.clody.presentation.ui.type.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet

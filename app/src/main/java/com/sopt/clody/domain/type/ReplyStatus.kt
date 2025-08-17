@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.type
+package com.sopt.clody.domain.type
 
 import kotlinx.serialization.Serializable
 

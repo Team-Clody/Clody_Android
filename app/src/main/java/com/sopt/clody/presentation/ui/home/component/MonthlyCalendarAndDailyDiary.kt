@@ -26,7 +26,7 @@ import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
 import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
-import com.sopt.clody.presentation.ui.type.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 import java.time.YearMonth

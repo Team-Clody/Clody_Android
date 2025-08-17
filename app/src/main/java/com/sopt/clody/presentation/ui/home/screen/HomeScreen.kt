@@ -49,7 +49,7 @@ import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
 import com.sopt.clody.presentation.ui.home.component.DailyStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
 import com.sopt.clody.presentation.ui.home.component.MonthlyCalendarAndDailyDiary
-import com.sopt.clody.presentation.ui.type.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
