@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.MonthlyCalendarInfo
 import com.sopt.clody.presentation.ui.type.DailyCloverType
 import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
@@ -39,7 +40,7 @@ fun MonthlyCalendar(
     dateList: List<CalendarDate>,
     selectedDate: LocalDate,
     onDayClick: (LocalDate) -> Unit,
-    getDiaryDataForDate: (LocalDate) -> MonthlyCalendarResponseDto.Diary?,
+    getDiaryDataForDate: (LocalDate) -> MonthlyCalendarInfo.DailyDiaryInfo?,
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val days = remember {
@@ -140,7 +141,7 @@ fun DailyClover(
     date: LocalDate,
     onDayClick: (LocalDate) -> Unit,
     isSelected: Boolean,
-    diaryData: MonthlyCalendarResponseDto.Diary,
+    diaryData: MonthlyCalendarInfo.DailyDiaryInfo,
     modifier: Modifier = Modifier,
 ) {
     val today = LocalDate.now()

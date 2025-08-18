@@ -3,6 +3,7 @@ package com.sopt.clody.presentation.ui.type
 import androidx.annotation.DrawableRes
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.MonthlyCalendarInfo
 import com.sopt.clody.domain.type.ReplyStatus
 
 /**
@@ -30,7 +31,7 @@ enum class DailyCloverType(@DrawableRes val iconRes: Int) {
 
     companion object {
         fun getCalendarCloverType(
-            diaryData: MonthlyCalendarResponseDto.Diary,
+            diaryData: MonthlyCalendarInfo.DailyDiaryInfo,
             isToday: Boolean,
         ): DailyCloverType {
             val count = diaryData.diaryCount

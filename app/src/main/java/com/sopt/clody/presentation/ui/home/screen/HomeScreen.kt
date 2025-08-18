@@ -38,6 +38,7 @@ import com.sopt.clody.R
 import com.sopt.clody.core.review.InAppReviewManager
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
+import com.sopt.clody.domain.model.MonthlyCalendarInfo
 import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
@@ -73,8 +74,7 @@ fun HomeRoute(
     ) -> Unit,
     homeViewModel: HomeViewModel = hiltViewModel(),
 ) {
-    val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
-    val dailyDiariesState by homeViewModel.dailyDiariesState.collectAsStateWithLifecycle()
+    val homeUiState by homeViewModel.homeUiState.collectAsStateWithLifecycle()
     val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
     val showFirstDraftPopup by homeViewModel.showFirstDraftPopup.collectAsStateWithLifecycle()
     val draftAlarmEnableToast by homeViewModel.draftAlarmEnableToast.collectAsStateWithLifecycle()
@@ -131,7 +131,7 @@ fun HomeRoute(
     }
 
     LaunchedEffect(Unit) {
-        homeViewModel.updateYearMonthAndLoadData(
+        homeViewModel.loadMonthlyCalendarInfo(
             selectedDiaryDate.year,
             selectedDiaryDate.month,
             selectedDate.dayOfMonth,
@@ -142,7 +142,7 @@ fun HomeRoute(
         FailureScreen(
             message = errorMessage,
             confirmAction = {
-                homeViewModel.updateYearMonthAndLoadData(
+                homeViewModel.loadMonthlyCalendarInfo(
                     selectedDiaryDate.year,
                     selectedDiaryDate.month,
                     selectedDate.dayOfMonth,
@@ -152,8 +152,7 @@ fun HomeRoute(
     } else {
         HomeScreen(
             homeViewModel = homeViewModel,
-            calendarState = calendarState,
-            dailyDiariesState = dailyDiariesState,
+            homeUiState = homeUiState,
             deleteDiaryState = deleteDiaryState,
             showYearMonthPickerState = showYearMonthPickerState,
             onClickDiaryList = navigateToDiaryList,
@@ -318,8 +317,7 @@ fun HomeRoute(
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModel,
-    calendarState: CalendarState<MonthlyCalendarResponseDto>,
-    dailyDiariesState: DailyDiariesState<DailyDiariesResponseDto>,
+    homeUiState: HomeUiState<MonthlyCalendarInfo>,
     deleteDiaryState: DeleteDiaryState,
     showYearMonthPickerState: Boolean,
     onClickDiaryList: (Int, Int) -> Unit,
@@ -354,32 +352,31 @@ fun HomeScreen(
         },
         containerColor = ClodyTheme.colors.white,
         content = { innerPadding ->
-            when (calendarState) {
-                is CalendarState.Idle -> {}
+            when (homeUiState) {
+                is HomeUiState.Idle -> {}
 
-                is CalendarState.Loading -> {
+                is HomeUiState.Loading -> {
                     LoadingScreen()
                 }
 
-                is CalendarState.Success -> {
+                is HomeUiState.Success -> {
                     MonthlyCalendarAndDailyDiary(
-                        selectedYear = selectedYear,
-                        selectedMonth = selectedMonth,
-                        cloverCount = calendarState.data.totalCloverCount,
-                        diaries = calendarState.data.diaries,
+                        selectedYear = homeUiState.data.year,
+                        selectedMonth = homeUiState.data.month,
+                        cloverCount = homeUiState.data.totalCloverCount,
+                        diaries = homeUiState.data.dailyDiaryInfoList,
                         homeViewModel = homeViewModel,
                         onShowDiaryDeleteStateChange = { newState -> homeViewModel.setShowDiaryDeleteState(newState) },
                         selectedDate = selectedDate,
                         onDiaryDataUpdated = { _, _ ->
-                            homeViewModel.updateDiaryState(calendarState.data.diaries)
+                            homeViewModel.updateDiaryState(homeUiState.data.dailyDiaryInfoList)
                         },
-                        modifier = Modifier.padding(innerPadding),
-                        dailyDiariesState = dailyDiariesState,
+                        modifier = Modifier.padding(innerPadding)
                     )
                 }
 
-                is CalendarState.Error -> {
-                    homeViewModel.setErrorState(true, calendarState.message)
+                is HomeUiState.Error -> {
+                    homeViewModel.setErrorState(true, homeUiState.message)
                 }
             }
 
@@ -431,7 +428,7 @@ fun HomeScreen(
                 selectedYear = selectedYear,
                 selectedMonth = selectedMonth,
                 onYearMonthSelected = { year, month ->
-                    homeViewModel.updateYearMonthAndLoadData(year, month, day = 1)
+                    homeViewModel.loadMonthlyCalendarInfo(year, month, day = 1)
                 },
             )
         }

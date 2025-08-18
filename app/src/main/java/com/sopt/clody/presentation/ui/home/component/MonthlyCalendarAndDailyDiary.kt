@@ -20,13 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
-import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.presentation.ui.component.FailureScreen
-import com.sopt.clody.presentation.ui.component.LoadingScreen
-import com.sopt.clody.presentation.ui.home.screen.DailyDiariesState
-import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
+import com.sopt.clody.domain.model.MonthlyCalendarInfo
 import com.sopt.clody.domain.type.ReplyStatus
+import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 import java.time.YearMonth
@@ -37,12 +33,11 @@ fun MonthlyCalendarAndDailyDiary(
     selectedMonth: Int,
     cloverCount: Int,
     homeViewModel: HomeViewModel,
-    diaries: List<MonthlyCalendarResponseDto.Diary>,
+    diaries: List<MonthlyCalendarInfo.DailyDiaryInfo>,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit,
     selectedDate: LocalDate,
     onDiaryDataUpdated: (Int, ReplyStatus) -> Unit,
     modifier: Modifier = Modifier,
-    dailyDiariesState: DailyDiariesState<DailyDiariesResponseDto>,
 ) {
     val scrollState = rememberScrollState()
     val currentMonth = YearMonth.of(selectedYear, selectedMonth)
@@ -107,27 +102,12 @@ fun MonthlyCalendarAndDailyDiary(
                     .padding(top = 30.dp, bottom = 20.dp),
             )
 
-            when (dailyDiariesState) {
-                is DailyDiariesState.Idle -> {
-                }
-
-                is DailyDiariesState.Loading -> {
-                    LoadingScreen()
-                }
-
-                is DailyDiariesState.Success -> {
-                    DailyDiary(
-                        date = selectedDate,
-                        dayOfWeek = initialDayOfWeek,
-                        dailyDiary = dailyDiariesState.data,
-                        onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange,
-                    )
-                }
-
-                is DailyDiariesState.Error -> {
-                    FailureScreen()
-                }
-            }
+            DailyDiary(
+                date = selectedDate,
+                dayOfWeek = initialDayOfWeek,
+                dailyDiary = diaries[selectedDate.dayOfMonth - 1],
+                onShowDiaryDeleteStateChange = onShowDiaryDeleteStateChange,
+            )
         }
     }
 }

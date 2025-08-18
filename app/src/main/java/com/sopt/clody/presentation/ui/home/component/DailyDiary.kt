@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
+import com.sopt.clody.domain.model.MonthlyCalendarInfo
 import com.sopt.clody.ui.theme.ClodyTheme
 import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
@@ -33,7 +34,7 @@ import java.time.format.TextStyle
 fun DailyDiary(
     date: LocalDate,
     dayOfWeek: DayOfWeek,
-    dailyDiary: DailyDiariesResponseDto,
+    dailyDiary: MonthlyCalendarInfo.DailyDiaryInfo,
     onShowDiaryDeleteStateChange: (Boolean) -> Unit,
 ) {
     Column(
@@ -64,7 +65,7 @@ fun DailyDiary(
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
-            if (dailyDiary.diaries.isNotEmpty()) {
+            if (dailyDiary.diaryList.isNotEmpty()) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_home_kebab),
                     contentDescription = "go to delete",
@@ -92,7 +93,7 @@ fun DailyDiary(
                 }
             }
 
-            dailyDiary.diaries.isEmpty() -> {
+            dailyDiary.diaryList.isEmpty() -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -109,8 +110,8 @@ fun DailyDiary(
             }
 
             else -> {
-                dailyDiary.diaries.forEachIndexed { index, diary ->
-                    DiaryItem(index = index + 1, text = diary.content)
+                dailyDiary.diaryList.forEachIndexed { index, diary ->
+                    DiaryItem(index = index + 1, text = diary)
                 }
             }
         }

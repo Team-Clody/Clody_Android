@@ -6,28 +6,25 @@ import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.network.NetworkConnectivityObserver
 import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
 import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
+import com.sopt.clody.domain.model.MonthlyCalendarInfo
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
+import com.sopt.clody.domain.type.ReplyStatus
+import com.sopt.clody.domain.usecase.LoadHomeDataUseCase
 import com.sopt.clody.presentation.ui.home.component.DiaryDateData
 import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
-import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import java.time.ZoneId
@@ -42,14 +39,11 @@ class HomeViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
     private val errorMessageProvider: ErrorMessageProvider,
     private val networkConnectivityObserver: NetworkConnectivityObserver,
+    private val loadHomeDataUseCase: LoadHomeDataUseCase,
 ) : ViewModel() {
 
-    private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
-    val calendarState: StateFlow<CalendarState<MonthlyCalendarResponseDto>> get() = _calendarState
-
-    private val _dailyDiariesState =
-        MutableStateFlow<DailyDiariesState<DailyDiariesResponseDto>>(DailyDiariesState.Idle)
-    val dailyDiariesState: StateFlow<DailyDiariesState<DailyDiariesResponseDto>> get() = _dailyDiariesState
+    private val _homeUiState = MutableStateFlow<HomeUiState<MonthlyCalendarInfo>>(HomeUiState.Idle)
+    val homeUiState: StateFlow<HomeUiState<MonthlyCalendarInfo>> get() = _homeUiState
 
     private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
     val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryState
@@ -107,7 +101,6 @@ class HomeViewModel @Inject constructor(
     val hasDraft: StateFlow<Boolean> get() = _hasDraft
 
     private var isInitialized = false
-    private val loadDataMutex = Mutex()
 
     init {
         initialize()
@@ -126,49 +119,40 @@ class HomeViewModel @Inject constructor(
         _errorState.value = isError to message
     }
 
-    private suspend fun loadCalendarData(year: Int, month: Int) {
-        if (!isNetworkAvailable()) {
-            setErrorState(true, errorMessageProvider.getNetworkError())
-            return
-        }
-        _calendarState.value = CalendarState.Loading
-        val result = withContext(Dispatchers.IO) {
-            diaryRepository.getMonthlyCalendarData(year, month)
-        }
-        _calendarState.value = result.fold(
-            onSuccess = {
-                setErrorState(false)
-                CalendarState.Success(it)
-            },
-            onFailure = {
-                setErrorState(true, errorMessageProvider.getTemporaryError())
-                CalendarState.Error(errorMessageProvider.getTemporaryError())
-            },
-        )
-    }
+    fun loadMonthlyCalendarInfo(year: Int, month: Int, day: Int) {
+        _homeUiState.value = HomeUiState.Loading
+        viewModelScope.launch {
+            if (!isNetworkAvailable()) {
+                setErrorState(true, errorMessageProvider.getNetworkError())
+                return@launch
+            }
 
-    private suspend fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
-        if (!isNetworkAvailable()) {
-            setErrorState(true, errorMessageProvider.getNetworkError())
-            return
+            val sameYmd = _selectedDiaryDate.value.year == year &&
+                _selectedDiaryDate.value.month == month &&
+                _selectedDate.value.dayOfMonth == day
+            val homeUiLoaded = _homeUiState.value is HomeUiState.Success
+            val alreadyLoaded = sameYmd && homeUiLoaded
+
+            if (alreadyLoaded) return@launch
+
+            _selectedDiaryDate.value = DiaryDateData(year, month)
+            _selectedDate.value = LocalDate.of(year, month, day)
+
+            val result = withContext(Dispatchers.IO) {
+                loadHomeDataUseCase(year, month, day)
+            }
+
+            _homeUiState.value = result.fold(
+                onSuccess = {
+                    setErrorState(false)
+                    HomeUiState.Success(it)
+                },
+                onFailure = {
+                    setErrorState(true, errorMessageProvider.getTemporaryError())
+                    HomeUiState.Error(errorMessageProvider.getTemporaryError())
+                }
+            )
         }
-        _dailyDiariesState.value = DailyDiariesState.Loading
-        val result = withContext(Dispatchers.IO) {
-            diaryRepository.getDailyDiariesData(year, month, date)
-        }
-        _dailyDiariesState.value = result.fold(
-            onSuccess = { dailyResponse ->
-                _hasDraft.value = dailyResponse.isDraft
-                _diaryCount.value = dailyResponse.diaries.size
-                _isDeleted.value = dailyResponse.isDeleted
-                setErrorState(false)
-                DailyDiariesState.Success(dailyResponse)
-            },
-            onFailure = {
-                setErrorState(true, errorMessageProvider.getTemporaryError())
-                DailyDiariesState.Error(errorMessageProvider.getTemporaryError())
-            },
-        )
     }
 
     fun deleteDailyDiary(year: Int, month: Int, day: Int) {
@@ -179,8 +163,7 @@ class HomeViewModel @Inject constructor(
             }
             _deleteDiaryResult.value = result.fold(
                 onSuccess = {
-                    loadCalendarData(year, month)
-                    loadDailyDiariesData(year, month, day)
+                    loadHomeDataUseCase(year, month, day)
                     _diaryCount.value = 0
                     _isDeleted.value = false
                     _replyStatus.value = ReplyStatus.UNREADY
@@ -193,40 +176,14 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun updateYearMonthAndLoadData(year: Int, month: Int, day: Int) {
-        viewModelScope.launch {
-            loadDataMutex.withLock {
-                val sameYmd = _selectedDiaryDate.value.year == year &&
-                    _selectedDiaryDate.value.month == month &&
-                    _selectedDate.value.dayOfMonth == day
-
-                val calendarLoaded = calendarState.value is CalendarState.Success
-                val dailyLoaded = dailyDiariesState.value is DailyDiariesState.Success
-                val alreadyLoaded = sameYmd && calendarLoaded && dailyLoaded
-
-                if (alreadyLoaded) return@withLock
-
-                _selectedDiaryDate.value = DiaryDateData(year, month)
-                _selectedDate.value = LocalDate.of(year, month, day)
-
-                coroutineScope {
-                    awaitAll(
-                        async { loadCalendarData(year, month) },
-                        async { loadDailyDiariesData(year, month, day) },
-                    )
-                }
-            }
-        }
-    }
-
     fun updateSelectedDate(date: LocalDate) {
         _selectedDate.value = date
         viewModelScope.launch {
-            loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
+            loadHomeDataUseCase(date.year, date.monthValue, date.dayOfMonth)
         }
     }
 
-    fun updateDiaryState(diaries: List<MonthlyCalendarResponseDto.Diary>) {
+    fun updateDiaryState(diaries: List<MonthlyCalendarInfo.DailyDiaryInfo>) {
         val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
         _diaryCount.value = selectedDiary?.diaryCount ?: 0
         _replyStatus.value = selectedDiary?.replyStatus ?: ReplyStatus.UNREADY
