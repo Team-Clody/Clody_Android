@@ -47,7 +47,7 @@ fun DailyDiaryCard(
     val iconRes = when {
         dailyDiary.replyStatus == ReplyStatus.READY_NOT_READ && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.replyStatus == ReplyStatus.UNREADY && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
-        dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT -> R.drawable.ic_home_expired_written_clover
+        dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT -> R.drawable.ic_home_disabled_reply_clover
         dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.diaryCount in 1..2 -> R.drawable.ic_home_bottom_clover
         dailyDiary.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover
