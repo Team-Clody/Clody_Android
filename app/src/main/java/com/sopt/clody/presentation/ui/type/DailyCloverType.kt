@@ -2,8 +2,7 @@ package com.sopt.clody.presentation.ui.type
 
 import androidx.annotation.DrawableRes
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.MonthlyCalendarInfo
+import com.sopt.clody.domain.model.CalendarMonthlyInfo
 import com.sopt.clody.domain.type.ReplyStatus
 
 /**
@@ -30,29 +29,15 @@ enum class DailyCloverType(@DrawableRes val iconRes: Int) {
     ;
 
     companion object {
-        fun getCalendarCloverType(
-            diaryData: MonthlyCalendarInfo.DailyDiaryInfo,
-            isToday: Boolean,
-        ): DailyCloverType {
-            val count = diaryData.diaryCount
-            val reply = diaryData.replyStatus
-
-            val hasDiary = count > 0
-            val noDiary = count == 0
-            val hasDraft = reply == ReplyStatus.HAS_DRAFT
-            val draftExpired = reply == ReplyStatus.INVALID_DRAFT
-            val hasUnreadOrNoReply = reply.isUnreadOrNotRead
-            val isDeleted = diaryData.isDeleted
-
+        fun getType(info: CalendarMonthlyInfo.CalendarDailyInfo): DailyCloverType {
             return when {
-                hasDraft -> DRAFT_SAVED
-                isDeleted || draftExpired -> DISABLED_REPLY
-                isToday && noDiary -> ENABLED_DIARY
-                isToday && hasUnreadOrNoReply -> WAITING_REPLY
-                hasDiary && hasUnreadOrNoReply -> UNGIVEN_CLOVER
-                reply == ReplyStatus.READY_READ && count in 1..2 -> BOTTOM_CLOVER
-                reply == ReplyStatus.READY_READ && count in 3..4 -> MID_CLOVER
-                reply == ReplyStatus.READY_READ && count >= 5 -> TOP_CLOVER
+                info.replyStatus == ReplyStatus.HAS_DRAFT -> DRAFT_SAVED
+                info.replyStatus == ReplyStatus.INVALID_DRAFT || info.isDeleted -> DISABLED_REPLY
+                info.enableWriteDiary() && info.diaryCount == 0 -> ENABLED_DIARY
+                info.replyStatus == ReplyStatus.UNREADY && info.diaryCount > 0 -> WAITING_REPLY
+                info.replyStatus == ReplyStatus.READY_READ && info.diaryCount in 1..2 -> BOTTOM_CLOVER
+                info.replyStatus == ReplyStatus.READY_READ && info.diaryCount in 3..4 -> MID_CLOVER
+                info.replyStatus == ReplyStatus.READY_READ && info.diaryCount >= 5 -> TOP_CLOVER
                 else -> UNGIVEN_CLOVER
             }
         }
