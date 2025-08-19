@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.clody.core.network.NetworkConnectivityObserver
 import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.domain.type.Notification
 import com.sopt.clody.domain.repository.NotificationRepository
+import com.sopt.clody.domain.type.Notification
 import com.sopt.clody.presentation.utils.extension.TimePeriod
 import com.sopt.clody.presentation.utils.extension.convertUTZtoKST
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider

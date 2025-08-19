@@ -24,10 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.MonthlyCalendarInfo
-import com.sopt.clody.presentation.ui.type.DailyCloverType
+import com.sopt.clody.domain.model.CalendarMonthlyInfo
 import com.sopt.clody.domain.type.ReplyStatus
+import com.sopt.clody.presentation.ui.type.DailyCloverType
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
@@ -37,15 +36,25 @@ import java.time.format.TextStyle
 
 @Composable
 fun MonthlyCalendar(
-    dateList: List<CalendarDate>,
+    year: Int,
+    month: Int,
     selectedDate: LocalDate,
-    onDayClick: (LocalDate) -> Unit,
-    getDiaryDataForDate: (LocalDate) -> MonthlyCalendarInfo.DailyDiaryInfo?,
+    calendarDailyInfoList: List<CalendarMonthlyInfo.CalendarDailyInfo>,
+    onClickDay: (Int) -> Unit,
 ) {
     val locale = LocalConfiguration.current.locales[0]
-    val days = remember {
-        List(7) { i -> DayOfWeek.SUNDAY.plus(i.toLong()) }
-    }
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val cellWidth = remember(screenWidth) { (screenWidth - 40.dp) / 7 }
+    val days = remember { List(7) { i -> DayOfWeek.SUNDAY.plus(i.toLong()) } }
+
+    val yearMonth = remember(year, month) { java.time.YearMonth.of(year, month) }
+    val monthDates = remember(yearMonth) { (1..yearMonth.lengthOfMonth()).map { day -> yearMonth.atDay(day) } }
+    val firstDayOfWeek = remember(yearMonth) { yearMonth.atDay(1).dayOfWeek }
+    val emptyDays = remember(firstDayOfWeek) { firstDayOfWeek.value % 7 } // Sunday=0, Monday=1, ...
+    val paddedDates: List<LocalDate?> = remember(monthDates, emptyDays) { List(emptyDays) { null } + monthDates }
+
+    // 날짜 문자열(YYYY-MM-DD) → Info 매핑 (탐색 비용 절감)
+    val infoByDate = remember(calendarDailyInfoList) { calendarDailyInfoList.associateBy { it.date } }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -53,7 +62,7 @@ fun MonthlyCalendar(
             .fillMaxWidth()
             .padding(horizontal = 20.dp),
     ) {
-        // 요일 헤더 부분
+        // 요일 헤더
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
@@ -62,11 +71,11 @@ fun MonthlyCalendar(
         ) {
             days.forEach { week ->
                 Box(
-                    modifier = Modifier.width((LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7),
+                    modifier = Modifier.width(cellWidth),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = week.getDisplayName(TextStyle.NARROW, locale),
+                        text = week.getDisplayName(java.time.format.TextStyle.NARROW, locale),
                         color = ClodyTheme.colors.gray05,
                         style = ClodyTheme.typography.detail1Medium,
                         textAlign = TextAlign.Center,
@@ -84,36 +93,30 @@ fun MonthlyCalendar(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                val firstDate = dateList.firstOrNull()?.let { LocalDate.of(it.year, it.month, it.date) }
-                val firstDayOfWeek = firstDate?.dayOfWeek ?: DayOfWeek.SUNDAY
-                val emptyDays = (firstDayOfWeek.value % 7)
-
-                val paddedDateList = List(emptyDays) { null } + dateList
-
-                paddedDateList.chunked(7).forEach { weekDates ->
+                paddedDates.chunked(7).forEach { weekDates ->
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        weekDates.forEach { date ->
+                        weekDates.forEach { dateOrNull ->
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(vertical = 2.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
+                                val date = dateOrNull
                                 if (date != null) {
-                                    val localDate = LocalDate.of(date.year, date.month, date.date)
-                                    val diaryData = getDiaryDataForDate(localDate)
-                                    if (diaryData != null) {
+                                    val calendarDailyInfo = infoByDate[date.toString()]
+                                    if (calendarDailyInfo != null) {
                                         DailyClover(
-                                            date = localDate,
-                                            onDayClick = { clickedDate ->
+                                            localDate = date,
+                                            calendarDailyInfo = calendarDailyInfo,
+                                            onClickDay = {
                                                 AmplitudeUtils.trackEvent(AmplitudeConstraints.HOME_CALENDAR_CLOVER)
-                                                onDayClick(clickedDate)
+                                                onClickDay(date.dayOfMonth)
                                             },
-                                            isSelected = localDate == selectedDate,
-                                            diaryData = diaryData,
+                                            isSelected = date == selectedDate,
                                             modifier = Modifier.fillMaxWidth(),
                                         )
                                     }
@@ -124,7 +127,7 @@ fun MonthlyCalendar(
                             repeat(7 - weekDates.size) {
                                 Box(
                                     modifier = Modifier
-                                        .width((LocalConfiguration.current.screenWidthDp.dp - 40.dp) / 7)
+                                        .width(cellWidth)
                                         .padding(vertical = 2.dp),
                                 )
                             }
@@ -137,25 +140,20 @@ fun MonthlyCalendar(
 }
 
 @Composable
-fun DailyClover(
-    date: LocalDate,
-    onDayClick: (LocalDate) -> Unit,
+private fun DailyClover(
+    localDate: LocalDate,
+    calendarDailyInfo: CalendarMonthlyInfo.CalendarDailyInfo,
+    onClickDay: () -> Unit,
     isSelected: Boolean,
-    diaryData: MonthlyCalendarInfo.DailyDiaryInfo,
     modifier: Modifier = Modifier,
 ) {
-    val today = LocalDate.now()
-    val isToday = date == today
-
-    val iconRes = DailyCloverType.getCalendarCloverType(diaryData, isToday).iconRes
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
             .padding(8.dp)
             .clip(RoundedCornerShape(12.dp))
-            .clickable { onDayClick(date) },
+            .clickable { onClickDay() },
     ) {
         Box(
             modifier = Modifier
@@ -163,10 +161,10 @@ fun DailyClover(
             contentAlignment = Alignment.Center,
         ) {
             Image(
-                painter = painterResource(id = iconRes),
+                painter = painterResource(id = DailyCloverType.getType(calendarDailyInfo).iconRes),
                 contentDescription = "Diary clover icon",
             )
-            if (diaryData.replyStatus == ReplyStatus.READY_NOT_READ && diaryData.diaryCount > 0) {
+            if (calendarDailyInfo.replyStatus == ReplyStatus.READY_NOT_READ && calendarDailyInfo.diaryCount > 0) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_home_unread_reply),
                     contentDescription = "Unread replies icon",
@@ -187,11 +185,11 @@ fun DailyClover(
                 .padding(horizontal = 6.dp),
         ) {
             Text(
-                text = date.dayOfMonth.toString(),
+                text = localDate.dayOfMonth.toString(),
                 style = ClodyTheme.typography.detail1SemiBold.copy(
                     color = when {
                         isSelected -> ClodyTheme.colors.white
-                        isToday -> ClodyTheme.colors.gray02
+                        localDate == LocalDate.now() -> ClodyTheme.colors.gray02
                         else -> ClodyTheme.colors.gray05
                     },
                 ),

@@ -23,19 +23,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
-import com.sopt.clody.domain.model.MonthlyCalendarInfo
+import com.sopt.clody.domain.model.DailyDiaryInfo
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
 
 @Composable
 fun DailyDiary(
-    date: LocalDate,
-    dayOfWeek: DayOfWeek,
-    dailyDiary: MonthlyCalendarInfo.DailyDiaryInfo,
-    onShowDiaryDeleteStateChange: (Boolean) -> Unit,
+    selectedDate: LocalDate,
+    selectedDailyInfo: DailyDiaryInfo,
+    onClickDiaryDelete: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -50,13 +47,13 @@ fun DailyDiary(
                 .padding(8.dp),
         ) {
             Text(
-                text = "${date.month.value}.${date.dayOfMonth}",
+                text = "${selectedDate.month.value}.${selectedDate.dayOfMonth}",
                 style = ClodyTheme.typography.body2Medium,
                 color = ClodyTheme.colors.gray04,
                 modifier = Modifier.padding(vertical = 3.dp),
             )
             Text(
-                text = dayOfWeek.getDisplayName(
+                text = selectedDate.dayOfWeek.getDisplayName(
                     TextStyle.FULL,
                     LocalConfiguration.current.locales.let { if (it.isEmpty) java.util.Locale.getDefault() else it[0] },
                 ),
@@ -65,19 +62,19 @@ fun DailyDiary(
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
-            if (dailyDiary.diaryList.isNotEmpty()) {
+            if (selectedDailyInfo.diaryList.isNotEmpty()) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_home_kebab),
                     contentDescription = "go to delete",
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .clickable(onClick = { onShowDiaryDeleteStateChange(true) }),
+                        .clickable(onClick = onClickDiaryDelete),
                 )
             }
         }
 
         when {
-            dailyDiary.isDraft -> {
+            selectedDailyInfo.isDraft -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -93,7 +90,7 @@ fun DailyDiary(
                 }
             }
 
-            dailyDiary.diaryList.isEmpty() -> {
+            selectedDailyInfo.diaryList.isEmpty() -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
@@ -110,7 +107,7 @@ fun DailyDiary(
             }
 
             else -> {
-                dailyDiary.diaryList.forEachIndexed { index, diary ->
+                selectedDailyInfo.diaryList.forEachIndexed { index, diary ->
                     DiaryItem(index = index + 1, text = diary)
                 }
             }

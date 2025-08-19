@@ -4,34 +4,34 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.sopt.clody.R
+import com.sopt.clody.domain.model.CalendarMonthlyInfo
+import com.sopt.clody.domain.model.DailyDiaryInfo
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
+import com.sopt.clody.presentation.ui.type.DailyStateButtonType
 import com.sopt.clody.ui.theme.ClodyTheme
 
 @Composable
 fun DailyStateButton(
-    hasDraft: Boolean,
-    canWrite: Boolean,
-    canReply: Boolean,
-    isInvalidDraft: Boolean,
-    year: Int,
-    month: Int,
-    day: Int,
-    onClickWriteDiary: (Int, Int, Int) -> Unit,
+    calendarDailyInfo: CalendarMonthlyInfo.CalendarDailyInfo,
+    selectedDailyInfo: DailyDiaryInfo,
+    onClickWriteDiary: () -> Unit,
     onClickReplyDiary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    when {
-        hasDraft -> {
+    val type = DailyStateButtonType.getType(calendarDailyInfo, selectedDailyInfo)
+
+    when (type) {
+        DailyStateButtonType.DRAFT_ENABLED -> {
             ClodyButton(
-                onClick = { onClickWriteDiary(year, month, day) },
+                onClick = onClickWriteDiary,
                 text = stringResource(R.string.home_btn_continue_draft),
                 enabled = true,
                 modifier = modifier,
             )
         }
 
-        isInvalidDraft -> {
+        DailyStateButtonType.REPLY_DISABLED -> {
             ClodyButton(
                 onClick = { /* no-action */ },
                 text = stringResource(R.string.home_btn_check_reply),
@@ -42,7 +42,7 @@ fun DailyStateButton(
             )
         }
 
-        canReply -> {
+        DailyStateButtonType.REPLY_ENABLED -> {
             ClodyReplyButton(
                 onClick = onClickReplyDiary,
                 text = stringResource(R.string.home_btn_check_reply),
@@ -51,9 +51,9 @@ fun DailyStateButton(
             )
         }
 
-        canWrite -> {
+        DailyStateButtonType.DIARY_ENABLED -> {
             ClodyButton(
-                onClick = { onClickWriteDiary(year, month, day) },
+                onClick = onClickWriteDiary,
                 text = stringResource(R.string.home_btn_write_diary),
                 enabled = true,
                 modifier = modifier,
@@ -62,7 +62,7 @@ fun DailyStateButton(
 
         else -> {
             ClodyButton(
-                onClick = { onClickWriteDiary(year, month, day) },
+                onClick = { /* no-action */ },
                 text = stringResource(R.string.home_btn_write_diary),
                 enabled = false,
                 modifier = modifier,
