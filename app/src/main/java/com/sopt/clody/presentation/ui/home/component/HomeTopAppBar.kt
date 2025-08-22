@@ -52,14 +52,14 @@ fun HomeTopAppBar(
                     Image(
                         painter = painterResource(id = R.drawable.ic_home_under_arrow),
                         contentDescription = "choose month",
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
+                        modifier = Modifier.padding(6.dp),
                     )
                 }
             }
         },
         navigationIcon = {
             IconButton(
-                onClick = { onClickDiaryList() },
+                onClick = onClickDiaryList,
                 modifier = Modifier.padding(start = 8.dp),
             ) {
                 Image(
@@ -70,7 +70,7 @@ fun HomeTopAppBar(
         },
         actions = {
             IconButton(
-                onClick = { onClickSetting() },
+                onClick = onClickSetting,
                 modifier = Modifier.padding(end = 8.dp),
             ) {
                 Image(

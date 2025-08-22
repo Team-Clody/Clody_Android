@@ -32,9 +32,9 @@ enum class DailyCloverType(@DrawableRes val iconRes: Int) {
         fun getType(info: CalendarMonthlyInfo.CalendarDailyInfo): DailyCloverType {
             return when {
                 info.replyStatus == ReplyStatus.HAS_DRAFT -> DRAFT_SAVED
-                info.replyStatus == ReplyStatus.INVALID_DRAFT || info.isDeleted -> DISABLED_REPLY
-                info.enableWriteDiary() && info.diaryCount == 0 -> ENABLED_DIARY
-                info.replyStatus == ReplyStatus.UNREADY && info.diaryCount > 0 -> WAITING_REPLY
+                info.replyStatus == ReplyStatus.INVALID_DRAFT || (info.isDeleted && info.diaryCount > 0) -> DISABLED_REPLY
+                info.isToday() && info.diaryCount == 0 -> ENABLED_DIARY
+                info.isToday() && info.replyStatus == ReplyStatus.UNREADY && info.diaryCount > 0 -> WAITING_REPLY
                 info.replyStatus == ReplyStatus.READY_READ && info.diaryCount in 1..2 -> BOTTOM_CLOVER
                 info.replyStatus == ReplyStatus.READY_READ && info.diaryCount in 3..4 -> MID_CLOVER
                 info.replyStatus == ReplyStatus.READY_READ && info.diaryCount >= 5 -> TOP_CLOVER

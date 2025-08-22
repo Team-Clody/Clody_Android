@@ -38,8 +38,6 @@ import com.airbnb.mvrx.compose.mavericksViewModel
 import com.sopt.clody.R
 import com.sopt.clody.core.review.InAppReviewManager
 import com.sopt.clody.domain.type.ReplyStatus
-import com.sopt.clody.presentation.ui.component.FailureScreen
-import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
@@ -77,30 +75,17 @@ fun HomeRoute(
                     is HomeContract.HomeSideEffect.NavigateToDiaryList -> navigateToDiaryList(state.year, state.month)
                     is HomeContract.HomeSideEffect.NavigateToSetting -> navigateToSetting()
                     is HomeContract.HomeSideEffect.NavigateToWriteDiary -> navigateToWriteDiary(state.year, state.month, state.dayOfMonth)
-                    is HomeContract.HomeSideEffect.NavigateToReplyLoading -> {
-                        val replyStatus = state.calendarMonthlyInfo.calendarDailyInfoList
-                            .find { it.date == java.time.LocalDate.of(state.year, state.month, state.dayOfMonth).toString() }
-                            ?.replyStatus ?: ReplyStatus.UNREADY
-                        navigateToReplyLoading(
-                            state.year,
-                            state.month,
-                            state.dayOfMonth,
-                            Route.ReplyLoading.ReplyLoadingFrom.HOME,
-                            replyStatus,
-                        )
-                    }
+                    is HomeContract.HomeSideEffect.NavigateToReplyLoading -> navigateToReplyLoading(state.year, state.month, state.dayOfMonth, Route.ReplyLoading.ReplyLoadingFrom.HOME, effect.replyStatus)
                 }
             }
         }
     }
 
     LaunchedEffect(Unit) {
-        // 먼저 월간 캘린더 데이터를 로드
-        viewModel.postIntent(HomeContract.HomeIntent.LoadCalendarMonthlyInfo(state.year, state.month))
-        // 월간 데이터 로드 완료 후 일간 데이터 로드 (ViewModel에서 순서 보장)
+        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
+        viewModel.postIntent(HomeContract.HomeIntent.InitializeInfo(state.year, state.month, state.dayOfMonth))
     }
 
-    // 백핸들러 조작
     var backPressedTime by remember { mutableLongStateOf(0L) }
     val backPressThreshold = 2000
     BackHandler {
@@ -112,11 +97,10 @@ fun HomeRoute(
         }
     }
 
-    // 알림 권한 신청 다이얼로그
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
     ) { isGranted: Boolean ->
-        viewModel.postIntent(HomeContract.HomeIntent.SendNotification(isGranted))
+        viewModel.postIntent(HomeContract.HomeIntent.RequestNotificationPermission(isGranted))
     }
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -124,41 +108,24 @@ fun HomeRoute(
             if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(notificationPermission)
             } else {
-                viewModel.postIntent(HomeContract.HomeIntent.SendNotification(true))
+                viewModel.postIntent(HomeContract.HomeIntent.RequestNotificationPermission(true))
             }
         } else {
-            viewModel.postIntent(HomeContract.HomeIntent.SendNotification(true))
+            viewModel.postIntent(HomeContract.HomeIntent.RequestNotificationPermission(true))
         }
     }
 
-    // 인앱리뷰 팝업 노출
-    LaunchedEffect(Unit) {
-        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
+    LaunchedEffect(state.showInAppReviewPopup, isFromReplyDiary) {
         if (state.showInAppReviewPopup && isFromReplyDiary) {
             InAppReviewManager.showPopup(context as Activity)
-            viewModel.postIntent(HomeContract.HomeIntent.UpdateInAppReview(false))
+            viewModel.postIntent(HomeContract.HomeIntent.UpdateInAppReviewFlag(false))
         }
     }
 
-    when (state.homeUiState) {
-        HomeUiState.Idle -> {
-        }
-        HomeUiState.Loading -> {
-            LoadingScreen()
-        }
-        HomeUiState.Success -> {
-            HomeScreen(
-                state = state,
-                onIntent = { viewModel.postIntent(it) },
-            )
-        }
-        HomeUiState.Error -> {
-            FailureScreen(
-                message = state.errorMessage ?: stringResource(R.string.error_unknown),
-                confirmAction = { viewModel.postIntent(HomeContract.HomeIntent.LoadCalendarMonthlyInfo(state.year, state.month)) },
-            )
-        }
-    }
+    HomeScreen(
+        state = state,
+        onIntent = { viewModel.postIntent(it) },
+    )
 }
 
 @Composable
@@ -190,27 +157,32 @@ fun HomeScreen(
                 month = state.month,
                 selectedDate = state.selectedDate,
                 calendarMonthlyInfo = state.calendarMonthlyInfo,
-                onClickDay = { dayOfMonth -> onIntent(HomeContract.HomeIntent.LoadDailyDiaryInfo(state.year, state.month, dayOfMonth)) },
-                selectedDailyInfo = state.selectedDailyInfo,
+                onClickDay = { dayOfMonth -> onIntent(HomeContract.HomeIntent.OnClickDay(state.year, state.month, dayOfMonth)) },
+                selectedDailyInfo = state.dailyDiaryInfo,
                 onClickDiaryDelete = { onIntent(HomeContract.HomeIntent.OnClickDiaryDelete) },
                 modifier = Modifier.padding(innerPadding),
             )
         },
         bottomBar = {
-            // 캘린더 데이터가 로드되었을 때만 DailyStateButton 표시
-            state.getCurrentCalendarDailyInfo()?.let { calendarDailyInfo ->
+            state.getCalendarDailyInfo()?.let { calendarDailyInfo ->
                 DailyStateButton(
                     calendarDailyInfo = calendarDailyInfo,
-                    selectedDailyInfo = state.selectedDailyInfo,
+                    selectedDailyInfo = state.dailyDiaryInfo,
                     onClickWriteDiary = {
                         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                        if (state.isDraftExpired()) {
+                        onIntent(HomeContract.HomeIntent.OnClickWriteDiary)
+                    },
+                    onClickContinueDraft = {
+                        if (calendarDailyInfo.enableWriteDiary()) {
+                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
+                            onIntent(HomeContract.HomeIntent.OnClickWriteDiary)
+                        } else {
                             onIntent(HomeContract.HomeIntent.ShowDraftExpiredDialog)
-                        } else { onIntent(HomeContract.HomeIntent.OnClickWriteDiary) }
+                        }
                     },
                     onClickReplyDiary = {
                         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_REPLY)
-                        onIntent(HomeContract.HomeIntent.OnClickReplyDiary)
+                        onIntent(HomeContract.HomeIntent.OnClickReplyDiary(calendarDailyInfo.replyStatus))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -229,15 +201,58 @@ fun HomeScreen(
                 selectedYear = state.year,
                 selectedMonth = state.month,
                 onYearMonthSelected = { newYear, newMonth ->
-                    onIntent(HomeContract.HomeIntent.UpdateYearMonth(newYear, newMonth))
+                    onIntent(HomeContract.HomeIntent.ConfirmYearMonthPicker(newYear, newMonth))
                 },
             )
         }
     }
 
+    if (state.showDiaryDeleteBottomSheet) {
+        DiaryDeleteSheet(
+            onDismiss = {
+                onIntent(HomeContract.HomeIntent.DismissDiaryDelete)
+            },
+            showDiaryDeleteDialog = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_DELETE_DIARY)
+                onIntent(HomeContract.HomeIntent.ShowDiaryDeleteDialog)
+            },
+        )
+    }
+
+    if (state.showDiaryDeleteDialog) {
+        ClodyDialog(
+            titleMassage = stringResource(R.string.dialog_diary_delete_title),
+            descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
+            confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
+            dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
+            confirmAction = {
+                onIntent(HomeContract.HomeIntent.ConfirmDiaryDelete(state.year, state.month, state.dayOfMonth))
+            },
+            onDismiss = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_NO_DELETE_DIARY)
+                onIntent(HomeContract.HomeIntent.DismissDiaryDelete)
+            },
+            confirmButtonColor = ClodyTheme.colors.red,
+            confirmButtonTextColor = ClodyTheme.colors.white,
+        )
+    }
+
+    if (state.showDraftExpiredDialog) {
+        ClodyDialog(
+            titleMassage = stringResource(R.string.dialog_home_continue_draft_title),
+            descriptionMassage = stringResource(R.string.dialog_home_continue_draft_description),
+            confirmOption = stringResource(R.string.dialog_home_continue_draft_confirm),
+            dismissOption = stringResource(R.string.dialog_home_continue_draft_dismiss),
+            confirmAction = { onIntent(HomeContract.HomeIntent.ConfirmDraftExpiredDialog) },
+            onDismiss = { onIntent(HomeContract.HomeIntent.DismissDraftExpiredDialog) },
+            confirmButtonColor = ClodyTheme.colors.mainYellow,
+            confirmButtonTextColor = ClodyTheme.colors.gray01,
+        )
+    }
+
     if (state.showDraftNotificationPopup) {
         ClodyPopupBottomSheet(
-            onDismissRequest = { onIntent(HomeContract.HomeIntent.UpdateDraftPopup(false)) },
+            onDismissRequest = { onIntent(HomeContract.HomeIntent.UpdateDraftPopupFlag(false)) },
             content = {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -271,7 +286,7 @@ fun HomeScreen(
                         text = stringResource(R.string.bottom_sheet_home_initial_draft_accept),
                         onClick = {
                             onIntent(HomeContract.HomeIntent.EnableDraftAlarm)
-                            onIntent(HomeContract.HomeIntent.UpdateDraftPopup(false))
+                            onIntent(HomeContract.HomeIntent.UpdateDraftPopupFlag(false))
                         },
                         enabled = true,
                         modifier = Modifier.fillMaxWidth(),
@@ -279,7 +294,7 @@ fun HomeScreen(
                     Text(
                         text = stringResource(R.string.bottom_sheet_home_initial_draft_skip),
                         modifier = Modifier
-                            .clickable(onClick = { onIntent(HomeContract.HomeIntent.UpdateDraftPopup(false)) })
+                            .clickable(onClick = { onIntent(HomeContract.HomeIntent.UpdateDraftPopupFlag(false)) })
                             .padding(12.dp),
                         color = ClodyTheme.colors.gray05,
                         style = ClodyTheme.typography.body4Medium,
@@ -301,53 +316,12 @@ fun HomeScreen(
                     backgroundColor = ClodyTheme.colors.gray04,
                     contentColor = ClodyTheme.colors.white,
                     durationMillis = 3000,
-                    onDismiss = { /* handled by state reset elsewhere if needed */ },
+                    onDismiss = { onIntent(HomeContract.HomeIntent.DismissDraftNotificationToast) },
                     modifier = Modifier
                         .navigationBarsPadding()
                         .padding(40.dp),
                 )
             },
-        )
-    }
-
-    if (state.showDraftExpiredDialog) {
-        ClodyDialog(
-            titleMassage = stringResource(R.string.dialog_home_continue_draft_title),
-            descriptionMassage = stringResource(R.string.dialog_home_continue_draft_description),
-            confirmOption = stringResource(R.string.dialog_home_continue_draft_confirm),
-            dismissOption = stringResource(R.string.dialog_home_continue_draft_dismiss),
-            confirmAction = { onIntent(HomeContract.HomeIntent.OnClickWriteDiary) },
-            onDismiss = { },
-            confirmButtonColor = ClodyTheme.colors.mainYellow,
-            confirmButtonTextColor = ClodyTheme.colors.gray01,
-        )
-    }
-
-    if (state.showDiaryDeleteBottomSheet) {
-        DiaryDeleteSheet(
-            onDismiss = { onIntent(HomeContract.HomeIntent.DismissDiaryDelete) },
-            showDiaryDeleteDialog = {
-                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_DELETE_DIARY)
-                onIntent(HomeContract.HomeIntent.ShowDiaryDeleteDialog)
-            },
-        )
-    }
-
-    if (state.showDiaryDeleteDialog) {
-        ClodyDialog(
-            titleMassage = stringResource(R.string.dialog_diary_delete_title),
-            descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
-            confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
-            dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
-            confirmAction = {
-                onIntent(HomeContract.HomeIntent.ConfirmDiaryDelete(state.year, state.month, state.dayOfMonth))
-            },
-            onDismiss = {
-                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_NO_DELETE_DIARY)
-                onIntent(HomeContract.HomeIntent.DismissDiaryDelete)
-            },
-            confirmButtonColor = ClodyTheme.colors.red,
-            confirmButtonTextColor = ClodyTheme.colors.white,
         )
     }
 }

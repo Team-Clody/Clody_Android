@@ -42,10 +42,9 @@ fun MonthlyCalendar(
     calendarDailyInfoList: List<CalendarMonthlyInfo.CalendarDailyInfo>,
     onClickDay: (Int) -> Unit,
 ) {
-    val locale = LocalConfiguration.current.locales[0]
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     val cellWidth = remember(screenWidth) { (screenWidth - 40.dp) / 7 }
-    val days = remember { List(7) { i -> DayOfWeek.SUNDAY.plus(i.toLong()) } }
+    val dayOfWeeks = remember { List(7) { i -> DayOfWeek.SUNDAY.plus(i.toLong()) } }
 
     val yearMonth = remember(year, month) { java.time.YearMonth.of(year, month) }
     val monthDates = remember(yearMonth) { (1..yearMonth.lengthOfMonth()).map { day -> yearMonth.atDay(day) } }
@@ -69,13 +68,13 @@ fun MonthlyCalendar(
                 .fillMaxWidth()
                 .padding(bottom = 8.dp),
         ) {
-            days.forEach { week ->
+            dayOfWeeks.forEach { dayOfWeek ->
                 Box(
                     modifier = Modifier.width(cellWidth),
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = week.getDisplayName(java.time.format.TextStyle.NARROW, locale),
+                        text = dayOfWeek.getDisplayName(TextStyle.NARROW, LocalConfiguration.current.locales[0]),
                         color = ClodyTheme.colors.gray05,
                         style = ClodyTheme.typography.detail1Medium,
                         textAlign = TextAlign.Center,
@@ -105,18 +104,17 @@ fun MonthlyCalendar(
                                     .padding(vertical = 2.dp),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                val date = dateOrNull
-                                if (date != null) {
-                                    val calendarDailyInfo = infoByDate[date.toString()]
+                                if (dateOrNull != null) {
+                                    val calendarDailyInfo = infoByDate[dateOrNull.toString()]
                                     if (calendarDailyInfo != null) {
                                         DailyClover(
-                                            localDate = date,
+                                            localDate = dateOrNull,
                                             calendarDailyInfo = calendarDailyInfo,
                                             onClickDay = {
                                                 AmplitudeUtils.trackEvent(AmplitudeConstraints.HOME_CALENDAR_CLOVER)
-                                                onClickDay(date.dayOfMonth)
+                                                onClickDay(dateOrNull.dayOfMonth)
                                             },
-                                            isSelected = date == selectedDate,
+                                            isSelected = dateOrNull == selectedDate,
                                             modifier = Modifier.fillMaxWidth(),
                                         )
                                     }

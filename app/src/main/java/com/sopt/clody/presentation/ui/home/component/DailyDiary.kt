@@ -27,6 +27,7 @@ import com.sopt.clody.domain.model.DailyDiaryInfo
 import com.sopt.clody.ui.theme.ClodyTheme
 import java.time.LocalDate
 import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
 fun DailyDiary(
@@ -35,9 +36,7 @@ fun DailyDiary(
     onClickDiaryDelete: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
@@ -47,7 +46,7 @@ fun DailyDiary(
                 .padding(8.dp),
         ) {
             Text(
-                text = "${selectedDate.month.value}.${selectedDate.dayOfMonth}",
+                text = "${selectedDate.monthValue}.${selectedDate.dayOfMonth}",
                 style = ClodyTheme.typography.body2Medium,
                 color = ClodyTheme.colors.gray04,
                 modifier = Modifier.padding(vertical = 3.dp),
@@ -55,7 +54,7 @@ fun DailyDiary(
             Text(
                 text = selectedDate.dayOfWeek.getDisplayName(
                     TextStyle.FULL,
-                    LocalConfiguration.current.locales.let { if (it.isEmpty) java.util.Locale.getDefault() else it[0] },
+                    LocalConfiguration.current.locales.let { if (it.isEmpty) Locale.getDefault() else it[0] },
                 ),
                 style = ClodyTheme.typography.body2SemiBold,
                 color = ClodyTheme.colors.gray02,
@@ -108,28 +107,20 @@ fun DailyDiary(
 
             else -> {
                 selectedDailyInfo.diaryList.forEachIndexed { index, diary ->
-                    DiaryItem(index = index + 1, text = diary)
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp))
+                            .padding(18.dp),
+                    ) {
+                        Text(
+                            text = "${index + 1}. $diary",
+                            style = ClodyTheme.typography.body2Medium,
+                            color = ClodyTheme.colors.gray01,
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-@Composable
-fun DiaryItem(
-    index: Int,
-    text: String,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp))
-            .padding(18.dp),
-    ) {
-        Text(
-            text = "$index. $text",
-            style = ClodyTheme.typography.body2Medium,
-            color = ClodyTheme.colors.gray01,
-        )
     }
 }

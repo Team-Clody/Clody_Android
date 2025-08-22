@@ -10,12 +10,15 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
 import com.sopt.clody.presentation.ui.type.DailyStateButtonType
 import com.sopt.clody.ui.theme.ClodyTheme
+import timber.log.Timber
+import java.time.LocalDate
 
 @Composable
 fun DailyStateButton(
     calendarDailyInfo: CalendarMonthlyInfo.CalendarDailyInfo,
     selectedDailyInfo: DailyDiaryInfo,
     onClickWriteDiary: () -> Unit,
+    onClickContinueDraft: () -> Unit,
     onClickReplyDiary: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -24,7 +27,7 @@ fun DailyStateButton(
     when (type) {
         DailyStateButtonType.DRAFT_ENABLED -> {
             ClodyButton(
-                onClick = onClickWriteDiary,
+                onClick = onClickContinueDraft,
                 text = stringResource(R.string.home_btn_continue_draft),
                 enabled = true,
                 modifier = modifier,

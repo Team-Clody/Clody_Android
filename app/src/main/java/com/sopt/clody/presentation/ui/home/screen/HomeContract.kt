@@ -3,36 +3,33 @@ package com.sopt.clody.presentation.ui.home.screen
 import com.airbnb.mvrx.MavericksState
 import com.sopt.clody.domain.model.CalendarMonthlyInfo
 import com.sopt.clody.domain.model.DailyDiaryInfo
+import com.sopt.clody.domain.type.ReplyStatus
+import com.sopt.clody.presentation.utils.base.UiLoadState
 import java.time.LocalDate
 
 class HomeContract {
     data class HomeState(
-        val homeUiState: HomeUiState = HomeUiState.Idle,
-        val errorMessage: String? = null,
-
         val year: Int = LocalDate.now().year,
         val month: Int = LocalDate.now().monthValue,
         val dayOfMonth: Int = LocalDate.now().dayOfMonth,
+        val calendarLoadState: UiLoadState = UiLoadState.Idle,
         val calendarMonthlyInfo: CalendarMonthlyInfo = CalendarMonthlyInfo(),
-        val selectedDailyInfo: DailyDiaryInfo = DailyDiaryInfo(),
+        val dailyDiaryLoadState: UiLoadState = UiLoadState.Idle,
+        val dailyDiaryInfo: DailyDiaryInfo = DailyDiaryInfo(),
         val showYearMonthPicker: Boolean = false,
-
         val showDiaryDeleteBottomSheet: Boolean = false,
         val showDiaryDeleteDialog: Boolean = false,
-
-        val showDraftExpiredDialog: Boolean = false,
-
-        val showDraftNotificationPopup: Boolean = false,
-        val showDraftNotificationToast: Boolean = false,
+        val diaryDeleteState: UiLoadState = UiLoadState.Idle,
+        val errorMessage: String? = null,
 
         val showInAppReviewPopup: Boolean = false,
+        val showDraftNotificationPopup: Boolean = false,
+        val showDraftNotificationToast: Boolean = false,
+        val showDraftExpiredDialog: Boolean = false,
     ) : MavericksState {
         val selectedDate: LocalDate = LocalDate.of(year, month, dayOfMonth)
 
-        fun isDraftExpired(): Boolean = selectedDate != LocalDate.now()
-
-        // 현재 선택된 날짜의 CalendarDailyInfo를 안전하게 가져오기
-        fun getCurrentCalendarDailyInfo(): CalendarMonthlyInfo.CalendarDailyInfo? {
+        fun getCalendarDailyInfo(): CalendarMonthlyInfo.CalendarDailyInfo? {
             return if (isCalendarDataLoaded()) {
                 calendarMonthlyInfo.calendarDailyInfoList[dayOfMonth - 1]
             } else {
@@ -40,7 +37,6 @@ class HomeContract {
             }
         }
 
-        // 캘린더 데이터가 안전하게 로드되었는지 확인
         private fun isCalendarDataLoaded(): Boolean {
             return calendarMonthlyInfo.calendarDailyInfoList.isNotEmpty() &&
                 dayOfMonth > 0 &&
@@ -49,35 +45,35 @@ class HomeContract {
     }
 
     sealed class HomeIntent {
-        data class LoadCalendarMonthlyInfo(val year: Int, val month: Int) : HomeIntent()
-        data class LoadDailyDiaryInfo(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
-
+        data class InitializeInfo(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
         data object OnClickDiaryList : HomeIntent()
         data object OnClickYearMonth : HomeIntent()
-        data class UpdateYearMonth(val newYear: Int, val newMonth: Int) : HomeIntent()
+        data class ConfirmYearMonthPicker(val newYear: Int, val newMonth: Int) : HomeIntent()
         data object DismissYearMonthPicker : HomeIntent()
         data object OnClickSetting : HomeIntent()
-
+        data class OnClickDay(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
         data object OnClickDiaryDelete : HomeIntent()
         data object ShowDiaryDeleteDialog : HomeIntent()
         data class ConfirmDiaryDelete(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
         data object DismissDiaryDelete : HomeIntent()
-
         data object OnClickWriteDiary : HomeIntent()
+        data class OnClickReplyDiary(val replyStatus: ReplyStatus) : HomeIntent()
         data object ShowDraftExpiredDialog : HomeIntent()
+        data object ConfirmDraftExpiredDialog : HomeIntent()
+        data object DismissDraftExpiredDialog : HomeIntent()
 
-        data object OnClickReplyDiary : HomeIntent()
-
+        data class RequestNotificationPermission(val granted: Boolean) : HomeIntent()
+        data class UpdateInAppReviewFlag(val flag: Boolean) : HomeIntent()
         data object EnableDraftAlarm : HomeIntent()
-        data class SendNotification(val granted: Boolean) : HomeIntent()
-        data class UpdateInAppReview(val show: Boolean) : HomeIntent()
-        data class UpdateDraftPopup(val show: Boolean) : HomeIntent()
+        data class UpdateDraftPopupFlag(val show: Boolean) : HomeIntent()
+        data object DismissDraftNotificationToast : HomeIntent()
+
     }
 
     sealed interface HomeSideEffect {
         data object NavigateToDiaryList : HomeSideEffect
         data object NavigateToSetting : HomeSideEffect
         data object NavigateToWriteDiary : HomeSideEffect
-        data object NavigateToReplyLoading : HomeSideEffect
+        data class NavigateToReplyLoading(val replyStatus: ReplyStatus) : HomeSideEffect
     }
 }
