@@ -71,7 +71,9 @@ class HomeViewModel @AssistedInject constructor(
             is HomeContract.HomeIntent.ShowDiaryDeleteDialog -> setState { copy(showDiaryDeleteBottomSheet = false, showDiaryDeleteDialog = true) }
             is HomeContract.HomeIntent.ConfirmDiaryDelete -> deleteDiary(intent.year, intent.month, intent.dayOfMonth)
             is HomeContract.HomeIntent.DismissDiaryDelete -> setState { copy(showDiaryDeleteBottomSheet = false, showDiaryDeleteDialog = false) }
-            is HomeContract.HomeIntent.OnClickWriteDiary -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToWriteDiary(intent.year, intent.month, intent.dayOfMonth))
+            is HomeContract.HomeIntent.OnClickWriteDiary -> _sideEffects.send(
+                HomeContract.HomeSideEffect.NavigateToWriteDiary(intent.year, intent.month, intent.dayOfMonth),
+            )
             is HomeContract.HomeIntent.OnClickReplyDiary -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToReplyLoading(intent.replyStatus))
             is HomeContract.HomeIntent.ShowDraftExpiredDialog -> setState { copy(showDraftExpiredDialog = true) }
             is HomeContract.HomeIntent.ConfirmDraftExpiredDialog -> {
@@ -88,10 +90,12 @@ class HomeViewModel @AssistedInject constructor(
     }
 
     private fun initialize() {
-        setState { copy(
-            showInAppReviewPopup = reviewRepository.getShouldShowPopup(),
-            showDraftNotificationPopup = draftRepository.getIsFirstUse()
-        ) }
+        setState {
+            copy(
+                showInAppReviewPopup = reviewRepository.getShouldShowPopup(),
+                showDraftNotificationPopup = draftRepository.getIsFirstUse(),
+            )
+        }
     }
 
     private suspend fun loadCalendarMonthlyInfo(year: Int, month: Int, dayOfMonth: Int = 1) {
@@ -191,7 +195,7 @@ class HomeViewModel @AssistedInject constructor(
             }
 
     private suspend fun buildAndSendNotification(
-        build: (info: NotificationInfoResponseDto, fcmToken: String) -> SendNotificationRequestDto
+        build: (info: NotificationInfoResponseDto, fcmToken: String) -> SendNotificationRequestDto,
     ): Result<SendNotificationResponseDto> {
         val token = fcmTokenProvider.getToken().orEmpty()
         val info = getNotificationInfoOrNull() ?: return Result.failure(IllegalStateException("notification info null"))

@@ -75,7 +75,13 @@ fun HomeRoute(
                     is HomeContract.HomeSideEffect.NavigateToDiaryList -> navigateToDiaryList(state.year, state.month)
                     is HomeContract.HomeSideEffect.NavigateToSetting -> navigateToSetting()
                     is HomeContract.HomeSideEffect.NavigateToWriteDiary -> navigateToWriteDiary(effect.year, effect.month, effect.dayOfMonth)
-                    is HomeContract.HomeSideEffect.NavigateToReplyLoading -> navigateToReplyLoading(state.year, state.month, state.dayOfMonth, Route.ReplyLoading.ReplyLoadingFrom.HOME, effect.replyStatus)
+                    is HomeContract.HomeSideEffect.NavigateToReplyLoading -> navigateToReplyLoading(
+                        state.year,
+                        state.month,
+                        state.dayOfMonth,
+                        Route.ReplyLoading.ReplyLoadingFrom.HOME,
+                        effect.replyStatus,
+                    )
                 }
             }
         }

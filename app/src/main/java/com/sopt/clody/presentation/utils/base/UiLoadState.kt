@@ -4,5 +4,5 @@ enum class UiLoadState {
     Idle,
     Loading,
     Success,
-    Error
+    Error,
 }

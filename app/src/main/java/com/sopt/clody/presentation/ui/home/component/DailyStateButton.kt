@@ -10,8 +10,6 @@ import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.button.ClodyReplyButton
 import com.sopt.clody.presentation.ui.type.DailyStateButtonType
 import com.sopt.clody.ui.theme.ClodyTheme
-import timber.log.Timber
-import java.time.LocalDate
 
 @Composable
 fun DailyStateButton(
