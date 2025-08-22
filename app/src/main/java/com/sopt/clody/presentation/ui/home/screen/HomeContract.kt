@@ -20,12 +20,11 @@ class HomeContract {
         val showDiaryDeleteBottomSheet: Boolean = false,
         val showDiaryDeleteDialog: Boolean = false,
         val diaryDeleteState: UiLoadState = UiLoadState.Idle,
-        val errorMessage: String? = null,
-
+        val showDraftExpiredDialog: Boolean = false,
         val showInAppReviewPopup: Boolean = false,
         val showDraftNotificationPopup: Boolean = false,
         val showDraftNotificationToast: Boolean = false,
-        val showDraftExpiredDialog: Boolean = false,
+        val errorMessage: String? = null,
     ) : MavericksState {
         val selectedDate: LocalDate = LocalDate.of(year, month, dayOfMonth)
 
@@ -56,24 +55,22 @@ class HomeContract {
         data object ShowDiaryDeleteDialog : HomeIntent()
         data class ConfirmDiaryDelete(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
         data object DismissDiaryDelete : HomeIntent()
-        data object OnClickWriteDiary : HomeIntent()
+        data class OnClickWriteDiary(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
         data class OnClickReplyDiary(val replyStatus: ReplyStatus) : HomeIntent()
         data object ShowDraftExpiredDialog : HomeIntent()
-        data object ConfirmDraftExpiredDialog : HomeIntent()
+        data class ConfirmDraftExpiredDialog(val year: Int, val month: Int, val dayOfMonth: Int) : HomeIntent()
         data object DismissDraftExpiredDialog : HomeIntent()
-
         data class RequestNotificationPermission(val granted: Boolean) : HomeIntent()
-        data class UpdateInAppReviewFlag(val flag: Boolean) : HomeIntent()
         data object EnableDraftAlarm : HomeIntent()
         data class UpdateDraftPopupFlag(val show: Boolean) : HomeIntent()
         data object DismissDraftNotificationToast : HomeIntent()
-
+        data class UpdateInAppReviewFlag(val newValue: Boolean) : HomeIntent()
     }
 
     sealed interface HomeSideEffect {
         data object NavigateToDiaryList : HomeSideEffect
         data object NavigateToSetting : HomeSideEffect
-        data object NavigateToWriteDiary : HomeSideEffect
+        data class NavigateToWriteDiary(val year: Int, val month: Int, val dayOfMonth: Int) : HomeSideEffect
         data class NavigateToReplyLoading(val replyStatus: ReplyStatus) : HomeSideEffect
     }
 }

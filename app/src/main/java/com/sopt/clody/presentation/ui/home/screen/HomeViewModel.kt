@@ -51,6 +51,7 @@ class HomeViewModel @AssistedInject constructor(
             .receiveAsFlow()
             .onEach(::handleIntent)
             .launchIn(viewModelScope)
+        initialize()
     }
 
     fun postIntent(intent: HomeContract.HomeIntent) {
@@ -60,7 +61,6 @@ class HomeViewModel @AssistedInject constructor(
     private suspend fun handleIntent(intent: HomeContract.HomeIntent) {
         when (intent) {
             is HomeContract.HomeIntent.InitializeInfo -> loadCalendarMonthlyInfo(intent.year, intent.month, intent.dayOfMonth)
-
             is HomeContract.HomeIntent.OnClickDiaryList -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToDiaryList)
             is HomeContract.HomeIntent.OnClickYearMonth -> setState { copy(showYearMonthPicker = true) }
             is HomeContract.HomeIntent.ConfirmYearMonthPicker -> loadCalendarMonthlyInfo(intent.newYear, intent.newMonth)
@@ -71,22 +71,27 @@ class HomeViewModel @AssistedInject constructor(
             is HomeContract.HomeIntent.ShowDiaryDeleteDialog -> setState { copy(showDiaryDeleteBottomSheet = false, showDiaryDeleteDialog = true) }
             is HomeContract.HomeIntent.ConfirmDiaryDelete -> deleteDiary(intent.year, intent.month, intent.dayOfMonth)
             is HomeContract.HomeIntent.DismissDiaryDelete -> setState { copy(showDiaryDeleteBottomSheet = false, showDiaryDeleteDialog = false) }
-            is HomeContract.HomeIntent.OnClickWriteDiary -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToWriteDiary)
+            is HomeContract.HomeIntent.OnClickWriteDiary -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToWriteDiary(intent.year, intent.month, intent.dayOfMonth))
             is HomeContract.HomeIntent.OnClickReplyDiary -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToReplyLoading(intent.replyStatus))
             is HomeContract.HomeIntent.ShowDraftExpiredDialog -> setState { copy(showDraftExpiredDialog = true) }
             is HomeContract.HomeIntent.ConfirmDraftExpiredDialog -> {
-                _sideEffects.send(HomeContract.HomeSideEffect.NavigateToWriteDiary)
+                _sideEffects.send(HomeContract.HomeSideEffect.NavigateToWriteDiary(intent.year, intent.month, intent.dayOfMonth))
                 setState { copy(showDraftExpiredDialog = false) }
             }
             is HomeContract.HomeIntent.DismissDraftExpiredDialog -> setState { copy(showDraftExpiredDialog = false) }
-
             is HomeContract.HomeIntent.RequestNotificationPermission -> sendNotification(intent.granted)
-            is HomeContract.HomeIntent.UpdateInAppReviewFlag -> updateInAppReviewFlag(intent.flag)
             is HomeContract.HomeIntent.EnableDraftAlarm -> enableDraftAlarm()
             is HomeContract.HomeIntent.UpdateDraftPopupFlag -> updateDraftPopupFlag(intent.show)
             is HomeContract.HomeIntent.DismissDraftNotificationToast -> setState { copy(showDraftNotificationToast = false) }
-
+            is HomeContract.HomeIntent.UpdateInAppReviewFlag -> updateInAppReviewFlag(intent.newValue)
         }
+    }
+
+    private fun initialize() {
+        setState { copy(
+            showInAppReviewPopup = reviewRepository.getShouldShowPopup(),
+            showDraftNotificationPopup = draftRepository.getIsFirstUse()
+        ) }
     }
 
     private suspend fun loadCalendarMonthlyInfo(year: Int, month: Int, dayOfMonth: Int = 1) {
@@ -178,7 +183,6 @@ class HomeViewModel @AssistedInject constructor(
         )
     }
 
-    // 공통 유틸: 알림 설정(info) 조회 실패 시 에러 상태 세팅 후 null 반환
     private suspend fun getNotificationInfoOrNull(): NotificationInfoResponseDto? =
         withContext(Dispatchers.IO) { notificationRepository.getNotificationInfo() }
             .getOrElse {
@@ -186,7 +190,6 @@ class HomeViewModel @AssistedInject constructor(
                 null
             }
 
-    // 공통 유틸: 요청 생성 람다만 넘기면 전송까지 수행
     private suspend fun buildAndSendNotification(
         build: (info: NotificationInfoResponseDto, fcmToken: String) -> SendNotificationRequestDto
     ): Result<SendNotificationResponseDto> {
@@ -196,8 +199,12 @@ class HomeViewModel @AssistedInject constructor(
         return withContext(Dispatchers.IO) { notificationRepository.sendNotification(request) }
     }
 
-    // 권한 부여/해제에 따른 전송 (결과는 기존처럼 별도 처리 없이 호출만)
     private suspend fun sendNotification(granted: Boolean) {
+        if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
+            setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
+            return
+        }
+
         buildAndSendNotification { info, token ->
             SendNotificationRequestDto(
                 isDiaryAlarm = granted,
@@ -209,7 +216,6 @@ class HomeViewModel @AssistedInject constructor(
         }
     }
 
-    // 임시저장(draft) 알림 활성화
     private suspend fun enableDraftAlarm() {
         if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
             setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
@@ -239,9 +245,9 @@ class HomeViewModel @AssistedInject constructor(
         setState { copy(showDraftNotificationPopup = flag) }
     }
 
-    private fun updateInAppReviewFlag(flag: Boolean) {
-        reviewRepository.setShouldShowPopup(flag)
-        setState { copy(showInAppReviewPopup = flag) }
+    private fun updateInAppReviewFlag(newValue: Boolean) {
+        reviewRepository.setShouldShowPopup(newValue)
+        setState { copy(showInAppReviewPopup = newValue) }
     }
 
     @AssistedFactory

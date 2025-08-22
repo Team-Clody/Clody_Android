@@ -74,7 +74,7 @@ fun HomeRoute(
                 when (effect) {
                     is HomeContract.HomeSideEffect.NavigateToDiaryList -> navigateToDiaryList(state.year, state.month)
                     is HomeContract.HomeSideEffect.NavigateToSetting -> navigateToSetting()
-                    is HomeContract.HomeSideEffect.NavigateToWriteDiary -> navigateToWriteDiary(state.year, state.month, state.dayOfMonth)
+                    is HomeContract.HomeSideEffect.NavigateToWriteDiary -> navigateToWriteDiary(effect.year, effect.month, effect.dayOfMonth)
                     is HomeContract.HomeSideEffect.NavigateToReplyLoading -> navigateToReplyLoading(state.year, state.month, state.dayOfMonth, Route.ReplyLoading.ReplyLoadingFrom.HOME, effect.replyStatus)
                 }
             }
@@ -170,12 +170,12 @@ fun HomeScreen(
                     selectedDailyInfo = state.dailyDiaryInfo,
                     onClickWriteDiary = {
                         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                        onIntent(HomeContract.HomeIntent.OnClickWriteDiary)
+                        onIntent(HomeContract.HomeIntent.OnClickWriteDiary(state.year, state.month, state.dayOfMonth))
                     },
                     onClickContinueDraft = {
                         if (calendarDailyInfo.enableWriteDiary()) {
                             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                            onIntent(HomeContract.HomeIntent.OnClickWriteDiary)
+                            onIntent(HomeContract.HomeIntent.OnClickWriteDiary(state.year, state.month, state.dayOfMonth))
                         } else {
                             onIntent(HomeContract.HomeIntent.ShowDraftExpiredDialog)
                         }
@@ -243,7 +243,7 @@ fun HomeScreen(
             descriptionMassage = stringResource(R.string.dialog_home_continue_draft_description),
             confirmOption = stringResource(R.string.dialog_home_continue_draft_confirm),
             dismissOption = stringResource(R.string.dialog_home_continue_draft_dismiss),
-            confirmAction = { onIntent(HomeContract.HomeIntent.ConfirmDraftExpiredDialog) },
+            confirmAction = { onIntent(HomeContract.HomeIntent.ConfirmDraftExpiredDialog(state.year, state.month, state.dayOfMonth)) },
             onDismiss = { onIntent(HomeContract.HomeIntent.DismissDraftExpiredDialog) },
             confirmButtonColor = ClodyTheme.colors.mainYellow,
             confirmButtonTextColor = ClodyTheme.colors.gray01,
