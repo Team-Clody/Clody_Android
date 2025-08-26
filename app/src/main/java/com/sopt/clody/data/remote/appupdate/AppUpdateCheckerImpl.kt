@@ -33,21 +33,35 @@ class AppUpdateCheckerImpl @Inject constructor(
         }
     }
 
+    /**
+     * Firebase RemoteConfig 로부터 점검 시간에 해당 하는지 검사하는 함수.
+     *
+     * @return 점검 시간 해당 여부
+     * */
     override suspend fun isUnderInspection(): Boolean {
         val start = remoteConfigDataSource.getInspectionStart() ?: return false
         val end = remoteConfigDataSource.getInspectionEnd() ?: return false
-        val serverZone = ZoneId.of("Asia/Seoul")
+        val serverZone = ZoneId.of(SERVER_TIMEZONE)
 
         val nowServer = ZonedDateTime.now(serverZone)
         val startZ = start.atZone(serverZone)
         val endZ = end.atZone(serverZone)
 
-        return nowServer.isAfter(startZ) && nowServer.isBefore(endZ)
+        return nowServer in startZ..endZ
     }
 
+    /**
+     * Firebase RemoteConfig 로부터 점검 시간을 가져와 반환하는 함수.
+     *
+     * @return 점검 시작 시간과 종료 시간을 "2025-08-11T18:00:00" 형식으로 반환
+     * */
     override suspend fun getInspectionTimeText(): Pair<String, String>? {
         val start = remoteConfigDataSource.getInspectionStart() ?: return null
         val end = remoteConfigDataSource.getInspectionEnd() ?: return null
         return start.toString() to end.toString()
+    }
+
+    companion object {
+        private const val SERVER_TIMEZONE = "Asia/Seoul"
     }
 }
