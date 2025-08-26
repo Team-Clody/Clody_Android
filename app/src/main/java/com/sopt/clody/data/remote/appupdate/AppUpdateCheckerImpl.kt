@@ -4,9 +4,8 @@ import com.sopt.clody.data.remote.datasource.RemoteConfigDataSource
 import com.sopt.clody.domain.appupdate.AppUpdateChecker
 import com.sopt.clody.domain.model.AppUpdateState
 import com.sopt.clody.domain.util.VersionComparator
-import java.time.LocalDateTime
-import java.time.format.TextStyle
-import java.util.Locale
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 class AppUpdateCheckerImpl @Inject constructor(
@@ -34,29 +33,35 @@ class AppUpdateCheckerImpl @Inject constructor(
         }
     }
 
+    /**
+     * Firebase RemoteConfig 로부터 점검 시간에 해당 하는지 검사하는 함수.
+     *
+     * @return 점검 시간 해당 여부
+     * */
     override suspend fun isUnderInspection(): Boolean {
         val start = remoteConfigDataSource.getInspectionStart() ?: return false
         val end = remoteConfigDataSource.getInspectionEnd() ?: return false
-        val now = LocalDateTime.now()
-        return now.isAfter(start) && now.isBefore(end)
+        val serverZone = ZoneId.of(SERVER_TIMEZONE)
+
+        val nowServer = ZonedDateTime.now(serverZone)
+        val startZ = start.atZone(serverZone)
+        val endZ = end.atZone(serverZone)
+
+        return nowServer in startZ..endZ
     }
 
-    override fun getInspectionTimeText(): String? {
-        val start = remoteConfigDataSource.getInspectionStart()
-        val end = remoteConfigDataSource.getInspectionEnd()
-        if (start == null || end == null) return null
-
-        val startText = formatDateTimeWithDayOfWeek(start)
-        val endText = formatDateTimeWithDayOfWeek(end)
-        return "$startText ~ $endText"
+    /**
+     * Firebase RemoteConfig 로부터 점검 시간을 가져와 반환하는 함수.
+     *
+     * @return 점검 시작 시간과 종료 시간을 "2025-08-11T18:00:00" 형식으로 반환
+     * */
+    override suspend fun getInspectionTimeText(): Pair<String, String>? {
+        val start = remoteConfigDataSource.getInspectionStart() ?: return null
+        val end = remoteConfigDataSource.getInspectionEnd() ?: return null
+        return start.toString() to end.toString()
     }
 
-    private fun formatDateTimeWithDayOfWeek(dateTime: LocalDateTime): String {
-        val dayOfWeek = dateTime.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.KOREAN)
-        val month = dateTime.monthValue
-        val day = dateTime.dayOfMonth
-        val hour = dateTime.hour.toString().padStart(2, '0')
-
-        return "$month/$day($dayOfWeek) ${hour}시"
+    companion object {
+        private const val SERVER_TIMEZONE = "Asia/Seoul"
     }
 }

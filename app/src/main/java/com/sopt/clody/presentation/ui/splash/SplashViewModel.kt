@@ -10,6 +10,7 @@ import com.sopt.clody.domain.model.AppUpdateState
 import com.sopt.clody.domain.repository.TokenRepository
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.language.LanguageProvider
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -25,6 +26,7 @@ class SplashViewModel @AssistedInject constructor(
     @Assisted initialState: SplashContract.SplashState,
     private val tokenRepository: TokenRepository,
     private val appUpdateChecker: AppUpdateChecker,
+    private val languageProvider: LanguageProvider,
 ) : MavericksViewModel<SplashContract.SplashState>(initialState) {
 
     private val _intents = Channel<SplashContract.SplashIntent>(BUFFERED)
@@ -64,7 +66,10 @@ class SplashViewModel @AssistedInject constructor(
 
     private suspend fun checkInspectionAndHandle(): Boolean {
         if (appUpdateChecker.isUnderInspection()) {
-            val inspectionText = appUpdateChecker.getInspectionTimeText()
+            val inspectionTextRaw = appUpdateChecker.getInspectionTimeText()
+            val inspectionText = inspectionTextRaw?.let { (start, end) ->
+                languageProvider.getInspectionTimeText(start, end)
+            }
             setState {
                 copy(
                     showInspectionDialog = true,
