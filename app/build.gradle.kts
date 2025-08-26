@@ -25,8 +25,8 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = 28
         targetSdk = 35
-        versionCode = 29
-        versionName = "1.5.0"
+        versionCode = 30
+        versionName = "1.5.1"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
         val googleAdmobAppId: String = properties.getProperty("GOOGLE_ADMOB_APP_ID", "")
