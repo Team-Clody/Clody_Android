@@ -36,14 +36,21 @@ fun NotificationSettingTimePicker(
     onDismissRequest: () -> Unit,
     onConfirm: (TimePeriod, String, String) -> Unit,
 ) {
-    val amPmItemsLabel = TimePeriod.entries.map { it.getLabel() }
-    val amPmItems = remember { amPmItemsLabel }
+    val amPmEnumItems = listOf(TimePeriod.AM, TimePeriod.PM)
+    val amPmLabelItems = amPmEnumItems.map { it.getLabel() }
+
     val hourItems = remember { (1..12).map { it.toString() } }
     val minuteItems = remember { listOf("00", "10", "20", "30", "40", "50") }
 
-    val amPmPickerState = rememberPickerState()
-    val hourPickerState = rememberPickerState()
-    val minutePickerState = rememberPickerState()
+    val amPmPickerState = rememberPickerState().apply {
+        selectedItem = amPmLabelItems[1]
+    }
+    val hourPickerState = rememberPickerState().apply {
+        selectedItem = "9"
+    }
+    val minutePickerState = rememberPickerState().apply {
+        selectedItem = "30"
+    }
 
     Surface(
         modifier = Modifier
@@ -105,7 +112,7 @@ fun NotificationSettingTimePicker(
                     Spacer(Modifier.weight(1f))
                     ClodyPicker(
                         state = amPmPickerState,
-                        items = amPmItems,
+                        items = amPmLabelItems,
                         startIndex = 1,
                         visibleItemsCount = 3,
                         infiniteScroll = false,
@@ -138,8 +145,12 @@ fun NotificationSettingTimePicker(
             }
             ClodyButton(
                 onClick = {
-                    val selectedPeriod = if (amPmPickerState.selectedItem == "오전") TimePeriod.AM else TimePeriod.PM
-                    onConfirm(selectedPeriod, hourPickerState.selectedItem, minutePickerState.selectedItem)
+                    val selectedLabel = amPmPickerState.selectedItem
+                    val selectedPeriod = amPmEnumItems.getOrElse(amPmLabelItems.indexOf(selectedLabel)) { TimePeriod.PM }
+                    val selectedHour = hourPickerState.selectedItem
+                    val selectedMinute = minutePickerState.selectedItem
+
+                    onConfirm(selectedPeriod, selectedHour, selectedMinute)
                 },
                 text = stringResource(R.string.bottom_sheet_notification_time_change_confirm),
                 enabled = true,
