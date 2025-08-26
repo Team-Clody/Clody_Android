@@ -33,7 +33,7 @@ class TimeReminderViewModel @Inject constructor(
     var selectedTime by mutableStateOf("21:30")
         private set
 
-    fun sendNotification(context: Context, isPermissionGranted: Boolean) {
+    fun sendNotification(context: Context) {
         viewModelScope.launch {
             if (networkConnectivityObserver.networkStatus.first() == NetworkStatus.Unavailable) {
                 _timeReminderState.value = TimeReminderState.Failure(errorMessageProvider.getNetworkError())
@@ -47,9 +47,9 @@ class TimeReminderViewModel @Inject constructor(
             }
 
             val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = isPermissionGranted,
+                isDiaryAlarm = true,
                 isDraftAlarm = false,
-                isReplyAlarm = isPermissionGranted,
+                isReplyAlarm = true,
                 time = selectedTime,
                 fcmToken = fcmToken,
             )

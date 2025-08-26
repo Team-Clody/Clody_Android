@@ -1,10 +1,5 @@
 package com.sopt.clody.presentation.ui.auth.timereminder
 
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -32,7 +27,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sopt.clody.R
 import com.sopt.clody.presentation.ui.auth.component.container.PickerBox
@@ -56,27 +50,6 @@ fun TimeReminderRoute(
     val context = LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
     var dialogMessage by remember { mutableStateOf("") }
-
-    val isNotificationPermissionGranted = remember { mutableStateOf(false) }
-
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-    ) { isGranted: Boolean ->
-        isNotificationPermissionGranted.value = isGranted
-    }
-    // 알림 권한 요청
-    LaunchedEffect(Unit) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
-            if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissionLauncher.launch(notificationPermission)
-            } else {
-                isNotificationPermissionGranted.value = true
-            }
-        } else {
-            isNotificationPermissionGranted.value = true
-        }
-    }
 
     // 알림 권한 요청 결과에 따른 처리
     LaunchedEffect(timeReminderState) {
@@ -103,14 +76,14 @@ fun TimeReminderRoute(
     TimeReminderScreen(
         onStartClick = {
             viewModel.setSelectedTime(TimePeriod.PM, "9", "30")
-            viewModel.sendNotification(context, isNotificationPermissionGranted.value)
+            viewModel.sendNotification(context)
         },
         onTimeSelected = { period, hour, minute ->
             viewModel.setSelectedTime(period, hour, minute)
         },
         onCompleteClick = {
             AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.ONBOARDING_ALARM)
-            viewModel.sendNotification(context, isNotificationPermissionGranted.value)
+            viewModel.sendNotification(context)
         },
         isLoading = timeReminderState is TimeReminderState.Loading,
     )

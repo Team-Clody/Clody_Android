@@ -160,6 +160,10 @@
     <string name="dialog_revoke_confirm">Withdraw</string>
     <string name="dialog_revoke_dismiss">Cancel</string>
 
+    <string name="dialog_inspection_title">We\'re conducting system maintenance\nto improve your experience on Clody.\nSee you again soon!</string>
+    <string name="dialog_inspection_description">[Maintenance Time]\n%1$s</string>
+    <string name="dialog_inspection_confirm">OK</string>
+
     <!-- Usage : Toast Message -->
     <string name="toast_home_draft_alarm_enabled">Continue writing reminders are now on!</string>
     <string name="toast_write_diary_entry_empty">Field required to send.</string>
