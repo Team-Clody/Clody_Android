@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -63,14 +64,14 @@ fun InspectionDialog(
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                     Text(
-                        text = "보다 안정적인 클로디 서비스를 위해\n시스템 점검 중이에요. 곧 다시 만나요!",
+                        text = stringResource(R.string.dialog_inspection_title),
                         color = ClodyTheme.colors.gray03,
                         textAlign = TextAlign.Center,
                         style = ClodyTheme.typography.body3Medium,
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "점검시간 : $inspectionTime",
+                        text = stringResource(R.string.dialog_inspection_description, inspectionTime),
                         color = ClodyTheme.colors.gray04,
                         textAlign = TextAlign.Center,
                         style = ClodyTheme.typography.body3Medium,
@@ -84,7 +85,7 @@ fun InspectionDialog(
                         colors = ButtonDefaults.buttonColors(ClodyTheme.colors.mainYellow),
                     ) {
                         Text(
-                            text = "확인",
+                            text = stringResource(R.string.dialog_inspection_confirm),
                             color = ClodyTheme.colors.gray02,
                             style = ClodyTheme.typography.body3SemiBold,
                         )
@@ -100,7 +101,7 @@ fun InspectionDialog(
 private fun PreviewInspectionDialog() {
     BasePreview {
         InspectionDialog(
-            inspectionTime = "",
+            inspectionTime = "Dec 14 (Wed) 12:00 PM ~ Mar 15 (Wed) 10:00 PM",
             onDismiss = {},
         )
     }
