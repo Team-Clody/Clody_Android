@@ -73,39 +73,7 @@ fun DailyDiary(
         }
 
         when {
-            selectedDailyInfo.isDraft -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 44.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.home_daily_diary_draft_message),
-                        style = ClodyTheme.typography.body3Regular,
-                        color = ClodyTheme.colors.gray05,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-
-            selectedDailyInfo.diaryList.isEmpty() -> {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 44.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.home_daily_diary_empty_message),
-                        style = ClodyTheme.typography.body3Regular,
-                        color = ClodyTheme.colors.gray05,
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-
-            else -> {
+            selectedDailyInfo.diaryList.isNotEmpty() -> {
                 selectedDailyInfo.diaryList.forEachIndexed { index, diary ->
                     Column(
                         modifier = Modifier
@@ -119,6 +87,38 @@ fun DailyDiary(
                             color = ClodyTheme.colors.gray01,
                         )
                     }
+                }
+            }
+
+            selectedDailyInfo.isDraft -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 44.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.home_daily_diary_draft_message),
+                        style = ClodyTheme.typography.body3Regular,
+                        color = ClodyTheme.colors.gray05,
+                        textAlign = TextAlign.Center,
+                    )
+                }
+            }
+
+            else -> {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 44.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.home_daily_diary_empty_message),
+                        style = ClodyTheme.typography.body3Regular,
+                        color = ClodyTheme.colors.gray05,
+                        textAlign = TextAlign.Center,
+                    )
                 }
             }
         }

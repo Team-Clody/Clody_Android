@@ -7,7 +7,7 @@ import java.time.ZoneId
 /**
  * 홈 화면의 월별 달력에서 사용되는 정보
  *
- * @property totalCloverCount 해당 월에 받은 클로버(답장)의 개수
+ * @property totalCloverCount 지금까지 모은 클로버(답장)의 개수. 연 단위로 카운트
  * @property calendarDailyInfoList 해당 월의 일별 정보
  *
  * */

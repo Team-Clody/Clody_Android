@@ -13,9 +13,9 @@ enum class DailyStateButtonType {
             dailyDiaryInfo: DailyDiaryInfo,
         ): DailyStateButtonType {
             return when {
+                calendarDailyInfo.isDeleted && calendarDailyInfo.diaryCount > 0 -> REPLY_DISABLED
                 dailyDiaryInfo.isDraft -> DRAFT_ENABLED
-                (calendarDailyInfo.isDeleted && calendarDailyInfo.diaryCount > 0) ||
-                    calendarDailyInfo.replyStatus == ReplyStatus.INVALID_DRAFT -> REPLY_DISABLED
+                calendarDailyInfo.replyStatus == ReplyStatus.INVALID_DRAFT -> REPLY_DISABLED
                 calendarDailyInfo.replyStatus == ReplyStatus.READY_READ ||
                     calendarDailyInfo.replyStatus == ReplyStatus.READY_NOT_READ ||
                     (calendarDailyInfo.replyStatus == ReplyStatus.UNREADY && calendarDailyInfo.diaryCount > 0) -> REPLY_ENABLED
