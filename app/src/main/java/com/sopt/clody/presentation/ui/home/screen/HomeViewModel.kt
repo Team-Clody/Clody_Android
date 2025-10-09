@@ -86,6 +86,7 @@ class HomeViewModel @AssistedInject constructor(
             is HomeContract.HomeIntent.UpdateDraftPopupFlag -> updateDraftPopupFlag(intent.show)
             is HomeContract.HomeIntent.DismissDraftNotificationToast -> setState { copy(showDraftNotificationToast = false) }
             is HomeContract.HomeIntent.UpdateInAppReviewFlag -> updateInAppReviewFlag(intent.newValue)
+            is HomeContract.HomeIntent.ResetErrorDialogMessage -> setState { copy(errorDialogMessage = null) }
         }
     }
 
@@ -102,7 +103,7 @@ class HomeViewModel @AssistedInject constructor(
         setState { copy(calendarLoadState = UiLoadState.Loading, year = year, month = month) }
 
         if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
-            setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
+            setState { copy(errorScreenMessage = errorMessageProvider.getNetworkError()) }
             return
         }
 
@@ -130,7 +131,7 @@ class HomeViewModel @AssistedInject constructor(
                 setState {
                     copy(
                         calendarLoadState = UiLoadState.Error,
-                        errorMessage = errorMessageProvider.getServerError(),
+                        errorScreenMessage = errorMessageProvider.getServerError(),
                     )
                 }
             },
@@ -141,7 +142,7 @@ class HomeViewModel @AssistedInject constructor(
         setState { copy(dailyDiaryLoadState = UiLoadState.Loading, dayOfMonth = dayOfMonth) }
 
         if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
-            setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
+            setState { copy(errorScreenMessage = errorMessageProvider.getNetworkError()) }
             return
         }
 
@@ -161,7 +162,7 @@ class HomeViewModel @AssistedInject constructor(
                 setState {
                     copy(
                         dailyDiaryLoadState = UiLoadState.Error,
-                        errorMessage = errorMessageProvider.getServerError(),
+                        errorScreenMessage = errorMessageProvider.getServerError(),
                     )
                 }
             },
@@ -172,7 +173,7 @@ class HomeViewModel @AssistedInject constructor(
         setState { copy(diaryDeleteState = UiLoadState.Loading) }
 
         if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
-            setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
+            setState { copy(errorDialogMessage = errorMessageProvider.getNetworkError()) }
             return
         }
 
@@ -182,7 +183,7 @@ class HomeViewModel @AssistedInject constructor(
                 setState { copy(showDiaryDeleteDialog = false, diaryDeleteState = UiLoadState.Success) }
             },
             onFailure = {
-                setState { copy(diaryDeleteState = UiLoadState.Error, errorMessage = errorMessageProvider.getServerError()) }
+                setState { copy(diaryDeleteState = UiLoadState.Error, errorDialogMessage = errorMessageProvider.getServerError()) }
             },
         )
     }
@@ -190,7 +191,7 @@ class HomeViewModel @AssistedInject constructor(
     private suspend fun getNotificationInfoOrNull(): NotificationInfoResponseDto? =
         withContext(Dispatchers.IO) { notificationRepository.getNotificationInfo() }
             .getOrElse {
-                setState { copy(errorMessage = errorMessageProvider.getTemporaryError()) }
+                setState { copy(errorDialogMessage = errorMessageProvider.getTemporaryError()) }
                 null
             }
 
@@ -205,7 +206,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private suspend fun sendNotification(granted: Boolean) {
         if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
-            setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
+            setState { copy(errorDialogMessage = errorMessageProvider.getNetworkError()) }
             return
         }
 
@@ -222,7 +223,7 @@ class HomeViewModel @AssistedInject constructor(
 
     private suspend fun enableDraftAlarm() {
         if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
-            setState { copy(errorMessage = errorMessageProvider.getNetworkError()) }
+            setState { copy(errorDialogMessage = errorMessageProvider.getNetworkError()) }
             return
         }
 
@@ -239,7 +240,7 @@ class HomeViewModel @AssistedInject constructor(
                 setState { copy(showDraftNotificationPopup = false, showDraftNotificationToast = true) }
             },
             onFailure = {
-                setState { copy(errorMessage = errorMessageProvider.getTemporaryError()) }
+                setState { copy(errorDialogMessage = errorMessageProvider.getTemporaryError()) }
             },
         )
     }

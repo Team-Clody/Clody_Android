@@ -24,7 +24,8 @@ class HomeContract {
         val showInAppReviewPopup: Boolean = false,
         val showDraftNotificationPopup: Boolean = false,
         val showDraftNotificationToast: Boolean = false,
-        val errorMessage: String? = null,
+        val errorDialogMessage: String? = null,
+        val errorScreenMessage: String? = null,
     ) : MavericksState {
         val selectedDate: LocalDate = LocalDate.of(year, month, dayOfMonth)
 
@@ -65,6 +66,7 @@ class HomeContract {
         data class UpdateDraftPopupFlag(val show: Boolean) : HomeIntent()
         data object DismissDraftNotificationToast : HomeIntent()
         data class UpdateInAppReviewFlag(val newValue: Boolean) : HomeIntent()
+        data object ResetErrorDialogMessage : HomeIntent()
     }
 
     sealed interface HomeSideEffect {

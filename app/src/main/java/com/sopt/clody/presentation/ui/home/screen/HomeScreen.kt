@@ -38,9 +38,11 @@ import com.airbnb.mvrx.compose.mavericksViewModel
 import com.sopt.clody.R
 import com.sopt.clody.core.review.InAppReviewManager
 import com.sopt.clody.domain.type.ReplyStatus
+import com.sopt.clody.presentation.ui.component.FailureScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
@@ -128,10 +130,17 @@ fun HomeRoute(
         }
     }
 
-    HomeScreen(
-        state = state,
-        onIntent = { viewModel.postIntent(it) },
-    )
+    if (state.errorScreenMessage != null) {
+        FailureScreen(
+            message = state.errorScreenMessage!!,
+            confirmAction = { viewModel.postIntent(HomeContract.HomeIntent.InitializeInfo(state.year, state.month, state.dayOfMonth)) }
+        )
+    } else {
+        HomeScreen(
+            state = state,
+            onIntent = { viewModel.postIntent(it) },
+        )
+    }
 }
 
 @Composable
@@ -328,6 +337,14 @@ fun HomeScreen(
                         .padding(40.dp),
                 )
             },
+        )
+    }
+
+    if (state.errorDialogMessage != null) {
+        FailureDialog(
+            message = state.errorDialogMessage,
+            confirmAction = { onIntent(HomeContract.HomeIntent.ResetErrorDialogMessage) },
+            onDismiss = { onIntent(HomeContract.HomeIntent.ResetErrorDialogMessage) },
         )
     }
 }
