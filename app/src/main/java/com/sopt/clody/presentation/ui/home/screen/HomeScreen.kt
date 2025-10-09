@@ -133,7 +133,7 @@ fun HomeRoute(
     if (state.errorScreenMessage != null) {
         FailureScreen(
             message = state.errorScreenMessage!!,
-            confirmAction = { viewModel.postIntent(HomeContract.HomeIntent.InitializeInfo(state.year, state.month, state.dayOfMonth)) }
+            confirmAction = { viewModel.postIntent(HomeContract.HomeIntent.InitializeInfo(state.year, state.month, state.dayOfMonth)) },
         )
     } else {
         HomeScreen(

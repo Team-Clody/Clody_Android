@@ -73,7 +73,7 @@ fun convertDateToKstDateTime(year: Int, month: Int, day: Int): String {
     val userNow = ZonedDateTime.now(userZone)
     val userDateTime = LocalDateTime.of(
         LocalDate.of(year, month, day),
-        userNow.toLocalTime()
+        userNow.toLocalTime(),
     ).atZone(userZone)
 
     val kstDateTime = userDateTime.withZoneSameInstant(kstZone)
