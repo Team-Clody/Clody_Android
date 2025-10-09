@@ -30,7 +30,7 @@ import com.sopt.clody.presentation.ui.type.DailyCloverType
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.datetime.DayOfWeek
+import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
 

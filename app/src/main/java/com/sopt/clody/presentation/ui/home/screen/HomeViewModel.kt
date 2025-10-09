@@ -123,6 +123,7 @@ class HomeViewModel @AssistedInject constructor(
                                 )
                             },
                         ),
+                        errorScreenMessage = null,
                     )
                 }
                 loadDailyDiaryInfo(year, month, dayOfMonth)
@@ -155,6 +156,7 @@ class HomeViewModel @AssistedInject constructor(
                             diaryList = data.diaries.map { it.content },
                             isDraft = data.isDraft,
                         ),
+                        errorScreenMessage = null,
                     )
                 }
             },
