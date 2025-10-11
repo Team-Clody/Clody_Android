@@ -4,6 +4,7 @@ import com.airbnb.mvrx.hilt.AssistedViewModelFactory
 import com.airbnb.mvrx.hilt.MavericksViewModelComponent
 import com.airbnb.mvrx.hilt.ViewModelKey
 import com.sopt.clody.presentation.ui.auth.signup.SignUpViewModel
+import com.sopt.clody.presentation.ui.home.screen.HomeViewModel
 import com.sopt.clody.presentation.ui.login.LoginViewModel
 import com.sopt.clody.presentation.ui.splash.SplashViewModel
 import dagger.Binds
@@ -34,5 +35,12 @@ interface ViewModelsModule {
     @ViewModelKey(SignUpViewModel::class)
     fun bindSignUpViewModelFactory(
         factory: SignUpViewModel.Factory,
+    ): AssistedViewModelFactory<*, *>
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(HomeViewModel::class)
+    fun bindHomeViewModelFactory(
+        factory: HomeViewModel.Factory,
     ): AssistedViewModelFactory<*, *>
 }

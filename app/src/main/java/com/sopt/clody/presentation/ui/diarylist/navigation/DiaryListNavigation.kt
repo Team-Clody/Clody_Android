@@ -4,7 +4,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.sopt.clody.domain.model.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListRoute
 import com.sopt.clody.presentation.utils.navigation.Route
 

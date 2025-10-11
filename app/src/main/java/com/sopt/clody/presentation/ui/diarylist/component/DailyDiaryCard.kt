@@ -28,7 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
 import com.sopt.clody.data.remote.dto.response.MonthlyDiaryResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.ui.diarylist.screen.DiaryListViewModel
 import com.sopt.clody.ui.theme.ClodyTheme
 
@@ -47,7 +47,7 @@ fun DailyDiaryCard(
     val iconRes = when {
         dailyDiary.replyStatus == ReplyStatus.READY_NOT_READ && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.replyStatus == ReplyStatus.UNREADY && dailyDiary.diaryCount > 0 -> R.drawable.ic_home_ungiven_clover
-        dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT -> R.drawable.ic_home_expired_written_clover
+        dailyDiary.replyStatus == ReplyStatus.INVALID_DRAFT -> R.drawable.ic_home_disabled_reply_clover
         dailyDiary.diaryCount == 0 -> R.drawable.ic_home_ungiven_clover
         dailyDiary.diaryCount in 1..2 -> R.drawable.ic_home_bottom_clover
         dailyDiary.diaryCount in 3..4 -> R.drawable.ic_home_mid_clover

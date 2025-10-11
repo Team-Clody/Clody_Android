@@ -1,40 +1,38 @@
 package com.sopt.clody.presentation.ui.home.screen
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import com.airbnb.mvrx.MavericksViewModel
+import com.airbnb.mvrx.MavericksViewModelFactory
+import com.airbnb.mvrx.hilt.AssistedViewModelFactory
+import com.airbnb.mvrx.hilt.hiltMavericksViewModelFactory
 import com.sopt.clody.core.fcm.FcmTokenProvider
 import com.sopt.clody.core.network.NetworkConnectivityObserver
 import com.sopt.clody.core.network.NetworkStatus
 import com.sopt.clody.data.remote.dto.request.SendNotificationRequestDto
-import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
-import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
 import com.sopt.clody.data.remote.dto.response.NotificationInfoResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
+import com.sopt.clody.data.remote.dto.response.SendNotificationResponseDto
+import com.sopt.clody.domain.model.CalendarMonthlyInfo
+import com.sopt.clody.domain.model.DailyDiaryInfo
 import com.sopt.clody.domain.repository.DiaryRepository
 import com.sopt.clody.domain.repository.DraftRepository
 import com.sopt.clody.domain.repository.NotificationRepository
 import com.sopt.clody.domain.repository.ReviewRepository
-import com.sopt.clody.presentation.ui.home.calendar.model.DiaryDateData
-import com.sopt.clody.presentation.ui.setting.notificationsetting.screen.NotificationChangeState
+import com.sopt.clody.presentation.utils.base.UiLoadState
 import com.sopt.clody.presentation.utils.network.ErrorMessageProvider
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.BUFFERED
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import java.time.LocalDate
-import java.time.ZoneId
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel @AssistedInject constructor(
+    @Assisted initialState: HomeContract.HomeState,
     private val diaryRepository: DiaryRepository,
     private val notificationRepository: NotificationRepository,
     private val draftRepository: DraftRepository,
@@ -42,338 +40,228 @@ class HomeViewModel @Inject constructor(
     private val reviewRepository: ReviewRepository,
     private val errorMessageProvider: ErrorMessageProvider,
     private val networkConnectivityObserver: NetworkConnectivityObserver,
-) : ViewModel() {
+) : MavericksViewModel<HomeContract.HomeState>(initialState) {
 
-    private val _calendarState = MutableStateFlow<CalendarState<MonthlyCalendarResponseDto>>(CalendarState.Idle)
-    val calendarState: StateFlow<CalendarState<MonthlyCalendarResponseDto>> get() = _calendarState
-
-    private val _dailyDiariesState =
-        MutableStateFlow<DailyDiariesState<DailyDiariesResponseDto>>(DailyDiariesState.Idle)
-    val dailyDiariesState: StateFlow<DailyDiariesState<DailyDiariesResponseDto>> get() = _dailyDiariesState
-
-    private val _deleteDiaryState = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
-    val deleteDiaryState: StateFlow<DeleteDiaryState> get() = _deleteDiaryState
-
-    private val _deleteDiaryResult = MutableStateFlow<DeleteDiaryState>(DeleteDiaryState.Idle)
-    val deleteDiaryResult: StateFlow<DeleteDiaryState> get() = _deleteDiaryResult
-
-    private val _selectedDiaryDate = MutableStateFlow(DiaryDateData())
-    val selectedDiaryDate: StateFlow<DiaryDateData> get() = _selectedDiaryDate
-
-    private val _selectedDate = MutableStateFlow(LocalDate.now())
-    val selectedDate: StateFlow<LocalDate> get() = _selectedDate
-
-    private val _diaryCount = MutableStateFlow(0)
-    val diaryCount: StateFlow<Int> get() = _diaryCount
-
-    private val _replyStatus = MutableStateFlow(ReplyStatus.UNREADY)
-    val replyStatus: StateFlow<ReplyStatus> get() = _replyStatus
-
-    private val _isToday = MutableStateFlow(false)
-    val isToday: StateFlow<Boolean> get() = _isToday
-
-    private val _isDeleted = MutableStateFlow(false)
-    val isDeleted: StateFlow<Boolean> get() = _isDeleted
-
-    private val _showYearMonthPickerState = MutableStateFlow(false)
-    val showYearMonthPickerState: StateFlow<Boolean> get() = _showYearMonthPickerState
-
-    private val _showDiaryDeleteState = MutableStateFlow(false)
-    val showDiaryDeleteState: StateFlow<Boolean> get() = _showDiaryDeleteState
-
-    private val _showDiaryDeleteDialog = MutableStateFlow(false)
-    val showDiaryDeleteDialog: StateFlow<Boolean> get() = _showDiaryDeleteDialog
-
-    private val _showContinueDraftDialog = MutableStateFlow(false)
-    val showContinueDraftDialog: StateFlow<Boolean> get() = _showContinueDraftDialog
-
-    private val _showFirstDraftPopup = MutableStateFlow(draftRepository.getIsFirstUse())
-    val showFirstDraftPopup: StateFlow<Boolean> = _showFirstDraftPopup
-
-    private val _draftAlarmChangeState =
-        MutableStateFlow<NotificationChangeState>(NotificationChangeState.Idle)
-    val draftAlarmChangeState: StateFlow<NotificationChangeState> = _draftAlarmChangeState
-
-    private val _draftAlarmEnableToast = MutableStateFlow(false)
-    val draftAlarmEnableToast: StateFlow<Boolean> = _draftAlarmEnableToast
-
-    private val _showInAppReviewPopup = MutableStateFlow(reviewRepository.getShouldShowPopup())
-    val showInAppReviewPopup: StateFlow<Boolean> get() = _showInAppReviewPopup
-
-    private val _errorState = MutableStateFlow(false to "")
-    val errorState: StateFlow<Pair<Boolean, String>> = _errorState
-
-    private val _hasDraft = MutableStateFlow(false)
-    val hasDraft: StateFlow<Boolean> get() = _hasDraft
-
-    private var isInitialized = false
+    private val _intents = Channel<HomeContract.HomeIntent>(BUFFERED)
+    private val _sideEffects = Channel<HomeContract.HomeSideEffect>(BUFFERED)
+    val sideEffects = _sideEffects.receiveAsFlow()
 
     init {
+        _intents
+            .receiveAsFlow()
+            .onEach(::handleIntent)
+            .launchIn(viewModelScope)
         initialize()
     }
 
-    private fun initialize() {
-        if (!isInitialized) {
-            val now = LocalDate.now()
-            _selectedDiaryDate.value = DiaryDateData(now.year, now.monthValue)
-            _selectedDate.value = now
-            isInitialized = true
-        }
+    fun postIntent(intent: HomeContract.HomeIntent) {
+        viewModelScope.launch { _intents.send(intent) }
     }
 
-    fun setErrorState(isError: Boolean, message: String = errorMessageProvider.getTemporaryError()) {
-        _errorState.value = isError to message
-    }
-
-    private suspend fun loadCalendarData(year: Int, month: Int) {
-        if (!isNetworkAvailable()) {
-            setErrorState(true, errorMessageProvider.getNetworkError())
-            return
-        }
-        _calendarState.value = CalendarState.Loading
-        val result = withContext(Dispatchers.IO) {
-            diaryRepository.getMonthlyCalendarData(year, month)
-        }
-        _calendarState.value = result.fold(
-            onSuccess = {
-                setErrorState(false)
-                CalendarState.Success(it)
-            },
-            onFailure = {
-                setErrorState(true, errorMessageProvider.getTemporaryError())
-                CalendarState.Error(errorMessageProvider.getTemporaryError())
-            },
-        )
-    }
-
-    private suspend fun loadDailyDiariesData(year: Int, month: Int, date: Int) {
-        if (!isNetworkAvailable()) {
-            setErrorState(true, errorMessageProvider.getNetworkError())
-            return
-        }
-        _dailyDiariesState.value = DailyDiariesState.Loading
-        val result = withContext(Dispatchers.IO) {
-            diaryRepository.getDailyDiariesData(year, month, date)
-        }
-        _dailyDiariesState.value = result.fold(
-            onSuccess = { dailyResponse ->
-                _hasDraft.value = dailyResponse.isDraft
-                _diaryCount.value = dailyResponse.diaries.size
-                _isDeleted.value = dailyResponse.isDeleted
-                setErrorState(false)
-                DailyDiariesState.Success(dailyResponse)
-            },
-            onFailure = {
-                setErrorState(true, errorMessageProvider.getTemporaryError())
-                DailyDiariesState.Error(errorMessageProvider.getTemporaryError())
-            },
-        )
-    }
-
-    fun deleteDailyDiary(year: Int, month: Int, day: Int) {
-        viewModelScope.launch {
-            _deleteDiaryResult.value = DeleteDiaryState.Loading
-            val result = withContext(Dispatchers.IO) {
-                diaryRepository.deleteDailyDiary(year, month, day)
+    private suspend fun handleIntent(intent: HomeContract.HomeIntent) {
+        when (intent) {
+            is HomeContract.HomeIntent.InitializeInfo -> loadCalendarMonthlyInfo(intent.year, intent.month, intent.dayOfMonth)
+            is HomeContract.HomeIntent.OnClickDiaryList -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToDiaryList)
+            is HomeContract.HomeIntent.OnClickYearMonth -> setState { copy(showYearMonthPicker = true) }
+            is HomeContract.HomeIntent.ConfirmYearMonthPicker -> loadCalendarMonthlyInfo(intent.newYear, intent.newMonth)
+            is HomeContract.HomeIntent.DismissYearMonthPicker -> setState { copy(showYearMonthPicker = false) }
+            is HomeContract.HomeIntent.OnClickSetting -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToSetting)
+            is HomeContract.HomeIntent.OnClickDay -> loadDailyDiaryInfo(intent.year, intent.month, intent.dayOfMonth)
+            is HomeContract.HomeIntent.OnClickDiaryDelete -> setState { copy(showDiaryDeleteBottomSheet = true) }
+            is HomeContract.HomeIntent.ShowDiaryDeleteDialog -> setState { copy(showDiaryDeleteBottomSheet = false, showDiaryDeleteDialog = true) }
+            is HomeContract.HomeIntent.ConfirmDiaryDelete -> deleteDiary(intent.year, intent.month, intent.dayOfMonth)
+            is HomeContract.HomeIntent.DismissDiaryDelete -> setState { copy(showDiaryDeleteBottomSheet = false, showDiaryDeleteDialog = false) }
+            is HomeContract.HomeIntent.OnClickWriteDiary -> _sideEffects.send(
+                HomeContract.HomeSideEffect.NavigateToWriteDiary(intent.year, intent.month, intent.dayOfMonth),
+            )
+            is HomeContract.HomeIntent.OnClickReplyDiary -> _sideEffects.send(HomeContract.HomeSideEffect.NavigateToReplyLoading(intent.replyStatus))
+            is HomeContract.HomeIntent.ShowDraftExpiredDialog -> setState { copy(showDraftExpiredDialog = true) }
+            is HomeContract.HomeIntent.ConfirmDraftExpiredDialog -> {
+                _sideEffects.send(HomeContract.HomeSideEffect.NavigateToWriteDiary(intent.year, intent.month, intent.dayOfMonth))
+                setState { copy(showDraftExpiredDialog = false) }
             }
-            _deleteDiaryResult.value = result.fold(
-                onSuccess = {
-                    loadCalendarData(year, month)
-                    loadDailyDiariesData(year, month, day)
-                    _diaryCount.value = 0
-                    _isDeleted.value = false
-                    _replyStatus.value = ReplyStatus.UNREADY
-                    DeleteDiaryState.Success
-                },
-                onFailure = {
-                    DeleteDiaryState.Failure(it.message ?: errorMessageProvider.getTemporaryError())
-                },
+            is HomeContract.HomeIntent.DismissDraftExpiredDialog -> setState { copy(showDraftExpiredDialog = false) }
+            is HomeContract.HomeIntent.RequestNotificationPermission -> sendNotification(intent.granted)
+            is HomeContract.HomeIntent.EnableDraftAlarm -> enableDraftAlarm()
+            is HomeContract.HomeIntent.UpdateDraftPopupFlag -> updateDraftPopupFlag(intent.show)
+            is HomeContract.HomeIntent.DismissDraftNotificationToast -> setState { copy(showDraftNotificationToast = false) }
+            is HomeContract.HomeIntent.UpdateInAppReviewFlag -> updateInAppReviewFlag(intent.newValue)
+            is HomeContract.HomeIntent.ResetErrorDialogMessage -> setState { copy(errorDialogMessage = null) }
+        }
+    }
+
+    private fun initialize() {
+        setState {
+            copy(
+                showInAppReviewPopup = reviewRepository.getShouldShowPopup(),
+                showDraftNotificationPopup = draftRepository.getIsFirstUse(),
             )
         }
     }
 
-    private val loadDataMutex = Mutex()
-    fun updateYearMonthAndLoadData(year: Int, month: Int) {
-        viewModelScope.launch {
-            loadDataMutex.withLock {
-                val sameYm = _selectedDiaryDate.value.year == year &&
-                    _selectedDiaryDate.value.month == month
+    private suspend fun loadCalendarMonthlyInfo(year: Int, month: Int, dayOfMonth: Int = 1) {
+        setState { copy(calendarLoadState = UiLoadState.Loading, year = year, month = month) }
 
-                val calendarLoaded = calendarState.value is CalendarState.Success
-                val dailyLoaded = dailyDiariesState.value is DailyDiariesState.Success
-                val selectedIsFirst = _selectedDate.value.dayOfMonth == 1
-                val alreadyLoaded = sameYm && calendarLoaded && (selectedIsFirst && dailyLoaded)
+        if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
+            setState { copy(errorScreenMessage = errorMessageProvider.getNetworkError()) }
+            return
+        }
 
-                if (alreadyLoaded) return@withLock
-
-                _selectedDiaryDate.value = DiaryDateData(year, month)
-                _selectedDate.value = LocalDate.of(year, month, 1)
-
-                coroutineScope {
-                    awaitAll(
-                        async { loadCalendarData(year, month) },
-                        async { loadDailyDiariesData(year, month, 1) },
+        withContext(Dispatchers.IO) { diaryRepository.getMonthlyCalendarData(year, month) }.fold(
+            onSuccess = { data ->
+                setState {
+                    copy(
+                        calendarLoadState = UiLoadState.Success,
+                        calendarMonthlyInfo = CalendarMonthlyInfo(
+                            totalCloverCount = data.totalCloverCount,
+                            calendarDailyInfoList = data.diaries.map {
+                                CalendarMonthlyInfo.CalendarDailyInfo(
+                                    diaryCount = it.diaryCount,
+                                    replyStatus = it.replyStatus,
+                                    date = it.date,
+                                    isDeleted = it.isDeleted,
+                                )
+                            },
+                        ),
+                        errorScreenMessage = null,
                     )
                 }
-            }
-        }
-    }
-
-    fun updateYearMonthAndLoadData(year: Int, month: Int, day: Int) {
-        viewModelScope.launch {
-            loadDataMutex.withLock {
-                val sameYmd = _selectedDiaryDate.value.year == year &&
-                    _selectedDiaryDate.value.month == month &&
-                    _selectedDate.value.dayOfMonth == day
-
-                val calendarLoaded = calendarState.value is CalendarState.Success
-                val dailyLoaded = dailyDiariesState.value is DailyDiariesState.Success
-                val alreadyLoaded = sameYmd && calendarLoaded && dailyLoaded
-
-                if (alreadyLoaded) return@withLock
-
-                _selectedDiaryDate.value = DiaryDateData(year, month)
-                _selectedDate.value = LocalDate.of(year, month, day)
-
-                coroutineScope {
-                    awaitAll(
-                        async { loadCalendarData(year, month) },
-                        async { loadDailyDiariesData(year, month, day) },
+                loadDailyDiaryInfo(year, month, dayOfMonth)
+            },
+            onFailure = {
+                setState {
+                    copy(
+                        calendarLoadState = UiLoadState.Error,
+                        errorScreenMessage = errorMessageProvider.getServerError(),
                     )
                 }
-            }
+            },
+        )
+    }
+
+    private suspend fun loadDailyDiaryInfo(year: Int, month: Int, dayOfMonth: Int) {
+        setState { copy(dailyDiaryLoadState = UiLoadState.Loading, dayOfMonth = dayOfMonth) }
+
+        if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
+            setState { copy(errorScreenMessage = errorMessageProvider.getNetworkError()) }
+            return
         }
+
+        withContext(Dispatchers.IO) { diaryRepository.getDailyDiariesData(year, month, dayOfMonth) }.fold(
+            onSuccess = { data ->
+                setState {
+                    copy(
+                        dailyDiaryLoadState = UiLoadState.Success,
+                        dailyDiaryInfo = DailyDiaryInfo(
+                            diaryList = data.diaries.map { it.content },
+                            isDraft = data.isDraft,
+                        ),
+                        errorScreenMessage = null,
+                    )
+                }
+            },
+            onFailure = {
+                setState {
+                    copy(
+                        dailyDiaryLoadState = UiLoadState.Error,
+                        errorScreenMessage = errorMessageProvider.getServerError(),
+                    )
+                }
+            },
+        )
     }
 
-    fun updateSelectedDate(date: LocalDate) {
-        _selectedDate.value = date
-        viewModelScope.launch {
-            loadDailyDiariesData(date.year, date.monthValue, date.dayOfMonth)
+    private suspend fun deleteDiary(year: Int, month: Int, dayOfMonth: Int) {
+        setState { copy(diaryDeleteState = UiLoadState.Loading) }
+
+        if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
+            setState { copy(errorDialogMessage = errorMessageProvider.getNetworkError()) }
+            return
         }
+
+        withContext(Dispatchers.IO) { diaryRepository.deleteDailyDiary(year, month, dayOfMonth) }.fold(
+            onSuccess = {
+                loadCalendarMonthlyInfo(year, month, dayOfMonth)
+                setState { copy(showDiaryDeleteDialog = false, diaryDeleteState = UiLoadState.Success) }
+            },
+            onFailure = {
+                setState { copy(diaryDeleteState = UiLoadState.Error, errorDialogMessage = errorMessageProvider.getServerError()) }
+            },
+        )
     }
 
-    fun updateDiaryState(diaries: List<MonthlyCalendarResponseDto.Diary>) {
-        val selectedDiary = diaries.getOrNull(_selectedDate.value.dayOfMonth - 1)
-        _diaryCount.value = selectedDiary?.diaryCount ?: 0
-        _replyStatus.value = selectedDiary?.replyStatus ?: ReplyStatus.UNREADY
-        _isDeleted.value = selectedDiary?.isDeleted ?: false
-    }
-
-    fun setShowYearMonthPickerState(state: Boolean) {
-        _showYearMonthPickerState.value = state
-    }
-
-    fun setShowDiaryDeleteState(state: Boolean) {
-        _showDiaryDeleteState.value = state
-    }
-
-    fun setShowDiaryDeleteDialog(state: Boolean) {
-        _showDiaryDeleteDialog.value = state
-    }
-
-    fun setShowContinueDraftDialog(state: Boolean) {
-        _showContinueDraftDialog.value = state
-    }
-
-    fun updateFirstDraftUse(newState: Boolean) {
-        draftRepository.setIsFirstUse(false)
-        _showFirstDraftPopup.value = newState
-    }
-
-    fun canWriteDiary(): Boolean {
-        val userTimeZone = ZoneId.systemDefault().id
-        val today = LocalDate.now()
-        val selected = _selectedDate.value
-        val isAvailableDay = if (userTimeZone == "Asia/Seoul") {
-            selected == today || selected == today.minusDays(1)
-        } else {
-            selected == today
-        }
-        return _diaryCount.value == 0 && isAvailableDay
-    }
-
-    fun canReplyDiary(): Boolean {
-        return _diaryCount.value > 0 && !_isDeleted.value
-    }
-
-    fun isValidDraftDate(): Boolean {
-        val today = LocalDate.now()
-        val selected = _selectedDate.value
-        return selected == today || selected == today.minusDays(1)
-    }
-
-    fun enableDraftAlarm() {
-        viewModelScope.launch {
-            if (!isNetworkAvailable()) {
-                setErrorState(true, errorMessageProvider.getNetworkError())
-                return@launch
+    private suspend fun getNotificationInfoOrNull(): NotificationInfoResponseDto? =
+        withContext(Dispatchers.IO) { notificationRepository.getNotificationInfo() }
+            .getOrElse {
+                setState { copy(errorDialogMessage = errorMessageProvider.getTemporaryError()) }
+                null
             }
 
-            val fcmToken = fcmTokenProvider.getToken().orEmpty()
-            val notificationInfo = getNotificationInfo() ?: return@launch
-            val request = buildDraftAlarmRequest(notificationInfo, fcmToken)
-            sendDraftAlarmRequest(request)
+    private suspend fun buildAndSendNotification(
+        build: (info: NotificationInfoResponseDto, fcmToken: String) -> SendNotificationRequestDto,
+    ): Result<SendNotificationResponseDto> {
+        val token = fcmTokenProvider.getToken().orEmpty()
+        val info = getNotificationInfoOrNull() ?: return Result.failure(IllegalStateException("notification info null"))
+        val request = build(info, token)
+        return withContext(Dispatchers.IO) { notificationRepository.sendNotification(request) }
+    }
+
+    private suspend fun sendNotification(granted: Boolean) {
+        if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
+            setState { copy(errorDialogMessage = errorMessageProvider.getNetworkError()) }
+            return
+        }
+
+        buildAndSendNotification { info, token ->
+            SendNotificationRequestDto(
+                isDiaryAlarm = granted,
+                isDraftAlarm = info.isDraftAlarm,
+                isReplyAlarm = granted,
+                time = info.time,
+                fcmToken = token,
+            )
         }
     }
 
-    private suspend fun isNetworkAvailable(): Boolean {
-        return networkConnectivityObserver.networkStatus.first() == NetworkStatus.Available
-    }
-
-    private suspend fun getNotificationInfo(): NotificationInfoResponseDto? {
-        return notificationRepository.getNotificationInfo().getOrElse {
-            _draftAlarmChangeState.value = NotificationChangeState.Failure(errorMessageProvider.getTemporaryError())
-            null
+    private suspend fun enableDraftAlarm() {
+        if (networkConnectivityObserver.networkStatus.first() != NetworkStatus.Available) {
+            setState { copy(errorDialogMessage = errorMessageProvider.getNetworkError()) }
+            return
         }
-    }
 
-    private fun buildDraftAlarmRequest(
-        info: NotificationInfoResponseDto,
-        fcmToken: String,
-    ): SendNotificationRequestDto = SendNotificationRequestDto(
-        isDiaryAlarm = info.isDiaryAlarm,
-        isDraftAlarm = true,
-        isReplyAlarm = info.isReplyAlarm,
-        time = info.time,
-        fcmToken = fcmToken,
-    )
-
-    private suspend fun sendDraftAlarmRequest(request: SendNotificationRequestDto) {
-        withContext(Dispatchers.IO) {
-            notificationRepository.sendNotification(request)
+        buildAndSendNotification { info, token ->
+            SendNotificationRequestDto(
+                isDiaryAlarm = info.isDiaryAlarm,
+                isDraftAlarm = true,
+                isReplyAlarm = info.isReplyAlarm,
+                time = info.time,
+                fcmToken = token,
+            )
         }.fold(
             onSuccess = {
-                _draftAlarmEnableToast.value = true
-                _draftAlarmChangeState.value = NotificationChangeState.Success(it)
+                setState { copy(showDraftNotificationPopup = false, showDraftNotificationToast = true) }
             },
             onFailure = {
-                _draftAlarmChangeState.value =
-                    NotificationChangeState.Failure(errorMessageProvider.getTemporaryError())
+                setState { copy(errorDialogMessage = errorMessageProvider.getTemporaryError()) }
             },
         )
     }
 
-    fun resetDraftAlarmEnableToast() {
-        _draftAlarmEnableToast.value = false
+    private fun updateDraftPopupFlag(flag: Boolean) {
+        draftRepository.setIsFirstUse(flag)
+        setState { copy(showDraftNotificationPopup = flag) }
     }
 
-    fun updateShowInAppReviewPopup(state: Boolean) {
-        reviewRepository.setShouldShowPopup(state)
-        _showInAppReviewPopup.value = state
+    private fun updateInAppReviewFlag(newValue: Boolean) {
+        reviewRepository.setShouldShowPopup(newValue)
+        setState { copy(showInAppReviewPopup = newValue) }
     }
 
-    fun sendNotification(isGranted: Boolean) {
-        viewModelScope.launch {
-            val fcmToken = fcmTokenProvider.getToken().orEmpty()
-            val notificationInfo = getNotificationInfo() ?: return@launch
-            val requestDto = SendNotificationRequestDto(
-                isDiaryAlarm = isGranted,
-                isDraftAlarm = notificationInfo.isDraftAlarm,
-                isReplyAlarm = isGranted,
-                time = notificationInfo.time,
-                fcmToken = fcmToken,
-            )
-            notificationRepository.sendNotification(requestDto)
-        }
+    @AssistedFactory
+    interface Factory : AssistedViewModelFactory<HomeViewModel, HomeContract.HomeState> {
+        override fun create(state: HomeContract.HomeState): HomeViewModel
     }
+
+    companion object :
+        MavericksViewModelFactory<HomeViewModel, HomeContract.HomeState> by hiltMavericksViewModelFactory()
 }

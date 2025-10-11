@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,7 +36,6 @@ import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
-import com.sopt.clody.presentation.ui.home.calendar.component.HorizontalDivider
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
 import com.sopt.clody.presentation.utils.extension.TimePeriod
@@ -166,7 +166,11 @@ fun TimeReminderScreen(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = { showBottomSheet = true },
                 )
-                HorizontalDivider(color = ClodyTheme.colors.gray07, thickness = 1.dp)
+                HorizontalDivider(
+                    color = ClodyTheme.colors.gray07,
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth(),
+                )
             }
 
             if (showBottomSheet) {
