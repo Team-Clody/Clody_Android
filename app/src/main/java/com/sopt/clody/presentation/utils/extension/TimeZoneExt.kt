@@ -1,6 +1,7 @@
 package com.sopt.clody.presentation.utils.extension
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -66,17 +67,17 @@ fun convertUTZtoKST(timePeriod: TimePeriod, hour: String, minute: String, refere
  *  @param day 작성된 일기의 일
  * */
 fun convertDateToKstDateTime(year: Int, month: Int, day: Int): String {
-    val localNowDate = LocalDate.now()
-    val targetDate = LocalDate.of(year, month, day)
+    val userZone = ZoneId.systemDefault()
     val kstZone = ZoneId.of("Asia/Seoul")
-    val nowKst = ZonedDateTime.now(kstZone)
 
-    val targetZonedDateTime = if (targetDate == localNowDate) {
-        nowKst
-    } else {
-        nowKst.minusDays(1)
-    }
+    val userNow = ZonedDateTime.now(userZone)
+    val userDateTime = LocalDateTime.of(
+        LocalDate.of(year, month, day),
+        userNow.toLocalTime(),
+    ).atZone(userZone)
+
+    val kstDateTime = userDateTime.withZoneSameInstant(kstZone)
 
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
-    return targetZonedDateTime.format(formatter)
+    return kstDateTime.format(formatter)
 }

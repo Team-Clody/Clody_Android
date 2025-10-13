@@ -22,7 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -32,420 +32,319 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.airbnb.mvrx.compose.collectAsState
+import com.airbnb.mvrx.compose.mavericksViewModel
 import com.sopt.clody.R
 import com.sopt.clody.core.review.InAppReviewManager
-import com.sopt.clody.data.remote.dto.response.MonthlyCalendarResponseDto
-import com.sopt.clody.domain.model.ReplyStatus
+import com.sopt.clody.domain.type.ReplyStatus
 import com.sopt.clody.presentation.ui.component.FailureScreen
-import com.sopt.clody.presentation.ui.component.LoadingScreen
 import com.sopt.clody.presentation.ui.component.bottomsheet.DiaryDeleteSheet
 import com.sopt.clody.presentation.ui.component.button.ClodyButton
 import com.sopt.clody.presentation.ui.component.dialog.ClodyDialog
+import com.sopt.clody.presentation.ui.component.dialog.FailureDialog
 import com.sopt.clody.presentation.ui.component.popup.ClodyPopupBottomSheet
 import com.sopt.clody.presentation.ui.component.timepicker.YearMonthPicker
 import com.sopt.clody.presentation.ui.component.toast.ClodyToastMessage
-import com.sopt.clody.presentation.ui.home.component.DiaryStateButton
+import com.sopt.clody.presentation.ui.home.component.DailyStateButton
 import com.sopt.clody.presentation.ui.home.component.HomeTopAppBar
+import com.sopt.clody.presentation.ui.home.component.MonthlyCalendarAndDailyDiary
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeConstraints
 import com.sopt.clody.presentation.utils.amplitude.AmplitudeUtils
+import com.sopt.clody.presentation.utils.extension.repeatOnStarted
 import com.sopt.clody.presentation.utils.extension.toLocalizedMonthLabel
 import com.sopt.clody.presentation.utils.extension.toLocalizedYearLabel
 import com.sopt.clody.presentation.utils.navigation.Route
 import com.sopt.clody.ui.theme.ClodyTheme
-import java.time.LocalDate
 
 @Composable
 fun HomeRoute(
+    viewModel: HomeViewModel = mavericksViewModel(),
     isFromReplyDiary: Boolean,
     navigateToDiaryList: (year: Int, month: Int) -> Unit,
     navigateToSetting: () -> Unit,
     navigateToWriteDiary: (year: Int, month: Int, date: Int) -> Unit,
-    navigateToReplyLoading: (
-        year: Int,
-        month: Int,
-        date: Int,
-        from: Route.ReplyLoading.ReplyLoadingFrom,
-        replyStatus: ReplyStatus,
-    ) -> Unit,
-    homeViewModel: HomeViewModel = hiltViewModel(),
+    navigateToReplyLoading: (year: Int, month: Int, date: Int, from: Route.ReplyLoading.ReplyLoadingFrom, replyStatus: ReplyStatus) -> Unit,
 ) {
-    val calendarState by homeViewModel.calendarState.collectAsStateWithLifecycle()
-    val replyStatus by homeViewModel.replyStatus.collectAsStateWithLifecycle()
-    val showFirstDraftPopup by homeViewModel.showFirstDraftPopup.collectAsStateWithLifecycle()
-    val draftAlarmEnableToast by homeViewModel.draftAlarmEnableToast.collectAsStateWithLifecycle()
+    val state by viewModel.collectAsState()
     val context = LocalContext.current
-    val showInAppReviewPopup by homeViewModel.showInAppReviewPopup.collectAsStateWithLifecycle()
-    val showContinueDraftDialog by homeViewModel.showContinueDraftDialog.collectAsStateWithLifecycle()
-    val showDiaryDeleteState by homeViewModel.showDiaryDeleteState.collectAsStateWithLifecycle()
-    val showDiaryDeleteDialog by homeViewModel.showDiaryDeleteDialog.collectAsStateWithLifecycle()
-    val selectedDiaryDate by homeViewModel.selectedDiaryDate.collectAsStateWithLifecycle()
-    val selectedDate by homeViewModel.selectedDate.collectAsStateWithLifecycle()
-    val deleteDiaryState by homeViewModel.deleteDiaryState.collectAsStateWithLifecycle()
-    val (isError, errorMessage) = homeViewModel.errorState.collectAsStateWithLifecycle().value
-    val showYearMonthPickerState by homeViewModel.showYearMonthPickerState.collectAsStateWithLifecycle()
-    val hasDraft by homeViewModel.hasDraft.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    val requestPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-    ) { isGranted: Boolean ->
-        homeViewModel.sendNotification(isGranted)
+    LaunchedEffect(viewModel) {
+        lifecycleOwner.repeatOnStarted {
+            viewModel.sideEffects.collect { effect ->
+                when (effect) {
+                    is HomeContract.HomeSideEffect.NavigateToDiaryList -> navigateToDiaryList(state.year, state.month)
+                    is HomeContract.HomeSideEffect.NavigateToSetting -> navigateToSetting()
+                    is HomeContract.HomeSideEffect.NavigateToWriteDiary -> navigateToWriteDiary(effect.year, effect.month, effect.dayOfMonth)
+                    is HomeContract.HomeSideEffect.NavigateToReplyLoading -> navigateToReplyLoading(
+                        state.year,
+                        state.month,
+                        state.dayOfMonth,
+                        Route.ReplyLoading.ReplyLoadingFrom.HOME,
+                        effect.replyStatus,
+                    )
+                }
+            }
+        }
     }
 
     LaunchedEffect(Unit) {
         AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME)
+        viewModel.postIntent(HomeContract.HomeIntent.InitializeInfo(state.year, state.month, state.dayOfMonth))
+    }
 
-        if (showInAppReviewPopup && isFromReplyDiary) {
-            InAppReviewManager.showPopup(context as Activity)
-            homeViewModel.updateShowInAppReviewPopup(false)
+    var backPressedTime by remember { mutableLongStateOf(0L) }
+    val backPressThreshold = 2000
+    BackHandler {
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - backPressedTime <= backPressThreshold) {
+            (context as? Activity)?.finish()
+        } else {
+            backPressedTime = currentTime
         }
     }
 
-    // 알림 권한 요청
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        viewModel.postIntent(HomeContract.HomeIntent.RequestNotificationPermission(isGranted))
+    }
     LaunchedEffect(Unit) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val notificationPermission = Manifest.permission.POST_NOTIFICATIONS
             if (ContextCompat.checkSelfPermission(context, notificationPermission) != PackageManager.PERMISSION_GRANTED) {
                 requestPermissionLauncher.launch(notificationPermission)
             } else {
-                homeViewModel.sendNotification(true)
+                viewModel.postIntent(HomeContract.HomeIntent.RequestNotificationPermission(true))
             }
         } else {
-            homeViewModel.sendNotification(true)
+            viewModel.postIntent(HomeContract.HomeIntent.RequestNotificationPermission(true))
         }
     }
 
-    LaunchedEffect(Unit) {
-        homeViewModel.updateYearMonthAndLoadData(
-            selectedDiaryDate.year,
-            selectedDiaryDate.month,
-            selectedDate.dayOfMonth,
-        )
+    LaunchedEffect(state.showInAppReviewPopup, isFromReplyDiary) {
+        if (state.showInAppReviewPopup && isFromReplyDiary) {
+            InAppReviewManager.showPopup(context as Activity)
+            viewModel.postIntent(HomeContract.HomeIntent.UpdateInAppReviewFlag(false))
+        }
     }
 
-    if (isError) {
+    if (state.errorScreenMessage != null) {
         FailureScreen(
-            message = errorMessage,
-            confirmAction = {
-                homeViewModel.updateYearMonthAndLoadData(
-                    selectedDiaryDate.year,
-                    selectedDiaryDate.month,
-                    selectedDate.dayOfMonth,
-                )
-            },
+            message = state.errorScreenMessage!!,
+            confirmAction = { viewModel.postIntent(HomeContract.HomeIntent.InitializeInfo(state.year, state.month, state.dayOfMonth)) },
         )
     } else {
         HomeScreen(
-            homeViewModel = homeViewModel,
-            calendarState = calendarState,
-            deleteDiaryState = deleteDiaryState,
-            showYearMonthPickerState = showYearMonthPickerState,
-            onClickDiaryList = navigateToDiaryList,
-            onClickSetting = navigateToSetting,
-            onClickWriteDiary = { year, month, day ->
-                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
-                if (hasDraft && !homeViewModel.isValidDraftDate()) {
-                    homeViewModel.setShowContinueDraftDialog(true)
-                } else {
-                    navigateToWriteDiary(year, month, day)
-                }
-            },
-            onClickReplyDiary = { year, month, day, _ ->
-                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_REPLY)
-                navigateToReplyLoading(
-                    year,
-                    month,
-                    day,
-                    Route.ReplyLoading.ReplyLoadingFrom.HOME,
-                    replyStatus,
-                )
-            },
-            isError = isError,
-            errorMessage = errorMessage,
-            selectedYear = selectedDiaryDate.year,
-            selectedMonth = selectedDiaryDate.month,
-            selectedDate = selectedDate,
-            hasDraft = hasDraft,
-            canWrite = homeViewModel.canWriteDiary(),
-            canReply = homeViewModel.canReplyDiary(),
-            isInvalidDraft = replyStatus == ReplyStatus.INVALID_DRAFT,
+            state = state,
+            onIntent = { viewModel.postIntent(it) },
         )
-
-        if (showFirstDraftPopup) {
-            ClodyPopupBottomSheet(
-                onDismissRequest = { homeViewModel.updateFirstDraftUse(false) },
-                content = {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 20.dp)
-                            .padding(horizontal = 16.dp),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.bottom_sheet_home_initial_draft_title),
-                            color = ClodyTheme.colors.gray01,
-                            textAlign = TextAlign.Center,
-                            style = ClodyTheme.typography.head3,
-                        )
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = stringResource(R.string.bottom_sheet_home_initial_draft_description),
-                            color = ClodyTheme.colors.gray04,
-                            textAlign = TextAlign.Center,
-                            style = ClodyTheme.typography.body3Regular,
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                        Text(
-                            text = stringResource(R.string.bottom_sheet_home_initial_draft_guide),
-                            color = ClodyTheme.colors.gray04,
-                            textAlign = TextAlign.Center,
-                            style = ClodyTheme.typography.body3Regular,
-                        )
-                        Spacer(modifier = Modifier.height(28.dp))
-                        ClodyButton(
-                            text = stringResource(R.string.bottom_sheet_home_initial_draft_accept),
-                            onClick = {
-                                homeViewModel.enableDraftAlarm()
-                                homeViewModel.updateFirstDraftUse(false)
-                            },
-                            enabled = true,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                        Text(
-                            text = stringResource(R.string.bottom_sheet_home_initial_draft_skip),
-                            modifier = Modifier
-                                .clickable(onClick = { homeViewModel.updateFirstDraftUse(false) })
-                                .padding(12.dp),
-                            color = ClodyTheme.colors.gray05,
-                            style = ClodyTheme.typography.body4Medium,
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-                    }
-                },
-            )
-        }
-
-        if (draftAlarmEnableToast) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.BottomCenter,
-                content = {
-                    ClodyToastMessage(
-                        message = stringResource(R.string.toast_home_draft_alarm_enabled),
-                        iconResId = R.drawable.ic_toast_check_on_18,
-                        backgroundColor = ClodyTheme.colors.gray04,
-                        contentColor = ClodyTheme.colors.white,
-                        durationMillis = 3000,
-                        onDismiss = { homeViewModel.resetDraftAlarmEnableToast() },
-                        modifier = Modifier
-                            .navigationBarsPadding()
-                            .padding(40.dp),
-                    )
-                },
-            )
-        }
-
-        if (showContinueDraftDialog) {
-            ClodyDialog(
-                titleMassage = stringResource(R.string.dialog_home_continue_draft_title),
-                descriptionMassage = stringResource(R.string.dialog_home_continue_draft_description),
-                confirmOption = stringResource(R.string.dialog_home_continue_draft_confirm),
-                dismissOption = stringResource(R.string.dialog_home_continue_draft_dismiss),
-                confirmAction = {
-                    homeViewModel.setShowContinueDraftDialog(false)
-                    val date = homeViewModel.selectedDate.value
-                    navigateToWriteDiary(date.year, date.monthValue, date.dayOfMonth)
-                },
-                onDismiss = {
-                    homeViewModel.setShowContinueDraftDialog(false)
-                },
-                confirmButtonColor = ClodyTheme.colors.mainYellow,
-                confirmButtonTextColor = ClodyTheme.colors.gray01,
-            )
-        }
-
-        if (showDiaryDeleteState) {
-            DiaryDeleteSheet(
-                onDismiss = { homeViewModel.setShowDiaryDeleteState(false) },
-                showDiaryDeleteDialog = {
-                    AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_DELETE_DIARY)
-                    homeViewModel.setShowDiaryDeleteDialog(true)
-                },
-            )
-        }
-
-        if (showDiaryDeleteDialog) {
-            ClodyDialog(
-                titleMassage = stringResource(R.string.dialog_diary_delete_title),
-                descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
-                confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
-                dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
-                confirmAction = {
-                    val d = homeViewModel.selectedDate.value
-                    homeViewModel.deleteDailyDiary(
-                        d.year,
-                        d.monthValue,
-                        d.dayOfMonth,
-                    )
-                    homeViewModel.setShowDiaryDeleteDialog(false)
-                },
-                onDismiss = {
-                    AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_NO_DELETE_DIARY)
-                    homeViewModel.setShowDiaryDeleteDialog(false)
-                },
-                confirmButtonColor = ClodyTheme.colors.red,
-                confirmButtonTextColor = ClodyTheme.colors.white,
-            )
-        }
     }
 }
 
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel,
-    calendarState: CalendarState<MonthlyCalendarResponseDto>,
-    deleteDiaryState: DeleteDiaryState,
-    showYearMonthPickerState: Boolean,
-    onClickDiaryList: (Int, Int) -> Unit,
-    onClickSetting: () -> Unit,
-    onClickWriteDiary: (Int, Int, Int) -> Unit,
-    onClickReplyDiary: (
-        year: Int,
-        month: Int,
-        date: Int,
-        replyStatus: Route.ReplyLoading.ReplyLoadingFrom,
-    ) -> Unit,
-    isError: Boolean,
-    errorMessage: String,
-    selectedYear: Int,
-    selectedMonth: Int,
-    selectedDate: LocalDate,
-    hasDraft: Boolean,
-    canWrite: Boolean,
-    canReply: Boolean,
-    isInvalidDraft: Boolean,
+    state: HomeContract.HomeState,
+    onIntent: (HomeContract.HomeIntent) -> Unit,
 ) {
-    if (isError) {
-        FailureScreen(
-            message = errorMessage,
-            confirmAction = {
-                homeViewModel.updateYearMonthAndLoadData(selectedYear, selectedMonth, selectedDate.dayOfMonth)
+    Scaffold(
+        topBar = {
+            HomeTopAppBar(
+                selectedYear = state.year.toLocalizedYearLabel(),
+                selectedMonth = state.month.toLocalizedMonthLabel(),
+                onClickDiaryList = {
+                    AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_LIST_DIARY)
+                    onIntent(HomeContract.HomeIntent.OnClickDiaryList)
+                },
+                onClickYearMonth = {
+                    onIntent(HomeContract.HomeIntent.OnClickYearMonth)
+                },
+                onClickSetting = {
+                    onIntent(HomeContract.HomeIntent.OnClickSetting)
+                },
+            )
+        },
+        containerColor = ClodyTheme.colors.white,
+        content = { innerPadding ->
+            MonthlyCalendarAndDailyDiary(
+                year = state.year,
+                month = state.month,
+                selectedDate = state.selectedDate,
+                calendarMonthlyInfo = state.calendarMonthlyInfo,
+                onClickDay = { dayOfMonth -> onIntent(HomeContract.HomeIntent.OnClickDay(state.year, state.month, dayOfMonth)) },
+                selectedDailyInfo = state.dailyDiaryInfo,
+                onClickDiaryDelete = { onIntent(HomeContract.HomeIntent.OnClickDiaryDelete) },
+                modifier = Modifier.padding(innerPadding),
+            )
+        },
+        bottomBar = {
+            state.getCalendarDailyInfo()?.let { calendarDailyInfo ->
+                DailyStateButton(
+                    calendarDailyInfo = calendarDailyInfo,
+                    selectedDailyInfo = state.dailyDiaryInfo,
+                    onClickWriteDiary = {
+                        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
+                        onIntent(HomeContract.HomeIntent.OnClickWriteDiary(state.year, state.month, state.dayOfMonth))
+                    },
+                    onClickContinueDraft = {
+                        if (calendarDailyInfo.enableWriteDiary()) {
+                            AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_WRITING_DIARY)
+                            onIntent(HomeContract.HomeIntent.OnClickWriteDiary(state.year, state.month, state.dayOfMonth))
+                        } else {
+                            onIntent(HomeContract.HomeIntent.ShowDraftExpiredDialog)
+                        }
+                    },
+                    onClickReplyDiary = {
+                        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_REPLY)
+                        onIntent(HomeContract.HomeIntent.OnClickReplyDiary(calendarDailyInfo.replyStatus))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .navigationBarsPadding()
+                        .background(ClodyTheme.colors.white)
+                        .padding(horizontal = 16.dp, vertical = 14.dp),
+                )
+            }
+        },
+    )
+
+    if (state.showYearMonthPicker) {
+        ClodyPopupBottomSheet(onDismissRequest = { onIntent(HomeContract.HomeIntent.DismissYearMonthPicker) }) {
+            YearMonthPicker(
+                onDismissRequest = { onIntent(HomeContract.HomeIntent.DismissYearMonthPicker) },
+                selectedYear = state.year,
+                selectedMonth = state.month,
+                onYearMonthSelected = { newYear, newMonth ->
+                    onIntent(HomeContract.HomeIntent.ConfirmYearMonthPicker(newYear, newMonth))
+                },
+            )
+        }
+    }
+
+    if (state.showDiaryDeleteBottomSheet) {
+        DiaryDeleteSheet(
+            onDismiss = {
+                onIntent(HomeContract.HomeIntent.DismissDiaryDelete)
+            },
+            showDiaryDeleteDialog = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_DELETE_DIARY)
+                onIntent(HomeContract.HomeIntent.ShowDiaryDeleteDialog)
             },
         )
-    } else {
-        var backPressedTime by remember { mutableStateOf(0L) }
-        val backPressThreshold = 2000
-        val context = LocalContext.current
+    }
 
-        BackHandler {
-            val currentTime = System.currentTimeMillis()
-            if (currentTime - backPressedTime <= backPressThreshold) {
-                (context as? Activity)?.finish()
-            } else {
-                backPressedTime = currentTime
-            }
-        }
-
-        Scaffold(
-            topBar = {
-                HomeTopAppBar(
-                    onClickDiaryList = {
-                        AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_LIST_DIARY)
-                        onClickDiaryList(selectedYear, selectedMonth)
-                    },
-                    onClickSetting = onClickSetting,
-                    onShowYearMonthPickerStateChange = { newState -> homeViewModel.setShowYearMonthPickerState(newState) },
-                    selectedYear = selectedYear.toLocalizedYearLabel(),
-                    selectedMonth = selectedMonth.toLocalizedMonthLabel(),
-                )
+    if (state.showDiaryDeleteDialog) {
+        ClodyDialog(
+            titleMassage = stringResource(R.string.dialog_diary_delete_title),
+            descriptionMassage = stringResource(R.string.dialog_diary_delete_description),
+            confirmOption = stringResource(R.string.dialog_diary_delete_confirm),
+            dismissOption = stringResource(R.string.dialog_diary_delete_dismiss),
+            confirmAction = {
+                onIntent(HomeContract.HomeIntent.ConfirmDiaryDelete(state.year, state.month, state.dayOfMonth))
             },
-            containerColor = ClodyTheme.colors.white,
-            content = { innerPadding ->
-                when (calendarState) {
-                    is CalendarState.Idle -> {}
-
-                    is CalendarState.Loading -> {
-                        LoadingScreen()
-                    }
-
-                    is CalendarState.Success -> {
-                        ScrollableCalendar(
-                            selectedYear = selectedYear,
-                            selectedMonth = selectedMonth,
-                            cloverCount = calendarState.data.totalCloverCount,
-                            diaries = calendarState.data.diaries,
-                            homeViewModel = homeViewModel,
-                            onShowDiaryDeleteStateChange = { newState -> homeViewModel.setShowDiaryDeleteState(newState) },
-                            selectedDate = selectedDate,
-                            onDiaryDataUpdated = { _, _ ->
-                                homeViewModel.updateDiaryState(calendarState.data.diaries)
-                            },
-                            modifier = Modifier.padding(innerPadding),
-                        )
-                    }
-
-                    is CalendarState.Error -> {
-                        homeViewModel.setErrorState(true, calendarState.message)
-                    }
-                }
-
-                when (deleteDiaryState) {
-                    is DeleteDiaryState.Idle -> {}
-
-                    is DeleteDiaryState.Loading -> {
-                        LoadingScreen()
-                    }
-
-                    is DeleteDiaryState.Success -> {}
-
-                    is DeleteDiaryState.Failure -> {
-                        homeViewModel.setErrorState(true, stringResource(R.string.home_error_delete_diary))
-                    }
-                }
+            onDismiss = {
+                AmplitudeUtils.trackEvent(eventName = AmplitudeConstraints.HOME_NO_DELETE_DIARY)
+                onIntent(HomeContract.HomeIntent.DismissDiaryDelete)
             },
-            bottomBar = {
+            confirmButtonColor = ClodyTheme.colors.red,
+            confirmButtonTextColor = ClodyTheme.colors.white,
+        )
+    }
+
+    if (state.showDraftExpiredDialog) {
+        ClodyDialog(
+            titleMassage = stringResource(R.string.dialog_home_continue_draft_title),
+            descriptionMassage = stringResource(R.string.dialog_home_continue_draft_description),
+            confirmOption = stringResource(R.string.dialog_home_continue_draft_confirm),
+            dismissOption = stringResource(R.string.dialog_home_continue_draft_dismiss),
+            confirmAction = { onIntent(HomeContract.HomeIntent.ConfirmDraftExpiredDialog(state.year, state.month, state.dayOfMonth)) },
+            onDismiss = { onIntent(HomeContract.HomeIntent.DismissDraftExpiredDialog) },
+            confirmButtonColor = ClodyTheme.colors.mainYellow,
+            confirmButtonTextColor = ClodyTheme.colors.gray01,
+        )
+    }
+
+    if (state.showDraftNotificationPopup) {
+        ClodyPopupBottomSheet(
+            onDismissRequest = { onIntent(HomeContract.HomeIntent.UpdateDraftPopupFlag(false)) },
+            content = {
                 Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 20.dp)
+                        .padding(horizontal = 16.dp),
+                ) {
+                    Text(
+                        text = stringResource(R.string.bottom_sheet_home_initial_draft_title),
+                        color = ClodyTheme.colors.gray01,
+                        textAlign = TextAlign.Center,
+                        style = ClodyTheme.typography.head3,
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(
+                        text = stringResource(R.string.bottom_sheet_home_initial_draft_description),
+                        color = ClodyTheme.colors.gray04,
+                        textAlign = TextAlign.Center,
+                        style = ClodyTheme.typography.body3Regular,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = stringResource(R.string.bottom_sheet_home_initial_draft_guide),
+                        color = ClodyTheme.colors.gray04,
+                        textAlign = TextAlign.Center,
+                        style = ClodyTheme.typography.body3Regular,
+                    )
+                    Spacer(modifier = Modifier.height(28.dp))
+                    ClodyButton(
+                        text = stringResource(R.string.bottom_sheet_home_initial_draft_accept),
+                        onClick = {
+                            onIntent(HomeContract.HomeIntent.EnableDraftAlarm)
+                            onIntent(HomeContract.HomeIntent.UpdateDraftPopupFlag(false))
+                        },
+                        enabled = true,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                    Text(
+                        text = stringResource(R.string.bottom_sheet_home_initial_draft_skip),
+                        modifier = Modifier
+                            .clickable(onClick = { onIntent(HomeContract.HomeIntent.UpdateDraftPopupFlag(false)) })
+                            .padding(12.dp),
+                        color = ClodyTheme.colors.gray05,
+                        style = ClodyTheme.typography.body4Medium,
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                }
+            },
+        )
+    }
+
+    if (state.showDraftNotificationToast) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter,
+            content = {
+                ClodyToastMessage(
+                    message = stringResource(R.string.toast_home_draft_alarm_enabled),
+                    iconResId = R.drawable.ic_toast_check_on_18,
+                    backgroundColor = ClodyTheme.colors.gray04,
+                    contentColor = ClodyTheme.colors.white,
+                    durationMillis = 3000,
+                    onDismiss = { onIntent(HomeContract.HomeIntent.DismissDraftNotificationToast) },
                     modifier = Modifier
                         .navigationBarsPadding()
-                        .background(ClodyTheme.colors.white),
-                ) {
-                    Spacer(modifier = Modifier.height(14.dp))
-                    DiaryStateButton(
-                        hasDraft = hasDraft,
-                        canWrite = canWrite,
-                        canReply = canReply,
-                        isInvalidDraft = isInvalidDraft,
-                        year = selectedYear,
-                        month = selectedMonth,
-                        day = selectedDate.dayOfMonth,
-                        onClickWriteDiary = onClickWriteDiary,
-                        onClickReplyDiary = {
-                            onClickReplyDiary(
-                                selectedYear,
-                                selectedMonth,
-                                selectedDate.dayOfMonth,
-                                Route.ReplyLoading.ReplyLoadingFrom.HOME,
-                            )
-                        },
-                    )
-                    Spacer(modifier = Modifier.height(14.dp))
-                }
+                        .padding(40.dp),
+                )
             },
         )
+    }
 
-        if (showYearMonthPickerState) {
-            ClodyPopupBottomSheet(onDismissRequest = { homeViewModel.setShowYearMonthPickerState(false) }) {
-                YearMonthPicker(
-                    onDismissRequest = { homeViewModel.setShowYearMonthPickerState(false) },
-                    selectedYear = selectedYear,
-                    selectedMonth = selectedMonth,
-                    onYearMonthSelected = { year, month ->
-                        homeViewModel.updateYearMonthAndLoadData(year, month)
-                    },
-                )
-            }
-        }
+    if (state.errorDialogMessage != null) {
+        FailureDialog(
+            message = state.errorDialogMessage,
+            confirmAction = { onIntent(HomeContract.HomeIntent.ResetErrorDialogMessage) },
+            onDismiss = { onIntent(HomeContract.HomeIntent.ResetErrorDialogMessage) },
+        )
     }
 }

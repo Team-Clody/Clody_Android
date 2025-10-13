@@ -24,11 +24,11 @@ import com.sopt.clody.ui.theme.ClodyTheme
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeTopAppBar(
-    onClickDiaryList: () -> Unit,
-    onClickSetting: () -> Unit,
-    onShowYearMonthPickerStateChange: (Boolean) -> Unit,
     selectedYear: String,
     selectedMonth: String,
+    onClickDiaryList: () -> Unit,
+    onClickYearMonth: () -> Unit,
+    onClickSetting: () -> Unit,
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -38,7 +38,7 @@ fun HomeTopAppBar(
             ) {
                 Row(
                     modifier = Modifier.clickable(
-                        onClick = { onShowYearMonthPickerStateChange(true) },
+                        onClick = onClickYearMonth,
                         indication = null,
                         interactionSource = remember { MutableInteractionSource() },
                     ),
@@ -52,14 +52,14 @@ fun HomeTopAppBar(
                     Image(
                         painter = painterResource(id = R.drawable.ic_home_under_arrow),
                         contentDescription = "choose month",
-                        modifier = Modifier.padding(horizontal = 6.dp, vertical = 6.dp),
+                        modifier = Modifier.padding(6.dp),
                     )
                 }
             }
         },
         navigationIcon = {
             IconButton(
-                onClick = { onClickDiaryList() },
+                onClick = onClickDiaryList,
                 modifier = Modifier.padding(start = 8.dp),
             ) {
                 Image(
@@ -70,7 +70,7 @@ fun HomeTopAppBar(
         },
         actions = {
             IconButton(
-                onClick = { onClickSetting() },
+                onClick = onClickSetting,
                 modifier = Modifier.padding(end = 8.dp),
             ) {
                 Image(

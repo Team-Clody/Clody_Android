@@ -1,4 +1,4 @@
-package com.sopt.clody.presentation.ui.home.calendar.component
+package com.sopt.clody.presentation.ui.home.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -23,23 +22,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.sopt.clody.R
-import com.sopt.clody.data.remote.dto.response.DailyDiariesResponseDto
+import com.sopt.clody.domain.model.DailyDiaryInfo
 import com.sopt.clody.ui.theme.ClodyTheme
-import kotlinx.datetime.DayOfWeek
 import java.time.LocalDate
 import java.time.format.TextStyle
+import java.util.Locale
 
 @Composable
-fun DailyDiaryListItem(
-    date: LocalDate,
-    dayOfWeek: DayOfWeek,
-    dailyDiary: DailyDiariesResponseDto,
-    onShowDiaryDeleteStateChange: (Boolean) -> Unit,
+fun DailyDiary(
+    selectedDate: LocalDate,
+    selectedDailyInfo: DailyDiaryInfo,
+    onClickDiaryDelete: () -> Unit,
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Row(
@@ -49,38 +45,55 @@ fun DailyDiaryListItem(
                 .padding(8.dp),
         ) {
             Text(
-                text = "${date.month.value}.${date.dayOfMonth}",
+                text = "${selectedDate.monthValue}.${selectedDate.dayOfMonth}",
                 style = ClodyTheme.typography.body2Medium,
                 color = ClodyTheme.colors.gray04,
                 modifier = Modifier.padding(vertical = 3.dp),
             )
             Text(
-                text = dayOfWeek.getDisplayName(
+                text = selectedDate.dayOfWeek.getDisplayName(
                     TextStyle.FULL,
-                    LocalConfiguration.current.locales.let { if (it.isEmpty) java.util.Locale.getDefault() else it[0] },
+                    LocalConfiguration.current.locales.let { if (it.isEmpty) Locale.getDefault() else it[0] },
                 ),
                 style = ClodyTheme.typography.body2SemiBold,
                 color = ClodyTheme.colors.gray02,
                 modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
             )
             Spacer(modifier = Modifier.weight(1f))
-            if (dailyDiary.diaries.isNotEmpty()) {
+            if (selectedDailyInfo.diaryList.isNotEmpty()) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_home_kebab),
                     contentDescription = "go to delete",
                     modifier = Modifier
                         .clip(RoundedCornerShape(12.dp))
-                        .clickable(onClick = { onShowDiaryDeleteStateChange(true) }),
+                        .clickable(onClick = onClickDiaryDelete),
                 )
             }
         }
 
         when {
-            dailyDiary.isDraft -> {
+            selectedDailyInfo.diaryList.isNotEmpty() -> {
+                selectedDailyInfo.diaryList.forEachIndexed { index, diary ->
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp))
+                            .padding(18.dp),
+                    ) {
+                        Text(
+                            text = "${index + 1}. $diary",
+                            style = ClodyTheme.typography.body2Medium,
+                            color = ClodyTheme.colors.gray01,
+                        )
+                    }
+                }
+            }
+
+            selectedDailyInfo.isDraft -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
@@ -92,11 +105,11 @@ fun DailyDiaryListItem(
                 }
             }
 
-            dailyDiary.diaries.isEmpty() -> {
+            else -> {
                 Box(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(vertical = 44.dp),
                 ) {
                     Text(
@@ -107,31 +120,6 @@ fun DailyDiaryListItem(
                     )
                 }
             }
-
-            else -> {
-                dailyDiary.diaries.forEachIndexed { index, diary ->
-                    DiaryItem(index = index + 1, text = diary.content)
-                }
-            }
         }
-    }
-}
-
-@Composable
-fun DiaryItem(
-    index: Int,
-    text: String,
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(ClodyTheme.colors.gray08, shape = RoundedCornerShape(10.dp))
-            .padding(18.dp),
-    ) {
-        Text(
-            text = "$index. $text",
-            style = ClodyTheme.typography.body2Medium,
-            color = ClodyTheme.colors.gray01,
-        )
     }
 }

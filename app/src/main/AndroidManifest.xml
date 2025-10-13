@@ -64,6 +64,40 @@
                     android:scheme="${kakaoRedirectUri}" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ClodyDeeplinkActivity"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="clody" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" android:host="clody.abr.ge" />
+                <data android:scheme="https" android:host="clody.abr.ge" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" android:host="clody.airbridge.io" />
+                <data android:scheme="https" android:host="clody.airbridge.io" />
+            </intent-filter>
+
+        </activity>
+
     </application>
 
 </manifest>
