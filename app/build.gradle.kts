@@ -25,7 +25,7 @@ android {
         applicationId = "com.sopt.clody"
         minSdk = 28
         targetSdk = 36
-        versionCode = 32
+        versionCode = 33
         versionName = "1.5.2"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
