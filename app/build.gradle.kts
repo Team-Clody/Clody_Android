@@ -19,13 +19,13 @@ plugins {
 
 android {
     namespace = "com.sopt.clody"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.sopt.clody"
         minSdk = 28
-        targetSdk = 35
-        versionCode = 32
+        targetSdk = 36
+        versionCode = 33
         versionName = "1.5.2"
         val kakaoApiKey: String = properties.getProperty("kakao.api.key")
         val amplitudeApiKey: String = properties.getProperty("amplitude.api.key")
